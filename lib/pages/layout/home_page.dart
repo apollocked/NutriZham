@@ -277,7 +277,7 @@ class _HomePageState extends State<HomePage> {
                       leading: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
-                          recipe.image,
+                          recipe.icon,
                           width: 70,
                           height: 70,
                           fit: BoxFit.cover,

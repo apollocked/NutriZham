@@ -148,7 +148,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             Stack(
               children: [
                 Image.network(
-                  widget.recipe.image,
+                  widget.recipe.icon,
                   height: 250,
                   width: double.infinity,
                   fit: BoxFit.cover,

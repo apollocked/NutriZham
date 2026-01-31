@@ -245,7 +245,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(loc.favorites,
                             style: TextStyle(
@@ -264,40 +264,42 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     const SizedBox(height: 12),
                     if (favoriteMeals.isEmpty)
-                      Container(
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: widget.isDarkMode
-                              ? AppColors.darkCard
-                              : Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.favorite_border,
-                              size: 48,
-                              color: textColor.withOpacity(0.5),
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              loc.noFavorites,
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: textColor,
-                                fontWeight: FontWeight.w500,
+                      Center(
+                        child: Container(
+                          padding: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            color: widget.isDarkMode
+                                ? AppColors.darkCard
+                                : Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.favorite_border,
+                                size: 48,
+                                color: textColor.withOpacity(0.5),
                               ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              loc.tapToSave,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: textColor.withOpacity(0.6),
+                              const SizedBox(height: 16),
+                              Text(
+                                loc.noFavorites,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: textColor,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
+                              const SizedBox(height: 8),
+                              Text(
+                                loc.tapToSave,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: textColor.withOpacity(0.6),
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
                         ),
                       )
                     else
@@ -307,16 +309,33 @@ class _ProfilePageState extends State<ProfilePage> {
                                 : Colors.white,
                             margin: const EdgeInsets.only(bottom: 8),
                             child: ListTile(
-                              leading: ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.network(recipe.image,
-                                    width: 50, height: 50, fit: BoxFit.cover),
+                              leading: Container(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: widget.isDarkMode
+                                      ? Colors.grey[800]
+                                      : Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    recipe.icon,
+                                    style: const TextStyle(fontSize: 24),
+                                  ),
+                                ),
                               ),
                               title: Text(
                                   recipe.title[widget.languageCode] ?? '',
                                   style: TextStyle(color: textColor)),
                               subtitle: Text(
-                                  '${recipe.nutrition.calories} kcal • ${recipe.category.toString().split('.').last}'),
+                                '${recipe.nutrition.calories} kcal • ${recipe.category.toString().split('.').last}',
+                                style: TextStyle(
+                                  color: widget.isDarkMode
+                                      ? AppColors.darkTextSecondary
+                                      : AppColors.lightTextSecondary,
+                                ),
+                              ),
                               trailing: IconButton(
                                 icon: const Icon(Icons.favorite,
                                     color: AppColors.accentRed),

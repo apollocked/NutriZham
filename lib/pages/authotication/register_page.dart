@@ -458,7 +458,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 24),
 
                   // Login Link
-                  Row(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
@@ -484,9 +484,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         child: Text(
                           loc.login,
                           style: const TextStyle(
-                            color: AppColors.primaryGreen,
-                            fontWeight: FontWeight.bold,
-                          ),
+                              color: AppColors.primaryGreen,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22),
                         ),
                       ),
                     ],

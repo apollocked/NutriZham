@@ -49,6 +49,24 @@ class _PlannerPageState extends State<PlannerPage> {
         .fold(0, (sum, r) => sum + r.nutrition.calories);
   }
 
+  String _getCategoryName(MealCategory category) {
+    final loc = AppLocalizations.of(widget.languageCode);
+    switch (category) {
+      case MealCategory.breakfast:
+        return loc.breakfast;
+      case MealCategory.lunch:
+        return loc.lunch;
+      case MealCategory.dinner:
+        return loc.dinner;
+      case MealCategory.snack:
+        return loc.snack;
+      case MealCategory.bulking:
+        return loc.bulking;
+      case MealCategory.cutting:
+        return loc.cutting;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(widget.languageCode);
@@ -69,27 +87,80 @@ class _PlannerPageState extends State<PlannerPage> {
       ),
       body: Column(
         children: [
+          // Today's meals header with total calories
           Container(
             padding: const EdgeInsets.all(20),
-            color: AppColors.primaryGreen,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [AppColors.primaryGreen, AppColors.primaryGreenLight],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
             child: Column(
               children: [
                 Text(loc.todaysMeals,
-                    style: const TextStyle(color: Colors.white, fontSize: 18)),
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
                 Text('${loc.totalCalories}: $_totalCalories kcal',
                     style: const TextStyle(
                         color: Colors.white,
                         fontSize: 24,
                         fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                Text(
+                  '${plannedMeals.length} ${plannedMeals.length == 1 ? loc.recipeFound : loc.recipesFound}',
+                  style: const TextStyle(color: Colors.white70, fontSize: 14),
+                ),
               ],
+            ),
+          ),
+          // Planned meals list
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text(
+              loc.dailyPlan,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: textColor,
+              ),
             ),
           ),
           Expanded(
             child: plannedMeals.isEmpty
                 ? Center(
-                    child: Text('${loc.addToPlan} meals',
-                        style: TextStyle(color: textColor)))
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.calendar_today,
+                          size: 64,
+                          color: textColor.withOpacity(0.5),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          loc.addToPlan,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: textColor.withOpacity(0.7),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '${loc.tapToSave} recommended meals below',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: textColor.withOpacity(0.5),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  )
                 : ListView.builder(
                     itemCount: plannedMeals.length,
                     itemBuilder: (context, index) {
@@ -103,12 +174,44 @@ class _PlannerPageState extends State<PlannerPage> {
                         child: ListTile(
                           leading: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: Image.network(recipe.image,
-                                width: 60, height: 60, fit: BoxFit.cover),
+                            child: Image.network(
+                              recipe.icon,
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => Container(
+                                width: 60,
+                                height: 60,
+                                color: Colors.grey[300],
+                                child: const Icon(Icons.restaurant,
+                                    size: 30, color: Colors.grey),
+                              ),
+                            ),
                           ),
-                          title: Text(recipe.title[widget.languageCode] ?? '',
-                              style: TextStyle(color: textColor)),
-                          subtitle: Text('${recipe.nutrition.calories} kcal'),
+                          title: Text(
+                            recipe.title[widget.languageCode] ?? '',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, color: textColor),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 4),
+                              Text(
+                                  '${recipe.nutrition.calories} kcal • ${_getCategoryName(recipe.category)}'),
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  const Icon(Icons.star,
+                                      color: AppColors.starActive, size: 16),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                      '${recipe.rating.toStringAsFixed(1)} (${recipe.ratingCount})',
+                                      style: const TextStyle(fontSize: 12)),
+                                ],
+                              ),
+                            ],
+                          ),
                           trailing: IconButton(
                             icon: const Icon(Icons.remove_circle,
                                 color: AppColors.error),
@@ -119,13 +222,17 @@ class _PlannerPageState extends State<PlannerPage> {
                     },
                   ),
           ),
+          // Recommended meals section
           Padding(
             padding: const EdgeInsets.all(16),
-            child: Text(loc.recommendedMeals,
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: textColor)),
+            child: Text(
+              loc.recommendedMeals,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: textColor,
+              ),
+            ),
           ),
           Expanded(
             child: ListView.builder(
@@ -137,19 +244,56 @@ class _PlannerPageState extends State<PlannerPage> {
                 final recipe = recipes
                     .where((r) => !_plannedMealIds.contains(r.id))
                     .toList()[index];
-                return ListTile(
-                  leading: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.network(recipe.image,
-                        width: 50, height: 50, fit: BoxFit.cover),
-                  ),
-                  title: Text(recipe.title[widget.languageCode] ?? '',
-                      style: TextStyle(color: textColor)),
-                  subtitle: Text('${recipe.nutrition.calories} kcal'),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.add_circle,
-                        color: AppColors.primaryGreen),
-                    onPressed: () => _toggleMealInPlan(recipe.id),
+                return Card(
+                  color: widget.isDarkMode ? AppColors.darkCard : Colors.white,
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: ListTile(
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(
+                        recipe.icon,
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Container(
+                          width: 50,
+                          height: 50,
+                          color: Colors.grey[300],
+                          child: const Icon(Icons.restaurant,
+                              size: 25, color: Colors.grey),
+                        ),
+                      ),
+                    ),
+                    title: Text(
+                      recipe.title[widget.languageCode] ?? '',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: textColor),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 4),
+                        Text(
+                            '${recipe.nutrition.calories} kcal • ${_getCategoryName(recipe.category)}'),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            const Icon(Icons.star,
+                                color: AppColors.starActive, size: 16),
+                            const SizedBox(width: 4),
+                            Text(
+                                '${recipe.rating.toStringAsFixed(1)} (${recipe.ratingCount})',
+                                style: const TextStyle(fontSize: 12)),
+                          ],
+                        ),
+                      ],
+                    ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.add_circle,
+                          color: AppColors.primaryGreen),
+                      onPressed: () => _toggleMealInPlan(recipe.id),
+                    ),
                   ),
                 );
               },

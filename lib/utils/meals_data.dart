@@ -42,7 +42,7 @@ class NutritionalInfo {
 class Recipe {
   final String id;
   final Map<String, String> title;
-  final String image;
+  final String icon; // Changed from image to icon
   final NutritionalInfo nutrition;
   final Map<String, List<String>> ingredients;
   final Map<String, List<String>> steps;
@@ -53,7 +53,7 @@ class Recipe {
   Recipe({
     required this.id,
     required this.title,
-    required this.image,
+    required this.icon, // Changed from image to icon
     required this.nutrition,
     required this.ingredients,
     required this.steps,
@@ -66,7 +66,7 @@ class Recipe {
     return {
       'id': id,
       'title': title,
-      'image': image,
+      'icon': icon, // Changed from image to icon
       'nutrition': nutrition.toJson(),
       'ingredients': ingredients,
       'steps': steps,
@@ -84,14 +84,26 @@ final List<Recipe> recipes = [
       'en': 'Grilled Chicken Bowl',
       'ku': 'مرگی برژاو لەگەڵ برنج',
     },
-    image: 'https://bowlsarethenewplates.com/wp-content/uploads/2021/03/harissa-chicken-1-682x1024.jpg',
+    icon: '🍗', // Chicken drumstick emoji
     nutrition: NutritionalInfo(calories: 420, protein: 35, carbs: 45, fats: 12),
     category: MealCategory.bulking,
     rating: 4.5,
     ratingCount: 128,
     ingredients: {
-      'en': ['Chicken breast', 'Olive oil', 'Brown rice', 'Broccoli', 'Salt & pepper'],
-      'ku': ['سنگی مرغ', 'ڕۆنی زەیتوون', 'برنجی قاوەیی', 'بڕۆکلی', 'خوێ و بیبەر'],
+      'en': [
+        'Chicken breast',
+        'Olive oil',
+        'Brown rice',
+        'Broccoli',
+        'Salt & pepper'
+      ],
+      'ku': [
+        'سنگی مرغ',
+        'ڕۆنی زەیتوون',
+        'برنجی قاوەیی',
+        'بڕۆکلی',
+        'خوێ و بیبەر'
+      ],
     },
     steps: {
       'en': [
@@ -116,7 +128,7 @@ final List<Recipe> recipes = [
       'en': 'Oatmeal with Fruits',
       'ku': 'جۆ دۆشاو لەگەڵ میوە',
     },
-    image: 'https://images.unsplash.com/photo-1517673400267-0251440c45dc',
+    icon: '🥣', // Bowl with spoon emoji
     nutrition: NutritionalInfo(calories: 280, protein: 8, carbs: 52, fats: 6),
     category: MealCategory.breakfast,
     rating: 4.2,
@@ -146,14 +158,28 @@ final List<Recipe> recipes = [
       'en': 'Salmon with Veggies',
       'ku': 'ماسی سەلمۆن لەگەڵ سەوزە',
     },
-    image: 'https://images.unsplash.com/photo-1485921325833-c519f76c4927',
+    icon: '🐟', // Fish emoji
     nutrition: NutritionalInfo(calories: 380, protein: 32, carbs: 18, fats: 22),
     category: MealCategory.dinner,
     rating: 4.7,
     ratingCount: 156,
     ingredients: {
-      'en': ['Salmon fillet', 'Asparagus', 'Cherry tomatoes', 'Lemon', 'Garlic', 'Olive oil'],
-      'ku': ['پارچە ماسی سەلمۆن', 'مارچووبە', 'تەماتەی گێلاسی', 'لیمۆ', 'سیر', 'ڕۆنی زەیتوون'],
+      'en': [
+        'Salmon fillet',
+        'Asparagus',
+        'Cherry tomatoes',
+        'Lemon',
+        'Garlic',
+        'Olive oil'
+      ],
+      'ku': [
+        'پارچە ماسی سەلمۆن',
+        'مارچووبە',
+        'تەماتەی گێلاسی',
+        'لیمۆ',
+        'سیر',
+        'ڕۆنی زەیتوون'
+      ],
     },
     steps: {
       'en': [
@@ -178,14 +204,20 @@ final List<Recipe> recipes = [
       'en': 'Greek Yogurt Parfait',
       'ku': 'ماستی یۆنانی لەگەڵ گرانۆلا',
     },
-    image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777',
+    icon: '🥛', // Glass of milk emoji
     nutrition: NutritionalInfo(calories: 220, protein: 15, carbs: 32, fats: 4),
     category: MealCategory.breakfast,
     rating: 4.3,
     ratingCount: 87,
     ingredients: {
       'en': ['Greek yogurt', 'Granola', 'Mixed berries', 'Honey', 'Chia seeds'],
-      'ku': ['ماستی یۆنانی', 'گرانۆلا', 'توومیوەی جۆراوجۆر', 'هەنگوین', 'تۆوی چیا'],
+      'ku': [
+        'ماستی یۆنانی',
+        'گرانۆلا',
+        'توومیوەی جۆراوجۆر',
+        'هەنگوین',
+        'تۆوی چیا'
+      ],
     },
     steps: {
       'en': [
@@ -208,14 +240,28 @@ final List<Recipe> recipes = [
       'en': 'Protein Smoothie',
       'ku': 'خواردنەوەی پڕۆتین',
     },
-    image: 'https://images.unsplash.com/photo-1505252585461-04db1eb84625',
+    icon: '🥤', // Cup with straw emoji
     nutrition: NutritionalInfo(calories: 310, protein: 25, carbs: 38, fats: 8),
     category: MealCategory.bulking,
     rating: 4.6,
     ratingCount: 142,
     ingredients: {
-      'en': ['Protein powder', 'Banana', 'Spinach', 'Almond milk', 'Peanut butter', 'Ice'],
-      'ku': ['تۆزی پڕۆتین', 'مۆز', 'سپێناخ', 'شیری بادەم', 'کەرەی کاکوێلە', 'سەهۆڵ'],
+      'en': [
+        'Protein powder',
+        'Banana',
+        'Spinach',
+        'Almond milk',
+        'Peanut butter',
+        'Ice'
+      ],
+      'ku': [
+        'تۆزی پڕۆتین',
+        'مۆز',
+        'سپێناخ',
+        'شیری بادەم',
+        'کەرەی کاکوێلە',
+        'سەهۆڵ'
+      ],
     },
     steps: {
       'en': [
@@ -236,14 +282,28 @@ final List<Recipe> recipes = [
       'en': 'Quinoa Buddha Bowl',
       'ku': 'قاپی کینۆا',
     },
-    image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd',
+    icon: '🥗', // Green salad emoji
     nutrition: NutritionalInfo(calories: 395, protein: 14, carbs: 58, fats: 13),
     category: MealCategory.lunch,
     rating: 4.4,
     ratingCount: 103,
     ingredients: {
-      'en': ['Quinoa', 'Chickpeas', 'Sweet potato', 'Kale', 'Avocado', 'Tahini dressing'],
-      'ku': ['کینۆا', 'نۆک', 'پەتاتەی شیرین', 'کەڵەرم', 'ئەڤۆکادۆ', 'سۆسی تەحینی'],
+      'en': [
+        'Quinoa',
+        'Chickpeas',
+        'Sweet potato',
+        'Kale',
+        'Avocado',
+        'Tahini dressing'
+      ],
+      'ku': [
+        'کینۆا',
+        'نۆک',
+        'پەتاتەی شیرین',
+        'کەڵەرم',
+        'ئەڤۆکادۆ',
+        'سۆسی تەحینی'
+      ],
     },
     steps: {
       'en': [
@@ -268,14 +328,28 @@ final List<Recipe> recipes = [
       'en': 'Turkey Lettuce Wraps',
       'ku': 'بوقچەی بووقەڵەموون و تووک',
     },
-    image: 'https://images.unsplash.com/photo-1590951735308-c0ce1d22e60c',
+    icon: '🌯', // Burrito emoji
     nutrition: NutritionalInfo(calories: 265, protein: 28, carbs: 12, fats: 12),
     category: MealCategory.cutting,
     rating: 4.1,
     ratingCount: 76,
     ingredients: {
-      'en': ['Ground turkey', 'Lettuce leaves', 'Bell peppers', 'Onion', 'Soy sauce', 'Ginger'],
-      'ku': ['گۆشتی تووکی هاڕاو', 'گەڵای بوقەڵەموون', 'دڵۆپی رەنگاوڕەنگ', 'پیاز', 'سۆسی سۆیا', 'زەنجەفیل'],
+      'en': [
+        'Ground turkey',
+        'Lettuce leaves',
+        'Bell peppers',
+        'Onion',
+        'Soy sauce',
+        'Ginger'
+      ],
+      'ku': [
+        'گۆشتی تووکی هاڕاو',
+        'گەڵای بوقەڵەموون',
+        'دڵۆپی رەنگاوڕەنگ',
+        'پیاز',
+        'سۆسی سۆیا',
+        'زەنجەفیل'
+      ],
     },
     steps: {
       'en': [
@@ -300,7 +374,7 @@ final List<Recipe> recipes = [
       'en': 'Baked Sweet Potato',
       'ku': 'پەتاتەی شیرینی برژاو',
     },
-    image: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90',
+    icon: '🍠', // Roasted sweet potato emoji
     nutrition: NutritionalInfo(calories: 180, protein: 4, carbs: 41, fats: 0.3),
     category: MealCategory.snack,
     rating: 4.0,
@@ -330,13 +404,19 @@ final List<Recipe> recipes = [
       'en': 'Egg White Omelette',
       'ku': 'ئۆملێتی سپێڵکی هێلکە',
     },
-    image: 'https://images.unsplash.com/photo-1608039829572-78524f79c4c7',
+    icon: '🍳', // Cooking emoji
     nutrition: NutritionalInfo(calories: 180, protein: 22, carbs: 8, fats: 6),
     category: MealCategory.cutting,
     rating: 4.3,
     ratingCount: 91,
     ingredients: {
-      'en': ['Egg whites', 'Spinach', 'Mushrooms', 'Tomatoes', 'Low-fat cheese'],
+      'en': [
+        'Egg whites',
+        'Spinach',
+        'Mushrooms',
+        'Tomatoes',
+        'Low-fat cheese'
+      ],
       'ku': ['سپێڵکی هێلکە', 'سپێناخ', 'تڵۆپەڵۆ', 'تەماتە', 'پەنیری کەم چەوری'],
     },
     steps: {
@@ -362,14 +442,28 @@ final List<Recipe> recipes = [
       'en': 'Mass Gainer Shake',
       'ku': 'شەیکی زیادکردنی قەبارە',
     },
-    image: 'https://images.unsplash.com/photo-1622484211979-7d6ac035e1dd',
+    icon: '💪', // Flexed biceps emoji
     nutrition: NutritionalInfo(calories: 650, protein: 40, carbs: 85, fats: 18),
     category: MealCategory.bulking,
     rating: 4.8,
     ratingCount: 187,
     ingredients: {
-      'en': ['Protein powder', 'Oats', 'Banana', 'Peanut butter', 'Whole milk', 'Honey'],
-      'ku': ['تۆزی پڕۆتین', 'جۆی دۆشاو', 'مۆز', 'کەرەی کاکوێلە', 'شیری تەواو', 'هەنگوین'],
+      'en': [
+        'Protein powder',
+        'Oats',
+        'Banana',
+        'Peanut butter',
+        'Whole milk',
+        'Honey'
+      ],
+      'ku': [
+        'تۆزی پڕۆتین',
+        'جۆی دۆشاو',
+        'مۆز',
+        'کەرەی کاکوێلە',
+        'شیری تەواو',
+        'هەنگوین'
+      ],
     },
     steps: {
       'en': [
