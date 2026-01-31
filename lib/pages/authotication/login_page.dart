@@ -305,14 +305,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            loc.dontHaveAccount,
-                            style: TextStyle(
-                              color: widget.isDarkMode
-                                  ? AppColors.darkTextSecondary
-                                  : AppColors.lightTextSecondary,
-                            ),
-                          ),
                           TextButton(
                             onPressed: () {
                               Navigator.push(
