@@ -1,160 +1,264 @@
-# NutriZham - Enhanced Recipe App
+# NutriZham 🥗💪
 
-## New Features Implemented
+A comprehensive fitness nutrition app with Kurdish language support and dark mode designed for bodybuilders and fitness enthusiasts.
 
-### 1. 🔍 Search & Filter
-- **Search bar**: Search by recipe name or ingredients
-- **Category filters**: Filter by Breakfast, Lunch, Dinner, or Snack
-- **Filter chips**: Easy-to-use category selection with visual feedback
-- **Real-time filtering**: Results update as you type
+## ✨ Features
 
-### 2. 🍽️ Recipe Categories
-- Breakfast
-- Lunch
-- Dinner
-- Snack
+### 🔍 Search & Filter
+- **Real-time search**: Search recipes by name or ingredients
+- **Category filtering**: Filter by Breakfast, Lunch, Dinner, Snack, Bulking, or Cutting
+- **Smart results**: See how many recipes match your search
+- **Empty states**: Helpful messages when no recipes are found
 
-Each recipe is now categorized, and you can filter the list to show only recipes from a specific category.
+### 🥗 Recipe Categories
+- **Breakfast** (تایبەتە) - Start your day right
+- **Lunch** (نانی نیوەڕۆ) - Midday fuel
+- **Dinner** (نانی ئێوارە) - Evening meals
+- **Snack** (خواردنی سووک) - Quick bites
+- **Bulking** (زیادکردنی قەبارە) - High-calorie muscle-building meals
+- **Cutting** (لاوازبوون) - Low-calorie fat-loss meals
 
-### 3. ❤️ Favorites System
+### 🔥 Complete Nutrition Info
+- **Calories** (کالۆری) - Total energy
+- **Protein** (پڕۆتین) - Muscle building
+- **Carbs** (کاربۆهایدرات) - Energy source
+- **Fats** (چەوری) - Essential nutrients
+
+Each recipe displays macros in color-coded chips and detailed breakdown on the detail screen.
+
+### ❤️ Favorites System
 - **Bookmark recipes**: Tap the heart icon to save favorites
-- **Persistent storage**: Favorites are saved using `shared_preferences` and persist across app restarts
-- **Favorites filter**: Toggle the heart icon in the app bar to show only your favorite recipes
-- **Visual feedback**: Filled heart for favorited recipes, outlined heart for non-favorites
+- **Persistent storage**: Favorites saved across app restarts
+- **Quick access**: Toggle favorites-only view from the app bar
+- **Visual feedback**: Filled/outlined hearts show favorite status
 
-### 4. 📊 Extended Nutritional Information
-- **Calories** (kcal)
-- **Protein** (grams)
-- **Carbohydrates** (grams)
-- **Fats** (grams)
+### 🇬🇧 🇹🇯 Language Switching
+- **English ↔ Kurdish**: Full bilingual support
+- **Complete translation**: All UI elements, recipe names, ingredients, and steps
+- **Persistent preference**: Language choice saved automatically
+- **Easy switching**: Change language from settings menu
 
-Nutritional information is displayed both in the list view (as compact chips) and in the detail view (as a comprehensive card with icons).
+### 🌙 Dark Mode (Fitness Theme)
+- **Sleek dark theme**: Professional fitness app aesthetic
+- **Eye-friendly**: Perfect for evening meal planning
+- **Persistent**: Dark mode preference saved
+- **Smooth toggle**: Switch themes instantly from settings
 
-## Installation & Setup
+## 📱 Screenshots
 
-### 1. Update Dependencies
-Add the new dependency to your `pubspec.yaml`:
+The app features:
+- Clean, modern Material Design 3 interface
+- Smooth animations and transitions
+- Professional color scheme (green primary color)
+- Card-based layouts for easy scanning
+- Responsive design for all screen sizes
+
+## 🚀 Installation
+
+### Prerequisites
+- Flutter SDK (3.0.0 or higher)
+- Dart SDK
+- Android Studio / Xcode (for mobile deployment)
+
+### Steps
+
+1. **Clone or download** the project files
+
+2. **Install dependencies**:
+```bash
+flutter pub get
+```
+
+3. **Run the app**:
+```bash
+flutter run
+```
+
+## 📁 Project Structure
+
+```
+lib/
+├── main.dart                      # App entry point with theme management
+├── pages/
+│   ├── home_page.dart            # Recipe list with search & filters
+│   └── details_screen.dart       # Recipe details with nutrition
+└── utils/
+    ├── meals_data.dart           # Recipe data model & sample recipes
+    └── app_localizations.dart    # English & Kurdish translations
+```
+
+## 🍳 Sample Recipes (10 Total)
+
+### Bulking Recipes
+1. **Grilled Chicken Bowl** (مرگی برژاو لەگەڵ برنج) - 420 kcal, 35g protein
+2. **Protein Smoothie** (خواردنەوەی پڕۆتین) - 310 kcal, 25g protein
+3. **Mass Gainer Shake** (شەیکی زیادکردنی قەبارە) - 650 kcal, 40g protein
+
+### Cutting Recipes
+1. **Turkey Lettuce Wraps** (بوقچەی بووقەڵەموون و تووک) - 265 kcal, 28g protein
+2. **Egg White Omelette** (ئۆملێتی سپێڵکی هێلکە) - 180 kcal, 22g protein
+
+### Breakfast
+1. **Oatmeal with Fruits** (جۆ دۆشاو لەگەڵ میوە) - 280 kcal
+2. **Greek Yogurt Parfait** (ماستی یۆنانی لەگەڵ گرانۆلا) - 220 kcal
+
+### Lunch & Dinner
+1. **Salmon with Veggies** (ماسی سەلمۆن لەگەڵ سەوزە) - 380 kcal
+2. **Quinoa Buddha Bowl** (قاپی کینۆا) - 395 kcal
+
+### Snacks
+1. **Baked Sweet Potato** (پەتاتەی شیرینی برژاو) - 180 kcal
+
+## 🔧 Customization
+
+### Adding New Recipes
+
+Edit `lib/utils/meals_data.dart`:
+
+```dart
+Recipe(
+  id: '11',
+  title: {
+    'en': 'Your Recipe Name',
+    'ku': 'ناوی ڕێچەتەکەت',
+  },
+  image: 'https://your-image-url.jpg',
+  nutrition: NutritionalInfo(
+    calories: 400,
+    protein: 30,
+    carbs: 45,
+    fats: 12,
+  ),
+  category: MealCategory.bulking, // or lunch, dinner, cutting, etc.
+  ingredients: {
+    'en': ['Ingredient 1', 'Ingredient 2'],
+    'ku': ['پێکهاتەی ١', 'پێکهاتەی ٢'],
+  },
+  steps: {
+    'en': ['Step 1', 'Step 2'],
+    'ku': ['هەنگاوی ١', 'هەنگاوی ٢'],
+  },
+),
+```
+
+### Adding New Languages
+
+1. Edit `lib/utils/app_localizations.dart`
+2. Add new language code to the `_localizedValues` map
+3. Translate all strings
+4. Add language option to settings dropdown in `home_page.dart`
+
+### Customizing Colors
+
+Edit the theme in `lib/main.dart`:
+
+```dart
+theme: ThemeData(
+  primarySwatch: Colors.blue, // Change primary color
+  // ... other theme properties
+),
+```
+
+## 🎨 Color Scheme
+
+### Light Mode
+- Primary: Green (#4CAF50)
+- Background: White (#FFFFFF)
+- Cards: White with elevation
+- Text: Black/Dark Gray
+
+### Dark Mode (Fitness Theme)
+- Background: #121212
+- Cards: #1E1E1E
+- Surface: #2C2C2C
+- Text: White/Light Gray
+- Accent: Green (#4CAF50)
+
+## 📊 Nutritional Information Display
+
+- **List View**: Compact macro chips (P/C/F) with color coding
+- **Detail View**: Large nutritional card with icons
+  - 🔥 Calories (Red)
+  - 💪 Protein (Blue)
+  - 🍞 Carbs (Orange)
+  - 💧 Fats (Purple)
+
+## 🔐 Data Persistence
+
+Uses `shared_preferences` package to store:
+- ❤️ Favorite recipes (list of recipe IDs)
+- 🌙 Dark mode preference (boolean)
+- 🇬🇧/🇹🇯 Language preference (string: 'en' or 'ku')
+
+All preferences are automatically loaded on app start and saved when changed.
+
+## 🌍 Localization
+
+### Supported Languages
+- **English** (en) - Full support
+- **Kurdish** (ku) - Full support (Sorani dialect)
+
+### Translation Coverage
+- ✅ All UI strings
+- ✅ Recipe titles
+- ✅ Ingredients
+- ✅ Preparation steps
+- ✅ Category names
+- ✅ Nutritional labels
+
+## 🎯 Use Cases
+
+Perfect for:
+- 💪 Bodybuilders tracking macros
+- 🏃 Athletes managing nutrition
+- 🥗 Health-conscious individuals
+- 🇹🇯 Kurdish-speaking fitness enthusiasts
+- 📱 Anyone wanting a dark mode recipe app
+
+## 🛠️ Dependencies
 
 ```yaml
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^2.2.2
+  shared_preferences: ^2.2.2  # For persistent storage
 ```
 
-Or run:
-```bash
-flutter pub add shared_preferences
-```
+## 🐛 Known Issues & Future Enhancements
 
-### 2. Replace Files
-Replace your existing files with the new versions:
+### Potential Additions
+- [ ] Meal planning calendar
+- [ ] Shopping list generator
+- [ ] Calorie tracking dashboard
+- [ ] Custom recipe creation
+- [ ] Recipe ratings and reviews
+- [ ] Cooking timers
+- [ ] Serving size calculator
+- [ ] More languages (Arabic, Persian, etc.)
+- [ ] Offline mode
+- [ ] Recipe sharing
 
-- `lib/utils/meals_data.dart` - Enhanced data model with categories and nutrition
-- `lib/pages/home_page.dart` - Added search, filters, and favorites
-- `lib/pages/details_screen.dart` - Enhanced detail view with nutrition breakdown
-- `lib/main.dart` - No changes needed
+## 📝 Notes
 
-### 3. Install Dependencies
-```bash
-flutter pub get
-```
+- All recipe images are loaded from external URLs
+- Error handling included for failed image loads
+- Recipes can be in multiple categories
+- Kurdish translations use Sorani dialect
+- Dark mode optimized for OLED screens
 
-### 4. Run the App
-```bash
-flutter run
-```
+## 🙏 Credits
 
-## File Structure
-```
-lib/
-├── main.dart
-├── pages/
-│   ├── home_page.dart
-│   └── details_screen.dart
-└── utils/
-    └── meals_data.dart
-```
+- Built with Flutter & Dart
+- Material Design 3 components
+- Recipe images from Unsplash and various sources
+- Kurdish translations provided
 
-## What's New in Each File
+## 📄 License
 
-### meals_data.dart
-- Added `MealCategory` enum (breakfast, lunch, dinner, snack)
-- Created `NutritionalInfo` class for detailed nutrition data
-- Updated `Recipe` model with `id`, `category`, and `nutrition` fields
-- Added 6 new recipes (8 total) covering all meal categories
+This project is provided as-is for educational and personal use.
 
-### home_page.dart
-- Converted to `StatefulWidget` to manage state
-- Added search TextField with clear button
-- Implemented category filter chips
-- Added favorites functionality with persistent storage
-- Added favorites-only filter toggle in app bar
-- Enhanced recipe cards with:
-  - Nutritional information chips (P/C/F)
-  - Category display
-  - Favorite button
-  - Error handling for images
-- Added empty state for no results
+---
 
-### details_screen.dart
-- Enhanced nutritional information display with icon cards
-- Added category badge on recipe image
-- Improved visual design with:
-  - Color-coded nutrient columns
-  - Numbered step cards
-  - Better spacing and typography
-- Added favorite toggle in app bar
-- Fixed bullet point encoding issue (now uses proper Unicode bullet)
+**Enjoy your fitness journey with NutriZham! 💪🥗**
 
-## Usage Tips
-
-### Searching
-- Type recipe names like "Chicken" or "Smoothie"
-- Search by ingredients like "banana" or "quinoa"
-- Clear search with the X button
-
-### Filtering
-- Tap category chips to filter by meal type
-- Tap "All" to clear category filter
-- Multiple filters work together (search + category + favorites)
-
-### Favorites
-- Tap heart icon on any recipe to save it
-- Tap heart in app bar to see only favorites
-- Favorites persist even after closing the app
-
-## Sample Data Included
-
-8 recipes covering all categories:
-- **Breakfast**: Oatmeal with Fruits, Greek Yogurt Parfait
-- **Lunch**: Grilled Chicken Bowl, Quinoa Buddha Bowl, Turkey Lettuce Wraps
-- **Dinner**: Salmon with Veggies
-- **Snack**: Protein Smoothie, Baked Sweet Potato
-
-## Next Steps (Future Enhancements)
-
-Some ideas for further development:
-- Add recipe ratings
-- Include cooking time and difficulty level
-- Create custom meal plans
-- Add a shopping list generator
-- Implement calorie tracking
-- Add recipe images from camera/gallery
-- Include nutritional goals and tracking
-- Add user-created recipes
-- Social sharing features
-
-## Dependencies
-
-- **flutter**: SDK
-- **shared_preferences**: ^2.2.2 (for persistent favorites storage)
-
-## Notes
-
-- Image URLs are from external sources (Unsplash, etc.)
-- Error handling added for failed image loads
-- All data is currently local (no backend)
-- Favorites are stored locally on device
-
-Enjoy your enhanced NutriZham app! 🥗✨
+*For support or questions, please open an issue in the repository.*

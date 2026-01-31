@@ -1,43 +1,68 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: unused_local_variable
 
 import 'package:flutter/material.dart';
 import 'package:nutrizham/utils/meals_data.dart';
+import 'package:nutrizham/utils/app_localizations.dart';
 
 class RecipeDetailScreen extends StatelessWidget {
   final Recipe recipe;
   final bool isFavorite;
   final VoidCallback onFavoriteToggle;
+  final bool isDarkMode;
+  final String languageCode;
 
   const RecipeDetailScreen({
     super.key,
     required this.recipe,
     required this.isFavorite,
     required this.onFavoriteToggle,
+    required this.isDarkMode,
+    required this.languageCode,
   });
 
   String _getCategoryName(MealCategory category) {
+    final loc = AppLocalizations.of(languageCode);
     switch (category) {
       case MealCategory.breakfast:
-        return 'Breakfast';
+        return loc.breakfast;
       case MealCategory.lunch:
-        return 'Lunch';
+        return loc.lunch;
       case MealCategory.dinner:
-        return 'Dinner';
+        return loc.dinner;
       case MealCategory.snack:
-        return 'Snack';
+        return loc.snack;
+      case MealCategory.bulking:
+        return loc.bulking;
+      case MealCategory.cutting:
+        return loc.cutting;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(languageCode);
+    final bgColor = isDarkMode ? const Color(0xFF121212) : Colors.white;
+    final cardColor = isDarkMode ? const Color(0xFF1E1E1E) : Colors.white;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+    final subtitleColor = isDarkMode ? Colors.grey[400] : Colors.grey[600];
+
+    final recipeTitle = recipe.title[languageCode] ?? recipe.title['en'] ?? '';
+    final recipeIngredients =
+        recipe.ingredients[languageCode] ?? recipe.ingredients['en'] ?? [];
+    final recipeSteps = recipe.steps[languageCode] ?? recipe.steps['en'] ?? [];
+
     return Scaffold(
+      backgroundColor: bgColor,
       appBar: AppBar(
-        title: Text(recipe.title),
+        title: Text(recipeTitle),
+        backgroundColor: isDarkMode ? const Color(0xFF1E1E1E) : Colors.green,
         actions: [
           IconButton(
             icon: Icon(
               isFavorite ? Icons.favorite : Icons.favorite_border,
-              color: isFavorite ? Colors.red : Colors.white,
+              color: isFavorite
+                  ? Colors.red
+                  : (isDarkMode ? Colors.white : Colors.white),
             ),
             onPressed: onFavoriteToggle,
           ),
@@ -94,6 +119,7 @@ class RecipeDetailScreen extends StatelessWidget {
                 children: [
                   // Nutritional information card
                   Card(
+                    color: cardColor,
                     elevation: 2,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -103,11 +129,12 @@ class RecipeDetailScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Nutritional Information',
+                          Text(
+                            loc.nutritionalInfo,
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
+                              color: textColor,
                             ),
                           ),
                           const SizedBox(height: 16),
@@ -116,25 +143,25 @@ class RecipeDetailScreen extends StatelessWidget {
                             children: [
                               _buildNutrientColumn(
                                 '${recipe.nutrition.calories}',
-                                'Calories',
+                                loc.calories,
                                 Colors.red,
                                 Icons.local_fire_department,
                               ),
                               _buildNutrientColumn(
                                 '${recipe.nutrition.protein}g',
-                                'Protein',
+                                loc.protein,
                                 Colors.blue,
                                 Icons.fitness_center,
                               ),
                               _buildNutrientColumn(
                                 '${recipe.nutrition.carbs}g',
-                                'Carbs',
+                                loc.carbs,
                                 Colors.orange,
                                 Icons.bakery_dining,
                               ),
                               _buildNutrientColumn(
                                 '${recipe.nutrition.fats}g',
-                                'Fats',
+                                loc.fats,
                                 Colors.purple,
                                 Icons.water_drop,
                               ),
@@ -148,12 +175,17 @@ class RecipeDetailScreen extends StatelessWidget {
                   const SizedBox(height: 24),
 
                   // Ingredients section
-                  const Text(
-                    'Ingredients',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  Text(
+                    loc.ingredients,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: textColor,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   Card(
+                    color: cardColor,
                     elevation: 1,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -162,7 +194,7 @@ class RecipeDetailScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: recipe.ingredients
+                        children: recipeIngredients
                             .map(
                               (ingredient) => Padding(
                                 padding: const EdgeInsets.only(bottom: 8),
@@ -180,7 +212,10 @@ class RecipeDetailScreen extends StatelessWidget {
                                     Expanded(
                                       child: Text(
                                         ingredient,
-                                        style: const TextStyle(fontSize: 16),
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: textColor,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -195,13 +230,18 @@ class RecipeDetailScreen extends StatelessWidget {
                   const SizedBox(height: 24),
 
                   // Steps section
-                  const Text(
-                    'Preparation Steps',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  Text(
+                    loc.preparationSteps,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: textColor,
+                    ),
                   ),
                   const SizedBox(height: 12),
-                  ...recipe.steps.asMap().entries.map(
+                  ...recipeSteps.asMap().entries.map(
                         (entry) => Card(
+                          color: cardColor,
                           elevation: 1,
                           margin: const EdgeInsets.only(bottom: 12),
                           shape: RoundedRectangleBorder(
@@ -233,7 +273,10 @@ class RecipeDetailScreen extends StatelessWidget {
                                 Expanded(
                                   child: Text(
                                     entry.value,
-                                    style: const TextStyle(fontSize: 16),
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: textColor,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -275,7 +318,7 @@ class RecipeDetailScreen extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 12,
-            color: Colors.grey[600],
+            color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
           ),
         ),
       ],
