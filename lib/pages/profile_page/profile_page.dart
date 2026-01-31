@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/pages/authotication/login_page.dart';
-import 'package:nutrizham/pages/settings_page.dart';
+import 'package:nutrizham/pages/profile_page/settings_page.dart';
 import 'package:nutrizham/services/auth_service.dart';
 import 'package:nutrizham/models/user_model.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
 import 'package:nutrizham/utils/meals_data.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:nutrizham/services/favorites_helper.dart';
+import 'dart:async';
 
 class ProfilePage extends StatefulWidget {
   final bool isDarkMode;
@@ -31,26 +32,48 @@ class _ProfilePageState extends State<ProfilePage> {
   UserModel? _currentUser;
   Set<String> _favoriteIds = {};
   bool _isLoading = true;
+  StreamSubscription<Set<String>>? _favoritesSubscription;
 
   @override
   void initState() {
     super.initState();
     _loadUserData();
+    _setupFavoritesListener();
+  }
+
+  @override
+  void dispose() {
+    _favoritesSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _setupFavoritesListener() {
+    _favoritesSubscription =
+        FavoritesHelper.favoritesStream.listen((favorites) {
+      if (mounted) {
+        setState(() {
+          _favoriteIds = favorites;
+        });
+      }
+    });
   }
 
   Future<void> _loadUserData() async {
     final user = await _authService.getCurrentUser();
-    final prefs = await SharedPreferences.getInstance();
-    final favorites = prefs.getStringList('favorites') ?? [];
+    final favorites = await FavoritesHelper.loadFavorites();
 
-    setState(() {
-      _currentUser = user;
-      _favoriteIds = favorites.toSet();
-      _isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _currentUser = user;
+        _favoriteIds = favorites;
+        _isLoading = false;
+      });
+    }
   }
 
   Future<void> _logout() async {
+    // Clear favorites when logging out
+    await FavoritesHelper.clearAllFavorites();
     await _authService.logout();
     if (!mounted) return;
     Navigator.of(context).pushReplacement(
@@ -123,6 +146,27 @@ class _ProfilePageState extends State<ProfilePage> {
                     const SizedBox(height: 8),
                     Text('${loc.age}: ${_currentUser!.age}',
                         style: const TextStyle(color: Colors.white70)),
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.favorite,
+                              color: Colors.white, size: 16),
+                          const SizedBox(width: 8),
+                          Text(
+                            '${_favoriteIds.length} ${loc.favorites.toLowerCase()}',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -177,7 +221,6 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ),
                         );
-                        _loadUserData();
                       },
                     ),
                     Divider(
@@ -196,19 +239,69 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
 
               // Favorite Meals Section
-              if (favoriteMeals.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(loc.favorites,
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: textColor)),
-                      const SizedBox(height: 12),
-                      ...favoriteMeals.take(3).map((recipe) => Card(
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(loc.favorites,
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: textColor)),
+                        if (favoriteMeals.isNotEmpty)
+                          Text(
+                            '${favoriteMeals.length}',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: textColor.withOpacity(0.7),
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    if (favoriteMeals.isEmpty)
+                      Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: widget.isDarkMode
+                              ? AppColors.darkCard
+                              : Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.favorite_border,
+                              size: 48,
+                              color: textColor.withOpacity(0.5),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              loc.noFavorites,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: textColor,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              loc.tapToSave,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: textColor.withOpacity(0.6),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      )
+                    else
+                      ...favoriteMeals.take(5).map((recipe) => Card(
                             color: widget.isDarkMode
                                 ? AppColors.darkCard
                                 : Colors.white,
@@ -222,13 +315,32 @@ class _ProfilePageState extends State<ProfilePage> {
                               title: Text(
                                   recipe.title[widget.languageCode] ?? '',
                                   style: TextStyle(color: textColor)),
-                              subtitle:
-                                  Text('${recipe.nutrition.calories} kcal'),
+                              subtitle: Text(
+                                  '${recipe.nutrition.calories} kcal • ${recipe.category.toString().split('.').last}'),
+                              trailing: IconButton(
+                                icon: const Icon(Icons.favorite,
+                                    color: AppColors.accentRed),
+                                onPressed: () =>
+                                    FavoritesHelper.toggleFavorite(recipe.id),
+                              ),
                             ),
                           )),
-                    ],
-                  ),
+                    if (favoriteMeals.length > 5)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Center(
+                          child: Text(
+                            '+ ${favoriteMeals.length - 5} more favorites',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: textColor.withOpacity(0.6),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
+              ),
             ],
           ),
         ),

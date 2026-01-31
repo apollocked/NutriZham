@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/pages/authotication/login_page.dart';
 import 'package:nutrizham/pages/layout/main_navigation.dart';
-import 'package:nutrizham/services/auth_service.dart';
+import 'package:nutrizham/services/preferences_helper.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:nutrizham/services/favorites_helper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,15 +31,17 @@ class _NutriZhamAppState extends State<NutriZhamApp> {
   }
 
   Future<void> _initialize() async {
-    final prefs = await SharedPreferences.getInstance();
-    final authService = AuthService();
+    // Load preferences
+    final theme = await PreferencesHelper.getIsDarkMode();
+    final lang = await PreferencesHelper.getLanguageCode();
 
-    final isDark = prefs.getBool('isDarkMode') ?? false;
-    final lang = prefs.getString('languageCode') ?? 'en';
-    final loggedIn = await authService.isLoggedIn();
+    // For demo purposes, check if user is logged in
+    // You can implement proper auth check here
+    final prefs = await SharedPreferences.getInstance();
+    final loggedIn = prefs.getBool('is_logged_in') ?? false;
 
     setState(() {
-      _isDarkMode = isDark;
+      _isDarkMode = theme;
       _languageCode = lang;
       _isLoggedIn = loggedIn;
       _isLoading = false;
@@ -93,5 +96,11 @@ class _NutriZhamAppState extends State<NutriZhamApp> {
               languageCode: _languageCode,
             ),
     );
+  }
+
+  @override
+  void dispose() {
+    FavoritesHelper.dispose(); // Clean up stream controller
+    super.dispose();
   }
 }

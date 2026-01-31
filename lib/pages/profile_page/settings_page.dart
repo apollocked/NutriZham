@@ -3,7 +3,8 @@ import 'package:nutrizham/pages/authotication/login_page.dart';
 import 'package:nutrizham/services/auth_service.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
-import 'package:nutrizham/pages/edit_account_page.dart';
+import 'package:nutrizham/services/preferences_helper.dart';
+import 'package:nutrizham/pages/profile_page/edit_account_page.dart';
 
 class SettingsPage extends StatefulWidget {
   final bool isDarkMode;
@@ -25,9 +26,18 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   final _authService = AuthService();
+  bool _currentDarkMode = false;
+  String _currentLanguage = 'en';
+
+  @override
+  void initState() {
+    super.initState();
+    _currentDarkMode = widget.isDarkMode;
+    _currentLanguage = widget.languageCode;
+  }
 
   Future<void> _deleteAccount() async {
-    final loc = AppLocalizations.of(widget.languageCode);
+    final loc = AppLocalizations.of(_currentLanguage);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -55,8 +65,8 @@ class _SettingsPageState extends State<SettingsPage> {
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (_) => LoginScreen(
-              isDarkMode: widget.isDarkMode,
-              languageCode: widget.languageCode,
+              isDarkMode: _currentDarkMode,
+              languageCode: _currentLanguage,
             ),
           ),
           (route) => false,
@@ -65,21 +75,36 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
+  Future<void> _handleThemeChanged(bool isDark) async {
+    setState(() {
+      _currentDarkMode = isDark;
+    });
+    await PreferencesHelper.setIsDarkMode(isDark); // Use PreferencesHelper
+    widget.onThemeChanged(isDark);
+  }
+
+  Future<void> _handleLanguageChanged(String lang) async {
+    setState(() {
+      _currentLanguage = lang;
+    });
+    await PreferencesHelper.setLanguageCode(lang); // Use PreferencesHelper
+    widget.onLanguageChanged(lang);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final loc = AppLocalizations.of(widget.languageCode);
-    final bgColor = widget.isDarkMode
-        ? AppColors.darkBackground
-        : AppColors.lightBackground;
+    final loc = AppLocalizations.of(_currentLanguage);
+    final bgColor =
+        _currentDarkMode ? AppColors.darkBackground : AppColors.lightBackground;
     final textColor =
-        widget.isDarkMode ? AppColors.darkText : AppColors.lightText;
+        _currentDarkMode ? AppColors.darkText : AppColors.lightText;
 
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
         title: Text(loc.settings),
         backgroundColor:
-            widget.isDarkMode ? AppColors.darkCard : AppColors.primaryGreen,
+            _currentDarkMode ? AppColors.darkCard : AppColors.primaryGreen,
       ),
       body: ListView(
         children: [
@@ -90,7 +115,7 @@ class _SettingsPageState extends State<SettingsPage> {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              color: widget.isDarkMode ? AppColors.darkCard : Colors.white,
+              color: _currentDarkMode ? AppColors.darkCard : Colors.white,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -106,15 +131,15 @@ class _SettingsPageState extends State<SettingsPage> {
                       context,
                       MaterialPageRoute(
                         builder: (_) => EditAccountPage(
-                          isDarkMode: widget.isDarkMode,
-                          languageCode: widget.languageCode,
+                          isDarkMode: _currentDarkMode,
+                          languageCode: _currentLanguage,
                         ),
                       ),
                     );
                   },
                 ),
                 Divider(
-                    color: widget.isDarkMode
+                    color: _currentDarkMode
                         ? AppColors.darkDivider
                         : AppColors.lightDivider,
                     height: 1),
@@ -136,23 +161,23 @@ class _SettingsPageState extends State<SettingsPage> {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              color: widget.isDarkMode ? AppColors.darkCard : Colors.white,
+              color: _currentDarkMode ? AppColors.darkCard : Colors.white,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
               children: [
                 SwitchListTile(
                   secondary: Icon(
-                    widget.isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                    _currentDarkMode ? Icons.dark_mode : Icons.light_mode,
                     color: AppColors.primaryGreen,
                   ),
                   title: Text(loc.darkMode, style: TextStyle(color: textColor)),
-                  value: widget.isDarkMode,
+                  value: _currentDarkMode,
                   activeColor: AppColors.primaryGreen,
-                  onChanged: widget.onThemeChanged,
+                  onChanged: _handleThemeChanged,
                 ),
                 Divider(
-                    color: widget.isDarkMode
+                    color: _currentDarkMode
                         ? AppColors.darkDivider
                         : AppColors.lightDivider,
                     height: 1),
@@ -161,9 +186,10 @@ class _SettingsPageState extends State<SettingsPage> {
                       const Icon(Icons.language, color: AppColors.primaryGreen),
                   title: Text(loc.language, style: TextStyle(color: textColor)),
                   trailing: DropdownButton<String>(
-                    value: widget.languageCode,
+                    value: _currentLanguage,
                     dropdownColor:
-                        widget.isDarkMode ? AppColors.darkCard : Colors.white,
+                        _currentDarkMode ? AppColors.darkCard : Colors.white,
+                    underline: Container(height: 0),
                     items: [
                       DropdownMenuItem(
                         value: 'en',
@@ -189,7 +215,9 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ],
                     onChanged: (value) {
-                      if (value != null) widget.onLanguageChanged(value);
+                      if (value != null) {
+                        _handleLanguageChanged(value);
+                      }
                     },
                   ),
                 ),
@@ -209,7 +237,7 @@ class _SettingsPageState extends State<SettingsPage> {
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
-          color: widget.isDarkMode
+          color: _currentDarkMode
               ? AppColors.darkTextSecondary
               : AppColors.lightTextSecondary,
         ),

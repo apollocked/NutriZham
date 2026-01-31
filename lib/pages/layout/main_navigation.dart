@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/pages/layout/home_page.dart';
-import 'package:nutrizham/pages/search_page.dart';
+
 import 'package:nutrizham/pages/layout/planner_page.dart';
-import 'package:nutrizham/pages/layout/profile_page.dart';
+import 'package:nutrizham/pages/profile_page/profile_page.dart';
+import 'package:nutrizham/pages/profile_page/search_page.dart';
+import 'package:nutrizham/services/preferences_helper.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MainNavigation extends StatefulWidget {
   final bool isDarkMode;
@@ -34,14 +35,12 @@ class _MainNavigationState extends State<MainNavigation> {
   }
 
   Future<void> _updateTheme(bool isDark) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isDarkMode', isDark);
+    await PreferencesHelper.setIsDarkMode(isDark); // Use PreferencesHelper
     setState(() => _isDarkMode = isDark);
   }
 
   Future<void> _updateLanguage(String lang) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('languageCode', lang);
+    await PreferencesHelper.setLanguageCode(lang); // Use PreferencesHelper
     setState(() => _languageCode = lang);
   }
 

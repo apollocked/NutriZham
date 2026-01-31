@@ -31,14 +31,14 @@ class AuthService {
     required int age,
   }) async {
     final prefs = await SharedPreferences.getInstance();
-    
+
     // Get existing users
     final usersJson = prefs.getString(_usersKey);
     List<Map<String, dynamic>> users = [];
     if (usersJson != null) {
       users = List<Map<String, dynamic>>.from(json.decode(usersJson));
     }
-    
+
     // Check if email already exists
     if (users.any((user) => user['email'] == email)) {
       return {
@@ -46,7 +46,7 @@ class AuthService {
         'message': 'Email already registered',
       };
     }
-    
+
     // Check if username already exists
     if (users.any((user) => user['username'] == username)) {
       return {
@@ -54,7 +54,7 @@ class AuthService {
         'message': 'Username already taken',
       };
     }
-    
+
     // Create new user
     final newUser = UserModel(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -63,16 +63,16 @@ class AuthService {
       age: age,
       createdAt: DateTime.now(),
     );
-    
+
     // Store password separately (in real app, use proper encryption)
     final userWithPassword = {
       ...newUser.toJson(),
       'password': password, // In production, hash this!
     };
-    
+
     users.add(userWithPassword);
     await prefs.setString(_usersKey, json.encode(users));
-    
+
     return {
       'success': true,
       'message': 'Registration successful',
@@ -86,7 +86,7 @@ class AuthService {
     required String password,
   }) async {
     final prefs = await SharedPreferences.getInstance();
-    
+
     // Get existing users
     final usersJson = prefs.getString(_usersKey);
     if (usersJson == null) {
@@ -95,32 +95,32 @@ class AuthService {
         'message': 'No registered users found',
       };
     }
-    
+
     final users = List<Map<String, dynamic>>.from(json.decode(usersJson));
-    
+
     // Find user with matching email and password
     final user = users.firstWhere(
       (user) => user['email'] == email && user['password'] == password,
       orElse: () => {},
     );
-    
+
     if (user.isEmpty) {
       return {
         'success': false,
         'message': 'Invalid email or password',
       };
     }
-    
+
     // Remove password from user data
     final userData = Map<String, dynamic>.from(user);
     userData.remove('password');
-    
+
     final loggedInUser = UserModel.fromJson(userData);
-    
+
     // Save current user
     await prefs.setString(_userKey, json.encode(loggedInUser.toJson()));
     await prefs.setBool(_isLoggedInKey, true);
-    
+
     return {
       'success': true,
       'message': 'Login successful',
@@ -138,16 +138,16 @@ class AuthService {
   // Update user profile
   Future<bool> updateUser(UserModel updatedUser) async {
     final prefs = await SharedPreferences.getInstance();
-    
+
     // Update current user
     await prefs.setString(_userKey, json.encode(updatedUser.toJson()));
-    
+
     // Update in users list
     final usersJson = prefs.getString(_usersKey);
     if (usersJson != null) {
       final users = List<Map<String, dynamic>>.from(json.decode(usersJson));
       final index = users.indexWhere((user) => user['id'] == updatedUser.id);
-      
+
       if (index != -1) {
         users[index] = {
           ...updatedUser.toJson(),
@@ -156,14 +156,14 @@ class AuthService {
         await prefs.setString(_usersKey, json.encode(users));
       }
     }
-    
+
     return true;
   }
 
   // Delete account
   Future<bool> deleteAccount(String userId) async {
     final prefs = await SharedPreferences.getInstance();
-    
+
     // Remove from users list
     final usersJson = prefs.getString(_usersKey);
     if (usersJson != null) {
@@ -171,10 +171,143 @@ class AuthService {
       users.removeWhere((user) => user['id'] == userId);
       await prefs.setString(_usersKey, json.encode(users));
     }
-    
-    // Logout
-    await logout();
-    
+
+    // Remove user data
+    await prefs.remove(_userKey);
+    await prefs.setBool(_isLoggedInKey, false);
+
     return true;
+  }
+
+  // Get all registered users (for admin purposes)
+  Future<List<UserModel>> getAllUsers() async {
+    final prefs = await SharedPreferences.getInstance();
+    final usersJson = prefs.getString(_usersKey);
+
+    if (usersJson == null) {
+      return [];
+    }
+
+    final users = List<Map<String, dynamic>>.from(json.decode(usersJson));
+
+    // Remove passwords before returning
+    return users.map((userData) {
+      final data = Map<String, dynamic>.from(userData);
+      data.remove('password');
+      return UserModel.fromJson(data);
+    }).toList();
+  }
+
+  // Get user by ID
+  Future<UserModel?> getUserById(String userId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final usersJson = prefs.getString(_usersKey);
+
+    if (usersJson == null) {
+      return null;
+    }
+
+    final users = List<Map<String, dynamic>>.from(json.decode(usersJson));
+    final user = users.firstWhere(
+      (user) => user['id'] == userId,
+      orElse: () => {},
+    );
+
+    if (user.isEmpty) {
+      return null;
+    }
+
+    final userData = Map<String, dynamic>.from(user);
+    userData.remove('password');
+    return UserModel.fromJson(userData);
+  }
+
+  // Change password
+  Future<bool> changePassword({
+    required String userId,
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    final usersJson = prefs.getString(_usersKey);
+
+    if (usersJson == null) {
+      return false;
+    }
+
+    final users = List<Map<String, dynamic>>.from(json.decode(usersJson));
+    final index = users.indexWhere((user) => user['id'] == userId);
+
+    if (index == -1) {
+      return false;
+    }
+
+    // Verify current password
+    if (users[index]['password'] != currentPassword) {
+      return false;
+    }
+
+    // Update password
+    users[index]['password'] = newPassword; // In production, hash this!
+    await prefs.setString(_usersKey, json.encode(users));
+
+    return true;
+  }
+
+  // Forgot password (simple implementation)
+  Future<bool> resetPassword(String email, String newPassword) async {
+    final prefs = await SharedPreferences.getInstance();
+    final usersJson = prefs.getString(_usersKey);
+
+    if (usersJson == null) {
+      return false;
+    }
+
+    final users = List<Map<String, dynamic>>.from(json.decode(usersJson));
+    final index = users.indexWhere((user) => user['email'] == email);
+
+    if (index == -1) {
+      return false;
+    }
+
+    // Update password
+    users[index]['password'] = newPassword; // In production, hash this!
+    await prefs.setString(_usersKey, json.encode(users));
+
+    return true;
+  }
+
+  // Check if email exists
+  Future<bool> emailExists(String email) async {
+    final prefs = await SharedPreferences.getInstance();
+    final usersJson = prefs.getString(_usersKey);
+
+    if (usersJson == null) {
+      return false;
+    }
+
+    final users = List<Map<String, dynamic>>.from(json.decode(usersJson));
+    return users.any((user) => user['email'] == email);
+  }
+
+  // Check if username exists
+  Future<bool> usernameExists(String username) async {
+    final prefs = await SharedPreferences.getInstance();
+    final usersJson = prefs.getString(_usersKey);
+
+    if (usersJson == null) {
+      return false;
+    }
+
+    final users = List<Map<String, dynamic>>.from(json.decode(usersJson));
+    return users.any((user) => user['username'] == username);
+  }
+
+  // Clear all user data (for testing/debugging)
+  Future<void> clearAllUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_userKey);
+    await prefs.remove(_usersKey);
+    await prefs.remove(_isLoggedInKey);
   }
 }

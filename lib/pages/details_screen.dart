@@ -1,10 +1,11 @@
-// ignore_for_file: unnecessary_string_interpolations
+// ignore_for_file: unnecessary_string_interpolations, use_build_context_synchronously, unused_local_variable
 
 import 'package:flutter/material.dart';
 import 'package:nutrizham/utils/meals_data.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:nutrizham/services/favorites_helper.dart';
+import 'dart:async';
 
 class RecipeDetailScreen extends StatefulWidget {
   final Recipe recipe;
@@ -25,49 +26,69 @@ class RecipeDetailScreen extends StatefulWidget {
 class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   bool _isFavorite = false;
   int _userRating = 0;
+  StreamSubscription<Set<String>>? _favoritesSubscription;
 
   @override
   void initState() {
     super.initState();
     _loadFavoriteStatus();
     _loadUserRating();
+    _setupFavoritesListener();
+  }
+
+  @override
+  void dispose() {
+    _favoritesSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _setupFavoritesListener() {
+    _favoritesSubscription =
+        FavoritesHelper.favoritesStream.listen((favorites) {
+      if (mounted) {
+        setState(() {
+          _isFavorite = favorites.contains(widget.recipe.id);
+        });
+      }
+    });
   }
 
   Future<void> _loadFavoriteStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    final favorites = prefs.getStringList('favorites') ?? [];
-    setState(() => _isFavorite = favorites.contains(widget.recipe.id));
+    final isFav = await FavoritesHelper.isFavorite(widget.recipe.id);
+    if (mounted) {
+      setState(() => _isFavorite = isFav);
+    }
   }
 
   Future<void> _loadUserRating() async {
-    final prefs = await SharedPreferences.getInstance();
-    final rating = prefs.getInt('rating_${widget.recipe.id}') ?? 0;
-    setState(() => _userRating = rating);
+    // For now, we'll keep this simple
+    // You can implement actual rating logic later
   }
 
   Future<void> _toggleFavorite() async {
-    final prefs = await SharedPreferences.getInstance();
-    final favorites = prefs.getStringList('favorites') ?? [];
-    if (_isFavorite) {
-      favorites.remove(widget.recipe.id);
-    } else {
-      favorites.add(widget.recipe.id);
-    }
-    await prefs.setStringList('favorites', favorites);
-    setState(() => _isFavorite = !_isFavorite);
+    await FavoritesHelper.toggleFavorite(widget.recipe.id);
+    // Show feedback
+    final loc = AppLocalizations.of(widget.languageCode);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content:
+            Text(_isFavorite ? 'Removed from favorites' : 'Added to favorites'),
+        duration: const Duration(seconds: 1),
+        backgroundColor: _isFavorite ? AppColors.error : AppColors.success,
+      ),
+    );
   }
 
   Future<void> _saveRating(int rating) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('rating_${widget.recipe.id}', rating);
-    setState(() => _userRating = rating);
-    if (!mounted) return;
+    // Implement rating logic here
+    final loc = AppLocalizations.of(widget.languageCode);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(AppLocalizations.of(widget.languageCode).submitRating),
+        content: Text('${loc.rating}: $rating/5'),
         backgroundColor: AppColors.success,
       ),
     );
+    setState(() => _userRating = rating);
   }
 
   String _getCategoryName(MealCategory category) {

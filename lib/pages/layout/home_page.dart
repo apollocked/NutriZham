@@ -1,11 +1,13 @@
 // ignore_for_file: unnecessary_string_interpolations
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:nutrizham/pages/details_screen.dart';
 import 'package:nutrizham/utils/meals_data.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:nutrizham/services/favorites_helper.dart';
 
 class HomePage extends StatefulWidget {
   final bool isDarkMode;
@@ -30,27 +32,43 @@ class _HomePageState extends State<HomePage> {
   MealCategory? _selectedCategory;
   Set<String> _favoriteIds = {};
   bool _showFavoritesOnly = false;
+  StreamSubscription<Set<String>>? _favoritesSubscription;
 
   @override
   void initState() {
     super.initState();
     _loadFavorites();
+    _setupFavoritesListener();
+  }
+
+  @override
+  void dispose() {
+    _favoritesSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _setupFavoritesListener() {
+    // Listen to favorites changes in real-time
+    _favoritesSubscription =
+        FavoritesHelper.favoritesStream.listen((favorites) {
+      if (mounted) {
+        setState(() {
+          _favoriteIds = favorites;
+        });
+      }
+    });
   }
 
   Future<void> _loadFavorites() async {
-    final prefs = await SharedPreferences.getInstance();
-    final favorites = prefs.getStringList('favorites') ?? [];
-    setState(() => _favoriteIds = favorites.toSet());
+    final favorites = await FavoritesHelper.loadFavorites();
+    if (mounted) {
+      setState(() => _favoriteIds = favorites);
+    }
   }
 
   Future<void> _toggleFavorite(String recipeId) async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _favoriteIds.contains(recipeId)
-          ? _favoriteIds.remove(recipeId)
-          : _favoriteIds.add(recipeId);
-    });
-    await prefs.setStringList('favorites', _favoriteIds.toList());
+    await FavoritesHelper.toggleFavorite(recipeId);
+    // No need to call setState here - stream listener will handle it
   }
 
   List<Recipe> get _filteredRecipes {
@@ -102,12 +120,42 @@ class _HomePageState extends State<HomePage> {
         backgroundColor:
             widget.isDarkMode ? AppColors.darkCard : AppColors.primaryGreen,
         actions: [
-          IconButton(
-            icon: Icon(
-                _showFavoritesOnly ? Icons.favorite : Icons.favorite_border),
-            color: _showFavoritesOnly ? AppColors.accentRed : Colors.white,
-            onPressed: () =>
-                setState(() => _showFavoritesOnly = !_showFavoritesOnly),
+          Stack(
+            children: [
+              IconButton(
+                icon: Icon(_showFavoritesOnly
+                    ? Icons.favorite
+                    : Icons.favorite_border),
+                color: _showFavoritesOnly ? AppColors.accentRed : Colors.white,
+                onPressed: () =>
+                    setState(() => _showFavoritesOnly = !_showFavoritesOnly),
+              ),
+              if (_favoriteIds.isNotEmpty)
+                Positioned(
+                  right: 8,
+                  top: 8,
+                  child: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: AppColors.accentRed,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 16,
+                      minHeight: 16,
+                    ),
+                    child: Text(
+                      '${_favoriteIds.length}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+            ],
           ),
         ],
       ),
@@ -163,6 +211,14 @@ class _HomePageState extends State<HomePage> {
                     child: FilterChip(
                       label: Text(_getCategoryName(category)),
                       selected: _selectedCategory == category,
+                      backgroundColor: widget.isDarkMode
+                          ? AppColors.darkCard
+                          : Colors.grey[200],
+                      selectedColor: AppColors.primaryGreen,
+                      labelStyle: TextStyle(
+                          color: _selectedCategory == category
+                              ? Colors.white
+                              : textColor),
                       onSelected: (bool selected) {
                         setState(() {
                           _selectedCategory = selected ? category : null;
@@ -175,8 +231,35 @@ class _HomePageState extends State<HomePage> {
           if (filteredRecipes.isEmpty)
             Expanded(
                 child: Center(
-                    child: Text(loc.noRecipesFound,
-                        style: TextStyle(color: textColor))))
+                    child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  _showFavoritesOnly ? Icons.favorite_border : Icons.search_off,
+                  size: 64,
+                  color: textColor.withOpacity(0.5),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  _showFavoritesOnly ? loc.noFavorites : loc.noRecipesFound,
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: textColor.withOpacity(0.7),
+                  ),
+                ),
+                if (_showFavoritesOnly)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      loc.tapToSave,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: textColor.withOpacity(0.5),
+                      ),
+                    ),
+                  ),
+              ],
+            )))
           else
             Expanded(
               child: ListView.builder(
