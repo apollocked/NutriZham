@@ -1,27 +1,77 @@
-// ignore_for_file: unused_local_variable
+// ignore_for_file: unnecessary_string_interpolations
 
 import 'package:flutter/material.dart';
 import 'package:nutrizham/utils/meals_data.dart';
+import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class RecipeDetailScreen extends StatelessWidget {
+class RecipeDetailScreen extends StatefulWidget {
   final Recipe recipe;
-  final bool isFavorite;
-  final VoidCallback onFavoriteToggle;
   final bool isDarkMode;
   final String languageCode;
 
   const RecipeDetailScreen({
     super.key,
     required this.recipe,
-    required this.isFavorite,
-    required this.onFavoriteToggle,
     required this.isDarkMode,
     required this.languageCode,
   });
 
+  @override
+  State<RecipeDetailScreen> createState() => _RecipeDetailScreenState();
+}
+
+class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
+  bool _isFavorite = false;
+  int _userRating = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFavoriteStatus();
+    _loadUserRating();
+  }
+
+  Future<void> _loadFavoriteStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final favorites = prefs.getStringList('favorites') ?? [];
+    setState(() => _isFavorite = favorites.contains(widget.recipe.id));
+  }
+
+  Future<void> _loadUserRating() async {
+    final prefs = await SharedPreferences.getInstance();
+    final rating = prefs.getInt('rating_${widget.recipe.id}') ?? 0;
+    setState(() => _userRating = rating);
+  }
+
+  Future<void> _toggleFavorite() async {
+    final prefs = await SharedPreferences.getInstance();
+    final favorites = prefs.getStringList('favorites') ?? [];
+    if (_isFavorite) {
+      favorites.remove(widget.recipe.id);
+    } else {
+      favorites.add(widget.recipe.id);
+    }
+    await prefs.setStringList('favorites', favorites);
+    setState(() => _isFavorite = !_isFavorite);
+  }
+
+  Future<void> _saveRating(int rating) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('rating_${widget.recipe.id}', rating);
+    setState(() => _userRating = rating);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(AppLocalizations.of(widget.languageCode).submitRating),
+        backgroundColor: AppColors.success,
+      ),
+    );
+  }
+
   String _getCategoryName(MealCategory category) {
-    final loc = AppLocalizations.of(languageCode);
+    final loc = AppLocalizations.of(widget.languageCode);
     switch (category) {
       case MealCategory.breakfast:
         return loc.breakfast;
@@ -40,31 +90,33 @@ class RecipeDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loc = AppLocalizations.of(languageCode);
-    final bgColor = isDarkMode ? const Color(0xFF121212) : Colors.white;
-    final cardColor = isDarkMode ? const Color(0xFF1E1E1E) : Colors.white;
-    final textColor = isDarkMode ? Colors.white : Colors.black;
-    final subtitleColor = isDarkMode ? Colors.grey[400] : Colors.grey[600];
-
-    final recipeTitle = recipe.title[languageCode] ?? recipe.title['en'] ?? '';
-    final recipeIngredients =
-        recipe.ingredients[languageCode] ?? recipe.ingredients['en'] ?? [];
-    final recipeSteps = recipe.steps[languageCode] ?? recipe.steps['en'] ?? [];
+    final loc = AppLocalizations.of(widget.languageCode);
+    final bgColor = widget.isDarkMode
+        ? AppColors.darkBackground
+        : AppColors.lightBackground;
+    final textColor =
+        widget.isDarkMode ? AppColors.darkText : AppColors.lightText;
+    final recipeTitle = widget.recipe.title[widget.languageCode] ??
+        widget.recipe.title['en'] ??
+        '';
+    final ingredients = widget.recipe.ingredients[widget.languageCode] ??
+        widget.recipe.ingredients['en'] ??
+        [];
+    final steps = widget.recipe.steps[widget.languageCode] ??
+        widget.recipe.steps['en'] ??
+        [];
 
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
         title: Text(recipeTitle),
-        backgroundColor: isDarkMode ? const Color(0xFF1E1E1E) : Colors.green,
+        backgroundColor:
+            widget.isDarkMode ? AppColors.darkCard : AppColors.primaryGreen,
         actions: [
           IconButton(
-            icon: Icon(
-              isFavorite ? Icons.favorite : Icons.favorite_border,
-              color: isFavorite
-                  ? Colors.red
-                  : (isDarkMode ? Colors.white : Colors.white),
-            ),
-            onPressed: onFavoriteToggle,
+            icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border),
+            color: _isFavorite ? AppColors.accentRed : Colors.white,
+            onPressed: _toggleFavorite,
           ),
         ],
       ),
@@ -72,23 +124,17 @@ class RecipeDetailScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Recipe image
             Stack(
               children: [
                 Image.network(
-                  recipe.image,
+                  widget.recipe.image,
                   height: 250,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
+                  errorBuilder: (_, __, ___) => Container(
                       height: 250,
                       color: Colors.grey[300],
-                      child: const Center(
-                        child: Icon(Icons.restaurant, size: 64),
-                      ),
-                    );
-                  },
+                      child: const Icon(Icons.restaurant, size: 64)),
                 ),
                 Positioned(
                   top: 16,
@@ -97,74 +143,125 @@ class RecipeDetailScreen extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      _getCategoryName(recipe.category),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                        color: AppColors.getCategoryColor(
+                            widget.recipe.category.toString().split('.').last),
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Text(_getCategoryName(widget.recipe.category),
+                        style: const TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold)),
                   ),
                 ),
               ],
             ),
-
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Nutritional information card
+                  // Rating Section
                   Card(
-                    color: cardColor,
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                    color:
+                        widget.isDarkMode ? AppColors.darkCard : Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                          '${widget.recipe.rating.toStringAsFixed(1)}',
+                                          style: const TextStyle(
+                                              fontSize: 32,
+                                              fontWeight: FontWeight.bold,
+                                              color: AppColors.starActive)),
+                                      const SizedBox(width: 8),
+                                      const Icon(Icons.star,
+                                          color: AppColors.starActive,
+                                          size: 32),
+                                    ],
+                                  ),
+                                  Text(
+                                      '${widget.recipe.ratingCount} ${loc.ratings}',
+                                      style: TextStyle(
+                                          color: widget.isDarkMode
+                                              ? AppColors.darkTextSecondary
+                                              : AppColors.lightTextSecondary)),
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(loc.yourRating,
+                                      style: const TextStyle(fontSize: 12)),
+                                  Row(
+                                    children: List.generate(5, (index) {
+                                      return GestureDetector(
+                                        onTap: () => _saveRating(index + 1),
+                                        child: Icon(
+                                          index < _userRating
+                                              ? Icons.star
+                                              : Icons.star_border,
+                                          color: AppColors.starActive,
+                                          size: 24,
+                                        ),
+                                      );
+                                    }),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Nutrition Info
+                  Card(
+                    color:
+                        widget.isDarkMode ? AppColors.darkCard : Colors.white,
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            loc.nutritionalInfo,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: textColor,
-                            ),
-                          ),
+                          Text(loc.nutritionalInfo,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor)),
                           const SizedBox(height: 16),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              _buildNutrientColumn(
-                                '${recipe.nutrition.calories}',
-                                loc.calories,
-                                Colors.red,
-                                Icons.local_fire_department,
-                              ),
-                              _buildNutrientColumn(
-                                '${recipe.nutrition.protein}g',
-                                loc.protein,
-                                Colors.blue,
-                                Icons.fitness_center,
-                              ),
-                              _buildNutrientColumn(
-                                '${recipe.nutrition.carbs}g',
-                                loc.carbs,
-                                Colors.orange,
-                                Icons.bakery_dining,
-                              ),
-                              _buildNutrientColumn(
-                                '${recipe.nutrition.fats}g',
-                                loc.fats,
-                                Colors.purple,
-                                Icons.water_drop,
-                              ),
+                              _buildNutrient(
+                                  '${widget.recipe.nutrition.calories}',
+                                  loc.calories,
+                                  AppColors.caloriesColor,
+                                  Icons.local_fire_department),
+                              _buildNutrient(
+                                  '${widget.recipe.nutrition.protein}g',
+                                  loc.protein,
+                                  AppColors.proteinColor,
+                                  Icons.fitness_center),
+                              _buildNutrient(
+                                  '${widget.recipe.nutrition.carbs}g',
+                                  loc.carbs,
+                                  AppColors.carbsColor,
+                                  Icons.bakery_dining),
+                              _buildNutrient(
+                                  '${widget.recipe.nutrition.fats}g',
+                                  loc.fats,
+                                  AppColors.fatsColor,
+                                  Icons.water_drop),
                             ],
                           ),
                         ],
@@ -174,54 +271,37 @@ class RecipeDetailScreen extends StatelessWidget {
 
                   const SizedBox(height: 24),
 
-                  // Ingredients section
-                  Text(
-                    loc.ingredients,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: textColor,
-                    ),
-                  ),
+                  Text(loc.ingredients,
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: textColor)),
                   const SizedBox(height: 12),
                   Card(
-                    color: cardColor,
-                    elevation: 1,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                    color:
+                        widget.isDarkMode ? AppColors.darkCard : Colors.white,
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: recipeIngredients
-                            .map(
-                              (ingredient) => Padding(
-                                padding: const EdgeInsets.only(bottom: 8),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      '• ',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.green,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Text(
-                                        ingredient,
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: textColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )
+                        children: ingredients
+                            .map((ing) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 8),
+                                  child: Row(
+                                    children: [
+                                      const Text('• ',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: AppColors.primaryGreen)),
+                                      Expanded(
+                                          child: Text(ing,
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: textColor))),
+                                    ],
+                                  ),
+                                ))
                             .toList(),
                       ),
                     ),
@@ -229,61 +309,42 @@ class RecipeDetailScreen extends StatelessWidget {
 
                   const SizedBox(height: 24),
 
-                  // Steps section
-                  Text(
-                    loc.preparationSteps,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: textColor,
-                    ),
-                  ),
+                  Text(loc.preparationSteps,
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: textColor)),
                   const SizedBox(height: 12),
-                  ...recipeSteps.asMap().entries.map(
-                        (entry) => Card(
-                          color: cardColor,
-                          elevation: 1,
-                          margin: const EdgeInsets.only(bottom: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: 32,
-                                  height: 32,
-                                  decoration: BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      '${entry.key + 1}',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Text(
-                                    entry.value,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: textColor,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                  ...steps.asMap().entries.map((entry) => Card(
+                        color: widget.isDarkMode
+                            ? AppColors.darkCard
+                            : Colors.white,
+                        margin: const EdgeInsets.only(bottom: 12),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 32,
+                                height: 32,
+                                decoration: BoxDecoration(
+                                    color: AppColors.primaryGreen,
+                                    borderRadius: BorderRadius.circular(16)),
+                                child: Center(
+                                    child: Text('${entry.key + 1}',
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold))),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                  child: Text(entry.value,
+                                      style: TextStyle(
+                                          fontSize: 16, color: textColor))),
+                            ],
                           ),
                         ),
-                      ),
+                      )),
                 ],
               ),
             ),
@@ -293,34 +354,27 @@ class RecipeDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildNutrientColumn(
+  Widget _buildNutrient(
       String value, String label, Color color, IconData icon) {
     return Column(
       children: [
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
-          ),
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12)),
           child: Icon(icon, color: color, size: 28),
         ),
         const SizedBox(height: 8),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: color,
-          ),
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
-          ),
-        ),
+        Text(value,
+            style: TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: color)),
+        Text(label,
+            style: TextStyle(
+                fontSize: 12,
+                color: widget.isDarkMode
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary)),
       ],
     );
   }

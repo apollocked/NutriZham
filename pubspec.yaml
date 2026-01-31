@@ -1,5 +1,5 @@
 name: nutrizham
-description: A nutrition and recipe app with fitness tracking
+description: A comprehensive fitness nutrition app with meal planning
 
 publish_to: 'none'
 
@@ -11,8 +11,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  
-  # For persistent storage (favorites, theme, language)
   shared_preferences: ^2.2.2
 
 dev_dependencies:
