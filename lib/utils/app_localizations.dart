@@ -211,14 +211,14 @@ class AppLocalizations {
     'ku': {
       // Auth
       'login': 'چوونەژوورەوە',
-      'register': 'تۆمارکردن',
+      'register': 'خۆتۆمارکردن',
       'logout': 'دەرچوون',
       'username': 'ناوی بەکارهێنەر',
       'email': 'ئیمەیڵ',
       'password': 'وشەی نهێنی',
       'age': 'تەمەن',
       'confirmPassword': 'دڵنیاکردنەوەی وشەی نهێنی',
-      'alreadyHaveAccount': 'پێشتر هەژمارت هەیە؟',
+      'alreadyHaveAccount': 'پێشتر هەژمارت هەبووە؟',
       'dontHaveAccount': 'هەژمارت نیە؟',
       'forgotPassword': 'وشەی نهێنیت بیر چووە؟',
 
@@ -229,11 +229,11 @@ class AppLocalizations {
       'profile': 'پڕۆفایل',
 
       // General
-      'appTitle': 'نوتریژام',
+      'appTitle': 'نوتری ژەم',
       'recipes': 'ڕێچەتەکان',
       'searchPlaceholder': 'گەڕان بە دوای ڕێچەتە یان پێکهاتەکان...',
       'all': 'هەموو',
-      'recipesFound': 'ڕێچەتە دۆزرایەوە',
+      'recipesFound': 'ڕێچەتەکان دۆزرانەوە',
       'recipeFound': 'ڕێچەتە دۆزرایەوە',
       'noRecipesFound': 'هیچ ڕێچەتەیەک نەدۆزرایەوە',
       'tryDifferentSearch': 'گەڕانێکی جیاواز یان فلتەرێکی تر تاقی بکەرەوە',
@@ -241,11 +241,11 @@ class AppLocalizations {
       'tapToSave': 'دەستی لە نیشانەی دڵ بدە بۆ پاشەکەوتکردنیان',
 
       // Categories
-      'breakfast': 'تایبەتە',
-      'lunch': 'نانی نیوەڕۆ',
-      'dinner': 'نانی ئێوارە',
+      'breakfast': 'ژەمی بەیانی',
+      'lunch': ' نیوەڕۆ',
+      'dinner': ' ئێوارە',
       'snack': 'خواردنی سووک',
-      'bulking': 'زیادکردنی قەبارە',
+      'bulking': 'کێش سەرخستن',
       'cutting': 'لاوازبوون',
 
       // Nutrition
@@ -282,21 +282,21 @@ class AppLocalizations {
       'myProfile': 'پڕۆفایلەکەم',
       'favorites': 'دڵخوازەکان',
       'accountSettings': 'ڕێکخستنەکانی هەژمار',
-      'memberSince': 'ئەندامی لە',
+      'memberSince': 'ئەندامی لەوەتەی',
 
       // Planner
       'mealPlanner': 'پلانی خواردن',
       'dailyPlan': 'پلانی ڕۆژانە',
       'weeklyPlan': 'پلانی هەفتانە',
       'recommendedMeals': 'خواردنە پێشنیارکراوەکان',
-      'basedOnYourGoals': 'لەسەر بنەمای ئامانجەکانتی فیتنس',
+      'basedOnYourGoals': 'لەسەر بنەمای ئامانجەکانت',
       'totalCalories': 'کۆی کالۆری',
       'todaysMeals': 'خواردنەکانی ئەمڕۆ',
       'addToPlan': 'زیادکردن بۆ پلان',
       'removeFromPlan': 'لابردن لە پلان',
 
       // Messages
-      'passwordsDoNotMatch': 'وشەی نهێنیەکان ناگونجێت',
+      'passwordsDoNotMatch': 'وشەی نهێنیەکان هەمان شت نین',
       'success': 'سەرکەوتوو',
       'error': 'هەڵە',
       'loading': 'بارکردن',
