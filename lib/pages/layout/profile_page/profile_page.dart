@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/pages/authotication/login_page.dart';
-
-import 'package:nutrizham/pages/profile_page/settings_page.dart';
+import 'package:nutrizham/widgets/stat_and_menu_widgets.dart';
+import 'package:nutrizham/widgets/recipe_card.dart';
+import 'package:nutrizham/widgets/empty_state_widget.dart';
+import 'package:nutrizham/pages/layout/profile_page/settings_page.dart';
 import 'package:nutrizham/services/auth_service.dart';
 import 'package:nutrizham/models/user_model.dart';
 import 'package:nutrizham/utils/app_colors.dart';
@@ -101,8 +103,10 @@ class _ProfilePageState extends State<ProfilePage> {
     if (_isLoading || _currentUser == null) {
       return Scaffold(
         backgroundColor: bgColor,
-        body: const Center(
-            child: CircularProgressIndicator(color: AppColors.primaryGreen)),
+        body: LoadingWidget(
+          message: loc.loading,
+          isDarkMode: widget.isDarkMode,
+        ),
       );
     }
 
@@ -172,26 +176,27 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
 
-              // Stats Cards
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
                     Expanded(
-                      child: _buildStatCard(
+                      child: StatCard(
                         icon: Icons.favorite,
                         label: loc.favorites,
                         value: '${favoriteMeals.length}',
                         color: AppColors.accentRed,
+                        isDarkMode: widget.isDarkMode,
                       ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
-                      child: _buildStatCard(
+                      child: StatCard(
                         icon: Icons.calendar_today,
                         label: loc.dailyPlan,
                         value: '0',
                         color: AppColors.accentBlue,
+                        isDarkMode: widget.isDarkMode,
                       ),
                     ),
                   ],
@@ -207,7 +212,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 child: Column(
                   children: [
-                    _buildMenuItem(
+                    MenuItemTile(
                       icon: Icons.settings,
                       title: loc.settings,
                       onTap: () async {
@@ -223,17 +228,20 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         );
                       },
+                      isDarkMode: widget.isDarkMode,
                     ),
                     Divider(
                         color: widget.isDarkMode
                             ? AppColors.darkDivider
                             : AppColors.lightDivider,
                         height: 1),
-                    _buildMenuItem(
+                    MenuItemTile(
                       icon: Icons.logout,
                       title: loc.logout,
-                      color: AppColors.error,
                       onTap: _logout,
+                      iconColor: AppColors.error,
+                      textColor: AppColors.error,
+                      isDarkMode: widget.isDarkMode,
                     ),
                   ],
                 ),
@@ -266,85 +274,26 @@ class _ProfilePageState extends State<ProfilePage> {
                     const SizedBox(height: 12),
                     if (favoriteMeals.isEmpty)
                       Center(
-                        child: Container(
-                          padding: const EdgeInsets.all(24),
-                          decoration: BoxDecoration(
-                            color: widget.isDarkMode
-                                ? AppColors.darkCard
-                                : Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.favorite_border,
-                                size: 48,
-                                color: textColor.withOpacity(0.5),
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                loc.noFavorites,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: textColor,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                loc.tapToSave,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: textColor.withOpacity(0.6),
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
+                          child: EmptyStateWidget(
+                        icon: Icons.favorite_border,
+                        title: loc.noFavorites,
+                        subtitle: loc.tapToSave,
+                        isDarkMode: widget.isDarkMode,
+                      ))
                     else
-                      ...favoriteMeals.take(5).map((recipe) => Card(
-                            color: widget.isDarkMode
-                                ? AppColors.darkCard
-                                : Colors.white,
-                            margin: const EdgeInsets.only(bottom: 8),
-                            child: ListTile(
-                              leading: Container(
-                                width: 50,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: widget.isDarkMode
-                                      ? Colors.grey[800]
-                                      : Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(8),
+                      ...favoriteMeals
+                          .take(5)
+                          .map((recipe) => CompactRecipeCard(
+                                recipe: recipe,
+                                isDarkMode: widget.isDarkMode,
+                                languageCode: widget.languageCode,
+                                trailing: IconButton(
+                                  icon: const Icon(Icons.favorite,
+                                      color: AppColors.accentRed),
+                                  onPressed: () =>
+                                      FavoritesHelper.toggleFavorite(recipe.id),
                                 ),
-                                child: Center(
-                                  child: Text(
-                                    recipe.icon,
-                                    style: const TextStyle(fontSize: 24),
-                                  ),
-                                ),
-                              ),
-                              title: Text(
-                                  recipe.title[widget.languageCode] ?? '',
-                                  style: TextStyle(color: textColor)),
-                              subtitle: Text(
-                                '${recipe.nutrition.calories} kcal • ${recipe.category.toString().split('.').last}',
-                                style: TextStyle(
-                                  color: widget.isDarkMode
-                                      ? AppColors.darkTextSecondary
-                                      : AppColors.lightTextSecondary,
-                                ),
-                              ),
-                              trailing: IconButton(
-                                icon: const Icon(Icons.favorite,
-                                    color: AppColors.accentRed),
-                                onPressed: () =>
-                                    FavoritesHelper.toggleFavorite(recipe.id),
-                              ),
-                            ),
-                          )),
+                              )),
                     if (favoriteMeals.length > 5)
                       Padding(
                         padding: const EdgeInsets.only(top: 8),
@@ -365,52 +314,6 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildStatCard({
-    required IconData icon,
-    required String label,
-    required String value,
-    required Color color,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: widget.isDarkMode ? AppColors.darkCard : Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: color, size: 32),
-          const SizedBox(height: 8),
-          Text(value,
-              style: TextStyle(
-                  fontSize: 24, fontWeight: FontWeight.bold, color: color)),
-          Text(label,
-              style: TextStyle(
-                  fontSize: 12,
-                  color: widget.isDarkMode
-                      ? AppColors.darkTextSecondary
-                      : AppColors.lightTextSecondary)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMenuItem({
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-    Color? color,
-  }) {
-    final itemColor =
-        color ?? (widget.isDarkMode ? AppColors.darkText : AppColors.lightText);
-    return ListTile(
-      leading: Icon(icon, color: itemColor),
-      title: Text(title, style: TextStyle(color: itemColor)),
-      trailing: Icon(Icons.arrow_forward_ios, size: 16, color: itemColor),
-      onTap: onTap,
     );
   }
 }

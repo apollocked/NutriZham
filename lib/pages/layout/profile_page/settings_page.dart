@@ -4,7 +4,9 @@ import 'package:nutrizham/services/auth_service.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
 import 'package:nutrizham/services/preferences_helper.dart';
-import 'package:nutrizham/pages/profile_page/edit_account_page.dart';
+import 'package:nutrizham/pages/layout/profile_page/edit_account_page.dart';
+import 'package:nutrizham/widgets/custom_app_bar.dart';
+import 'package:nutrizham/widgets/stat_and_menu_widgets.dart';
 
 class SettingsPage extends StatefulWidget {
   final bool isDarkMode;
@@ -101,10 +103,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
     return Scaffold(
       backgroundColor: bgColor,
-      appBar: AppBar(
-        title: Text(loc.settings),
-        backgroundColor:
-            _currentDarkMode ? AppColors.darkCard : AppColors.primaryGreen,
+      appBar: CustomAppBar(
+        title: loc.settings,
+        isDarkMode: _currentDarkMode,
       ),
       body: ListView(
         children: [
@@ -120,12 +121,9 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             child: Column(
               children: [
-                ListTile(
-                  leading:
-                      const Icon(Icons.edit, color: AppColors.primaryGreen),
-                  title:
-                      Text(loc.editAccount, style: TextStyle(color: textColor)),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                MenuItemTile(
+                  icon: Icons.edit,
+                  title: loc.editAccount,
                   onTap: () {
                     Navigator.push(
                       context,
@@ -137,19 +135,22 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     );
                   },
+                  isDarkMode: _currentDarkMode,
                 ),
                 Divider(
                     color: _currentDarkMode
                         ? AppColors.darkDivider
                         : AppColors.lightDivider,
                     height: 1),
-                ListTile(
-                  leading:
-                      const Icon(Icons.delete_forever, color: AppColors.error),
-                  title: Text(loc.deleteAccount,
-                      style: const TextStyle(color: AppColors.error)),
+                MenuItemTile(
+                  icon: Icons.delete_forever,
+                  title: loc.deleteAccount,
                   onTap: _deleteAccount,
-                ),
+                  iconColor: AppColors.error,
+                  textColor: AppColors.error,
+                  showTrailing: false,
+                  isDarkMode: _currentDarkMode,
+                )
               ],
             ),
           ),

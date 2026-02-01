@@ -1,5 +1,8 @@
-// ignore_for_file: unnecessary_string_interpolations, use_build_context_synchronously, unused_local_variable
+// ignore_for_file: use_build_context_synchronously
 
+import 'package:nutrizham/widgets/custom_app_bar.dart';
+import 'package:nutrizham/widgets/nutrition_info_widget.dart';
+import 'package:nutrizham/widgets/category_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:nutrizham/utils/meals_data.dart';
 import 'package:nutrizham/utils/app_colors.dart';
@@ -68,7 +71,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   Future<void> _toggleFavorite() async {
     await FavoritesHelper.toggleFavorite(widget.recipe.id);
     // Show feedback
-    final loc = AppLocalizations.of(widget.languageCode);
+    AppLocalizations.of(widget.languageCode);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content:
@@ -84,29 +87,13 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     final loc = AppLocalizations.of(widget.languageCode);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
+        duration: const Duration(milliseconds: 775),
+        behavior: SnackBarBehavior.floating,
         content: Text('${loc.rating}: $rating/5'),
         backgroundColor: AppColors.success,
       ),
     );
     setState(() => _userRating = rating);
-  }
-
-  String _getCategoryName(MealCategory category) {
-    final loc = AppLocalizations.of(widget.languageCode);
-    switch (category) {
-      case MealCategory.breakfast:
-        return loc.breakfast;
-      case MealCategory.lunch:
-        return loc.lunch;
-      case MealCategory.dinner:
-        return loc.dinner;
-      case MealCategory.snack:
-        return loc.snack;
-      case MealCategory.bulking:
-        return loc.bulking;
-      case MealCategory.cutting:
-        return loc.cutting;
-    }
   }
 
   @override
@@ -129,10 +116,9 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
 
     return Scaffold(
       backgroundColor: bgColor,
-      appBar: AppBar(
-        title: Text(recipeTitle),
-        backgroundColor:
-            widget.isDarkMode ? AppColors.darkCard : AppColors.primaryGreen,
+      appBar: CustomAppBar(
+        title: recipeTitle,
+        isDarkMode: widget.isDarkMode,
         actions: [
           IconButton(
             icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border),
@@ -160,18 +146,11 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                 Positioned(
                   top: 16,
                   right: 16,
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                        color: AppColors.getCategoryColor(
-                            widget.recipe.category.toString().split('.').last),
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Text(_getCategoryName(widget.recipe.category),
-                        style: const TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold)),
+                  child: CategoryBadge(
+                    category: widget.recipe.category,
+                    languageCode: widget.languageCode,
                   ),
-                ),
+                )
               ],
             ),
             Padding(
@@ -196,7 +175,8 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                                   Row(
                                     children: [
                                       Text(
-                                          '${widget.recipe.rating.toStringAsFixed(1)}',
+                                          widget.recipe.rating
+                                              .toStringAsFixed(1),
                                           style: const TextStyle(
                                               fontSize: 32,
                                               fontWeight: FontWeight.bold,
@@ -245,49 +225,10 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
 
                   const SizedBox(height: 16),
 
-                  // Nutrition Info
-                  Card(
-                    color:
-                        widget.isDarkMode ? AppColors.darkCard : Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(loc.nutritionalInfo,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: textColor)),
-                          const SizedBox(height: 16),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              _buildNutrient(
-                                  '${widget.recipe.nutrition.calories}',
-                                  loc.calories,
-                                  AppColors.caloriesColor,
-                                  Icons.local_fire_department),
-                              _buildNutrient(
-                                  '${widget.recipe.nutrition.protein}g',
-                                  loc.protein,
-                                  AppColors.proteinColor,
-                                  Icons.fitness_center),
-                              _buildNutrient(
-                                  '${widget.recipe.nutrition.carbs}g',
-                                  loc.carbs,
-                                  AppColors.carbsColor,
-                                  Icons.bakery_dining),
-                              _buildNutrient(
-                                  '${widget.recipe.nutrition.fats}g',
-                                  loc.fats,
-                                  AppColors.fatsColor,
-                                  Icons.water_drop),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                  NutritionInfoCard(
+                    nutrition: widget.recipe.nutrition,
+                    isDarkMode: widget.isDarkMode,
+                    languageCode: widget.languageCode,
                   ),
 
                   const SizedBox(height: 24),
@@ -372,31 +313,6 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildNutrient(
-      String value, String label, Color color, IconData icon) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12)),
-          child: Icon(icon, color: color, size: 28),
-        ),
-        const SizedBox(height: 8),
-        Text(value,
-            style: TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: color)),
-        Text(label,
-            style: TextStyle(
-                fontSize: 12,
-                color: widget.isDarkMode
-                    ? AppColors.darkTextSecondary
-                    : AppColors.lightTextSecondary)),
-      ],
     );
   }
 }

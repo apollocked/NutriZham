@@ -3,6 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nutrizham/utils/meals_data.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
+import 'package:nutrizham/widgets/custom_app_bar.dart';
+import 'package:nutrizham/widgets/recipe_card.dart';
+import 'package:nutrizham/widgets/empty_state_widget.dart';
 
 class PlannerPage extends StatefulWidget {
   final bool isDarkMode;
@@ -49,24 +52,6 @@ class _PlannerPageState extends State<PlannerPage> {
         .fold(0, (sum, r) => sum + r.nutrition.calories);
   }
 
-  String _getCategoryName(MealCategory category) {
-    final loc = AppLocalizations.of(widget.languageCode);
-    switch (category) {
-      case MealCategory.breakfast:
-        return loc.breakfast;
-      case MealCategory.lunch:
-        return loc.lunch;
-      case MealCategory.dinner:
-        return loc.dinner;
-      case MealCategory.snack:
-        return loc.snack;
-      case MealCategory.bulking:
-        return loc.bulking;
-      case MealCategory.cutting:
-        return loc.cutting;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(widget.languageCode);
@@ -80,10 +65,9 @@ class _PlannerPageState extends State<PlannerPage> {
 
     return Scaffold(
       backgroundColor: bgColor,
-      appBar: AppBar(
-        title: Text(loc.mealPlanner),
-        backgroundColor:
-            widget.isDarkMode ? AppColors.darkCard : AppColors.primaryGreen,
+      appBar: CustomAppBar(
+        title: loc.mealPlanner,
+        isDarkMode: widget.isDarkMode,
       ),
       body: Column(
         children: [
@@ -132,91 +116,26 @@ class _PlannerPageState extends State<PlannerPage> {
           ),
           Expanded(
             child: plannedMeals.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.calendar_today,
-                          size: 64,
-                          color: textColor.withOpacity(0.5),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          loc.addToPlan,
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: textColor.withOpacity(0.7),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          '${loc.tapToSave} recommended meals below',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: textColor.withOpacity(0.5),
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+                ? Expanded(
+                    child: EmptyStateWidget(
+                      icon: Icons.calendar_today,
+                      title: loc.addToPlan,
+                      subtitle: '${loc.tapToSave} recommended meals below',
+                      isDarkMode: widget.isDarkMode,
                     ),
                   )
                 : ListView.builder(
                     itemCount: plannedMeals.length,
                     itemBuilder: (context, index) {
                       final recipe = plannedMeals[index];
-                      return Card(
-                        color: widget.isDarkMode
-                            ? AppColors.darkCard
-                            : Colors.white,
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
-                        child: ListTile(
-                          leading: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
-                              recipe.icon,
-                              width: 60,
-                              height: 60,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => Container(
-                                width: 60,
-                                height: 60,
-                                color: Colors.grey[300],
-                                child: const Icon(Icons.restaurant,
-                                    size: 30, color: Colors.grey),
-                              ),
-                            ),
-                          ),
-                          title: Text(
-                            recipe.title[widget.languageCode] ?? '',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, color: textColor),
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 4),
-                              Text(
-                                  '${recipe.nutrition.calories} kcal • ${_getCategoryName(recipe.category)}'),
-                              const SizedBox(height: 4),
-                              Row(
-                                children: [
-                                  const Icon(Icons.star,
-                                      color: AppColors.starActive, size: 16),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                      '${recipe.rating.toStringAsFixed(1)} (${recipe.ratingCount})',
-                                      style: const TextStyle(fontSize: 12)),
-                                ],
-                              ),
-                            ],
-                          ),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.remove_circle,
-                                color: AppColors.error),
-                            onPressed: () => _toggleMealInPlan(recipe.id),
-                          ),
+                      return CompactRecipeCard(
+                        recipe: recipe,
+                        isDarkMode: widget.isDarkMode,
+                        languageCode: widget.languageCode,
+                        trailing: IconButton(
+                          icon: const Icon(Icons.remove_circle,
+                              color: AppColors.error),
+                          onPressed: () => _toggleMealInPlan(recipe.id),
                         ),
                       );
                     },
@@ -244,56 +163,14 @@ class _PlannerPageState extends State<PlannerPage> {
                 final recipe = recipes
                     .where((r) => !_plannedMealIds.contains(r.id))
                     .toList()[index];
-                return Card(
-                  color: widget.isDarkMode ? AppColors.darkCard : Colors.white,
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: ListTile(
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.network(
-                        recipe.icon,
-                        width: 50,
-                        height: 50,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Container(
-                          width: 50,
-                          height: 50,
-                          color: Colors.grey[300],
-                          child: const Icon(Icons.restaurant,
-                              size: 25, color: Colors.grey),
-                        ),
-                      ),
-                    ),
-                    title: Text(
-                      recipe.title[widget.languageCode] ?? '',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: textColor),
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 4),
-                        Text(
-                            '${recipe.nutrition.calories} kcal • ${_getCategoryName(recipe.category)}'),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            const Icon(Icons.star,
-                                color: AppColors.starActive, size: 16),
-                            const SizedBox(width: 4),
-                            Text(
-                                '${recipe.rating.toStringAsFixed(1)} (${recipe.ratingCount})',
-                                style: const TextStyle(fontSize: 12)),
-                          ],
-                        ),
-                      ],
-                    ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.add_circle,
-                          color: AppColors.primaryGreen),
-                      onPressed: () => _toggleMealInPlan(recipe.id),
-                    ),
+                return CompactRecipeCard(
+                  recipe: recipe,
+                  isDarkMode: widget.isDarkMode,
+                  languageCode: widget.languageCode,
+                  trailing: IconButton(
+                    icon: const Icon(Icons.add_circle,
+                        color: AppColors.primaryGreen),
+                    onPressed: () => _toggleMealInPlan(recipe.id),
                   ),
                 );
               },

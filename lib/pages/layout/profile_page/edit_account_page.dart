@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:nutrizham/services/auth_service.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
+import 'package:nutrizham/widgets/custom_app_bar.dart';
+import 'package:nutrizham/widgets/custom_text_field.dart';
+import 'package:nutrizham/widgets/custom_buttons.dart';
+import 'package:nutrizham/widgets/empty_state_widget.dart';
 
 class EditAccountPage extends StatefulWidget {
   final bool isDarkMode;
   final String languageCode;
-
   const EditAccountPage(
       {super.key, required this.isDarkMode, required this.languageCode});
 
@@ -21,7 +24,6 @@ class _EditAccountPageState extends State<EditAccountPage> {
   final _ageController = TextEditingController();
   final _authService = AuthService();
   bool _isLoading = true;
-
   @override
   void initState() {
     super.initState();
@@ -68,23 +70,26 @@ class _EditAccountPageState extends State<EditAccountPage> {
     final bgColor = widget.isDarkMode
         ? AppColors.darkBackground
         : AppColors.lightBackground;
-    final textColor =
-        widget.isDarkMode ? AppColors.darkText : AppColors.lightText;
 
     if (_isLoading) {
       return Scaffold(
         backgroundColor: bgColor,
-        body: const Center(
-            child: CircularProgressIndicator(color: AppColors.primaryGreen)),
+        appBar: CustomAppBar(
+          title: loc.editAccount,
+          isDarkMode: widget.isDarkMode,
+        ),
+        body: LoadingWidget(
+          message: loc.loading,
+          isDarkMode: widget.isDarkMode,
+        ),
       );
     }
 
     return Scaffold(
       backgroundColor: bgColor,
-      appBar: AppBar(
-        title: Text(loc.editAccount),
-        backgroundColor:
-            widget.isDarkMode ? AppColors.darkCard : AppColors.primaryGreen,
+      appBar: CustomAppBar(
+        title: loc.editAccount,
+        isDarkMode: widget.isDarkMode,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -92,54 +97,34 @@ class _EditAccountPageState extends State<EditAccountPage> {
           key: _formKey,
           child: Column(
             children: [
-              TextFormField(
+              CustomTextField(
                 controller: _usernameController,
-                style: TextStyle(color: textColor),
-                decoration: InputDecoration(
-                  labelText: loc.username,
-                  prefixIcon:
-                      const Icon(Icons.person, color: AppColors.primaryGreen),
-                  filled: true,
-                  fillColor:
-                      widget.isDarkMode ? AppColors.darkCard : Colors.white,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                ),
+                labelText: loc.username,
+                prefixIcon: Icons.person,
+                isDarkMode: widget.isDarkMode,
+                textInputAction: TextInputAction.next,
                 validator: (value) =>
                     value?.isEmpty == true ? 'Required' : null,
               ),
               const SizedBox(height: 16),
-              TextFormField(
+              CustomTextField(
                 controller: _emailController,
-                style: TextStyle(color: textColor),
-                decoration: InputDecoration(
-                  labelText: loc.email,
-                  prefixIcon:
-                      const Icon(Icons.email, color: AppColors.primaryGreen),
-                  filled: true,
-                  fillColor:
-                      widget.isDarkMode ? AppColors.darkCard : Colors.white,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                ),
+                labelText: loc.email,
+                prefixIcon: Icons.email,
+                isDarkMode: widget.isDarkMode,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
                 validator: (value) =>
                     value?.contains('@') == false ? 'Invalid email' : null,
               ),
               const SizedBox(height: 16),
-              TextFormField(
+              CustomTextField(
                 controller: _ageController,
-                style: TextStyle(color: textColor),
+                labelText: loc.age,
+                prefixIcon: Icons.calendar_today,
+                isDarkMode: widget.isDarkMode,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: loc.age,
-                  prefixIcon: const Icon(Icons.calendar_today,
-                      color: AppColors.primaryGreen),
-                  filled: true,
-                  fillColor:
-                      widget.isDarkMode ? AppColors.darkCard : Colors.white,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                ),
+                textInputAction: TextInputAction.done,
                 validator: (value) {
                   final age = int.tryParse(value ?? '');
                   return age == null || age < 13 ? 'Invalid age' : null;
@@ -149,16 +134,10 @@ class _EditAccountPageState extends State<EditAccountPage> {
               SizedBox(
                 width: double.infinity,
                 height: 56,
-                child: ElevatedButton(
+                child: PrimaryButton(
+                  text: loc.save,
                   onPressed: _saveChanges,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryGreen,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                  ),
-                  child: Text(loc.save,
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold)),
+                  icon: Icons.save,
                 ),
               ),
             ],
