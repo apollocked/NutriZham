@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/pages/authotication/login_page.dart';
+
 import 'package:nutrizham/pages/profile_page/settings_page.dart';
 import 'package:nutrizham/services/auth_service.dart';
 import 'package:nutrizham/models/user_model.dart';
@@ -78,7 +79,7 @@ class _ProfilePageState extends State<ProfilePage> {
     if (!mounted) return;
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (_) => LoginScreen(
+        builder: (_) => LoginPageRefactored(
           isDarkMode: widget.isDarkMode,
           languageCode: widget.languageCode,
         ),

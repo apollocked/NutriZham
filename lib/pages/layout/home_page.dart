@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:nutrizham/pages/details_screen.dart';
@@ -6,18 +8,18 @@ import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
 import 'package:nutrizham/services/favorites_helper.dart';
 import 'package:nutrizham/widgets/custom_app_bar.dart';
-import 'package:nutrizham/widgets/search_bar_widget.dart';
 import 'package:nutrizham/widgets/category_widgets.dart';
 import 'package:nutrizham/widgets/recipe_card.dart';
 import 'package:nutrizham/widgets/empty_state_widget.dart';
+import 'package:nutrizham/widgets/search_bar_widget.dart';
 
-class HomePageRefactored extends StatefulWidget {
+class HomePage extends StatefulWidget {
   final bool isDarkMode;
   final String languageCode;
   final Function(bool) onThemeChanged;
   final Function(String) onLanguageChanged;
 
-  const HomePageRefactored({
+  const HomePage({
     super.key,
     required this.isDarkMode,
     required this.languageCode,
@@ -26,10 +28,10 @@ class HomePageRefactored extends StatefulWidget {
   });
 
   @override
-  State<HomePageRefactored> createState() => _HomePageRefactoredState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageRefactoredState extends State<HomePageRefactored> {
+class _HomePageState extends State<HomePage> {
   String _searchQuery = '';
   MealCategory? _selectedCategory;
   Set<String> _favoriteIds = {};
@@ -52,7 +54,8 @@ class _HomePageRefactoredState extends State<HomePageRefactored> {
   }
 
   void _setupFavoritesListener() {
-    _favoritesSubscription = FavoritesHelper.favoritesStream.listen((favorites) {
+    _favoritesSubscription =
+        FavoritesHelper.favoritesStream.listen((favorites) {
       if (mounted) {
         setState(() => _favoriteIds = favorites);
       }
@@ -72,7 +75,8 @@ class _HomePageRefactoredState extends State<HomePageRefactored> {
 
   List<Recipe> get _filteredRecipes {
     return recipes.where((recipe) {
-      final title = recipe.title[widget.languageCode] ?? recipe.title['en'] ?? '';
+      final title =
+          recipe.title[widget.languageCode] ?? recipe.title['en'] ?? '';
       final matchesSearch = _searchQuery.isEmpty ||
           title.toLowerCase().contains(_searchQuery.toLowerCase());
       final matchesCategory =
@@ -145,7 +149,6 @@ class _HomePageRefactoredState extends State<HomePageRefactored> {
       ),
       body: Column(
         children: [
-          // Search Bar
           CustomSearchBar(
             hintText: loc.searchPlaceholder,
             searchQuery: _searchQuery,
@@ -154,7 +157,6 @@ class _HomePageRefactoredState extends State<HomePageRefactored> {
             isDarkMode: widget.isDarkMode,
             controller: _searchController,
           ),
-
           // Category Filter Chips
           CategoryFilterChips(
             selectedCategory: _selectedCategory,

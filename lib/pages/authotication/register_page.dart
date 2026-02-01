@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:nutrizham/pages/authotication/login_page.dart';
 import 'package:nutrizham/services/auth_service.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
-import 'package:nutrizham/pages/authotication/login_page.dart';
+import 'package:nutrizham/widgets/custom_text_field.dart';
+import 'package:nutrizham/widgets/custom_buttons.dart';
 
 class RegisterScreen extends StatefulWidget {
   final bool isDarkMode;
@@ -78,7 +80,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => LoginScreen(
+          builder: (_) => LoginPageRefactored(
             isDarkMode: widget.isDarkMode,
             languageCode: widget.languageCode,
           ),
@@ -181,35 +183,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Column(
                       children: [
                         // Username Field
-                        TextFormField(
+                        CustomTextField(
                           controller: _usernameController,
-                          style: TextStyle(color: textColor),
-                          decoration: InputDecoration(
-                            labelText: loc.username,
-                            labelStyle: TextStyle(
-                                color: widget.isDarkMode
-                                    ? AppColors.darkTextSecondary
-                                    : AppColors.lightTextSecondary),
-                            prefixIcon: const Icon(Icons.person_outline,
-                                color: AppColors.primaryGreen),
-                            filled: true,
-                            fillColor: widget.isDarkMode
-                                ? AppColors.darkSurface
-                                : AppColors.lightBackground,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(
-                                  color: AppColors.primaryGreen, width: 2),
-                            ),
-                          ),
+                          labelText: loc.username,
+                          prefixIcon: Icons.person_outline,
+                          isDarkMode: widget.isDarkMode,
+                          textInputAction: TextInputAction.next,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter a username';
@@ -223,36 +202,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         const SizedBox(height: 16),
 
                         // Email Field
-                        TextFormField(
+                        CustomTextField(
                           controller: _emailController,
-                          style: TextStyle(color: textColor),
-                          decoration: InputDecoration(
-                            labelText: loc.email,
-                            labelStyle: TextStyle(
-                                color: widget.isDarkMode
-                                    ? AppColors.darkTextSecondary
-                                    : AppColors.lightTextSecondary),
-                            prefixIcon: const Icon(Icons.email_outlined,
-                                color: AppColors.primaryGreen),
-                            filled: true,
-                            fillColor: widget.isDarkMode
-                                ? AppColors.darkSurface
-                                : AppColors.lightBackground,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(
-                                  color: AppColors.primaryGreen, width: 2),
-                            ),
-                          ),
+                          labelText: loc.email,
+                          prefixIcon: Icons.email_outlined,
+                          isDarkMode: widget.isDarkMode,
                           keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your email';
@@ -266,36 +222,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         const SizedBox(height: 16),
 
                         // Age Field
-                        TextFormField(
+                        CustomTextField(
                           controller: _ageController,
-                          style: TextStyle(color: textColor),
-                          decoration: InputDecoration(
-                            labelText: loc.age,
-                            labelStyle: TextStyle(
-                                color: widget.isDarkMode
-                                    ? AppColors.darkTextSecondary
-                                    : AppColors.lightTextSecondary),
-                            prefixIcon: const Icon(Icons.calendar_today,
-                                color: AppColors.primaryGreen),
-                            filled: true,
-                            fillColor: widget.isDarkMode
-                                ? AppColors.darkSurface
-                                : AppColors.lightBackground,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(
-                                  color: AppColors.primaryGreen, width: 2),
-                            ),
-                          ),
+                          labelText: loc.age,
+                          prefixIcon: Icons.calendar_today,
+                          isDarkMode: widget.isDarkMode,
                           keyboardType: TextInputType.number,
+                          textInputAction: TextInputAction.next,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your age';
@@ -309,50 +242,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         const SizedBox(height: 16),
 
-                        // Password Field
-                        TextFormField(
+                        CustomTextField(
                           controller: _passwordController,
-                          style: TextStyle(color: textColor),
+                          labelText: loc.password,
+                          prefixIcon: Icons.lock_outline,
+                          isDarkMode: widget.isDarkMode,
                           obscureText: _obscurePassword,
-                          decoration: InputDecoration(
-                            labelText: loc.password,
-                            labelStyle: TextStyle(
-                                color: widget.isDarkMode
-                                    ? AppColors.darkTextSecondary
-                                    : AppColors.lightTextSecondary),
-                            prefixIcon: const Icon(Icons.lock_outline,
-                                color: AppColors.primaryGreen),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _obscurePassword
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                                color: widget.isDarkMode
-                                    ? AppColors.darkTextSecondary
-                                    : AppColors.lightTextSecondary,
-                              ),
-                              onPressed: () {
-                                setState(
-                                    () => _obscurePassword = !_obscurePassword);
-                              },
+                          textInputAction: TextInputAction.next,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: widget.isDarkMode
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary,
                             ),
-                            filled: true,
-                            fillColor: widget.isDarkMode
-                                ? AppColors.darkSurface
-                                : AppColors.lightBackground,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(
-                                  color: AppColors.primaryGreen, width: 2),
-                            ),
+                            onPressed: () {
+                              setState(
+                                  () => _obscurePassword = !_obscurePassword);
+                            },
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -366,50 +275,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         const SizedBox(height: 16),
 
-                        // Confirm Password Field
-                        TextFormField(
+                        CustomTextField(
                           controller: _confirmPasswordController,
-                          style: TextStyle(color: textColor),
+                          labelText: loc.confirmPassword,
+                          prefixIcon: Icons.lock_outlined,
+                          isDarkMode: widget.isDarkMode,
                           obscureText: _obscureConfirmPassword,
-                          decoration: InputDecoration(
-                            labelText: loc.confirmPassword,
-                            labelStyle: TextStyle(
-                                color: widget.isDarkMode
-                                    ? AppColors.darkTextSecondary
-                                    : AppColors.lightTextSecondary),
-                            prefixIcon: const Icon(Icons.lock_outlined,
-                                color: AppColors.primaryGreen),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _obscureConfirmPassword
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                                color: widget.isDarkMode
-                                    ? AppColors.darkTextSecondary
-                                    : AppColors.lightTextSecondary,
-                              ),
-                              onPressed: () {
-                                setState(() => _obscureConfirmPassword =
-                                    !_obscureConfirmPassword);
-                              },
+                          textInputAction: TextInputAction.done,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscureConfirmPassword
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: widget.isDarkMode
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary,
                             ),
-                            filled: true,
-                            fillColor: widget.isDarkMode
-                                ? AppColors.darkSurface
-                                : AppColors.lightBackground,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(
-                                  color: AppColors.primaryGreen, width: 2),
-                            ),
+                            onPressed: () {
+                              setState(() => _obscureConfirmPassword =
+                                  !_obscureConfirmPassword);
+                            },
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -420,77 +305,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         const SizedBox(height: 24),
 
-                        // Register Button
-                        SizedBox(
-                          width: double.infinity,
-                          height: 56,
-                          child: ElevatedButton(
-                            onPressed: _isLoading ? null : _register,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primaryGreen,
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              elevation: 0,
-                            ),
-                            child: _isLoading
-                                ? const SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2,
-                                    ),
-                                  )
-                                : Text(
-                                    loc.register,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                          ),
-                        ),
+                        PrimaryButton(
+                          text: loc.register,
+                          onPressed: _register,
+                          isLoading: _isLoading,
+                        )
                       ],
                     ),
                   ),
                   const SizedBox(height: 24),
 
-                  // Login Link
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        loc.alreadyHaveAccount,
-                        style: TextStyle(
-                          color: widget.isDarkMode
-                              ? AppColors.darkTextSecondary
-                              : AppColors.lightTextSecondary,
+                  IconTextButton(
+                    text: loc.login,
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => LoginPageRefactored(
+                            isDarkMode: widget.isDarkMode,
+                            languageCode: widget.languageCode,
+                          ),
                         ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => LoginScreen(
-                                isDarkMode: widget.isDarkMode,
-                                languageCode: widget.languageCode,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          loc.login,
-                          style: const TextStyle(
-                              color: AppColors.primaryGreen,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22),
-                        ),
-                      ),
-                    ],
-                  ),
+                      );
+                    },
+                    fontSize: 22,
+                  )
                 ],
               ),
             ),

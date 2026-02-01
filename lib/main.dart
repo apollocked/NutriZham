@@ -1,6 +1,7 @@
+// ignore_for_file: unused_field
+
 import 'package:flutter/material.dart';
 import 'package:nutrizham/pages/authotication/login_page.dart';
-import 'package:nutrizham/pages/layout/main_navigation.dart';
 import 'package:nutrizham/services/preferences_helper.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -61,41 +62,35 @@ class _NutriZhamAppState extends State<NutriZhamApp> {
     }
 
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'NutriZham',
-      theme: ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.light,
-        primaryColor: AppColors.primaryGreen,
-        scaffoldBackgroundColor: AppColors.lightBackground,
-        cardColor: AppColors.lightCard,
-        colorScheme: const ColorScheme.light(
-          primary: AppColors.primaryGreen,
-          secondary: AppColors.primaryGreenLight,
+        debugShowCheckedModeBanner: false,
+        title: 'NutriZham',
+        theme: ThemeData(
+          useMaterial3: true,
+          brightness: Brightness.light,
+          primaryColor: AppColors.primaryGreen,
+          scaffoldBackgroundColor: AppColors.lightBackground,
+          cardColor: AppColors.lightCard,
+          colorScheme: const ColorScheme.light(
+            primary: AppColors.primaryGreen,
+            secondary: AppColors.primaryGreenLight,
+          ),
         ),
-      ),
-      darkTheme: ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.dark,
-        primaryColor: AppColors.primaryGreen,
-        scaffoldBackgroundColor: AppColors.darkBackground,
-        cardColor: AppColors.darkCard,
-        colorScheme: const ColorScheme.dark(
-          primary: AppColors.primaryGreen,
-          secondary: AppColors.primaryGreenLight,
+        darkTheme: ThemeData(
+          useMaterial3: true,
+          brightness: Brightness.dark,
+          primaryColor: AppColors.primaryGreen,
+          scaffoldBackgroundColor: AppColors.darkBackground,
+          cardColor: AppColors.darkCard,
+          colorScheme: const ColorScheme.dark(
+            primary: AppColors.primaryGreen,
+            secondary: AppColors.primaryGreenLight,
+          ),
         ),
-      ),
-      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      home: _isLoggedIn
-          ? MainNavigation(
-              isDarkMode: _isDarkMode,
-              languageCode: _languageCode,
-            )
-          : LoginScreen(
-              isDarkMode: _isDarkMode,
-              languageCode: _languageCode,
-            ),
-    );
+        themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
+        home: LoginPageRefactored(
+          isDarkMode: _isDarkMode,
+          languageCode: _languageCode,
+        ));
   }
 
   @override
