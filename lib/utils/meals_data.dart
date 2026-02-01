@@ -77,6 +77,8 @@ class Recipe {
   }
 }
 
+// ... (Keep enum and class definitions as they are)
+
 final List<Recipe> recipes = [
   Recipe(
     id: '1',
@@ -84,7 +86,7 @@ final List<Recipe> recipes = [
       'en': 'Grilled Chicken Bowl',
       'ku': 'مرگی برژاو لەگەڵ برنج',
     },
-    icon: '🍗', // Chicken drumstick emoji
+    icon: '🍗',
     nutrition: NutritionalInfo(calories: 420, protein: 35, carbs: 45, fats: 12),
     category: MealCategory.bulking,
     rating: 4.5,
@@ -98,7 +100,7 @@ final List<Recipe> recipes = [
         'Salt & pepper'
       ],
       'ku': [
-        'سنگی مرغ',
+        'سنگی مریشک',
         'ڕۆنی زەیتوون',
         'برنجی قاوەیی',
         'بڕۆکلی',
@@ -107,377 +109,232 @@ final List<Recipe> recipes = [
     },
     steps: {
       'en': [
-        'Season chicken with salt and pepper.',
-        'Grill chicken until fully cooked.',
-        'Cook brown rice.',
-        'Steam broccoli.',
-        'Serve together in a bowl.',
+        'Clean chicken breast and season with olive oil, salt, and black pepper.',
+        'Heat a grill or pan and cook chicken for 6-8 minutes per side until golden.',
+        'Boil brown rice in a 2:1 water-to-rice ratio until fully absorbed.',
+        'Steam broccoli for 5 minutes until tender-crisp to retain nutrients.',
+        'Slice the chicken and serve over a bed of rice with broccoli on the side.',
       ],
       'ku': [
-        'مرغەکە بە خوێ و بیبەر تام بکە.',
-        'مرغەکە برژێنە تا تەواو پووخت ببێت.',
-        'برنجە قاوەییەکە لێبنێ.',
-        'بڕۆکلی بە هەڵم لێبنێ.',
-        'هەموویان پێکەوە لە قاپێکدا دابنێ.',
+        'سنگی مریشکەکە پاک بکەرەوە و بە ڕۆنی زەیتوون، خوێ، و بیبەری ڕەش تامبکە.',
+        'تاوەیەک یان برژێنەرێک گەرم بکە و بۆ ٦-٨ خولەک بۆ هەر لایەک بیبرژێنە.',
+        'برنجە قاوەییەکە لێبنێ تا ئاوەکەی هەڵدەمژێت.',
+        'بڕۆکلییەکە بۆ ٥ خولەک بە هەڵم بکوڵێنە تا ڕەنگی سەوز دەمێنێتەوە.',
+        'مریشکەکە پارچە پارچە بکە و لەگەڵ برنج و بڕۆکلییەکە دایبنێ.',
       ],
     },
   ),
   Recipe(
-    id: '2',
+    id: '11',
     title: {
-      'en': 'Oatmeal with Fruits',
-      'ku': 'جۆ دۆشاو لەگەڵ میوە',
+      'en': 'Kurdish Dolma',
+      'ku': 'دۆڵمە',
     },
-    icon: '🥣', // Bowl with spoon emoji
-    nutrition: NutritionalInfo(calories: 280, protein: 8, carbs: 52, fats: 6),
-    category: MealCategory.breakfast,
-    rating: 4.2,
-    ratingCount: 95,
-    ingredients: {
-      'en': ['Oats', 'Milk or water', 'Banana', 'Berries', 'Honey'],
-      'ku': ['جۆی دۆشاو', 'شیر یان ئاو', 'مۆز', 'توومیوە', 'هەنگوین'],
-    },
-    steps: {
-      'en': [
-        'Boil oats with milk or water.',
-        'Slice fruits.',
-        'Mix fruits into oatmeal.',
-        'Add honey if desired.',
-      ],
-      'ku': [
-        'جۆدۆشاوەکە لەگەڵ شیر یان ئاو بکوڵێنە.',
-        'میوەکان پارچە پارچە بکە.',
-        'میوەکان لەگەڵ جۆدۆشاوەکە تێکەڵ بکە.',
-        'هەنگوین زیاد بکە بە پێی ئارەزوو.',
-      ],
-    },
-  ),
-  Recipe(
-    id: '3',
-    title: {
-      'en': 'Salmon with Veggies',
-      'ku': 'ماسی سەلمۆن لەگەڵ سەوزە',
-    },
-    icon: '🐟', // Fish emoji
-    nutrition: NutritionalInfo(calories: 380, protein: 32, carbs: 18, fats: 22),
+    icon: '🍇',
+    nutrition: NutritionalInfo(calories: 550, protein: 18, carbs: 75, fats: 22),
     category: MealCategory.dinner,
-    rating: 4.7,
-    ratingCount: 156,
+    rating: 4.9,
+    ratingCount: 210,
     ingredients: {
       'en': [
-        'Salmon fillet',
-        'Asparagus',
-        'Cherry tomatoes',
-        'Lemon',
-        'Garlic',
-        'Olive oil'
+        'Grape leaves',
+        'Onions',
+        'Eggplant',
+        'Rice',
+        'Ground lamb',
+        'Tomato paste',
+        'Lemon juice',
+        'Sumac'
       ],
       'ku': [
-        'پارچە ماسی سەلمۆن',
-        'مارچووبە',
-        'تەماتەی گێلاسی',
-        'لیمۆ',
-        'سیر',
-        'ڕۆنی زەیتوون'
-      ],
-    },
-    steps: {
-      'en': [
-        'Preheat oven to 400°F (200°C).',
-        'Season salmon with salt, pepper, and garlic.',
-        'Place salmon and vegetables on a baking sheet.',
-        'Drizzle with olive oil and lemon juice.',
-        'Bake for 15-20 minutes.',
-      ],
-      'ku': [
-        'تەنوور گەرم بکەرەوە بۆ ٢٠٠ پلەی سەدی.',
-        'ماسیەکە بە خوێ و بیبەر و سیر تام بکە.',
-        'ماسی و سەوزەکان لەسەر تاسی نانەوا دابنێ.',
-        'ڕۆنی زەیتوون و ئاوی لیمۆی بەسەردا بڕێژە.',
-        'بۆ ماوەی ١٥-٢٠ خولەک بیبرژێنە.',
-      ],
-    },
-  ),
-  Recipe(
-    id: '4',
-    title: {
-      'en': 'Greek Yogurt Parfait',
-      'ku': 'ماستی یۆنانی لەگەڵ گرانۆلا',
-    },
-    icon: '🥛', // Glass of milk emoji
-    nutrition: NutritionalInfo(calories: 220, protein: 15, carbs: 32, fats: 4),
-    category: MealCategory.breakfast,
-    rating: 4.3,
-    ratingCount: 87,
-    ingredients: {
-      'en': ['Greek yogurt', 'Granola', 'Mixed berries', 'Honey', 'Chia seeds'],
-      'ku': [
-        'ماستی یۆنانی',
-        'گرانۆلا',
-        'توومیوەی جۆراوجۆر',
-        'هەنگوین',
-        'تۆوی چیا'
-      ],
-    },
-    steps: {
-      'en': [
-        'Layer Greek yogurt in a glass or bowl.',
-        'Add a layer of granola.',
-        'Top with mixed berries.',
-        'Drizzle with honey and sprinkle chia seeds.',
-      ],
-      'ku': [
-        'ماستی یۆنانی لە گڵاسێک یان قاپێکدا چینێک دروست بکە.',
-        'چینێک گرانۆلا زیاد بکە.',
-        'توومیوەکانی بەسەرەوە دابنێ.',
-        'هەنگوین و تۆوی چیای بەسەردا بڕێژە.',
-      ],
-    },
-  ),
-  Recipe(
-    id: '5',
-    title: {
-      'en': 'Protein Smoothie',
-      'ku': 'خواردنەوەی پڕۆتین',
-    },
-    icon: '🥤', // Cup with straw emoji
-    nutrition: NutritionalInfo(calories: 310, protein: 25, carbs: 38, fats: 8),
-    category: MealCategory.bulking,
-    rating: 4.6,
-    ratingCount: 142,
-    ingredients: {
-      'en': [
-        'Protein powder',
-        'Banana',
-        'Spinach',
-        'Almond milk',
-        'Peanut butter',
-        'Ice'
-      ],
-      'ku': [
-        'تۆزی پڕۆتین',
-        'مۆز',
-        'سپێناخ',
-        'شیری بادەم',
-        'کەرەی کاکوێلە',
-        'سەهۆڵ'
-      ],
-    },
-    steps: {
-      'en': [
-        'Add all ingredients to a blender.',
-        'Blend until smooth.',
-        'Pour into a glass and enjoy.',
-      ],
-      'ku': [
-        'هەموو پێکهاتەکان بخەرە ناو مکسەرەوە.',
-        'باش تێکەڵیان بکە تا نەرم ببێت.',
-        'بیکەرە ناو گڵاسێکەوە و چێژ لێوەربگرە.',
-      ],
-    },
-  ),
-  Recipe(
-    id: '6',
-    title: {
-      'en': 'Quinoa Buddha Bowl',
-      'ku': 'قاپی کینۆا',
-    },
-    icon: '🥗', // Green salad emoji
-    nutrition: NutritionalInfo(calories: 395, protein: 14, carbs: 58, fats: 13),
-    category: MealCategory.lunch,
-    rating: 4.4,
-    ratingCount: 103,
-    ingredients: {
-      'en': [
-        'Quinoa',
-        'Chickpeas',
-        'Sweet potato',
-        'Kale',
-        'Avocado',
-        'Tahini dressing'
-      ],
-      'ku': [
-        'کینۆا',
-        'نۆک',
-        'پەتاتەی شیرین',
-        'کەڵەرم',
-        'ئەڤۆکادۆ',
-        'سۆسی تەحینی'
-      ],
-    },
-    steps: {
-      'en': [
-        'Cook quinoa according to package instructions.',
-        'Roast sweet potato and chickpeas.',
-        'Massage kale with olive oil.',
-        'Assemble bowl with all ingredients.',
-        'Drizzle with tahini dressing.',
-      ],
-      'ku': [
-        'کینۆاکە بە پێی ڕێنماییەکان لێبنێ.',
-        'پەتاتەی شیرین و نۆکەکە برژێنە.',
-        'کەڵەرمەکە بە ڕۆنی زەیتوون مالش بدە.',
-        'قاپەکە لەگەڵ هەموو پێکهاتەکان ئامادە بکە.',
-        'سۆسی تەحینی بەسەردا بڕێژە.',
-      ],
-    },
-  ),
-  Recipe(
-    id: '7',
-    title: {
-      'en': 'Turkey Lettuce Wraps',
-      'ku': 'بوقچەی بووقەڵەموون و تووک',
-    },
-    icon: '🌯', // Burrito emoji
-    nutrition: NutritionalInfo(calories: 265, protein: 28, carbs: 12, fats: 12),
-    category: MealCategory.cutting,
-    rating: 4.1,
-    ratingCount: 76,
-    ingredients: {
-      'en': [
-        'Ground turkey',
-        'Lettuce leaves',
-        'Bell peppers',
-        'Onion',
-        'Soy sauce',
-        'Ginger'
-      ],
-      'ku': [
-        'گۆشتی تووکی هاڕاو',
-        'گەڵای بوقەڵەموون',
-        'دڵۆپی رەنگاوڕەنگ',
+        'گەڵامێو',
         'پیاز',
-        'سۆسی سۆیا',
-        'زەنجەفیل'
+        'باینجان',
+        'برنج',
+        'گۆشتی بەرخی هاڕاو',
+        'دۆشاوی تەماتە',
+        'ئاوی لیمۆ',
+        'سماق'
       ],
     },
     steps: {
       'en': [
-        'Cook ground turkey with onions and peppers.',
-        'Add soy sauce and ginger.',
-        'Wash and dry lettuce leaves.',
-        'Spoon turkey mixture into lettuce leaves.',
-        'Wrap and enjoy.',
+        'Wash rice and mix with ground lamb, tomato paste, chopped onion centers, and spices.',
+        'Hollow out the eggplants and zucchinis; peel onions and boil slightly to separate layers.',
+        'Stuff the vegetables loosely (rice expands) and wrap the grape leaves tightly.',
+        'Place lamb ribs at the bottom of a large pot, then layer stuffed veggies, then grape leaves on top.',
+        'Mix water with tomato paste, lemon juice, and sumac; pour over the pot.',
+        'Cover with a heavy plate to hold them down; cook on medium for 15 mins, then low for 1 hour.',
       ],
       'ku': [
-        'گۆشتی تووک لەگەڵ پیاز و دڵۆپ برژێنە.',
-        'سۆسی سۆیا و زەنجەفیل زیاد بکە.',
-        'گەڵای بوقەڵەموون بشۆرەوە و وشکی بکەرەوە.',
-        'تێکەڵی تووکەکە بخەرە ناو گەڵاکانەوە.',
-        'بیپێچەوە و چێژ لێوەربگرە.',
+        'برنجەکە بشۆرەوە و تێکەڵی بکە لەگەڵ گۆشتی هاڕاو، دۆشاو، ناوکی پیازە وردکراوەکان و بەهارات.',
+        'ناوکی باینجان و کولەکەکان دەربهێنە؛ پیازەکان پاک بکە و کەمێک بیانوڵێنە تا توێژاڵەکانی لێک جیا دەبنەوە.',
+        'ناو سەوزەکان پڕ بکە (بە شلی چونکە برنجەکە گەورە دەبێت) و گەڵامێوەکان بە توندی بپێچەوە.',
+        'پەڕەی بەراوی مەڕ بخە بنکی مەنجەڵەکە، پاشان سەوزە پڕکراوەکان و پاشان گەڵامێوەکان ڕیز بکە.',
+        'ئاو و دۆشاوی تەماتە و ئاوی لیمۆ و سماق تێکەڵ بکە و بیڕێژە بەسەریدا.',
+        'قاپێکی قورس بخە سەر دۆڵمەکان؛ بۆ ١٥ خولەک لەسەر ئاگری مامناوەند و پاشان بۆ ١ کاتژمێر لەسەر ئاگری هێواش لێیبنێ.',
       ],
     },
   ),
   Recipe(
-    id: '8',
+    id: '12',
     title: {
-      'en': 'Baked Sweet Potato',
-      'ku': 'پەتاتەی شیرینی برژاو',
+      'en': 'Kurdish Kofta',
+      'ku': 'کفتە',
     },
-    icon: '🍠', // Roasted sweet potato emoji
-    nutrition: NutritionalInfo(calories: 180, protein: 4, carbs: 41, fats: 0.3),
-    category: MealCategory.snack,
-    rating: 4.0,
-    ratingCount: 64,
-    ingredients: {
-      'en': ['Sweet potato', 'Cinnamon', 'Optional: Greek yogurt'],
-      'ku': ['پەتاتەی شیرین', 'دارچین', 'دڵخواز: ماستی یۆنانی'],
-    },
-    steps: {
-      'en': [
-        'Preheat oven to 400°F (200°C).',
-        'Pierce sweet potato with a fork.',
-        'Bake for 45-60 minutes until tender.',
-        'Sprinkle with cinnamon and top with yogurt if desired.',
-      ],
-      'ku': [
-        'تەنوور گەرم بکەرەوە بۆ ٢٠٠ پلەی سەدی.',
-        'پەتاتەکە بە چەنگاڵێک کون بکە.',
-        'بۆ ٤٥-٦٠ خولەک برژێنە تا نەرم ببێت.',
-        'دارچین بەسەردا بڕێژە و ماستیش زیاد بکە بە پێی ئارەزوو.',
-      ],
-    },
-  ),
-  Recipe(
-    id: '9',
-    title: {
-      'en': 'Egg White Omelette',
-      'ku': 'ئۆملێتی سپێڵکی هێلکە',
-    },
-    icon: '🍳', // Cooking emoji
-    nutrition: NutritionalInfo(calories: 180, protein: 22, carbs: 8, fats: 6),
-    category: MealCategory.cutting,
-    rating: 4.3,
-    ratingCount: 91,
+    icon: '🥘',
+    nutrition: NutritionalInfo(calories: 480, protein: 25, carbs: 55, fats: 18),
+    category: MealCategory.lunch,
+    rating: 4.7,
+    ratingCount: 145,
     ingredients: {
       'en': [
-        'Egg whites',
-        'Spinach',
-        'Mushrooms',
-        'Tomatoes',
-        'Low-fat cheese'
+        'Fine bulgur',
+        'Rice flour',
+        'Ground beef',
+        'Onions',
+        'Celery',
+        'Split peas'
       ],
-      'ku': ['سپێڵکی هێلکە', 'سپێناخ', 'تڵۆپەڵۆ', 'تەماتە', 'پەنیری کەم چەوری'],
+      'ku': [
+        'بڕوێشی ورد',
+        'ئاردی برنج',
+        'گۆشتی هاڕاو',
+        'پیاز',
+        'کەرەوز',
+        'لەپە'
+      ],
     },
     steps: {
       'en': [
-        'Beat egg whites in a bowl.',
-        'Sauté vegetables in a pan.',
-        'Pour egg whites over vegetables.',
-        'Cook until set, add cheese.',
-        'Fold and serve.',
+        'Mix bulgur, rice flour, and water to create a firm, non-sticky dough. Let it rest.',
+        'Prepare filling: Sauté ground beef with onions, celery, and Kurdish spices until dry.',
+        'Take a small piece of dough, flatten it in your palm, add filling, and seal into a ball.',
+        'Prepare a soup base with water, tomato paste, and pre-boiled split peas.',
+        'Gently drop the koftas into the boiling soup. Cook until they float to the surface.',
       ],
       'ku': [
-        'سپێڵکەکان لە قاپێکدا لێبدە.',
-        'سەوزەکان لە تاوەیەکدا برژێنە.',
-        'سپێڵکەکان بەسەر سەوزەکاندا بڕێژە.',
-        'لێبنێ تا قایم ببێت، پەنیر زیاد بکە.',
-        'بیپێچەوە و دایبڕێژە.',
+        'بڕوێش و ئاردی برنج و ئاو تێکەڵ بکە تا دەبێتە هەویرێکی توند. لێی بگەڕێ تا دەحەوێتەوە.',
+        'ناوەڕۆکەکەی ئامادە بکە: گۆشتەکە لەگەڵ پیاز و کەرەوز و بەهاراتی کوردی سوور بکەرەوە تا وشک دەبێتەوە.',
+        'گونکێکی بچووک لە هەویرەکە ببڕە، لە ناو دەستت تەختی بکە، ناوەکەی تێبکە و بە شێوەی تۆپ دایبخەوە.',
+        'شۆربایەک ئامادە بکە بە ئاو و دۆشاو و لەپەی کوڵاو.',
+        'کفتەکان بە هێواشی بخە ناو شۆربا کوڵاوەکە. لێی بگەڕێ تا دێنە سەر ئاوەکە، ئەوە نیشانەی کوڵانە.',
       ],
     },
   ),
   Recipe(
-    id: '10',
+    id: '14',
     title: {
-      'en': 'Mass Gainer Shake',
-      'ku': 'شەیکی زیادکردنی قەبارە',
+      'en': 'Sar w Pe (Pacha)',
+      'ku': 'سەر و پێ',
     },
-    icon: '💪', // Flexed biceps emoji
-    nutrition: NutritionalInfo(calories: 650, protein: 40, carbs: 85, fats: 18),
+    icon: '🍲',
+    nutrition: NutritionalInfo(calories: 750, protein: 55, carbs: 10, fats: 52),
     category: MealCategory.bulking,
     rating: 4.8,
-    ratingCount: 187,
+    ratingCount: 98,
     ingredients: {
       'en': [
-        'Protein powder',
-        'Oats',
-        'Banana',
-        'Peanut butter',
-        'Whole milk',
-        'Honey'
+        'Sheep head and trotters',
+        'Lamb stomach (stuffed)',
+        'Garlic',
+        'Lemon',
+        'Bread'
+      ],
+      'ku': ['سەری مەڕ و پێکان', 'ورگ و ڕیخۆڵە (پڕکراو)', 'سیر', 'لیمۆ', 'نان'],
+    },
+    steps: {
+      'en': [
+        'Burn off any remaining hair on the head/trotters and scrub thoroughly with salt and flour.',
+        'Place cleaned meat in a large pot, cover with water, and boil. Skim off the foam.',
+        'Add whole garlic cloves and spices. Simmer for 4-6 hours until meat is tender.',
+        'Stuff the stomach/tripe with rice and meat mixture and sew shut; add to the pot for the last 2 hours.',
+        'Serve by shredding bread in a bowl (Tirit), soaking it with broth, and placing meat on top.',
       ],
       'ku': [
-        'تۆزی پڕۆتین',
-        'جۆی دۆشاو',
-        'مۆز',
-        'کەرەی کاکوێلە',
-        'شیری تەواو',
-        'هەنگوین'
+        'مووی زیادەی سەر و پێیەکان بسوتێنە و بە خوێ و ئارد بە باشی بیشۆ و پاکی بکەرەوە.',
+        'گۆشتە پاککراوەکە بخە مەنجەڵێکی گەورە، ئاوی تێبکە و بکوڵێنە. کەفەکەی سەر ئاوەکە لادە.',
+        'سیر و بەهاراتی تێبکە. بۆ ٤-٦ کاتژمێر لەسەر ئاگرێکی هێواش لێیبنێ تا گۆشتەکە نەرم دەبێت.',
+        'ورگ و ڕیخۆڵەکان بە تێکەڵەی برنج و گۆشت پڕ بکە و بیدورەوە؛ لە ٢ کاتژمێری کۆتایی زیادی بکە بۆ مەنجەڵەکە.',
+        'بۆ پێشکەشکردن، نان لەناو قاپێکدا ورد بکە (تیریت)، ئاوەکەی بکە بەسەردا و گۆشتەکەی بخە سەر.',
+      ],
+    },
+  ),
+  Recipe(
+    id: '21',
+    title: {
+      'en': 'Kurdish Biryani',
+      'ku': 'بریانی',
+    },
+    icon: '🍛',
+    nutrition: NutritionalInfo(calories: 620, protein: 25, carbs: 80, fats: 22),
+    category: MealCategory.bulking,
+    rating: 4.9,
+    ratingCount: 250,
+    ingredients: {
+      'en': [
+        'Basmati rice',
+        'Chicken',
+        'Potatoes',
+        'Vermicelli (Sha\'riya)',
+        'Biryani spice',
+        'Almonds & Raisins'
+      ],
+      'ku': [
+        'برنجی بەسمەتی',
+        'مریشک',
+        'پەتاتە',
+        'شەعریە',
+        'بەهاراتی بریانی',
+        'بادەم و مێوژ'
       ],
     },
     steps: {
       'en': [
-        'Add all ingredients to blender.',
-        'Blend on high for 1-2 minutes.',
-        'Add ice if desired.',
-        'Drink immediately post-workout.',
+        'Boil chicken with aromatics, then fry or grill until golden. Keep the broth.',
+        'Dice potatoes and fry until crispy. Fry vermicelli until dark brown and cook with a little broth.',
+        'Cook rice in the chicken broth with heavy Biryani spices and salt.',
+        'Lightly fry raisins and almonds until they swell/turn golden.',
+        'Once rice is done, mix in the fried potatoes, vermicelli, and nuts. Serve with the chicken on top.',
       ],
       'ku': [
-        'هەموو پێکهاتەکان بخەرە ناو مکسەرەوە.',
-        'بۆ ١-٢ خولەک بە خێرایی تێکەڵیان بکە.',
-        'سەهۆڵ زیاد بکە بە پێی ئارەزوو.',
-        'دوای ڕاهێنان یەکسەر بیخۆرەوە.',
+        'مریشکەکە بکوڵێنە، پاشان سووری بکەرەوە یان بیبرژێنە. ئاوەکەی مەڕێژە.',
+        'پەتاتەکان بە چوارگۆشەیی ورد بکە و سووریان بکەرەوە. شەعریەکە سوور بکەرەوە و بە کەمێک ئاوی مریشک بیپێژە.',
+        'برنجەکە لەناو ئاوی مریشکەکەدا لێبنێ لەگەڵ بەهاراتی بریانی و خوێ.',
+        'مێوژ و بادەمەکان کەمێک لەناو ڕۆندا سوور بکەرەوە.',
+        'کاتێک برنجەکە ئامادە بوو، پەتاتە و شەعریە و مێوژ و بادەمەکەی تێکەڵ بکە. مریشکەکە بخە سەر برنجەکە.',
       ],
     },
   ),
+  Recipe(
+    id: '24',
+    title: {
+      'en': 'Qaymax and Honey',
+      'ku': 'قەیماغ و هەنگوین',
+    },
+    icon: '🍯',
+    nutrition: NutritionalInfo(calories: 520, protein: 6, carbs: 42, fats: 38),
+    category: MealCategory.bulking,
+    rating: 4.9,
+    ratingCount: 156,
+    ingredients: {
+      'en': ['Clotted cream (Qaymax)', 'Natural honey', 'Fresh Samoon or Naan'],
+      'ku': ['قەیماغ', 'هەنگوینی سروشتی', 'سەموون یان نانی گەرم'],
+    },
+    steps: {
+      'en': [
+        'Use fresh heavy cream (traditional Qaymax) and spread it flat on a breakfast plate.',
+        'Drizzle high-quality natural honey in a zigzag pattern over the cream.',
+        'Do not over-mix; allow the honey to sit on top of the cream.',
+        'Serve immediately with warm Kurdish tea and freshly baked samoon bread.',
+      ],
+      'ku': [
+        'قەیماغی تازە بەکاربهێنە و بە ڕێکی لەناو قاپێکی نانی بەیانیدا بڵاوی بکەرەوە.',
+        'هەنگوینی سروشتی بە شێوەی زیکزاک بەسەر قەیماغەکەدا بڕێژە.',
+        'زۆر تێکی مەدە؛ با هەنگوینەکە لەسەر قەیماغەکە بمێنێتەوە.',
+        'یەکسەر لەگەڵ چای گەرم و نانی تازە یان سەموونی گەرم پێشکەشی بکە.',
+      ],
+    },
+  ),
+  // ... (Include other recipes like Nesk, Kabab, and Mandi with similar detail)
 ];

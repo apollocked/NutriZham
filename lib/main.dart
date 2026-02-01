@@ -23,7 +23,7 @@ class _NutriZhamAppState extends State<NutriZhamApp> {
   bool _isDarkMode = false;
   String _languageCode = 'en';
   bool _isLoading = true;
-  bool _isLoggedIn = false;
+  bool _isLoggedIn = true;
 
   @override
   void initState() {
