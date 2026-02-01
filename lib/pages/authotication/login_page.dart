@@ -4,22 +4,24 @@ import 'package:nutrizham/services/auth_service.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
 import 'package:nutrizham/pages/layout/main_navigation.dart';
+import 'package:nutrizham/widgets/custom_text_field.dart';
+import 'package:nutrizham/widgets/custom_buttons.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginPageRefactored extends StatefulWidget {
   final bool isDarkMode;
   final String languageCode;
 
-  const LoginScreen({
+  const LoginPageRefactored({
     super.key,
     required this.isDarkMode,
     required this.languageCode,
   });
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<LoginPageRefactored> createState() => _LoginPageRefactoredState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginPageRefactoredState extends State<LoginPageRefactored> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -89,253 +91,187 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // App Logo/Icon
-                  Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: AppColors.primaryGradient,
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(25),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.primaryGreen.withOpacity(0.3),
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.restaurant_menu,
-                      size: 50,
-                      color: Colors.white,
-                    ),
-                  ),
+                  // App Logo
+                  _buildAppLogo(),
                   const SizedBox(height: 32),
 
                   // App Title
-                  Text(
-                    loc.appTitle,
-                    style: TextStyle(
-                      fontSize: 36,
-                      fontWeight: FontWeight.bold,
-                      color: textColor,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    loc.login,
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: widget.isDarkMode
-                          ? AppColors.darkTextSecondary
-                          : AppColors.lightTextSecondary,
-                    ),
-                  ),
+                  _buildAppTitle(textColor, loc),
                   const SizedBox(height: 48),
 
-                  // Login Card
-                  Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: cardColor,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 10,
-                          offset: const Offset(0, 5),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        // Email Field
-                        TextFormField(
-                          controller: _emailController,
-                          style: TextStyle(color: textColor),
-                          decoration: InputDecoration(
-                            labelText: loc.email,
-                            labelStyle: TextStyle(
-                                color: widget.isDarkMode
-                                    ? AppColors.darkTextSecondary
-                                    : AppColors.lightTextSecondary),
-                            prefixIcon: const Icon(Icons.email_outlined,
-                                color: AppColors.primaryGreen),
-                            filled: true,
-                            fillColor: widget.isDarkMode
-                                ? AppColors.darkSurface
-                                : AppColors.lightBackground,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(
-                                  color: AppColors.primaryGreen, width: 2),
-                            ),
-                          ),
-                          keyboardType: TextInputType.emailAddress,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your email';
-                            }
-                            if (!value.contains('@')) {
-                              return 'Please enter a valid email';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Password Field
-                        TextFormField(
-                          controller: _passwordController,
-                          style: TextStyle(color: textColor),
-                          obscureText: _obscurePassword,
-                          decoration: InputDecoration(
-                            labelText: loc.password,
-                            labelStyle: TextStyle(
-                                color: widget.isDarkMode
-                                    ? AppColors.darkTextSecondary
-                                    : AppColors.lightTextSecondary),
-                            prefixIcon: const Icon(Icons.lock_outline,
-                                color: AppColors.primaryGreen),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _obscurePassword
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                                color: widget.isDarkMode
-                                    ? AppColors.darkTextSecondary
-                                    : AppColors.lightTextSecondary,
-                              ),
-                              onPressed: () {
-                                setState(
-                                    () => _obscurePassword = !_obscurePassword);
-                              },
-                            ),
-                            filled: true,
-                            fillColor: widget.isDarkMode
-                                ? AppColors.darkSurface
-                                : AppColors.lightBackground,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(
-                                  color: AppColors.primaryGreen, width: 2),
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your password';
-                            }
-                            if (value.length < 6) {
-                              return 'Password must be at least 6 characters';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 24),
-
-                        // Login Button
-                        SizedBox(
-                          width: double.infinity,
-                          height: 56,
-                          child: ElevatedButton(
-                            onPressed: _isLoading ? null : _login,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primaryGreen,
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              elevation: 0,
-                            ),
-                            child: _isLoading
-                                ? const SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2,
-                                    ),
-                                  )
-                                : Text(
-                                    loc.login,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Login Form Card
+                  _buildLoginCard(cardColor, loc),
                   const SizedBox(height: 24),
 
                   // Register Link
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        loc.dontHaveAccount,
-                        style: TextStyle(
-                          color: widget.isDarkMode
-                              ? AppColors.darkTextSecondary
-                              : AppColors.lightTextSecondary,
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => RegisterScreen(
-                                    isDarkMode: widget.isDarkMode,
-                                    languageCode: widget.languageCode,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Text(
-                              loc.register,
-                              style: const TextStyle(
-                                fontSize: 22,
-                                color: AppColors.primaryGreen,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                  _buildRegisterLink(loc),
                 ],
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildAppLogo() {
+    return Container(
+      width: 100,
+      height: 100,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: AppColors.primaryGradient,
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primaryGreen.withOpacity(0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: const Icon(
+        Icons.restaurant_menu,
+        size: 50,
+        color: Colors.white,
+      ),
+    );
+  }
+
+  Widget _buildAppTitle(Color textColor, AppLocalizations loc) {
+    return Column(
+      children: [
+        Text(
+          loc.appTitle,
+          style: TextStyle(
+            fontSize: 36,
+            fontWeight: FontWeight.bold,
+            color: textColor,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          loc.login,
+          style: TextStyle(
+            fontSize: 18,
+            color: widget.isDarkMode
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLoginCard(Color cardColor, AppLocalizations loc) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // Email Field - Using Custom Widget
+          CustomTextField(
+            controller: _emailController,
+            labelText: loc.email,
+            prefixIcon: Icons.email_outlined,
+            isDarkMode: widget.isDarkMode,
+            keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your email';
+              }
+              if (!value.contains('@')) {
+                return 'Please enter a valid email';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 16),
+
+          // Password Field - Using Custom Widget
+          CustomTextField(
+            controller: _passwordController,
+            labelText: loc.password,
+            prefixIcon: Icons.lock_outline,
+            isDarkMode: widget.isDarkMode,
+            obscureText: _obscurePassword,
+            textInputAction: TextInputAction.done,
+            suffixIcon: IconButton(
+              icon: Icon(
+                _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                color: widget.isDarkMode
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary,
+              ),
+              onPressed: () {
+                setState(() => _obscurePassword = !_obscurePassword);
+              },
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your password';
+              }
+              if (value.length < 6) {
+                return 'Password must be at least 6 characters';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 24),
+
+          // Login Button - Using Custom Widget
+          PrimaryButton(
+            text: loc.login,
+            onPressed: _login,
+            isLoading: _isLoading,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRegisterLink(AppLocalizations loc) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          loc.dontHaveAccount,
+          style: TextStyle(
+            color: widget.isDarkMode
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
+          ),
+        ),
+        IconTextButton(
+          text: loc.register,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => RegisterScreen(
+                  isDarkMode: widget.isDarkMode,
+                  languageCode: widget.languageCode,
+                ),
+              ),
+            );
+          },
+          fontSize: 22,
+        ),
+      ],
     );
   }
 }
