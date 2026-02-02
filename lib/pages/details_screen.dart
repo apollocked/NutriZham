@@ -133,19 +133,13 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
           children: [
             Stack(
               children: [
-                Image.network(
-                  widget.recipe.icon,
-                  height: 250,
+                const SizedBox(
                   width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(
-                      height: 250,
-                      color: Colors.grey[300],
-                      child: const Icon(Icons.restaurant, size: 64)),
+                  height: 50,
                 ),
                 Positioned(
                   top: 16,
-                  right: 16,
+                  right: 25,
                   child: CategoryBadge(
                     category: widget.recipe.category,
                     languageCode: widget.languageCode,

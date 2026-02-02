@@ -20,7 +20,7 @@ class CategoryFilterChips extends StatelessWidget {
   String _getCategoryName(MealCategory? category) {
     final loc = AppLocalizations.of(languageCode);
     if (category == null) return loc.all;
-    
+
     switch (category) {
       case MealCategory.breakfast:
         return loc.breakfast;
@@ -53,11 +53,14 @@ class CategoryFilterChips extends StatelessWidget {
             child: FilterChip(
               label: Text(_getCategoryName(null)),
               selected: selectedCategory == null,
-              backgroundColor: isDarkMode ? AppColors.darkCard : Colors.grey[200],
+              backgroundColor:
+                  isDarkMode ? AppColors.darkCard : Colors.grey[200],
               selectedColor: AppColors.primaryGreen,
               labelStyle: TextStyle(
                 color: selectedCategory == null ? Colors.white : textColor,
-                fontWeight: selectedCategory == null ? FontWeight.bold : FontWeight.normal,
+                fontWeight: selectedCategory == null
+                    ? FontWeight.bold
+                    : FontWeight.normal,
               ),
               onSelected: (_) => onCategorySelected(null),
               shape: RoundedRectangleBorder(
@@ -72,11 +75,15 @@ class CategoryFilterChips extends StatelessWidget {
                 child: FilterChip(
                   label: Text(_getCategoryName(category)),
                   selected: selectedCategory == category,
-                  backgroundColor: isDarkMode ? AppColors.darkCard : Colors.grey[200],
+                  backgroundColor:
+                      isDarkMode ? AppColors.darkCard : Colors.grey[200],
                   selectedColor: AppColors.primaryGreen,
                   labelStyle: TextStyle(
-                    color: selectedCategory == category ? Colors.white : textColor,
-                    fontWeight: selectedCategory == category ? FontWeight.bold : FontWeight.normal,
+                    color:
+                        selectedCategory == category ? Colors.white : textColor,
+                    fontWeight: selectedCategory == category
+                        ? FontWeight.bold
+                        : FontWeight.normal,
                   ),
                   onSelected: (bool selected) {
                     onCategorySelected(selected ? category : null);
@@ -127,7 +134,7 @@ class CategoryBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: AppColors.getCategoryColor(category.toString().split('.').last),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
         _getCategoryName(),
