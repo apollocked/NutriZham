@@ -18,7 +18,7 @@ class PreferencesHelper {
   // Language Preferences
   static Future<String> getLanguageCode() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_languageCodeKey) ?? 'en';
+    return prefs.getString(_languageCodeKey) ?? 'ar';
   }
 
   static Future<void> setLanguageCode(String languageCode) async {

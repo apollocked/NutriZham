@@ -6,7 +6,7 @@ class UserData {
       'id': '1',
       'username': 'demo_user',
       'email': 'demo@nutrizham.com',
-      'password': 'password123', // In production, use proper hashing
+      'password': 'demo123', // In production, use proper hashing
       'age': 25,
       'profileImage': null,
       'createdAt': DateTime.now().toIso8601String(),

@@ -212,6 +212,16 @@ class _SettingsPageState extends State<SettingsPage> {
                           ],
                         ),
                       ),
+                      DropdownMenuItem(
+                        value: 'ar',
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(loc.arabic,
+                                style: TextStyle(color: textColor)),
+                          ],
+                        ),
+                      ),
                     ],
                     onChanged: (value) {
                       if (value != null) {

@@ -53,7 +53,7 @@ class Recipe {
   Recipe({
     required this.id,
     required this.title,
-    required this.icon, // Changed from image to icon
+    required this.icon,
     required this.nutrition,
     required this.ingredients,
     required this.steps,

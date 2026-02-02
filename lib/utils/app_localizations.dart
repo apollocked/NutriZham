@@ -68,6 +68,7 @@ class AppLocalizations {
   String get darkMode => _get('darkMode');
   String get english => _get('english');
   String get kurdish => _get('kurdish');
+  String get arabic => _get('arabic');
   String get editAccount => _get('editAccount');
   String get deleteAccount => _get('deleteAccount');
   String get areYouSure => _get('areYouSure');
@@ -172,6 +173,7 @@ class AppLocalizations {
       'darkMode': 'Dark Mode',
       'english': 'English',
       'kurdish': 'Kurdish',
+      'arabic': 'Arabic',
       'editAccount': 'Edit Account',
       'deleteAccount': 'Delete Account',
       'areYouSure': 'Are you sure?',
@@ -270,6 +272,7 @@ class AppLocalizations {
       'darkMode': 'دۆخی تاریک',
       'english': 'ئینگلیزی',
       'kurdish': 'کوردی',
+      'arabic': 'عربی',
       'editAccount': 'دەستکاریکردنی هەژمار',
       'deleteAccount': 'سڕینەوەی هەژمار',
       'areYouSure': 'دڵنیایت؟',
@@ -305,6 +308,105 @@ class AppLocalizations {
       'accountUpdated': 'هەژمار بە سەرکەوتوویی نوێکرایەوە',
       'loginSuccess': 'چوونەژوورەوە سەرکەوتوو بوو',
       'registerSuccess': 'تۆمارکردن سەرکەوتوو بوو',
+    },
+    'ar': {
+      // Auth
+      'login': 'تسجيل الدخول',
+      'register': 'التسجيل',
+      'logout': 'تسجيل الخروج',
+      'username': 'اسم المستخدم',
+      'email': 'البريد الإلكتروني',
+      'password': 'كلمة المرور',
+      'age': 'العمر',
+      'confirmPassword': 'تأكيد كلمة المرور',
+      'alreadyHaveAccount': 'هل لديك حساب بالفعل؟',
+      'dontHaveAccount': 'ليس لديك حساب؟',
+      'forgotPassword': 'نسيت كلمة المرور؟',
+
+      // Navigation
+      'home': 'الرئيسية',
+      'search': 'بحث',
+      'planner': 'المخطط',
+      'profile': 'الملف الشخصي',
+
+      // General
+      'appTitle': 'نوتري زهام',
+      'recipes': 'الوصفات',
+      'searchPlaceholder': 'ابحث عن وصفات أو مكونات...',
+      'all': 'الكل',
+      'recipesFound': 'وصفة تم العثور عليها',
+      'recipeFound': 'وصفات تم العثور عليها',
+      'noRecipesFound': 'لم يتم العثور على وصفات',
+      'tryDifferentSearch': 'جرب بحثًا مختلفًا أو مرشحًا آخر',
+      'noFavorites': 'لا توجد مفضلات حتى الآن',
+      'tapToSave': 'انقر على أيقونة + لحفظ الوصفات',
+
+      // Categories
+      'breakfast': 'الفطور',
+      'lunch': 'الغداء',
+      'dinner': 'العشاء',
+      'snack': 'وجبة خفيفة',
+      'bulking': 'زيادة الوزن',
+      'cutting': 'إنقاص الوزن',
+
+      // Nutrition
+      'nutritionalInfo': 'المعلومات الغذائية',
+      'calories': 'السعرات الحرارية',
+      'protein': 'البروتين',
+      'carbs': 'الكربوهيدرات',
+      'fats': 'الدهون',
+
+      // Recipe
+      'ingredients': 'المكونات',
+      'preparationSteps': 'خطوات التحضير',
+      'rating': 'التقييم',
+      'ratings': 'التقييمات',
+      'rateThisMeal': 'قيم هذه الوجبة',
+      'yourRating': 'تقييمك',
+      'submitRating': 'إرسال التقييم',
+
+      // Settings
+      'settings': 'الإعدادات',
+      'language': 'اللغة',
+      'darkMode': 'الوضع المظلم',
+      'english': 'الإنجليزية',
+      'kurdish': 'الكردية',
+      'arabic': 'العربية',
+      'editAccount': 'تعديل الحساب',
+      'deleteAccount': 'حذف الحساب',
+      'areYouSure': 'هل أنت متأكد؟',
+      'cancel': 'إلغاء',
+      'delete': 'حذف',
+      'save': 'حفظ',
+      'update': 'تحديث',
+
+      // Profile
+      'myProfile': 'ملفي الشخصي',
+      'favorites': 'المفضلات',
+      'accountSettings': 'إعدادات الحساب',
+      'memberSince': 'عضو منذ',
+
+      // Planner
+      'mealPlanner': 'مخطط الوجبات',
+      'dailyPlan': 'الخطة اليومية',
+      'weeklyPlan': 'الخطة الأسبوعية',
+      'recommendedMeals': 'الوجبات الموصى بها',
+      'basedOnYourGoals': 'بناءً على أهدافك الرياضية',
+      'totalCalories': 'إجمالي السعرات الحرارية',
+      'todaysMeals': 'وجبات اليوم',
+      'addToPlan': 'إضافة إلى الخطة',
+      'removeFromPlan': 'إزالة من الخطة',
+
+      // Messages
+      'passwordsDoNotMatch': 'كلمات المرور غير متطابقة',
+      'success': 'نجاح',
+      'error': 'خطأ',
+      'loading': 'جاري التحميل',
+      'pleaseWait': 'يرجى الانتظار...',
+      'accountDeleted': 'تم حذف الحساب بنجاح',
+      'accountUpdated': 'تم تحديث الحساب بنجاح',
+      'loginSuccess': 'تم تسجيل الدخول بنجاح',
+      'registerSuccess': 'تم التسجيل بنجاح',
     },
   };
 }
