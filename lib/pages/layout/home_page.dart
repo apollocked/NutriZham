@@ -147,27 +147,26 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          CustomSearchBar(
-            hintText: loc.searchPlaceholder,
-            searchQuery: _searchQuery,
-            onChanged: (value) => setState(() => _searchQuery = value),
-            onClear: _clearSearch,
-            isDarkMode: widget.isDarkMode,
-            controller: _searchController,
-          ),
-          // Category Filter Chips
-          CategoryFilterChips(
-            selectedCategory: _selectedCategory,
-            onCategorySelected: (category) =>
-                setState(() => _selectedCategory = category),
-            isDarkMode: widget.isDarkMode,
-            languageCode: widget.languageCode,
-          ),
+      body: Column(children: [
+        CustomSearchBar(
+          hintText: loc.searchPlaceholder,
+          searchQuery: _searchQuery,
+          onChanged: (value) => setState(() => _searchQuery = value),
+          onClear: _clearSearch,
+          isDarkMode: widget.isDarkMode,
+          controller: _searchController,
+        ),
+        // Category Filter Chips
+        CategoryFilterChips(
+          selectedCategory: _selectedCategory,
+          onCategorySelected: (category) =>
+              setState(() => _selectedCategory = category),
+          isDarkMode: widget.isDarkMode,
+          languageCode: widget.languageCode,
+        ),
 
-          // Recipes List or Empty State
-          Expanded(
+        // Recipes List or Empty State
+        Expanded(
             child: filteredRecipes.isEmpty
                 ? EmptyStateWidget(
                     icon: _showFavoritesOnly
@@ -181,37 +180,30 @@ class _HomePageState extends State<HomePage> {
                         : loc.tryDifferentSearch,
                     isDarkMode: widget.isDarkMode,
                   )
-                : ListView.builder(
-                    itemCount: filteredRecipes.length,
-                    padding: const EdgeInsets.only(bottom: 16),
+                : // In HomePage - Scrolls smoothly through all 110
+                ListView.builder(
+                    itemCount: filteredRecipes.length, // Could be all 110
                     itemBuilder: (context, index) {
                       final recipe = filteredRecipes[index];
                       final isFavorite = _favoriteIds.contains(recipe.id);
-
                       return RecipeCard(
-                        recipe: recipe,
-                        isDarkMode: widget.isDarkMode,
-                        languageCode: widget.languageCode,
-                        isFavorite: isFavorite,
-                        onFavoriteToggle: () => _toggleFavorite(recipe.id),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => RecipeDetailScreen(
-                                recipe: recipe,
-                                isDarkMode: widget.isDarkMode,
-                                languageCode: widget.languageCode,
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-          ),
-        ],
-      ),
+                          recipe: recipe,
+                          isDarkMode: widget.isDarkMode,
+                          languageCode: widget.languageCode,
+                          isFavorite: isFavorite,
+                          onFavoriteToggle: () => _toggleFavorite(recipe.id),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => RecipeDetailScreen(
+                                          recipe: recipe,
+                                          isDarkMode: widget.isDarkMode,
+                                          languageCode: widget.languageCode,
+                                        )));
+                          });
+                    }))
+      ]),
     );
   }
 }

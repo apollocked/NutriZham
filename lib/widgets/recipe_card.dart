@@ -63,22 +63,26 @@ class RecipeCard extends StatelessWidget {
                 child: Container(
                   width: 70,
                   height: 70,
-                  color: isDarkMode ? Colors.grey[800] : Colors.grey[200],
-                  child: recipe.icon.startsWith('http')
-                      ? Image.network(
-                          recipe.icon,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => const Icon(
-                            Icons.restaurant,
-                            size: 30,
-                          ),
-                        )
-                      : Center(
-                          child: Text(
-                            recipe.icon,
-                            style: const TextStyle(fontSize: 32),
-                          ),
-                        ),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.getCategoryColor(
+                          recipe.category.toString().split('.').last,
+                        ).withOpacity(0.2),
+                        AppColors.getCategoryColor(
+                          recipe.category.toString().split('.').last,
+                        ).withOpacity(0.1),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      recipe.icon,
+                      style: const TextStyle(fontSize: 40),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
@@ -177,13 +181,24 @@ class CompactRecipeCard extends StatelessWidget {
           width: 50,
           height: 50,
           decoration: BoxDecoration(
-            color: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+            gradient: LinearGradient(
+              colors: [
+                AppColors.getCategoryColor(
+                  recipe.category.toString().split('.').last,
+                ).withOpacity(0.2),
+                AppColors.getCategoryColor(
+                  recipe.category.toString().split('.').last,
+                ).withOpacity(0.1),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Center(
             child: Text(
               recipe.icon,
-              style: const TextStyle(fontSize: 24),
+              style: const TextStyle(fontSize: 28),
             ),
           ),
         ),
