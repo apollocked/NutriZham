@@ -197,7 +197,6 @@ class _SettingsPageState extends State<SettingsPage> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('🇬🇧 '),
                             Text(loc.english,
                                 style: TextStyle(color: textColor)),
                           ],
@@ -208,7 +207,6 @@ class _SettingsPageState extends State<SettingsPage> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('🇹🇯 '),
                             Text(loc.kurdish,
                                 style: TextStyle(color: textColor)),
                           ],

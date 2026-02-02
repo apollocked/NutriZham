@@ -140,7 +140,7 @@ class AppLocalizations {
       'noRecipesFound': 'No recipes found',
       'tryDifferentSearch': 'Try a different search or filter',
       'noFavorites': 'No favorites yet',
-      'tapToSave': 'Tap the heart icon on recipes to save them',
+      'tapToSave': 'Tap the + icon on recipes to save them',
 
       // Categories
       'breakfast': 'Breakfast',
@@ -238,7 +238,7 @@ class AppLocalizations {
       'noRecipesFound': 'هیچ ڕێچەتەیەک نەدۆزرایەوە',
       'tryDifferentSearch': 'گەڕانێکی جیاواز یان فلتەرێکی تر تاقی بکەرەوە',
       'noFavorites': 'هێشتا هیچ دڵخوازێک نیە',
-      'tapToSave': 'دەستی لە نیشانەی دڵ بدە بۆ پاشەکەوتکردنیان',
+      'tapToSave': ' دەست لە نیشانەی + بدە بۆ پاشەکەوتکردنیان ',
 
       // Categories
       'breakfast': 'ژەمی بەیانی',

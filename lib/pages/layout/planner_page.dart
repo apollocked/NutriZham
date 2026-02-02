@@ -120,7 +120,7 @@ class _PlannerPageState extends State<PlannerPage> {
                     child: EmptyStateWidget(
                       icon: Icons.calendar_today,
                       title: loc.addToPlan,
-                      subtitle: '${loc.tapToSave} recommended meals below',
+                      subtitle: '${loc.tapToSave} ',
                       isDarkMode: widget.isDarkMode,
                     ),
                   )
