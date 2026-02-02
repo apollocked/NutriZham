@@ -87,7 +87,7 @@ class _NutriZhamAppState extends State<NutriZhamApp> {
           ),
         ),
         themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-        home: LoginPageRefactored(
+        home: LoginPage(
           isDarkMode: _isDarkMode,
           languageCode: _languageCode,
         ));

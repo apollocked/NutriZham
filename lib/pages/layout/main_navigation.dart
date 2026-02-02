@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'home_page.dart';
-
-import 'planner_page.dart';
+import 'package:nutrizham/pages/layout/home_page.dart';
+import 'package:nutrizham/pages/layout/planner_page.dart';
 import 'package:nutrizham/pages/layout/profile_page/profile_page.dart';
 import 'package:nutrizham/pages/layout/search_page.dart';
 import 'package:nutrizham/services/preferences_helper.dart';

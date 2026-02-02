@@ -6,21 +6,21 @@ import 'package:nutrizham/utils/app_localizations.dart';
 import 'package:nutrizham/widgets/custom_text_field.dart';
 import 'package:nutrizham/widgets/custom_buttons.dart';
 
-class RegisterScreen extends StatefulWidget {
+class RegisterPage extends StatefulWidget {
   final bool isDarkMode;
   final String languageCode;
 
-  const RegisterScreen({
+  const RegisterPage({
     super.key,
     required this.isDarkMode,
     required this.languageCode,
   });
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -80,7 +80,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => LoginPageRefactored(
+          builder: (_) => LoginPage(
             isDarkMode: widget.isDarkMode,
             languageCode: widget.languageCode,
           ),
@@ -321,7 +321,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => LoginPageRefactored(
+                          builder: (_) => LoginPage(
                             isDarkMode: widget.isDarkMode,
                             languageCode: widget.languageCode,
                           ),

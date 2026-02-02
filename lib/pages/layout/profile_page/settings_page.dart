@@ -66,7 +66,7 @@ class _SettingsPageState extends State<SettingsPage> {
         if (!mounted) return;
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
-            builder: (_) => LoginPageRefactored(
+            builder: (_) => LoginPage(
               isDarkMode: _currentDarkMode,
               languageCode: _currentLanguage,
             ),

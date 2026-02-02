@@ -1,8 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nutrizham/utils/meals_data.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
+import 'package:nutrizham/services/meal_planner_service.dart';
 import 'package:nutrizham/widgets/custom_app_bar.dart';
 import 'package:nutrizham/widgets/recipe_card.dart';
 import 'package:nutrizham/widgets/empty_state_widget.dart';
@@ -11,8 +14,11 @@ class PlannerPage extends StatefulWidget {
   final bool isDarkMode;
   final String languageCode;
 
-  const PlannerPage(
-      {super.key, required this.isDarkMode, required this.languageCode});
+  const PlannerPage({
+    super.key,
+    required this.isDarkMode,
+    required this.languageCode,
+  });
 
   @override
   State<PlannerPage> createState() => _PlannerPageState();
@@ -20,36 +26,76 @@ class PlannerPage extends StatefulWidget {
 
 class _PlannerPageState extends State<PlannerPage> {
   List<String> _plannedMealIds = [];
+  StreamSubscription<List<String>>? _plannerSubscription;
 
   @override
   void initState() {
     super.initState();
     _loadPlannedMeals();
+    _setupPlannerListener();
+  }
+
+  @override
+  void dispose() {
+    _plannerSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _setupPlannerListener() {
+    _plannerSubscription =
+        MealPlannerService.plannedMealsStream.listen((plannedMeals) {
+      if (mounted) {
+        setState(() => _plannedMealIds = plannedMeals);
+      }
+    });
   }
 
   Future<void> _loadPlannedMeals() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _plannedMealIds = prefs.getStringList('planned_meals') ?? [];
-    });
+    final plannedMeals = await MealPlannerService.loadPlannedMeals();
+    if (mounted) {
+      setState(() => _plannedMealIds = plannedMeals);
+    }
   }
 
   Future<void> _toggleMealInPlan(String recipeId) async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      if (_plannedMealIds.contains(recipeId)) {
-        _plannedMealIds.remove(recipeId);
-      } else {
-        _plannedMealIds.add(recipeId);
-      }
-    });
-    await prefs.setStringList('planned_meals', _plannedMealIds);
+    await MealPlannerService.toggleMealInPlan(recipeId);
+
+    // Show feedback
+    if (mounted) {
+      final isInPlan = _plannedMealIds.contains(recipeId);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content:
+              Text(isInPlan ? 'Added to meal plan' : 'Removed from meal plan'),
+          duration: const Duration(seconds: 1),
+          backgroundColor: isInPlan ? AppColors.success : AppColors.error,
+        ),
+      );
+    }
   }
 
   int get _totalCalories {
     return recipes
         .where((r) => _plannedMealIds.contains(r.id))
         .fold(0, (sum, r) => sum + r.nutrition.calories);
+  }
+
+  double get _totalProtein {
+    return recipes
+        .where((r) => _plannedMealIds.contains(r.id))
+        .fold(0.0, (sum, r) => sum + r.nutrition.protein);
+  }
+
+  double get _totalCarbs {
+    return recipes
+        .where((r) => _plannedMealIds.contains(r.id))
+        .fold(0.0, (sum, r) => sum + r.nutrition.carbs);
+  }
+
+  double get _totalFats {
+    return recipes
+        .where((r) => _plannedMealIds.contains(r.id))
+        .fold(0.0, (sum, r) => sum + r.nutrition.fats);
   }
 
   @override
@@ -62,122 +108,239 @@ class _PlannerPageState extends State<PlannerPage> {
         widget.isDarkMode ? AppColors.darkText : AppColors.lightText;
     final plannedMeals =
         recipes.where((r) => _plannedMealIds.contains(r.id)).toList();
+    final recommendedMeals =
+        recipes.where((r) => !_plannedMealIds.contains(r.id)).take(5).toList();
 
     return Scaffold(
       backgroundColor: bgColor,
       appBar: CustomAppBar(
         title: loc.mealPlanner,
         isDarkMode: widget.isDarkMode,
+        actions: [
+          if (_plannedMealIds.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.delete_outline),
+              onPressed: () async {
+                final confirmed = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Clear Meal Plan'),
+                    content: const Text(
+                        'Are you sure you want to clear all planned meals?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        style: TextButton.styleFrom(
+                            foregroundColor: AppColors.error),
+                        child: const Text('Clear'),
+                      ),
+                    ],
+                  ),
+                );
+
+                if (confirmed == true) {
+                  await MealPlannerService.clearAllPlannedMeals();
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Meal plan cleared'),
+                        backgroundColor: AppColors.success,
+                      ),
+                    );
+                  }
+                }
+              },
+            ),
+        ],
       ),
       body: Column(
         children: [
-          // Today's meals header with total calories
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [AppColors.primaryGreen, AppColors.primaryGreenLight],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-            child: Column(
-              children: [
-                Text(loc.todaysMeals,
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                Text('${loc.totalCalories}: $_totalCalories kcal',
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold)),
-                const SizedBox(height: 4),
-                Text(
-                  '${plannedMeals.length} ${plannedMeals.length == 1 ? loc.recipeFound : loc.recipesFound}',
-                  style: const TextStyle(color: Colors.white70, fontSize: 14),
-                ),
-              ],
-            ),
-          ),
+          // Today's meals header with enhanced nutrition summary
+          _buildNutritionSummaryHeader(loc, plannedMeals),
+
           // Planned meals list
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text(
-              loc.dailyPlan,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: textColor,
-              ),
-            ),
-          ),
           Expanded(
-            child: plannedMeals.isEmpty
-                ? Expanded(
-                    child: EmptyStateWidget(
-                      icon: Icons.calendar_today,
-                      title: loc.addToPlan,
-                      subtitle: '${loc.tapToSave} ',
-                      isDarkMode: widget.isDarkMode,
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: plannedMeals.length,
-                    itemBuilder: (context, index) {
-                      final recipe = plannedMeals[index];
-                      return CompactRecipeCard(
-                        recipe: recipe,
-                        isDarkMode: widget.isDarkMode,
-                        languageCode: widget.languageCode,
-                        trailing: IconButton(
-                          icon: const Icon(Icons.remove_circle,
-                              color: AppColors.error),
-                          onPressed: () => _toggleMealInPlan(recipe.id),
-                        ),
-                      );
-                    },
-                  ),
-          ),
-          // Recommended meals section
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text(
-              loc.recommendedMeals,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: textColor,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Daily Plan Section
+                  _buildSectionHeader(loc.dailyPlan, textColor),
+                  _buildPlannedMealsList(loc, plannedMeals),
+
+                  const SizedBox(height: 16),
+
+                  // Recommended Meals Section
+                  _buildSectionHeader(loc.recommendedMeals, textColor),
+                  _buildRecommendedMealsList(recommendedMeals),
+
+                  const SizedBox(height: 16),
+                ],
               ),
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: recipes
-                  .where((r) => !_plannedMealIds.contains(r.id))
-                  .take(5)
-                  .length,
-              itemBuilder: (context, index) {
-                final recipe = recipes
-                    .where((r) => !_plannedMealIds.contains(r.id))
-                    .toList()[index];
-                return CompactRecipeCard(
-                  recipe: recipe,
-                  isDarkMode: widget.isDarkMode,
-                  languageCode: widget.languageCode,
-                  trailing: IconButton(
-                    icon: const Icon(Icons.add_circle,
-                        color: AppColors.primaryGreen),
-                    onPressed: () => _toggleMealInPlan(recipe.id),
-                  ),
-                );
-              },
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildNutritionSummaryHeader(
+      AppLocalizations loc, List<Recipe> plannedMeals) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [AppColors.primaryGreen, AppColors.primaryGreenLight],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Column(
+        children: [
+          Text(
+            loc.todaysMeals,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Total Calories - Big display
+          Text(
+            '$_totalCalories kcal',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${plannedMeals.length} ${plannedMeals.length == 1 ? loc.recipeFound : loc.recipesFound}',
+            style: const TextStyle(color: Colors.white70, fontSize: 14),
+          ),
+
+          const SizedBox(height: 16),
+
+          // Macros breakdown
+          if (plannedMeals.isNotEmpty)
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildMacroItem('P', '${_totalProtein.toStringAsFixed(0)}g',
+                      AppColors.proteinColor),
+                  Container(width: 1, height: 30, color: Colors.white30),
+                  _buildMacroItem('C', '${_totalCarbs.toStringAsFixed(0)}g',
+                      AppColors.carbsColor),
+                  Container(width: 1, height: 30, color: Colors.white30),
+                  _buildMacroItem('F', '${_totalFats.toStringAsFixed(0)}g',
+                      AppColors.fatsColor),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMacroItem(String label, String value, Color color) {
+    return Column(
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white70,
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSectionHeader(String title, Color textColor) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: textColor,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPlannedMealsList(
+      AppLocalizations loc, List<Recipe> plannedMeals) {
+    if (plannedMeals.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: EmptyStateWidget(
+          icon: Icons.calendar_today,
+          title: loc.addToPlan,
+          subtitle: '${loc.tapToSave} recommended meals below',
+          isDarkMode: widget.isDarkMode,
+        ),
+      );
+    }
+
+    return Column(
+      children: plannedMeals.map((recipe) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          child: CompactRecipeCard(
+            recipe: recipe,
+            isDarkMode: widget.isDarkMode,
+            languageCode: widget.languageCode,
+            trailing: IconButton(
+              icon: const Icon(Icons.remove_circle, color: AppColors.error),
+              onPressed: () => _toggleMealInPlan(recipe.id),
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildRecommendedMealsList(List<Recipe> recommendedMeals) {
+    return Column(
+      children: recommendedMeals.map((recipe) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          child: CompactRecipeCard(
+            recipe: recipe,
+            isDarkMode: widget.isDarkMode,
+            languageCode: widget.languageCode,
+            trailing: IconButton(
+              icon: const Icon(Icons.add_circle, color: AppColors.primaryGreen),
+              onPressed: () => _toggleMealInPlan(recipe.id),
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 }

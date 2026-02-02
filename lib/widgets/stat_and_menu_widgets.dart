@@ -49,7 +49,7 @@ class StatCard extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 15,
               color: isDarkMode
                   ? AppColors.darkTextSecondary
                   : AppColors.lightTextSecondary,
@@ -142,7 +142,7 @@ class InfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textColor = isDarkMode ? AppColors.darkText : AppColors.lightText;
-    final backgroundColor = color?.withOpacity(0.1) ?? 
+    final backgroundColor = color?.withOpacity(0.1) ??
         (isDarkMode ? AppColors.darkCard : Colors.white);
 
     return Container(
@@ -150,9 +150,8 @@ class InfoCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(12),
-        border: color != null
-            ? Border.all(color: color!.withOpacity(0.3))
-            : null,
+        border:
+            color != null ? Border.all(color: color!.withOpacity(0.3)) : null,
       ),
       child: Row(
         children: [
