@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nutrizham/pages/details_screen.dart';
-import 'package:nutrizham/utils/meals_data.dart'; // Make sure this contains your Recipe class and MealCategory enum
+import 'package:nutrizham/utils/meals_data.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
 import 'package:nutrizham/services/favorites_helper.dart';
@@ -39,12 +39,14 @@ class _HomePageState extends State<HomePage> {
   StreamSubscription<Set<String>>? _favoritesSubscription;
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  List<Recipe> _allRecipes = [];
 
-  // Pagination
-  int _currentPage = 0;
-  final int _recipesPerPage = 20;
+  // Firestore Pagination variables
+  List<Recipe> _allRecipes = [];
+  bool _isLoading = true;
   bool _isLoadingMore = false;
+  bool _hasMore = true; // To check if there are more docs in DB
+  DocumentSnapshot? _lastDocument; // To keep track of the last doc fetched
+  final int _pageSize = 20; // Number of items to fetch per batch
 
   @override
   void initState() {
@@ -52,20 +54,59 @@ class _HomePageState extends State<HomePage> {
     _loadFavorites();
     _setupFavoritesListener();
     _setupScrollListener();
-    _loadRecipesFromFirebase();
+    _loadNextBatch(); // Load the first batch
   }
 
-  Future<void> _loadRecipesFromFirebase() async {
-    final snapshot =
-        await FirebaseFirestore.instance.collection('recipes').get();
-    final recipesList = snapshot.docs.map((doc) {
-      return Recipe.fromJson(doc.data() as Map<String, dynamic>);
-    }).toList();
+  // 1. Load a batch of recipes from Firestore
+  Future<void> _loadNextBatch() async {
+    if (_isLoadingMore || !_hasMore) return;
 
-    if (mounted) {
-      setState(() {
-        _allRecipes = recipesList;
-      });
+    setState(() => _isLoadingMore = true);
+
+    try {
+      Query query = FirebaseFirestore.instance
+          .collection('recipes')
+          .orderBy('title') // Important: Must order by a field for pagination
+          .limit(_pageSize);
+
+      // If we have a previous document, start after it
+      if (_lastDocument != null) {
+        query = query.startAfterDocument(_lastDocument!);
+      }
+
+      final snapshot = await query.get();
+
+      if (snapshot.docs.isEmpty) {
+        setState(() {
+          _hasMore = false;
+          _isLoadingMore = false;
+          _isLoading = false;
+        });
+        return;
+      }
+
+      final newRecipes = snapshot.docs.map((doc) {
+        return Recipe.fromJson(doc.data() as Map<String, dynamic>);
+      }).toList();
+
+      if (mounted) {
+        setState(() {
+          _allRecipes.addAll(newRecipes);
+          _lastDocument = snapshot.docs.last;
+          _hasMore = newRecipes.length ==
+              _pageSize; // If less than page size, we reached end
+          _isLoadingMore = false;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      print("Error loading recipes: $e");
+      if (mounted) {
+        setState(() {
+          _isLoadingMore = false;
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -79,9 +120,14 @@ class _HomePageState extends State<HomePage> {
 
   void _setupScrollListener() {
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels >=
-          _scrollController.position.maxScrollExtent - 200) {
-        _loadMoreRecipes();
+      // Only load more if not searching/filtering (Searching works on local data)
+      if (_searchQuery.isEmpty &&
+          _selectedCategory == null &&
+          !_showFavoritesOnly) {
+        if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 200) {
+          _loadNextBatch();
+        }
       }
     });
   }
@@ -106,42 +152,11 @@ class _HomePageState extends State<HomePage> {
     await FavoritesHelper.toggleFavorite(recipeId);
   }
 
-  void _loadMoreRecipes() {
-    if (_isLoadingMore) return;
-
-    // Calculate the total number of filtered recipes to check if we can load more
-    // We replicate the filter logic here or use a helper.
-    // Since _paginatedRecipes is a getter, we calculate the raw length here.
-    final filteredRecipes = _allRecipes.where((recipe) {
-      final title =
-          recipe.title[widget.languageCode] ?? recipe.title['en'] ?? '';
-      final matchesSearch = _searchQuery.isEmpty ||
-          title.toLowerCase().contains(_searchQuery.toLowerCase());
-      final matchesCategory =
-          _selectedCategory == null || recipe.category == _selectedCategory;
-      final matchesFavorites =
-          !_showFavoritesOnly || _favoriteIds.contains(recipe.id);
-      return matchesSearch && matchesCategory && matchesFavorites;
-    }).toList();
-
-    final maxPages = (filteredRecipes.length / _recipesPerPage).ceil();
-
-    if (_currentPage < maxPages - 1) {
-      setState(() {
-        _isLoadingMore = true;
-        _currentPage++;
-      });
-
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (mounted) {
-          setState(() => _isLoadingMore = false);
-        }
-      });
-    }
-  }
-
+  // NOTE: Pagination logic for local filtering (Search/Category)
+  // When filtering, we use the loaded _allRecipes and slice them.
+  // When scrolling in "All" mode, we trigger _loadNextBatch.
   List<Recipe> get _paginatedRecipes {
-    // 1. Filter recipes
+    // 1. Filter recipes (from the locally loaded list)
     var filtered = _allRecipes.where((recipe) {
       final title =
           recipe.title[widget.languageCode] ?? recipe.title['en'] ?? '';
@@ -154,22 +169,17 @@ class _HomePageState extends State<HomePage> {
       return matchesSearch && matchesCategory && matchesFavorites;
     }).toList();
 
-    // 2. Pagination logic: take the slice for the current page
-    final startIndex = _currentPage * _recipesPerPage;
-    final endIndex = startIndex + _recipesPerPage;
-
-    if (startIndex >= filtered.length) {
-      return [];
-    }
-
-    return filtered.sublist(startIndex, endIndex.clamp(0, filtered.length));
+    // Note: We do NOT slice the list here anymore.
+    // The ListView.builder handles displaying all items currently in memory.
+    // Real infinite scrolling for "Search" is complex (requires backend search),
+    // so we rely on the user scrolling in "All" view to populate _allRecipes.
+    return filtered;
   }
 
   void _clearSearch() {
     setState(() {
       _searchQuery = '';
       _searchController.clear();
-      _currentPage = 0;
     });
   }
 
@@ -183,7 +193,7 @@ class _HomePageState extends State<HomePage> {
               NutritionalInfo(calories: 0, protein: 0, carbs: 0, fats: 0),
           ingredients: {},
           steps: {},
-          category: MealCategory.snack); // Fallback
+          category: MealCategory.snack);
     }
     final dayOfYear =
         DateTime.now().difference(DateTime(DateTime.now().year, 1, 1)).inDays;
@@ -230,7 +240,6 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               setState(() {
                 _showFavoritesOnly = !_showFavoritesOnly;
-                _currentPage = 0;
               });
             },
           ),
@@ -247,7 +256,6 @@ class _HomePageState extends State<HomePage> {
               onChanged: (value) {
                 setState(() {
                   _searchQuery = value;
-                  _currentPage = 0;
                 });
               },
               onClear: _clearSearch,
@@ -282,7 +290,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 Text(
-                  '${paginatedRecipes.length}', // Updated to show paginated count or total count as preferred
+                  '${paginatedRecipes.length}',
                   style: TextStyle(
                     fontSize: 14,
                     color: widget.isDarkMode
@@ -294,62 +302,86 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
 
-          // Recipes List or Empty State
+          // Recipes List
           Expanded(
-            child: paginatedRecipes.isEmpty
-                ? EmptyStateWidget(
-                    icon: _showFavoritesOnly
-                        ? Icons.favorite_outline
-                        : Icons.search_off,
-                    title: _showFavoritesOnly
-                        ? loc.noFavorites
-                        : loc.noRecipesFound,
-                    subtitle: _showFavoritesOnly
-                        ? loc.tapToSave
-                        : loc.tryDifferentSearch,
-                    isDarkMode: widget.isDarkMode,
+            child: _isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.primaryGreen,
+                    ),
                   )
-                : ListView.builder(
-                    controller: _scrollController,
-                    itemCount:
-                        paginatedRecipes.length + (_isLoadingMore ? 1 : 0),
-                    padding: const EdgeInsets.only(bottom: 16),
-                    itemBuilder: (context, index) {
-                      if (index == paginatedRecipes.length) {
-                        return const Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: CircularProgressIndicator(
-                              color: AppColors.primaryGreen,
-                            ),
-                          ),
-                        );
-                      }
-
-                      final recipe = paginatedRecipes[index];
-                      final isFavorite = _favoriteIds.contains(recipe.id);
-
-                      return RecipeCard(
-                        recipe: recipe,
+                : paginatedRecipes.isEmpty
+                    ? EmptyStateWidget(
+                        icon: _showFavoritesOnly
+                            ? Icons.favorite_outline
+                            : Icons.search_off,
+                        title: _showFavoritesOnly
+                            ? loc.noFavorites
+                            : loc.noRecipesFound,
+                        subtitle: _showFavoritesOnly
+                            ? loc.tapToSave
+                            : loc.tryDifferentSearch,
                         isDarkMode: widget.isDarkMode,
-                        languageCode: widget.languageCode,
-                        isFavorite: isFavorite,
-                        onFavoriteToggle: () => _toggleFavorite(recipe.id),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => RecipeDetailScreen(
-                                recipe: recipe,
-                                isDarkMode: widget.isDarkMode,
-                                languageCode: widget.languageCode,
-                              ),
-                            ),
-                          );
+                      )
+                    : NotificationListener<ScrollNotification>(
+                        onNotification: (ScrollNotification scrollInfo) {
+                          // Handle scroll loading here only if in "All" view
+                          if (_searchQuery.isEmpty &&
+                              _selectedCategory == null &&
+                              !_showFavoritesOnly &&
+                              !_isLoadingMore &&
+                              _hasMore &&
+                              scrollInfo.metrics.pixels >=
+                                  scrollInfo.metrics.maxScrollExtent - 200) {
+                            _loadNextBatch();
+                          }
+                          return false;
                         },
-                      );
-                    },
-                  ),
+                        child: ListView.builder(
+                          controller: _scrollController,
+                          // If loading more, add 1 for the spinner
+                          itemCount: paginatedRecipes.length +
+                              (_hasMore && _isLoadingMore ? 1 : 0),
+                          padding: const EdgeInsets.only(bottom: 16),
+                          itemBuilder: (context, index) {
+                            // Show spinner at the bottom
+                            if (index == paginatedRecipes.length) {
+                              return const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.primaryGreen,
+                                  ),
+                                ),
+                              );
+                            }
+
+                            final recipe = paginatedRecipes[index];
+                            final isFavorite = _favoriteIds.contains(recipe.id);
+
+                            return RecipeCard(
+                              recipe: recipe,
+                              isDarkMode: widget.isDarkMode,
+                              languageCode: widget.languageCode,
+                              isFavorite: isFavorite,
+                              onFavoriteToggle: () =>
+                                  _toggleFavorite(recipe.id),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => RecipeDetailScreen(
+                                      recipe: recipe,
+                                      isDarkMode: widget.isDarkMode,
+                                      languageCode: widget.languageCode,
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
           ),
         ],
       ),
@@ -363,7 +395,6 @@ class _HomePageState extends State<HomePage> {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
-          // "All" chip
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: ChoiceChip(
@@ -372,7 +403,6 @@ class _HomePageState extends State<HomePage> {
               onSelected: (_) {
                 setState(() {
                   _selectedCategory = null;
-                  _currentPage = 0;
                 });
               },
               backgroundColor: widget.isDarkMode
@@ -400,7 +430,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          // Category chips
           ...MealCategory.values.map((category) => Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: ChoiceChip(
@@ -409,7 +438,6 @@ class _HomePageState extends State<HomePage> {
                   onSelected: (bool selected) {
                     setState(() {
                       _selectedCategory = selected ? category : null;
-                      _currentPage = 0;
                     });
                   },
                   backgroundColor: widget.isDarkMode
@@ -458,7 +486,7 @@ class _HomePageState extends State<HomePage> {
                 const Icon(Icons.star, color: AppColors.primaryGreen, size: 20),
                 const SizedBox(width: 8),
                 Text(
-                  "Recipe of the Day", // Fixed typo "Reycipe"
+                  "Recipe of the Day",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
