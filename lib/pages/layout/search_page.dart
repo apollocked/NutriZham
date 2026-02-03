@@ -24,15 +24,14 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+  MealCategory? _selectedCategory;
 
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
   }
-
-  String _searchQuery = '';
-  MealCategory? _selectedCategory;
 
   List<Recipe> get _filteredRecipes {
     return recipes.where((recipe) {
@@ -44,24 +43,6 @@ class _SearchPageState extends State<SearchPage> {
           _selectedCategory == null || recipe.category == _selectedCategory;
       return matchesSearch && matchesCategory;
     }).toList();
-  }
-
-  String _getCategoryName(MealCategory category) {
-    final loc = AppLocalizations.of(widget.languageCode);
-    switch (category) {
-      case MealCategory.breakfast:
-        return loc.breakfast;
-      case MealCategory.lunch:
-        return loc.lunch;
-      case MealCategory.dinner:
-        return loc.dinner;
-      case MealCategory.snack:
-        return loc.snack;
-      case MealCategory.bulking:
-        return loc.bulking;
-      case MealCategory.cutting:
-        return loc.cutting;
-    }
   }
 
   @override
@@ -81,20 +62,21 @@ class _SearchPageState extends State<SearchPage> {
       body: Column(
         children: [
           Padding(
-              padding: const EdgeInsets.all(16),
-              child: CustomSearchBar(
-                hintText: loc.searchPlaceholder,
-                searchQuery: _searchQuery,
-                onChanged: (value) => setState(() => _searchQuery = value),
-                onClear: () {
-                  setState(() {
-                    _searchQuery = '';
-                    _searchController.clear();
-                  });
-                },
-                isDarkMode: widget.isDarkMode,
-                controller: _searchController,
-              )),
+            padding: const EdgeInsets.all(16),
+            child: CustomSearchBar(
+              hintText: loc.searchPlaceholder,
+              searchQuery: _searchQuery,
+              onChanged: (value) => setState(() => _searchQuery = value),
+              onClear: () {
+                setState(() {
+                  _searchQuery = '';
+                  _searchController.clear();
+                });
+              },
+              isDarkMode: widget.isDarkMode,
+              controller: _searchController,
+            ),
+          ),
           CategoryFilterChips(
             selectedCategory: _selectedCategory,
             onCategorySelected: (category) =>

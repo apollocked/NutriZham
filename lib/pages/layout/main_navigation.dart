@@ -34,12 +34,12 @@ class _MainNavigationState extends State<MainNavigation> {
   }
 
   Future<void> _updateTheme(bool isDark) async {
-    await PreferencesHelper.setIsDarkMode(isDark); // Use PreferencesHelper
+    await PreferencesHelper.setIsDarkMode(isDark);
     setState(() => _isDarkMode = isDark);
   }
 
   Future<void> _updateLanguage(String lang) async {
-    await PreferencesHelper.setLanguageCode(lang); // Use PreferencesHelper
+    await PreferencesHelper.setLanguageCode(lang);
     setState(() => _languageCode = lang);
   }
 
@@ -72,51 +72,41 @@ class _MainNavigationState extends State<MainNavigation> {
         index: _currentIndex,
         children: pages,
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, -5),
-            ),
-          ],
-        ),
-        child: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (index) => setState(() => _currentIndex = index),
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: _isDarkMode ? AppColors.darkCard : Colors.white,
-          selectedItemColor: AppColors.primaryGreen,
-          unselectedItemColor: _isDarkMode
-              ? AppColors.darkTextSecondary
-              : AppColors.lightTextSecondary,
-          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
-          showUnselectedLabels: true,
-          elevation: 0,
-          items: [
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.home_outlined),
-              activeIcon: const Icon(Icons.home),
-              label: loc.home,
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.search_outlined),
-              activeIcon: const Icon(Icons.search),
-              label: loc.search,
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.calendar_today_outlined),
-              activeIcon: const Icon(Icons.calendar_today),
-              label: loc.planner,
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.person_outline),
-              activeIcon: const Icon(Icons.person),
-              label: loc.profile,
-            ),
-          ],
-        ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) => setState(() => _currentIndex = index),
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: _isDarkMode ? AppColors.darkBackground : Colors.white,
+        selectedItemColor: AppColors.primaryGreen,
+        unselectedItemColor: _isDarkMode
+            ? AppColors.darkTextSecondary
+            : AppColors.lightTextSecondary,
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
+        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w400),
+        showUnselectedLabels: true,
+        elevation: 0,
+        items: [
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.home_outlined),
+            activeIcon: const Icon(Icons.home),
+            label: loc.home,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.search_outlined),
+            activeIcon: const Icon(Icons.search),
+            label: loc.search,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.calendar_today_outlined),
+            activeIcon: const Icon(Icons.calendar_today),
+            label: loc.planner,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.person_outline),
+            activeIcon: const Icon(Icons.person),
+            label: loc.profile,
+          ),
+        ],
       ),
     );
   }

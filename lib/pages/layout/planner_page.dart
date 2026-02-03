@@ -60,7 +60,6 @@ class _PlannerPageState extends State<PlannerPage> {
   Future<void> _toggleMealInPlan(String recipeId, dynamic loc) async {
     await MealPlannerService.toggleMealInPlan(recipeId);
 
-    // Show feedback
     if (mounted) {
       final isInPlan = _plannedMealIds.contains(recipeId);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -115,51 +114,11 @@ class _PlannerPageState extends State<PlannerPage> {
       appBar: CustomAppBar(
         title: loc.mealPlanner,
         isDarkMode: widget.isDarkMode,
-        actions: [
-          if (_plannedMealIds.isNotEmpty)
-            IconButton(
-              icon: const Icon(Icons.delete_outline),
-              onPressed: () async {
-                final confirmed = await showDialog<bool>(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Clear Meal Plan'),
-                    content: const Text(
-                        'Are you sure you want to clear all planned meals?'),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, false),
-                        child: const Text('Cancel'),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, true),
-                        style: TextButton.styleFrom(
-                            foregroundColor: AppColors.error),
-                        child: const Text('Clear'),
-                      ),
-                    ],
-                  ),
-                );
-
-                if (confirmed == true) {
-                  await MealPlannerService.clearAllPlannedMeals();
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Meal plan cleared'),
-                        backgroundColor: AppColors.success,
-                      ),
-                    );
-                  }
-                }
-              },
-            ),
-        ],
       ),
       body: Column(
         children: [
-          // Today's meals header with enhanced nutrition summary
-          _buildNutritionSummaryHeader(loc, plannedMeals),
+          // Nutrition Summary
+          _buildNutritionSummary(loc, plannedMeals),
 
           // Planned meals list
           Expanded(
@@ -171,7 +130,7 @@ class _PlannerPageState extends State<PlannerPage> {
                   _buildSectionHeader(loc.dailyPlan, textColor),
                   _buildPlannedMealsList(loc, plannedMeals),
 
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 24),
 
                   // Recommended Meals Section
                   _buildSectionHeader(loc.recommendedMeals, textColor),
@@ -187,42 +146,53 @@ class _PlannerPageState extends State<PlannerPage> {
     );
   }
 
-  Widget _buildNutritionSummaryHeader(
+  Widget _buildNutritionSummary(
       AppLocalizations loc, List<Recipe> plannedMeals) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [AppColors.primaryGreen, AppColors.primaryGreenLight],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+      decoration: BoxDecoration(
+        color: widget.isDarkMode ? AppColors.darkCard : Colors.white,
+        border: Border(
+          bottom: BorderSide(
+            color: widget.isDarkMode
+                ? AppColors.darkDivider
+                : AppColors.lightDivider,
+          ),
         ),
       ),
       child: Column(
         children: [
           Text(
             loc.todaysMeals,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+            style: TextStyle(
+              color: widget.isDarkMode
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 12),
 
-          // Total Calories - Big display
+          // Total Calories
           Text(
             '$_totalCalories kcal',
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color:
+                  widget.isDarkMode ? AppColors.darkText : AppColors.lightText,
               fontSize: 32,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 4),
           Text(
             '${plannedMeals.length} ${plannedMeals.length == 1 ? loc.recipeFound : loc.recipesFound}',
-            style: const TextStyle(color: Colors.white70, fontSize: 14),
+            style: TextStyle(
+              color: widget.isDarkMode
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
+              fontSize: 14,
+            ),
           ),
 
           const SizedBox(height: 16),
@@ -232,18 +202,32 @@ class _PlannerPageState extends State<PlannerPage> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: widget.isDarkMode
+                      ? AppColors.darkDivider
+                      : AppColors.lightDivider,
+                ),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _buildMacroItem('P', '${_totalProtein.toStringAsFixed(0)}g',
                       AppColors.proteinColor),
-                  Container(width: 1, height: 30, color: Colors.white30),
+                  Container(
+                      width: 1,
+                      height: 30,
+                      color: widget.isDarkMode
+                          ? AppColors.darkDivider
+                          : AppColors.lightDivider),
                   _buildMacroItem('C', '${_totalCarbs.toStringAsFixed(0)}g',
                       AppColors.carbsColor),
-                  Container(width: 1, height: 30, color: Colors.white30),
+                  Container(
+                      width: 1,
+                      height: 30,
+                      color: widget.isDarkMode
+                          ? AppColors.darkDivider
+                          : AppColors.lightDivider),
                   _buildMacroItem('F', '${_totalFats.toStringAsFixed(0)}g',
                       AppColors.fatsColor),
                 ],
@@ -259,19 +243,21 @@ class _PlannerPageState extends State<PlannerPage> {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            color: Colors.white70,
+          style: TextStyle(
+            color: widget.isDarkMode
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
             fontSize: 12,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w500,
           ),
         ),
         const SizedBox(height: 4),
         Text(
           value,
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: color,
             fontSize: 16,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ],
@@ -280,12 +266,12 @@ class _PlannerPageState extends State<PlannerPage> {
 
   Widget _buildSectionHeader(String title, Color textColor) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
       child: Text(
         title,
         style: TextStyle(
           fontSize: 18,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w600,
           color: textColor,
         ),
       ),
@@ -298,7 +284,7 @@ class _PlannerPageState extends State<PlannerPage> {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: EmptyStateWidget(
-          icon: Icons.calendar_today,
+          icon: Icons.calendar_today_outlined,
           title: loc.addToPlan,
           subtitle: '${loc.tapToSave} recommended meals below',
           isDarkMode: widget.isDarkMode,
@@ -315,7 +301,8 @@ class _PlannerPageState extends State<PlannerPage> {
             isDarkMode: widget.isDarkMode,
             languageCode: widget.languageCode,
             trailing: IconButton(
-              icon: const Icon(Icons.remove_circle, color: AppColors.error),
+              icon: const Icon(Icons.remove_circle_outline,
+                  color: AppColors.error),
               onPressed: () => _toggleMealInPlan(
                   recipe.id, AppLocalizations.of(widget.languageCode)),
             ),
@@ -335,7 +322,8 @@ class _PlannerPageState extends State<PlannerPage> {
             isDarkMode: widget.isDarkMode,
             languageCode: widget.languageCode,
             trailing: IconButton(
-              icon: const Icon(Icons.add_circle, color: AppColors.primaryGreen),
+              icon: const Icon(Icons.add_circle_outline,
+                  color: AppColors.primaryGreen),
               onPressed: () => _toggleMealInPlan(
                   recipe.id, AppLocalizations.of(widget.languageCode)),
             ),

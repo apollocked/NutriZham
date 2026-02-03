@@ -70,12 +70,11 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
 
   Future<void> _toggleFavorite() async {
     await FavoritesHelper.toggleFavorite(widget.recipe.id);
-    // Show feedback
     AppLocalizations.of(widget.languageCode);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content:
-            Text(_isFavorite ? 'Removed from favorites' : 'Added to favorites'),
+            Text(_isFavorite ? "Removed from favorites" : 'Added to favorites'),
         duration: const Duration(seconds: 1),
         backgroundColor: _isFavorite ? AppColors.error : AppColors.success,
       ),
@@ -121,8 +120,8 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
         isDarkMode: widget.isDarkMode,
         actions: [
           IconButton(
-            icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border),
-            color: _isFavorite ? AppColors.accentRed : Colors.white,
+            icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_outline),
+            color: _isFavorite ? AppColors.accentRed : null,
             onPressed: _toggleFavorite,
           ),
         ],
@@ -131,94 +130,108 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Stack(
-              children: [
-                const SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                ),
-                Positioned(
-                  top: 16,
-                  right: 25,
-                  child: CategoryBadge(
-                    category: widget.recipe.category,
-                    languageCode: widget.languageCode,
-                  ),
-                )
-              ],
-            ),
+            // Category Badge
             Padding(
               padding: const EdgeInsets.all(16),
+              child: CategoryBadge(
+                category: widget.recipe.category,
+                languageCode: widget.languageCode,
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Rating Section
-                  Card(
-                    color:
-                        widget.isDarkMode ? AppColors.darkCard : Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                          widget.recipe.rating
-                                              .toStringAsFixed(1),
-                                          style: const TextStyle(
-                                              fontSize: 32,
-                                              fontWeight: FontWeight.bold,
-                                              color: AppColors.starActive)),
-                                      const SizedBox(width: 8),
-                                      const Icon(Icons.star,
-                                          color: AppColors.starActive,
-                                          size: 32),
-                                    ],
-                                  ),
-                                  Text(
-                                      '${widget.recipe.ratingCount} ${loc.ratings}',
-                                      style: TextStyle(
-                                          color: widget.isDarkMode
-                                              ? AppColors.darkTextSecondary
-                                              : AppColors.lightTextSecondary)),
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(loc.yourRating,
-                                      style: const TextStyle(fontSize: 12)),
-                                  Row(
-                                    children: List.generate(5, (index) {
-                                      return GestureDetector(
-                                        onTap: () => _saveRating(index + 1),
-                                        child: Icon(
-                                          index < _userRating
-                                              ? Icons.star
-                                              : Icons.star_border,
-                                          color: AppColors.starActive,
-                                          size: 24,
-                                        ),
-                                      );
-                                    }),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color:
+                          widget.isDarkMode ? AppColors.darkCard : Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: widget.isDarkMode
+                            ? AppColors.darkDivider
+                            : AppColors.lightDivider,
                       ),
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      widget.recipe.rating.toStringAsFixed(1),
+                                      style: const TextStyle(
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.starActive,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    const Icon(
+                                      Icons.star,
+                                      color: AppColors.starActive,
+                                      size: 28,
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  '${widget.recipe.ratingCount} ${loc.ratings}',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: widget.isDarkMode
+                                        ? AppColors.darkTextSecondary
+                                        : AppColors.lightTextSecondary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  loc.yourRating,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: widget.isDarkMode
+                                        ? AppColors.darkTextSecondary
+                                        : AppColors.lightTextSecondary,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Row(
+                                  children: List.generate(5, (index) {
+                                    return GestureDetector(
+                                      onTap: () => _saveRating(index + 1),
+                                      child: Icon(
+                                        index < _userRating
+                                            ? Icons.star
+                                            : Icons.star_outline,
+                                        color: AppColors.starActive,
+                                        size: 20,
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
 
                   const SizedBox(height: 16),
 
+                  // Nutrition Info
                   NutritionInfoCard(
                     nutrition: widget.recipe.nutrition,
                     isDarkMode: widget.isDarkMode,
@@ -227,80 +240,121 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
 
                   const SizedBox(height: 24),
 
-                  Text(loc.ingredients,
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: textColor)),
+                  // Ingredients
+                  Text(
+                    loc.ingredients,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: textColor,
+                    ),
+                  ),
                   const SizedBox(height: 12),
-                  Card(
-                    color:
-                        widget.isDarkMode ? AppColors.darkCard : Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: ingredients
-                            .map((ing) => Padding(
-                                  padding: const EdgeInsets.only(bottom: 8),
-                                  child: Row(
-                                    children: [
-                                      const Text('• ',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color: AppColors.primaryGreen)),
-                                      Expanded(
-                                          child: Text(ing,
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: textColor))),
-                                    ],
-                                  ),
-                                ))
-                            .toList(),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color:
+                          widget.isDarkMode ? AppColors.darkCard : Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: widget.isDarkMode
+                            ? AppColors.darkDivider
+                            : AppColors.lightDivider,
                       ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: ingredients
+                          .map((ing) => Padding(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: Row(
+                                  children: [
+                                    const Text(
+                                      '• ',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: AppColors.primaryGreen,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        ing,
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: textColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ))
+                          .toList(),
                     ),
                   ),
 
                   const SizedBox(height: 24),
 
-                  Text(loc.preparationSteps,
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: textColor)),
+                  // Preparation Steps
+                  Text(
+                    loc.preparationSteps,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: textColor,
+                    ),
+                  ),
                   const SizedBox(height: 12),
-                  ...steps.asMap().entries.map((entry) => Card(
-                        color: widget.isDarkMode
-                            ? AppColors.darkCard
-                            : Colors.white,
-                        margin: const EdgeInsets.only(bottom: 12),
+                  ...steps.asMap().entries.map((entry) => Container(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        decoration: BoxDecoration(
+                          color: widget.isDarkMode
+                              ? AppColors.darkCard
+                              : Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: widget.isDarkMode
+                                ? AppColors.darkDivider
+                                : AppColors.lightDivider,
+                          ),
+                        ),
                         child: Padding(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(12),
                           child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                width: 32,
-                                height: 32,
+                                width: 28,
+                                height: 28,
                                 decoration: BoxDecoration(
-                                    color: AppColors.primaryGreen,
-                                    borderRadius: BorderRadius.circular(16)),
+                                  color: AppColors.primaryGreen,
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
                                 child: Center(
-                                    child: Text('${entry.key + 1}',
-                                        style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold))),
+                                  child: Text(
+                                    '${entry.key + 1}',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
                               ),
                               const SizedBox(width: 12),
                               Expanded(
-                                  child: Text(entry.value,
-                                      style: TextStyle(
-                                          fontSize: 16, color: textColor))),
+                                child: Text(
+                                  entry.value,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: textColor,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
                       )),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),

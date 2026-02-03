@@ -100,7 +100,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
               CustomTextField(
                 controller: _usernameController,
                 labelText: loc.username,
-                prefixIcon: Icons.person,
+                prefixIcon: Icons.person_outline,
                 isDarkMode: widget.isDarkMode,
                 textInputAction: TextInputAction.next,
                 validator: (value) =>
@@ -110,7 +110,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
               CustomTextField(
                 controller: _emailController,
                 labelText: loc.email,
-                prefixIcon: Icons.email,
+                prefixIcon: Icons.email_outlined,
                 isDarkMode: widget.isDarkMode,
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
@@ -121,7 +121,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
               CustomTextField(
                 controller: _ageController,
                 labelText: loc.age,
-                prefixIcon: Icons.calendar_today,
+                prefixIcon: Icons.calendar_today_outlined,
                 isDarkMode: widget.isDarkMode,
                 keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.done,
@@ -137,7 +137,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
                 child: PrimaryButton(
                   text: loc.save,
                   onPressed: _saveChanges,
-                  icon: Icons.save,
+                  icon: Icons.check,
                 ),
               ),
             ],

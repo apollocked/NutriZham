@@ -76,7 +76,6 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       );
 
-      // Navigate back to login page
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -102,8 +101,6 @@ class _RegisterPageState extends State<RegisterPage> {
     final bgColor = widget.isDarkMode
         ? AppColors.darkBackground
         : AppColors.lightBackground;
-    final cardColor =
-        widget.isDarkMode ? AppColors.darkCard : AppColors.lightCard;
     final textColor =
         widget.isDarkMode ? AppColors.darkText : AppColors.lightText;
 
@@ -118,29 +115,21 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // App Logo/Icon
+                  // App Logo
                   Container(
-                    width: 100,
-                    height: 100,
+                    width: 80,
+                    height: 80,
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: AppColors.primaryGradient,
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                      color: AppColors.primaryGreen.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: AppColors.primaryGreen.withOpacity(0.3),
                       ),
-                      borderRadius: BorderRadius.circular(25),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.primaryGreen.withOpacity(0.3),
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
-                        ),
-                      ],
                     ),
                     child: const Icon(
                       Icons.restaurant_menu,
-                      size: 50,
-                      color: Colors.white,
+                      size: 40,
+                      color: AppColors.primaryGreen,
                     ),
                   ),
                   const SizedBox(height: 32),
@@ -149,8 +138,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   Text(
                     loc.appTitle,
                     style: TextStyle(
-                      fontSize: 36,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 32,
+                      fontWeight: FontWeight.w600,
                       color: textColor,
                     ),
                   ),
@@ -158,7 +147,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   Text(
                     loc.register,
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       color: widget.isDarkMode
                           ? AppColors.darkTextSecondary
                           : AppColors.lightTextSecondary,
@@ -166,170 +155,178 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   const SizedBox(height: 48),
 
-                  // Registration Card
-                  Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: cardColor,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 10,
-                          offset: const Offset(0, 5),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        // Username Field
-                        CustomTextField(
-                          controller: _usernameController,
-                          labelText: loc.username,
-                          prefixIcon: Icons.person_outline,
-                          isDarkMode: widget.isDarkMode,
-                          textInputAction: TextInputAction.next,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter a username';
-                            }
-                            if (value.length < 3) {
-                              return 'Username must be at least 3 characters';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 16),
+                  // Registration Form
+                  Column(
+                    children: [
+                      // Username Field
+                      CustomTextField(
+                        controller: _usernameController,
+                        labelText: loc.username,
+                        prefixIcon: Icons.person_outline,
+                        isDarkMode: widget.isDarkMode,
+                        textInputAction: TextInputAction.next,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a username';
+                          }
+                          if (value.length < 3) {
+                            return 'Username must be at least 3 characters';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
 
-                        // Email Field
-                        CustomTextField(
-                          controller: _emailController,
-                          labelText: loc.email,
-                          prefixIcon: Icons.email_outlined,
-                          isDarkMode: widget.isDarkMode,
-                          keyboardType: TextInputType.emailAddress,
-                          textInputAction: TextInputAction.next,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your email';
-                            }
-                            if (!value.contains('@')) {
-                              return 'Please enter a valid email';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 16),
+                      // Email Field
+                      CustomTextField(
+                        controller: _emailController,
+                        labelText: loc.email,
+                        prefixIcon: Icons.email_outlined,
+                        isDarkMode: widget.isDarkMode,
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your email';
+                          }
+                          if (!value.contains('@')) {
+                            return 'Please enter a valid email';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
 
-                        // Age Field
-                        CustomTextField(
-                          controller: _ageController,
-                          labelText: loc.age,
-                          prefixIcon: Icons.calendar_today,
-                          isDarkMode: widget.isDarkMode,
-                          keyboardType: TextInputType.number,
-                          textInputAction: TextInputAction.next,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your age';
-                            }
-                            final age = int.tryParse(value);
-                            if (age == null || age < 10 || age > 100) {
-                              return 'Please enter a valid age (10-100)';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 16),
+                      // Age Field
+                      CustomTextField(
+                        controller: _ageController,
+                        labelText: loc.age,
+                        prefixIcon: Icons.calendar_today_outlined,
+                        isDarkMode: widget.isDarkMode,
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your age';
+                          }
+                          final age = int.tryParse(value);
+                          if (age == null || age < 10 || age > 100) {
+                            return 'Please enter a valid age (10-100)';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
 
-                        CustomTextField(
-                          controller: _passwordController,
-                          labelText: loc.password,
-                          prefixIcon: Icons.lock_outline,
-                          isDarkMode: widget.isDarkMode,
-                          obscureText: _obscurePassword,
-                          textInputAction: TextInputAction.next,
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscurePassword
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                              color: widget.isDarkMode
-                                  ? AppColors.darkTextSecondary
-                                  : AppColors.lightTextSecondary,
-                            ),
-                            onPressed: () {
-                              setState(
-                                  () => _obscurePassword = !_obscurePassword);
-                            },
+                      // Password Field
+                      CustomTextField(
+                        controller: _passwordController,
+                        labelText: loc.password,
+                        prefixIcon: Icons.lock_outline,
+                        isDarkMode: widget.isDarkMode,
+                        obscureText: _obscurePassword,
+                        textInputAction: TextInputAction.next,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: widget.isDarkMode
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your password';
-                            }
-                            if (value.length < 6) {
-                              return 'Password must be at least 6 characters';
-                            }
-                            return null;
+                          onPressed: () {
+                            setState(
+                                () => _obscurePassword = !_obscurePassword);
                           },
                         ),
-                        const SizedBox(height: 16),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your password';
+                          }
+                          if (value.length < 6) {
+                            return 'Password must be at least 6 characters';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
 
-                        CustomTextField(
-                          controller: _confirmPasswordController,
-                          labelText: loc.confirmPassword,
-                          prefixIcon: Icons.lock_outlined,
-                          isDarkMode: widget.isDarkMode,
-                          obscureText: _obscureConfirmPassword,
-                          textInputAction: TextInputAction.done,
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscureConfirmPassword
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                              color: widget.isDarkMode
-                                  ? AppColors.darkTextSecondary
-                                  : AppColors.lightTextSecondary,
-                            ),
-                            onPressed: () {
-                              setState(() => _obscureConfirmPassword =
-                                  !_obscureConfirmPassword);
-                            },
+                      // Confirm Password Field
+                      CustomTextField(
+                        controller: _confirmPasswordController,
+                        labelText: loc.confirmPassword,
+                        prefixIcon: Icons.lock_outlined,
+                        isDarkMode: widget.isDarkMode,
+                        obscureText: _obscureConfirmPassword,
+                        textInputAction: TextInputAction.done,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureConfirmPassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: widget.isDarkMode
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please confirm your password';
-                            }
-                            return null;
+                          onPressed: () {
+                            setState(() => _obscureConfirmPassword =
+                                !_obscureConfirmPassword);
                           },
                         ),
-                        const SizedBox(height: 24),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please confirm your password';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 24),
 
-                        PrimaryButton(
-                          text: loc.register,
-                          onPressed: _register,
-                          isLoading: _isLoading,
-                        )
-                      ],
-                    ),
+                      // Register Button
+                      PrimaryButton(
+                        text: loc.register,
+                        onPressed: _register,
+                        isLoading: _isLoading,
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 45),
 
-                  IconTextButton(
-                    text: loc.login,
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => LoginPage(
-                            isDarkMode: widget.isDarkMode,
-                            languageCode: widget.languageCode,
-                          ),
+                  // Login Link
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        loc.alreadyHaveAccount,
+                        style: TextStyle(
+                          color: widget.isDarkMode
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
-                      );
-                    },
-                    fontSize: 22,
-                  )
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => LoginPage(
+                                isDarkMode: widget.isDarkMode,
+                                languageCode: widget.languageCode,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          loc.login,
+                          style: const TextStyle(
+                              color: AppColors.primaryGreen,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),

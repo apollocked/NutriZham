@@ -29,15 +29,15 @@ class EmptyStateWidget extends StatelessWidget {
           children: [
             Icon(
               icon,
-              size: 80,
+              size: 64,
               color: textColor.withOpacity(0.3),
             ),
             const SizedBox(height: 24),
             Text(
               title,
               style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
                 color: textColor.withOpacity(0.7),
               ),
               textAlign: TextAlign.center,
@@ -122,7 +122,7 @@ class ErrorWidget extends StatelessWidget {
           children: [
             Icon(
               Icons.error_outline,
-              size: 80,
+              size: 64,
               color: AppColors.error.withOpacity(0.7),
             ),
             const SizedBox(height: 24),

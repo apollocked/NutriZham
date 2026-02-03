@@ -23,25 +23,21 @@ class StatCard extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isDarkMode ? AppColors.darkCard : Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isDarkMode ? AppColors.darkDivider : AppColors.lightDivider,
+        ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: color, size: 32),
+          Icon(icon, color: color, size: 28),
           const SizedBox(height: 8),
           Text(
             value,
             style: TextStyle(
               fontSize: 24,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w600,
               color: color,
             ),
           ),
@@ -49,7 +45,7 @@ class StatCard extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 14,
               color: isDarkMode
                   ? AppColors.darkTextSecondary
                   : AppColors.lightTextSecondary,
@@ -117,82 +113,6 @@ class MenuItemTile extends StatelessWidget {
             )
           : null,
       onTap: onTap,
-    );
-  }
-}
-
-class InfoCard extends StatelessWidget {
-  final String title;
-  final String? subtitle;
-  final IconData? icon;
-  final Color? color;
-  final bool isDarkMode;
-  final Widget? trailing;
-
-  const InfoCard({
-    super.key,
-    required this.title,
-    required this.isDarkMode,
-    this.subtitle,
-    this.icon,
-    this.color,
-    this.trailing,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final textColor = isDarkMode ? AppColors.darkText : AppColors.lightText;
-    final backgroundColor = color?.withOpacity(0.1) ??
-        (isDarkMode ? AppColors.darkCard : Colors.white);
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(12),
-        border:
-            color != null ? Border.all(color: color!.withOpacity(0.3)) : null,
-      ),
-      child: Row(
-        children: [
-          if (icon != null) ...[
-            Icon(
-              icon,
-              color: color ?? AppColors.primaryGreen,
-              size: 32,
-            ),
-            const SizedBox(width: 16),
-          ],
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: textColor,
-                  ),
-                ),
-                if (subtitle != null) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle!,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: isDarkMode
-                          ? AppColors.darkTextSecondary
-                          : AppColors.lightTextSecondary,
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-          if (trailing != null) trailing!,
-        ],
-      ),
     );
   }
 }

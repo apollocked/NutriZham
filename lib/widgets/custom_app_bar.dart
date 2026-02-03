@@ -22,14 +22,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(title),
-      backgroundColor: isDarkMode ? AppColors.darkCard : AppColors.primaryGreen,
-      foregroundColor: Colors.white,
+      title: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      backgroundColor: isDarkMode ? AppColors.darkBackground : Colors.white,
+      foregroundColor: isDarkMode ? AppColors.darkText : AppColors.lightText,
       elevation: 0,
       centerTitle: centerTitle,
       actions: actions,
       leading: leading,
       bottom: bottom,
+      surfaceTintColor: Colors.transparent,
     );
   }
 
@@ -37,44 +44,4 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => Size.fromHeight(
         kToolbarHeight + (bottom?.preferredSize.height ?? 0),
       );
-}
-
-class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
-  final List<Widget>? actions;
-  final Widget? leading;
-  final bool centerTitle;
-
-  const GradientAppBar({
-    super.key,
-    required this.title,
-    this.actions,
-    this.leading,
-    this.centerTitle = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: AppColors.primaryGradient,
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
-      child: AppBar(
-        title: Text(title),
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: centerTitle,
-        actions: actions,
-        leading: leading,
-      ),
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

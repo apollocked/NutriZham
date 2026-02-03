@@ -30,7 +30,7 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textColor = isDarkMode ? AppColors.darkText : AppColors.lightText;
-    
+
     return TextFormField(
       controller: controller,
       style: TextStyle(color: textColor),
@@ -47,19 +47,22 @@ class CustomTextField extends StatelessWidget {
         ),
         prefixIcon: Icon(prefixIcon, color: AppColors.primaryGreen),
         suffixIcon: suffixIcon,
-        filled: true,
-        fillColor: isDarkMode ? AppColors.darkSurface : AppColors.lightBackground,
+        filled: false,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(
+            color: isDarkMode ? AppColors.darkDivider : AppColors.lightDivider,
+          ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(
+            color: isDarkMode ? AppColors.darkDivider : AppColors.lightDivider,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.primaryGreen, width: 2),
+          borderSide: const BorderSide(color: AppColors.primaryGreen, width: 1),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -67,7 +70,7 @@ class CustomTextField extends StatelessWidget {
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.error, width: 2),
+          borderSide: const BorderSide(color: AppColors.error, width: 1),
         ),
       ),
       validator: validator,

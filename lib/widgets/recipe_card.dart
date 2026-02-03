@@ -43,12 +43,14 @@ class RecipeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final textColor = isDarkMode ? AppColors.darkText : AppColors.lightText;
 
-    return Card(
-      color: isDarkMode ? AppColors.darkCard : Colors.white,
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      elevation: 2,
-      shape: RoundedRectangleBorder(
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      decoration: BoxDecoration(
+        color: isDarkMode ? AppColors.darkCard : Colors.white,
         borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isDarkMode ? AppColors.darkDivider : AppColors.lightDivider,
+        ),
       ),
       child: InkWell(
         onTap: onTap,
@@ -58,29 +60,23 @@ class RecipeCard extends StatelessWidget {
           child: Row(
             children: [
               // Recipe Icon
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Container(
-                  width: 70,
-                  height: 70,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        AppColors.getCategoryColor(
-                          recipe.category.toString().split('.').last,
-                        ).withOpacity(0.2),
-                        AppColors.getCategoryColor(
-                          recipe.category.toString().split('.').last,
-                        ).withOpacity(0.1),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      recipe.icon,
-                      style: const TextStyle(fontSize: 40),
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: AppColors.getCategoryColor(
+                    recipe.category.toString().split('.').last,
+                  ).withOpacity(0.1),
+                ),
+                child: Center(
+                  child: Text(
+                    recipe.icon,
+                    style: TextStyle(
+                      fontSize: 32,
+                      color: AppColors.getCategoryColor(
+                        recipe.category.toString().split('.').last,
+                      ),
                     ),
                   ),
                 ),
@@ -95,7 +91,7 @@ class RecipeCard extends StatelessWidget {
                     Text(
                       recipe.title[languageCode] ?? recipe.title['en'] ?? '',
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                         fontSize: 16,
                         color: textColor,
                       ),
@@ -112,26 +108,6 @@ class RecipeCard extends StatelessWidget {
                             : AppColors.lightTextSecondary,
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.star,
-                          color: AppColors.starActive,
-                          size: 16,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          '${recipe.rating.toStringAsFixed(1)} (${recipe.ratingCount})',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: isDarkMode
-                                ? AppColors.darkTextSecondary
-                                : AppColors.lightTextSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),
@@ -139,7 +115,7 @@ class RecipeCard extends StatelessWidget {
               // Favorite Button
               IconButton(
                 icon: Icon(
-                  isFavorite ? Icons.favorite : Icons.favorite_border,
+                  isFavorite ? Icons.favorite : Icons.favorite_outline,
                   color: isFavorite ? AppColors.accentRed : Colors.grey,
                 ),
                 onPressed: onFavoriteToggle,
@@ -172,33 +148,35 @@ class CompactRecipeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final textColor = isDarkMode ? AppColors.darkText : AppColors.lightText;
 
-    return Card(
-      color: isDarkMode ? AppColors.darkCard : Colors.white,
+    return Container(
       margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: isDarkMode ? AppColors.darkCard : Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: isDarkMode ? AppColors.darkDivider : AppColors.lightDivider,
+        ),
+      ),
       child: ListTile(
         onTap: onTap,
         leading: Container(
-          width: 50,
-          height: 50,
+          width: 40,
+          height: 40,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                AppColors.getCategoryColor(
-                  recipe.category.toString().split('.').last,
-                ).withOpacity(0.2),
-                AppColors.getCategoryColor(
-                  recipe.category.toString().split('.').last,
-                ).withOpacity(0.1),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(6),
+            color: AppColors.getCategoryColor(
+              recipe.category.toString().split('.').last,
+            ).withOpacity(0.1),
           ),
           child: Center(
             child: Text(
               recipe.icon,
-              style: const TextStyle(fontSize: 28),
+              style: TextStyle(
+                fontSize: 20,
+                color: AppColors.getCategoryColor(
+                  recipe.category.toString().split('.').last,
+                ),
+              ),
             ),
           ),
         ),

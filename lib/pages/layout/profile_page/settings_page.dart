@@ -81,7 +81,7 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       _currentDarkMode = isDark;
     });
-    await PreferencesHelper.setIsDarkMode(isDark); // Use PreferencesHelper
+    await PreferencesHelper.setIsDarkMode(isDark);
     widget.onThemeChanged(isDark);
   }
 
@@ -89,7 +89,7 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       _currentLanguage = lang;
     });
-    await PreferencesHelper.setLanguageCode(lang); // Use PreferencesHelper
+    await PreferencesHelper.setLanguageCode(lang);
     widget.onLanguageChanged(lang);
   }
 
@@ -116,13 +116,17 @@ class _SettingsPageState extends State<SettingsPage> {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              color: _currentDarkMode ? AppColors.darkCard : Colors.white,
               borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: _currentDarkMode
+                    ? AppColors.darkDivider
+                    : AppColors.lightDivider,
+              ),
             ),
             child: Column(
               children: [
                 MenuItemTile(
-                  icon: Icons.edit,
+                  icon: Icons.edit_outlined,
                   title: loc.editAccount,
                   onTap: () {
                     Navigator.push(
@@ -143,7 +147,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         : AppColors.lightDivider,
                     height: 1),
                 MenuItemTile(
-                  icon: Icons.delete_forever,
+                  icon: Icons.delete_outline,
                   title: loc.deleteAccount,
                   onTap: _deleteAccount,
                   iconColor: AppColors.error,
@@ -162,14 +166,20 @@ class _SettingsPageState extends State<SettingsPage> {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              color: _currentDarkMode ? AppColors.darkCard : Colors.white,
               borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: _currentDarkMode
+                    ? AppColors.darkDivider
+                    : AppColors.lightDivider,
+              ),
             ),
             child: Column(
               children: [
                 SwitchListTile(
                   secondary: Icon(
-                    _currentDarkMode ? Icons.dark_mode : Icons.light_mode,
+                    _currentDarkMode
+                        ? Icons.dark_mode_outlined
+                        : Icons.light_mode_outlined,
                     color: AppColors.primaryGreen,
                   ),
                   title: Text(loc.darkMode, style: TextStyle(color: textColor)),
@@ -183,8 +193,8 @@ class _SettingsPageState extends State<SettingsPage> {
                         : AppColors.lightDivider,
                     height: 1),
                 ListTile(
-                  leading:
-                      const Icon(Icons.language, color: AppColors.primaryGreen),
+                  leading: const Icon(Icons.language_outlined,
+                      color: AppColors.primaryGreen),
                   title: Text(loc.language, style: TextStyle(color: textColor)),
                   trailing: DropdownButton<String>(
                     value: _currentLanguage,
@@ -245,7 +255,7 @@ class _SettingsPageState extends State<SettingsPage> {
         title,
         style: TextStyle(
           fontSize: 14,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w500,
           color: _currentDarkMode
               ? AppColors.darkTextSecondary
               : AppColors.lightTextSecondary,

@@ -60,8 +60,8 @@ class PrimaryButton extends StatelessWidget {
                   Text(
                     text,
                     style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
@@ -100,7 +100,7 @@ class SecondaryButton extends StatelessWidget {
           foregroundColor: textColor ?? AppColors.primaryGreen,
           side: BorderSide(
             color: borderColor ?? AppColors.primaryGreen,
-            width: 2,
+            width: 1,
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -116,8 +116,8 @@ class SecondaryButton extends StatelessWidget {
             Text(
               text,
               style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ],
@@ -150,7 +150,7 @@ class IconTextButton extends StatelessWidget {
         style: TextStyle(
           fontSize: fontSize,
           color: color,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );

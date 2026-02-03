@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:nutrizham/pages/authotication/login_page.dart';
 import 'package:nutrizham/pages/layout/profile_page/settings_page.dart';
-
 import 'package:nutrizham/services/auth_service.dart';
 import 'package:nutrizham/models/user_model.dart';
 import 'package:nutrizham/utils/app_colors.dart';
@@ -90,8 +89,6 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _logout() async {
-    await FavoritesHelper.clearAllFavorites();
-    await MealPlannerService.clearAllPlannedMeals();
     await _authService.logout();
     if (!mounted) return;
     Navigator.of(context).pushReplacement(
@@ -132,7 +129,7 @@ class _ProfilePageState extends State<ProfilePage> {
               // Profile Header
               _buildProfileHeader(loc),
 
-              // Stats Cards with Meal Plan count
+              // Stats Cards
               _buildStatsSection(loc, favoriteMeals),
 
               // Menu Items
@@ -151,11 +148,14 @@ class _ProfilePageState extends State<ProfilePage> {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(32),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: AppColors.primaryGradient,
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+      decoration: BoxDecoration(
+        color: widget.isDarkMode ? AppColors.darkCard : Colors.white,
+        border: Border(
+          bottom: BorderSide(
+            color: widget.isDarkMode
+                ? AppColors.darkDivider
+                : AppColors.lightDivider,
+          ),
         ),
       ),
       child: Column(
@@ -163,13 +163,13 @@ class _ProfilePageState extends State<ProfilePage> {
           // Avatar
           CircleAvatar(
             radius: 50,
-            backgroundColor: Colors.white,
+            backgroundColor: AppColors.primaryGreen.withOpacity(0.1),
             child: Text(
               _currentUser!.username[0].toUpperCase(),
               style: const TextStyle(
                 fontSize: 36,
                 color: AppColors.primaryGreen,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
@@ -178,70 +178,29 @@ class _ProfilePageState extends State<ProfilePage> {
           // User Info
           Text(
             _currentUser!.username,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              color:
+                  widget.isDarkMode ? AppColors.darkText : AppColors.lightText,
             ),
           ),
           Text(
             _currentUser!.email,
-            style: const TextStyle(color: Colors.white70),
+            style: TextStyle(
+              color: widget.isDarkMode
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             '${loc.age}: ${_currentUser!.age}',
-            style: const TextStyle(color: Colors.white70),
-          ),
-          const SizedBox(height: 16),
-
-          // Quick Stats Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Favorites Badge
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.favorite, color: Colors.white, size: 16),
-                    const SizedBox(width: 8),
-                    Text(
-                      '${_favoriteIds.length} ${loc.favorites.toLowerCase()}',
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 12),
-              // Meal Plan Badge
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.calendar_today,
-                        color: Colors.white, size: 16),
-                    const SizedBox(width: 8),
-                    Text(
-                      '${_plannedMealIds.length} ${loc.mealPlanner.toLowerCase()}',
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+            style: TextStyle(
+              color: widget.isDarkMode
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
+            ),
           ),
         ],
       ),
@@ -255,7 +214,7 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           Expanded(
             child: StatCard(
-              icon: Icons.favorite,
+              icon: Icons.favorite_outline,
               label: loc.favorites,
               value: '${favoriteMeals.length}',
               color: AppColors.accentRed,
@@ -265,7 +224,7 @@ class _ProfilePageState extends State<ProfilePage> {
           const SizedBox(width: 16),
           Expanded(
             child: StatCard(
-              icon: Icons.calendar_today,
+              icon: Icons.calendar_today_outlined,
               label: loc.mealPlanner,
               value: '${_plannedMealIds.length}',
               color: AppColors.accentBlue,
@@ -281,13 +240,17 @@ class _ProfilePageState extends State<ProfilePage> {
     return Container(
       margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: widget.isDarkMode ? AppColors.darkCard : Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: widget.isDarkMode
+              ? AppColors.darkDivider
+              : AppColors.lightDivider,
+        ),
       ),
       child: Column(
         children: [
           MenuItemTile(
-            icon: Icons.settings,
+            icon: Icons.settings_outlined,
             title: loc.settings,
             onTap: () async {
               await Navigator.push(
@@ -333,35 +296,20 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                loc.favorites,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: textColor,
-                ),
-              ),
-              if (favoriteMeals.isNotEmpty) ...[
-                const SizedBox(width: 8),
-                Text(
-                  '(${favoriteMeals.length})',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: textColor.withOpacity(0.7),
-                  ),
-                ),
-              ],
-            ],
+          Text(
+            loc.favorites,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: textColor,
+            ),
           ),
           const SizedBox(height: 12),
 
           // Empty State or Favorites List
           if (favoriteMeals.isEmpty)
             EmptyStateWidget(
-              icon: Icons.favorite_border,
+              icon: Icons.favorite_outline,
               title: loc.noFavorites,
               subtitle: loc.tapToSave,
               isDarkMode: widget.isDarkMode,
@@ -382,10 +330,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     )),
                 if (favoriteMeals.length > 5)
                   Padding(
-                    padding: const EdgeInsets.only(top: 8),
+                    padding: const EdgeInsets.only(top: 12),
                     child: Center(
                       child: Text(
-                        '+ ${favoriteMeals.length - 5} more favorites',
+                        '+ ${favoriteMeals.length - 5} more',
                         style: TextStyle(
                           fontSize: 14,
                           color: textColor.withOpacity(0.6),

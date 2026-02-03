@@ -7,7 +7,6 @@ import 'package:nutrizham/utils/app_localizations.dart';
 import 'package:nutrizham/services/favorites_helper.dart';
 import 'package:nutrizham/widgets/custom_app_bar.dart';
 import 'package:nutrizham/widgets/search_bar_widget.dart';
-
 import 'package:nutrizham/widgets/recipe_card.dart';
 import 'package:nutrizham/widgets/empty_state_widget.dart';
 
@@ -142,14 +141,6 @@ class _HomePageState extends State<HomePage> {
     return recipes[dayOfYear % recipes.length];
   }
 
-  Map<MealCategory, int> get _categoryCounts {
-    final counts = <MealCategory, int>{};
-    for (var recipe in recipes) {
-      counts[recipe.category] = (counts[recipe.category] ?? 0) + 1;
-    }
-    return counts;
-  }
-
   String _getCategoryName(MealCategory category) {
     final loc = AppLocalizations.of(widget.languageCode);
     switch (category) {
@@ -182,71 +173,42 @@ class _HomePageState extends State<HomePage> {
         title: loc.appTitle,
         isDarkMode: widget.isDarkMode,
         actions: [
-          Stack(
-            children: [
-              IconButton(
-                icon: Icon(
-                  _showFavoritesOnly ? Icons.favorite : Icons.favorite_border,
-                ),
-                color: _showFavoritesOnly ? AppColors.accentRed : Colors.white,
-                onPressed: () {
-                  setState(() {
-                    _showFavoritesOnly = !_showFavoritesOnly;
-                    _currentPage = 0;
-                  });
-                },
-              ),
-              if (_favoriteIds.isNotEmpty)
-                Positioned(
-                  right: 8,
-                  top: 8,
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      color: AppColors.accentRed,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    constraints: const BoxConstraints(
-                      minWidth: 16,
-                      minHeight: 16,
-                    ),
-                    child: Text(
-                      '${_favoriteIds.length}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-            ],
+          IconButton(
+            icon: Icon(
+              _showFavoritesOnly ? Icons.favorite : Icons.favorite_outline,
+              color: _showFavoritesOnly ? AppColors.accentRed : null,
+            ),
+            onPressed: () {
+              setState(() {
+                _showFavoritesOnly = !_showFavoritesOnly;
+                _currentPage = 0;
+              });
+            },
           ),
         ],
       ),
       body: Column(
         children: [
-          // Recipe Count Banner
-          _buildRecipeCountBanner(loc),
-
           // Search Bar
-          CustomSearchBar(
-            hintText: loc.searchPlaceholder,
-            searchQuery: _searchQuery,
-            onChanged: (value) {
-              setState(() {
-                _searchQuery = value;
-                _currentPage = 0;
-              });
-            },
-            onClear: _clearSearch,
-            isDarkMode: widget.isDarkMode,
-            controller: _searchController,
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: CustomSearchBar(
+              hintText: loc.searchPlaceholder,
+              searchQuery: _searchQuery,
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value;
+                  _currentPage = 0;
+                });
+              },
+              onClear: _clearSearch,
+              isDarkMode: widget.isDarkMode,
+              controller: _searchController,
+            ),
           ),
 
-          // Category Filter Chips with counts
-          _buildCategoryChipsWithCounts(loc),
+          // Category Filter Chips
+          _buildCategoryChips(loc),
 
           // Recipe of the Day (only show when not searching/filtering)
           if (_searchQuery.isEmpty &&
@@ -254,12 +216,41 @@ class _HomePageState extends State<HomePage> {
               !_showFavoritesOnly)
             _buildRecipeOfTheDay(loc),
 
+          // Recipes List Header
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  _showFavoritesOnly ? loc.favorites : loc.recipes,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: widget.isDarkMode
+                        ? AppColors.darkText
+                        : AppColors.lightText,
+                  ),
+                ),
+                Text(
+                  '${_paginatedRecipes.length}',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: widget.isDarkMode
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
           // Recipes List or Empty State
           Expanded(
             child: paginatedRecipes.isEmpty
                 ? EmptyStateWidget(
                     icon: _showFavoritesOnly
-                        ? Icons.favorite_border
+                        ? Icons.favorite_outline
                         : Icons.search_off,
                     title: _showFavoritesOnly
                         ? loc.noFavorites
@@ -316,121 +307,81 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildRecipeCountBanner(AppLocalizations loc) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppColors.primaryGreen.withOpacity(0.1),
-            AppColors.primaryGreenLight.withOpacity(0.05),
-          ],
-        ),
-        border: Border(
-          bottom: BorderSide(
-            color: widget.isDarkMode
-                ? AppColors.darkDivider
-                : AppColors.lightDivider,
-          ),
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.restaurant_menu,
-            color: AppColors.primaryGreen,
-            size: 20,
-          ),
-          const SizedBox(width: 8),
-          Text(
-            '${recipes.length} ${loc.recipes}',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color:
-                  widget.isDarkMode ? AppColors.darkText : AppColors.lightText,
-            ),
-          ),
-          const SizedBox(width: 4),
-          Text(
-            '• Kurdish & Middle Eastern',
-            style: TextStyle(
-              fontSize: 12,
-              color: widget.isDarkMode
-                  ? AppColors.darkTextSecondary
-                  : AppColors.lightTextSecondary,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCategoryChipsWithCounts(AppLocalizations loc) {
-    final counts = _categoryCounts;
-
+  Widget _buildCategoryChips(AppLocalizations loc) {
     return SizedBox(
-      height: 50,
+      height: 40,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
-          // "All" chip with total count
+          // "All" chip
           Padding(
             padding: const EdgeInsets.only(right: 8),
-            child: FilterChip(
-              label: Text('${loc.all} (${recipes.length})'),
+            child: ChoiceChip(
+              label: Text(loc.all),
               selected: _selectedCategory == null,
-              backgroundColor:
-                  widget.isDarkMode ? AppColors.darkCard : Colors.grey[200],
-              selectedColor: AppColors.primaryGreen,
-              labelStyle: TextStyle(
-                color: _selectedCategory == null
-                    ? Colors.white
-                    : (widget.isDarkMode
-                        ? AppColors.darkText
-                        : AppColors.lightText),
-                fontWeight: _selectedCategory == null
-                    ? FontWeight.bold
-                    : FontWeight.normal,
-              ),
               onSelected: (_) {
                 setState(() {
                   _selectedCategory = null;
                   _currentPage = 0;
                 });
               },
+              backgroundColor: Colors.transparent,
+              selectedColor: AppColors.primaryGreen.withOpacity(0.1),
+              labelStyle: TextStyle(
+                color: _selectedCategory == null
+                    ? AppColors.primaryGreen
+                    : (widget.isDarkMode
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary),
+                fontWeight: FontWeight.w500,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+                side: BorderSide(
+                  color: _selectedCategory == null
+                      ? AppColors.primaryGreen
+                      : (widget.isDarkMode
+                          ? AppColors.darkDivider
+                          : AppColors.lightDivider),
+                  width: 1,
+                ),
+              ),
             ),
           ),
-          // Category chips with counts
+          // Category chips
           ...MealCategory.values.map((category) => Padding(
                 padding: const EdgeInsets.only(right: 8),
-                child: FilterChip(
-                  label: Text(
-                    '${_getCategoryName(category)} (${counts[category] ?? 0})',
-                  ),
+                child: ChoiceChip(
+                  label: Text(_getCategoryName(category)),
                   selected: _selectedCategory == category,
-                  backgroundColor:
-                      widget.isDarkMode ? AppColors.darkCard : Colors.grey[200],
-                  selectedColor: AppColors.primaryGreen,
-                  labelStyle: TextStyle(
-                    color: _selectedCategory == category
-                        ? Colors.white
-                        : (widget.isDarkMode
-                            ? AppColors.darkText
-                            : AppColors.lightText),
-                    fontWeight: _selectedCategory == category
-                        ? FontWeight.bold
-                        : FontWeight.normal,
-                  ),
                   onSelected: (bool selected) {
                     setState(() {
                       _selectedCategory = selected ? category : null;
                       _currentPage = 0;
                     });
                   },
+                  backgroundColor: Colors.transparent,
+                  selectedColor: AppColors.primaryGreen.withOpacity(0.1),
+                  labelStyle: TextStyle(
+                    color: _selectedCategory == category
+                        ? AppColors.primaryGreen
+                        : (widget.isDarkMode
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary),
+                    fontWeight: FontWeight.w500,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: BorderSide(
+                      color: _selectedCategory == category
+                          ? AppColors.primaryGreen
+                          : (widget.isDarkMode
+                              ? AppColors.darkDivider
+                              : AppColors.lightDivider),
+                      width: 1,
+                    ),
+                  ),
                 ),
               )),
         ],
@@ -443,21 +394,21 @@ class _HomePageState extends State<HomePage> {
     final isFavorite = _favoriteIds.contains(recipe.id);
 
     return Container(
-      margin: const EdgeInsets.all(12),
+      margin: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.only(bottom: 12),
             child: Row(
               children: [
-                const Icon(Icons.star, color: AppColors.starActive, size: 20),
+                const Icon(Icons.star, color: AppColors.primaryGreen, size: 20),
                 const SizedBox(width: 8),
                 Text(
-                  'Recipe of the Day',
+                  "Reycipe of the Day",
                   style: TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     color: widget.isDarkMode
                         ? AppColors.darkText
                         : AppColors.lightText,
@@ -467,23 +418,24 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           RecipeCard(
-              recipe: recipe,
-              isDarkMode: widget.isDarkMode,
-              languageCode: widget.languageCode,
-              isFavorite: isFavorite,
-              onFavoriteToggle: () => _toggleFavorite(recipe.id),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => RecipeDetailScreen(
-                      recipe: recipe,
-                      isDarkMode: widget.isDarkMode,
-                      languageCode: widget.languageCode,
-                    ),
+            recipe: recipe,
+            isDarkMode: widget.isDarkMode,
+            languageCode: widget.languageCode,
+            isFavorite: isFavorite,
+            onFavoriteToggle: () => _toggleFavorite(recipe.id),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => RecipeDetailScreen(
+                    recipe: recipe,
+                    isDarkMode: widget.isDarkMode,
+                    languageCode: widget.languageCode,
                   ),
-                );
-              }),
+                ),
+              );
+            },
+          ),
         ],
       ),
     );

@@ -75,8 +75,6 @@ class _LoginPageState extends State<LoginPage> {
     final bgColor = widget.isDarkMode
         ? AppColors.darkBackground
         : AppColors.lightBackground;
-    final cardColor =
-        widget.isDarkMode ? AppColors.darkCard : AppColors.lightCard;
     final textColor =
         widget.isDarkMode ? AppColors.darkText : AppColors.lightText;
 
@@ -92,186 +90,154 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // App Logo
-                  _buildAppLogo(),
+                  Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryGreen.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: AppColors.primaryGreen.withOpacity(0.3),
+                      ),
+                    ),
+                    child: const Icon(
+                      Icons.restaurant_menu,
+                      size: 40,
+                      color: AppColors.primaryGreen,
+                    ),
+                  ),
                   const SizedBox(height: 32),
 
                   // App Title
-                  _buildAppTitle(textColor, loc),
+                  Text(
+                    loc.appTitle,
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w600,
+                      color: textColor,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    loc.login,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: widget.isDarkMode
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
+                    ),
+                  ),
                   const SizedBox(height: 48),
 
-                  // Login Form Card
-                  _buildLoginCard(cardColor, loc),
-                  const SizedBox(height: 24),
+                  // Login Form
+                  Column(
+                    children: [
+                      // Email Field
+                      CustomTextField(
+                        controller: _emailController,
+                        labelText: loc.email,
+                        prefixIcon: Icons.email_outlined,
+                        isDarkMode: widget.isDarkMode,
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your email';
+                          }
+                          if (!value.contains('@')) {
+                            return 'Please enter a valid email';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Password Field
+                      CustomTextField(
+                        controller: _passwordController,
+                        labelText: loc.password,
+                        prefixIcon: Icons.lock_outline,
+                        isDarkMode: widget.isDarkMode,
+                        obscureText: _obscurePassword,
+                        textInputAction: TextInputAction.done,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: widget.isDarkMode
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
+                          ),
+                          onPressed: () {
+                            setState(
+                                () => _obscurePassword = !_obscurePassword);
+                          },
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your password';
+                          }
+                          if (value.length < 6) {
+                            return 'Password must be at least 6 characters';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 24),
+
+                      // Login Button
+                      PrimaryButton(
+                        text: loc.login,
+                        onPressed: _login,
+                        isLoading: _isLoading,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 45),
 
                   // Register Link
-                  _buildRegisterLink(loc),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        loc.dontHaveAccount,
+                        style: TextStyle(
+                          color: widget.isDarkMode
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => RegisterPage(
+                                isDarkMode: widget.isDarkMode,
+                                languageCode: widget.languageCode,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          loc.register,
+                          style: const TextStyle(
+                            color: AppColors.primaryGreen,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildAppLogo() {
-    return Container(
-      width: 100,
-      height: 100,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: AppColors.primaryGradient,
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(25),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primaryGreen.withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: const Icon(
-        Icons.restaurant_menu,
-        size: 50,
-        color: Colors.white,
-      ),
-    );
-  }
-
-  Widget _buildAppTitle(Color textColor, AppLocalizations loc) {
-    return Column(
-      children: [
-        Text(
-          loc.appTitle,
-          style: TextStyle(
-            fontSize: 36,
-            fontWeight: FontWeight.bold,
-            color: textColor,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          loc.login,
-          style: TextStyle(
-            fontSize: 18,
-            color: widget.isDarkMode
-                ? AppColors.darkTextSecondary
-                : AppColors.lightTextSecondary,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLoginCard(Color cardColor, AppLocalizations loc) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: cardColor,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          // Email Field - Using Custom Widget
-          CustomTextField(
-            controller: _emailController,
-            labelText: loc.email,
-            prefixIcon: Icons.email_outlined,
-            isDarkMode: widget.isDarkMode,
-            keyboardType: TextInputType.emailAddress,
-            textInputAction: TextInputAction.next,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your email';
-              }
-              if (!value.contains('@')) {
-                return 'Please enter a valid email';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 16),
-
-          // Password Field - Using Custom Widget
-          CustomTextField(
-            controller: _passwordController,
-            labelText: loc.password,
-            prefixIcon: Icons.lock_outline,
-            isDarkMode: widget.isDarkMode,
-            obscureText: _obscurePassword,
-            textInputAction: TextInputAction.done,
-            suffixIcon: IconButton(
-              icon: Icon(
-                _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                color: widget.isDarkMode
-                    ? AppColors.darkTextSecondary
-                    : AppColors.lightTextSecondary,
-              ),
-              onPressed: () {
-                setState(() => _obscurePassword = !_obscurePassword);
-              },
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your password';
-              }
-              if (value.length < 6) {
-                return 'Password must be at least 6 characters';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 24),
-
-          // Login Button - Using Custom Widget
-          PrimaryButton(
-            text: loc.login,
-            onPressed: _login,
-            isLoading: _isLoading,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRegisterLink(AppLocalizations loc) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          loc.dontHaveAccount,
-          style: TextStyle(
-            color: widget.isDarkMode
-                ? AppColors.darkTextSecondary
-                : AppColors.lightTextSecondary,
-          ),
-        ),
-        IconTextButton(
-          text: loc.register,
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => RegisterPage(
-                  isDarkMode: widget.isDarkMode,
-                  languageCode: widget.languageCode,
-                ),
-              ),
-            );
-          },
-          fontSize: 22,
-        ),
-      ],
     );
   }
 }

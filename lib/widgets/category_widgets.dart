@@ -39,58 +39,71 @@ class CategoryFilterChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textColor = isDarkMode ? AppColors.darkText : AppColors.lightText;
-
     return SizedBox(
-      height: 50,
+      height: 40,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
           // "All" chip
           Padding(
             padding: const EdgeInsets.only(right: 8),
-            child: FilterChip(
+            child: ChoiceChip(
               label: Text(_getCategoryName(null)),
               selected: selectedCategory == null,
-              backgroundColor:
-                  isDarkMode ? AppColors.darkCard : Colors.grey[200],
-              selectedColor: AppColors.primaryGreen,
-              labelStyle: TextStyle(
-                color: selectedCategory == null ? Colors.white : textColor,
-                fontWeight: selectedCategory == null
-                    ? FontWeight.bold
-                    : FontWeight.normal,
-              ),
               onSelected: (_) => onCategorySelected(null),
+              backgroundColor: Colors.transparent,
+              selectedColor: AppColors.primaryGreen.withOpacity(0.1),
+              labelStyle: TextStyle(
+                color: selectedCategory == null
+                    ? AppColors.primaryGreen
+                    : (isDarkMode
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary),
+                fontWeight: FontWeight.w500,
+              ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
-                side: BorderSide.none,
+                side: BorderSide(
+                  color: selectedCategory == null
+                      ? AppColors.primaryGreen
+                      : (isDarkMode
+                          ? AppColors.darkDivider
+                          : AppColors.lightDivider),
+                  width: 1,
+                ),
               ),
             ),
           ),
           // Category chips
           ...MealCategory.values.map((category) => Padding(
                 padding: const EdgeInsets.only(right: 8),
-                child: FilterChip(
+                child: ChoiceChip(
                   label: Text(_getCategoryName(category)),
                   selected: selectedCategory == category,
-                  backgroundColor:
-                      isDarkMode ? AppColors.darkCard : Colors.grey[200],
-                  selectedColor: AppColors.primaryGreen,
-                  labelStyle: TextStyle(
-                    color:
-                        selectedCategory == category ? Colors.white : textColor,
-                    fontWeight: selectedCategory == category
-                        ? FontWeight.bold
-                        : FontWeight.normal,
-                  ),
                   onSelected: (bool selected) {
                     onCategorySelected(selected ? category : null);
                   },
+                  backgroundColor: Colors.transparent,
+                  selectedColor: AppColors.primaryGreen.withOpacity(0.1),
+                  labelStyle: TextStyle(
+                    color: selectedCategory == category
+                        ? AppColors.primaryGreen
+                        : (isDarkMode
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary),
+                    fontWeight: FontWeight.w500,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
-                    side: BorderSide.none,
+                    side: BorderSide(
+                      color: selectedCategory == category
+                          ? AppColors.primaryGreen
+                          : (isDarkMode
+                              ? AppColors.darkDivider
+                              : AppColors.lightDivider),
+                      width: 1,
+                    ),
                   ),
                 ),
               )),
@@ -133,14 +146,20 @@ class CategoryBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: AppColors.getCategoryColor(category.toString().split('.').last),
+        color: AppColors.getCategoryColor(category.toString().split('.').last)
+            .withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: AppColors.getCategoryColor(category.toString().split('.').last)
+              .withOpacity(0.3),
+        ),
       ),
       child: Text(
         _getCategoryName(),
-        style: const TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
+        style: TextStyle(
+          color:
+              AppColors.getCategoryColor(category.toString().split('.').last),
+          fontWeight: FontWeight.w500,
           fontSize: 12,
         ),
       ),
