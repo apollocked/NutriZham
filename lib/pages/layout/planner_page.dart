@@ -57,7 +57,7 @@ class _PlannerPageState extends State<PlannerPage> {
     }
   }
 
-  Future<void> _toggleMealInPlan(String recipeId) async {
+  Future<void> _toggleMealInPlan(String recipeId, dynamic loc) async {
     await MealPlannerService.toggleMealInPlan(recipeId);
 
     // Show feedback
@@ -65,10 +65,9 @@ class _PlannerPageState extends State<PlannerPage> {
       final isInPlan = _plannedMealIds.contains(recipeId);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content:
-              Text(isInPlan ? 'Added to meal plan' : 'Removed from meal plan'),
+          content: Text(isInPlan ? loc.removeFromPlan : loc.addToPlan),
           duration: const Duration(seconds: 1),
-          backgroundColor: isInPlan ? AppColors.success : AppColors.error,
+          backgroundColor: isInPlan ? AppColors.error : AppColors.success,
         ),
       );
     }
@@ -317,7 +316,8 @@ class _PlannerPageState extends State<PlannerPage> {
             languageCode: widget.languageCode,
             trailing: IconButton(
               icon: const Icon(Icons.remove_circle, color: AppColors.error),
-              onPressed: () => _toggleMealInPlan(recipe.id),
+              onPressed: () => _toggleMealInPlan(
+                  recipe.id, AppLocalizations.of(widget.languageCode)),
             ),
           ),
         );
@@ -336,7 +336,8 @@ class _PlannerPageState extends State<PlannerPage> {
             languageCode: widget.languageCode,
             trailing: IconButton(
               icon: const Icon(Icons.add_circle, color: AppColors.primaryGreen),
-              onPressed: () => _toggleMealInPlan(recipe.id),
+              onPressed: () => _toggleMealInPlan(
+                  recipe.id, AppLocalizations.of(widget.languageCode)),
             ),
           ),
         );
