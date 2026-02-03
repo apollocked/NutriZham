@@ -326,7 +326,9 @@ class _HomePageState extends State<HomePage> {
                   _currentPage = 0;
                 });
               },
-              backgroundColor: Colors.transparent,
+              backgroundColor: widget.isDarkMode
+                  ? AppColors.darkSurface
+                  : AppColors.lightSurface,
               selectedColor: AppColors.primaryGreen.withOpacity(0.1),
               labelStyle: TextStyle(
                 color: _selectedCategory == null
@@ -361,7 +363,9 @@ class _HomePageState extends State<HomePage> {
                       _currentPage = 0;
                     });
                   },
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: widget.isDarkMode
+                      ? AppColors.darkSurface
+                      : AppColors.lightSurface,
                   selectedColor: AppColors.primaryGreen.withOpacity(0.1),
                   labelStyle: TextStyle(
                     color: _selectedCategory == category
