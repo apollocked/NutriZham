@@ -1,12 +1,15 @@
+// ignore_for_file: unnecessary_cast
+
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nutrizham/pages/authotication/login_page.dart';
 import 'package:nutrizham/pages/layout/profile_page/settings_page.dart';
 import 'package:nutrizham/services/auth_service.dart';
 import 'package:nutrizham/models/user_model.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
-import 'package:nutrizham/utils/meals_data.dart';
+import 'package:nutrizham/utils/meals_data.dart'; // Keep for models (Recipe, etc.)
 import 'package:nutrizham/services/favorites_helper.dart';
 import 'package:nutrizham/services/meal_planner_service.dart';
 import 'package:nutrizham/widgets/stat_and_menu_widgets.dart';
@@ -36,6 +39,10 @@ class _ProfilePageState extends State<ProfilePage> {
   UserModel? _currentUser;
   Set<String> _favoriteIds = {};
   List<String> _plannedMealIds = [];
+
+  // Stores the full list of recipes fetched from Firestore
+  List<Recipe> _allRecipes = [];
+
   bool _isLoading = true;
   StreamSubscription<Set<String>>? _favoritesSubscription;
   StreamSubscription<List<String>>? _plannerSubscription;
@@ -44,6 +51,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     _loadUserData();
+    _loadRecipesFromFirebase(); // Load recipes from DB
     _setupFavoritesListener();
     _setupPlannerListener();
   }
@@ -53,6 +61,26 @@ class _ProfilePageState extends State<ProfilePage> {
     _favoritesSubscription?.cancel();
     _plannerSubscription?.cancel();
     super.dispose();
+  }
+
+  // NEW: Fetch recipes from Firestore
+  Future<void> _loadRecipesFromFirebase() async {
+    try {
+      final snapshot =
+          await FirebaseFirestore.instance.collection('recipes').get();
+      final recipesList = snapshot.docs.map((doc) {
+        return Recipe.fromJson(doc.data() as Map<String, dynamic>);
+      }).toList();
+
+      if (mounted) {
+        setState(() {
+          _allRecipes = recipesList;
+        });
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error loading recipes for profile: $e");
+    }
   }
 
   void _setupFavoritesListener() {
@@ -107,8 +135,10 @@ class _ProfilePageState extends State<ProfilePage> {
     final bgColor = widget.isDarkMode
         ? AppColors.darkBackground
         : AppColors.lightBackground;
+
+    // FIXED: Filter the loaded Firestore recipes by favorite IDs
     final favoriteMeals =
-        recipes.where((r) => _favoriteIds.contains(r.id)).toList();
+        _allRecipes.where((r) => _favoriteIds.contains(r.id)).toList();
 
     if (_isLoading || _currentUser == null) {
       return Scaffold(
@@ -317,15 +347,20 @@ class _ProfilePageState extends State<ProfilePage> {
           else
             Column(
               children: [
-                ...favoriteMeals.take(5).map((recipe) => CompactRecipeCard(
-                      recipe: recipe,
-                      isDarkMode: widget.isDarkMode,
-                      languageCode: widget.languageCode,
-                      trailing: IconButton(
-                        icon: const Icon(Icons.favorite,
-                            color: AppColors.accentRed),
-                        onPressed: () =>
+                // Using standard RecipeCard for consistency
+                ...favoriteMeals.take(5).map((recipe) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: RecipeCard(
+                        recipe: recipe,
+                        isDarkMode: widget.isDarkMode,
+                        languageCode: widget.languageCode,
+                        isFavorite: true, // These are favorites by definition
+                        onFavoriteToggle: () =>
                             FavoritesHelper.toggleFavorite(recipe.id),
+                        onTap: () {
+                          // Optional: Navigate to details if you have the route
+                          // Navigator.push(...);
+                        },
                       ),
                     )),
                 if (favoriteMeals.length > 5)

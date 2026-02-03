@@ -1,7 +1,10 @@
+// ignore_for_file: unnecessary_cast
+
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nutrizham/pages/details_screen.dart';
-import 'package:nutrizham/utils/meals_data.dart';
+import 'package:nutrizham/utils/meals_data.dart'; // Make sure this contains your Recipe class and MealCategory enum
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
 import 'package:nutrizham/services/favorites_helper.dart';
@@ -36,6 +39,7 @@ class _HomePageState extends State<HomePage> {
   StreamSubscription<Set<String>>? _favoritesSubscription;
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  List<Recipe> _allRecipes = [];
 
   // Pagination
   int _currentPage = 0;
@@ -48,6 +52,21 @@ class _HomePageState extends State<HomePage> {
     _loadFavorites();
     _setupFavoritesListener();
     _setupScrollListener();
+    _loadRecipesFromFirebase();
+  }
+
+  Future<void> _loadRecipesFromFirebase() async {
+    final snapshot =
+        await FirebaseFirestore.instance.collection('recipes').get();
+    final recipesList = snapshot.docs.map((doc) {
+      return Recipe.fromJson(doc.data() as Map<String, dynamic>);
+    }).toList();
+
+    if (mounted) {
+      setState(() {
+        _allRecipes = recipesList;
+      });
+    }
   }
 
   @override
@@ -90,7 +109,21 @@ class _HomePageState extends State<HomePage> {
   void _loadMoreRecipes() {
     if (_isLoadingMore) return;
 
-    final filteredRecipes = _getAllFilteredRecipes();
+    // Calculate the total number of filtered recipes to check if we can load more
+    // We replicate the filter logic here or use a helper.
+    // Since _paginatedRecipes is a getter, we calculate the raw length here.
+    final filteredRecipes = _allRecipes.where((recipe) {
+      final title =
+          recipe.title[widget.languageCode] ?? recipe.title['en'] ?? '';
+      final matchesSearch = _searchQuery.isEmpty ||
+          title.toLowerCase().contains(_searchQuery.toLowerCase());
+      final matchesCategory =
+          _selectedCategory == null || recipe.category == _selectedCategory;
+      final matchesFavorites =
+          !_showFavoritesOnly || _favoriteIds.contains(recipe.id);
+      return matchesSearch && matchesCategory && matchesFavorites;
+    }).toList();
+
     final maxPages = (filteredRecipes.length / _recipesPerPage).ceil();
 
     if (_currentPage < maxPages - 1) {
@@ -107,8 +140,9 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  List<Recipe> _getAllFilteredRecipes() {
-    return recipes.where((recipe) {
+  List<Recipe> get _paginatedRecipes {
+    // 1. Filter recipes
+    var filtered = _allRecipes.where((recipe) {
       final title =
           recipe.title[widget.languageCode] ?? recipe.title['en'] ?? '';
       final matchesSearch = _searchQuery.isEmpty ||
@@ -119,12 +153,16 @@ class _HomePageState extends State<HomePage> {
           !_showFavoritesOnly || _favoriteIds.contains(recipe.id);
       return matchesSearch && matchesCategory && matchesFavorites;
     }).toList();
-  }
 
-  List<Recipe> get _paginatedRecipes {
-    final allFiltered = _getAllFilteredRecipes();
-    final endIndex = (_currentPage + 1) * _recipesPerPage;
-    return allFiltered.take(endIndex.clamp(0, allFiltered.length)).toList();
+    // 2. Pagination logic: take the slice for the current page
+    final startIndex = _currentPage * _recipesPerPage;
+    final endIndex = startIndex + _recipesPerPage;
+
+    if (startIndex >= filtered.length) {
+      return [];
+    }
+
+    return filtered.sublist(startIndex, endIndex.clamp(0, filtered.length));
   }
 
   void _clearSearch() {
@@ -136,9 +174,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   Recipe get _recipeOfTheDay {
+    if (_allRecipes.isEmpty) {
+      return Recipe(
+          id: '0',
+          title: {},
+          icon: '',
+          nutrition:
+              NutritionalInfo(calories: 0, protein: 0, carbs: 0, fats: 0),
+          ingredients: {},
+          steps: {},
+          category: MealCategory.snack); // Fallback
+    }
     final dayOfYear =
         DateTime.now().difference(DateTime(DateTime.now().year, 1, 1)).inDays;
-    return recipes[dayOfYear % recipes.length];
+    return _allRecipes[dayOfYear % _allRecipes.length];
   }
 
   String _getCategoryName(MealCategory category) {
@@ -233,7 +282,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 Text(
-                  '${_paginatedRecipes.length}',
+                  '${paginatedRecipes.length}', // Updated to show paginated count or total count as preferred
                   style: TextStyle(
                     fontSize: 14,
                     color: widget.isDarkMode
@@ -409,7 +458,7 @@ class _HomePageState extends State<HomePage> {
                 const Icon(Icons.star, color: AppColors.primaryGreen, size: 20),
                 const SizedBox(width: 8),
                 Text(
-                  "Reycipe of the Day",
+                  "Recipe of the Day", // Fixed typo "Reycipe"
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

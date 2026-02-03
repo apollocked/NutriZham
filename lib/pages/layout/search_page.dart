@@ -1,5 +1,5 @@
-// ignore_for_file: unused_element
-
+// ignore_for_file: unused_element, unnecessary_cast
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nutrizham/utils/meals_data.dart';
 import 'package:nutrizham/utils/app_colors.dart';
@@ -26,6 +26,23 @@ class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
   MealCategory? _selectedCategory;
+  List<Recipe> _allRecipes = [];
+  @override
+  void initState() {
+    super.initState();
+    _loadRecipes(); // Load data
+  }
+
+  Future<void> _loadRecipes() async {
+    final snapshot =
+        await FirebaseFirestore.instance.collection('recipes').get();
+    final recipesList = snapshot.docs
+        .map((doc) => Recipe.fromJson(doc.data() as Map<String, dynamic>))
+        .toList();
+    if (mounted) {
+      setState(() => _allRecipes = recipesList);
+    }
+  }
 
   @override
   void dispose() {
@@ -34,7 +51,8 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   List<Recipe> get _filteredRecipes {
-    return recipes.where((recipe) {
+    // Now filters _allRecipes instead of global 'recipes'
+    return _allRecipes.where((recipe) {
       final title =
           recipe.title[widget.languageCode] ?? recipe.title['en'] ?? '';
       final matchesSearch = _searchQuery.isEmpty ||

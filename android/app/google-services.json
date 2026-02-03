@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "456258435671",
+    "project_id": "nutrizham",
+    "storage_bucket": "nutrizham.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:456258435671:android:28a30e7c2e5cef5f414112",
+        "android_client_info": {
+          "package_name": "com.example.nutrizham"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBVR9rKCHlIZeGTnr9UbxeUj_X32zUEFY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

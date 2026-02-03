@@ -1,5 +1,5 @@
-// ignore_for_file: use_build_context_synchronously
-
+// ignore_for_file: use_build_context_synchronously, unnecessary_cast, avoid_types_as_parameter_names
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:nutrizham/utils/meals_data.dart';
@@ -27,12 +27,25 @@ class PlannerPage extends StatefulWidget {
 class _PlannerPageState extends State<PlannerPage> {
   List<String> _plannedMealIds = [];
   StreamSubscription<List<String>>? _plannerSubscription;
+  List<Recipe> _allRecipes = []; // Cache list
 
   @override
   void initState() {
     super.initState();
     _loadPlannedMeals();
     _setupPlannerListener();
+    _loadRecipes(); //Load data
+  }
+
+  Future<void> _loadRecipes() async {
+    final snapshot =
+        await FirebaseFirestore.instance.collection('recipes').get();
+    final recipesList = snapshot.docs
+        .map((doc) => Recipe.fromJson(doc.data() as Map<String, dynamic>))
+        .toList();
+    if (mounted) {
+      setState(() => _allRecipes = recipesList);
+    }
   }
 
   @override
@@ -73,25 +86,25 @@ class _PlannerPageState extends State<PlannerPage> {
   }
 
   int get _totalCalories {
-    return recipes
+    return _allRecipes
         .where((r) => _plannedMealIds.contains(r.id))
         .fold(0, (sum, r) => sum + r.nutrition.calories);
   }
 
   double get _totalProtein {
-    return recipes
+    return _allRecipes
         .where((r) => _plannedMealIds.contains(r.id))
         .fold(0.0, (sum, r) => sum + r.nutrition.protein);
   }
 
   double get _totalCarbs {
-    return recipes
+    return _allRecipes
         .where((r) => _plannedMealIds.contains(r.id))
         .fold(0.0, (sum, r) => sum + r.nutrition.carbs);
   }
 
   double get _totalFats {
-    return recipes
+    return _allRecipes
         .where((r) => _plannedMealIds.contains(r.id))
         .fold(0.0, (sum, r) => sum + r.nutrition.fats);
   }
@@ -105,9 +118,11 @@ class _PlannerPageState extends State<PlannerPage> {
     final textColor =
         widget.isDarkMode ? AppColors.darkText : AppColors.lightText;
     final plannedMeals =
-        recipes.where((r) => _plannedMealIds.contains(r.id)).toList();
-    final recommendedMeals =
-        recipes.where((r) => !_plannedMealIds.contains(r.id)).take(5).toList();
+        _allRecipes.where((r) => _plannedMealIds.contains(r.id)).toList();
+    final recommendedMeals = _allRecipes
+        .where((r) => !_plannedMealIds.contains(r.id))
+        .take(5)
+        .toList();
 
     return Scaffold(
       backgroundColor: bgColor,

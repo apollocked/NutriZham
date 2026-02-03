@@ -7,8 +7,17 @@ import 'package:nutrizham/utils/app_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nutrizham/services/favorites_helper.dart';
 
+// --- ADD THESE TWO IMPORTS ---
+// Make sure the paths match where you saved your files!
+import 'package:firebase_core/firebase_core.dart';
+
 void main() async {
+  // 1. Required for Firebase
   WidgetsFlutterBinding.ensureInitialized();
+
+  // 2. Initialize Firebase
+  await Firebase.initializeApp();
+
   runApp(const NutriZhamApp());
 }
 
@@ -28,18 +37,18 @@ class _NutriZhamAppState extends State<NutriZhamApp> {
   @override
   void initState() {
     super.initState();
-    _initialize();
+    _initialize(); // This line calls the method below
   }
 
+  // THIS IS THE METHOD YOU WERE MISSING
   Future<void> _initialize() async {
-    // Load preferences
+    // --- LOAD PREFERENCES ---
     final theme = await PreferencesHelper.getIsDarkMode();
     final lang = await PreferencesHelper.getLanguageCode();
-
-    // For demo purposes, check if user is logged in
-    // You can implement proper auth check here
     final prefs = await SharedPreferences.getInstance();
     final loggedIn = prefs.getBool('is_logged_in') ?? false;
+
+    // --- NO UPLOAD CODE HERE ANYMORE ---
 
     setState(() {
       _isDarkMode = theme;
@@ -95,7 +104,7 @@ class _NutriZhamAppState extends State<NutriZhamApp> {
 
   @override
   void dispose() {
-    FavoritesHelper.dispose(); // Clean up stream controller
+    FavoritesHelper.dispose();
     super.dispose();
   }
 }
