@@ -300,8 +300,8 @@ class _PlannerPageState extends State<PlannerPage> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: EmptyStateWidget(
           icon: Icons.calendar_today_outlined,
-          title: loc.addToPlan,
-          subtitle: '${loc.tapToSave} recommended meals below',
+          title: loc.emptyplan,
+          subtitle: '${loc.tapToSave} ',
           isDarkMode: widget.isDarkMode,
         ),
       );

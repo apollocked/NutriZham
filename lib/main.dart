@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:nutrizham/pages/authotication/login_page.dart';
+import 'package:nutrizham/pages/welcome_page.dart'; // ADD THIS IMPORT
 import 'package:nutrizham/services/preferences_helper.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,6 +34,7 @@ class _NutriZhamAppState extends State<NutriZhamApp> {
   String _languageCode = 'en';
   bool _isLoading = true;
   bool _isLoggedIn = true;
+  bool _welcomeShown = false; // ADD THIS
 
   @override
   void initState() {
@@ -47,6 +49,7 @@ class _NutriZhamAppState extends State<NutriZhamApp> {
     final lang = await PreferencesHelper.getLanguageCode();
     final prefs = await SharedPreferences.getInstance();
     final loggedIn = prefs.getBool('is_logged_in') ?? false;
+    final welcomeShown = prefs.getBool('welcome_shown') ?? false; // ADD THIS
 
     // --- NO UPLOAD CODE HERE ANYMORE ---
 
@@ -54,6 +57,7 @@ class _NutriZhamAppState extends State<NutriZhamApp> {
       _isDarkMode = theme;
       _languageCode = lang;
       _isLoggedIn = loggedIn;
+      _welcomeShown = welcomeShown; // SET THIS
       _isLoading = false;
     });
   }
@@ -96,10 +100,12 @@ class _NutriZhamAppState extends State<NutriZhamApp> {
           ),
         ),
         themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-        home: LoginPage(
-          isDarkMode: _isDarkMode,
-          languageCode: _languageCode,
-        ));
+        home: _welcomeShown
+            ? LoginPage(
+                isDarkMode: _isDarkMode,
+                languageCode: _languageCode,
+              )
+            : const WelcomePage());
   }
 
   @override

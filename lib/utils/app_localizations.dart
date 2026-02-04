@@ -85,6 +85,8 @@ class AppLocalizations {
 
   // Planner
   String get mealPlanner => _get('mealPlanner');
+  String get emptyplan => _get('emptyplan');
+
   String get dailyPlan => _get('dailyPlan');
   String get weeklyPlan => _get('weeklyPlan');
   String get recommendedMeals => _get('recommendedMeals');
@@ -190,6 +192,7 @@ class AppLocalizations {
 
       // Planner
       'mealPlanner': 'Meal Planner',
+      'emptyplan': 'Your Daily Plan is Empty',
       'dailyPlan': 'Daily Plan',
       'weeklyPlan': 'Weekly Plan',
       'recommendedMeals': 'Recommended Meals',
@@ -289,6 +292,7 @@ class AppLocalizations {
 
       // Planner
       'mealPlanner': 'پلانی خواردن',
+      'emptyplan': 'هیج پلانێکت هەڵنەبژاردوە',
       'dailyPlan': 'پلانی ڕۆژانە',
       'weeklyPlan': 'پلانی هەفتانە',
       'recommendedMeals': 'خواردنە پێشنیارکراوەکان',
@@ -388,6 +392,7 @@ class AppLocalizations {
 
       // Planner
       'mealPlanner': 'مخطط الوجبات',
+      'emptyplan': ' بلا الخطة',
       'dailyPlan': 'الخطة اليومية',
       'weeklyPlan': 'الخطة الأسبوعية',
       'recommendedMeals': 'الوجبات الموصى بها',

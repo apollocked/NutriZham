@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_cast
+// ignore_for_file: unnecessary_cast, avoid_print
 
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
   final ScrollController _scrollController = ScrollController();
 
   // Firestore Pagination variables
-  List<Recipe> _allRecipes = [];
+  final List<Recipe> _allRecipes = [];
   bool _isLoading = true;
   bool _isLoadingMore = false;
   bool _hasMore = true; // To check if there are more docs in DB
