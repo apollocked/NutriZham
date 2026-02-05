@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nutrizham/pages/authotication/login_page.dart';
+import 'package:nutrizham/pages/layout/profile_page/app_features_page.dart';
 import 'package:nutrizham/pages/layout/profile_page/settings_page.dart';
 import 'package:nutrizham/services/auth_service.dart';
 import 'package:nutrizham/models/user_model.dart';
@@ -279,6 +280,26 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       child: Column(
         children: [
+          MenuItemTile(
+            icon: Icons.favorite_rounded,
+            title: loc.appfeture,
+            onTap: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => AppFeaturesPage(
+                        isDarkMode: widget.isDarkMode,
+                        languageCode: widget.languageCode)),
+              );
+            },
+            isDarkMode: widget.isDarkMode,
+          ),
+          Divider(
+            color: widget.isDarkMode
+                ? AppColors.darkDivider
+                : AppColors.lightDivider,
+            height: 1,
+          ),
           MenuItemTile(
             icon: Icons.settings_outlined,
             title: loc.settings,

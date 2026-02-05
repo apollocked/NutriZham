@@ -35,7 +35,6 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   Future<void> _continue() async {
-    // Save preferences
     await PreferencesHelper.setLanguageCode(_selectedLanguage);
     await PreferencesHelper.setIsDarkMode(_isDarkMode);
     await PreferencesHelper.setWelcomeShown(true);
