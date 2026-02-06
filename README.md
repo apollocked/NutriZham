@@ -597,4 +597,4 @@ flutter run
 
 Happy cooking and healthy eating! 🥗💻
 
-Built with Flutter & Firebase | Version 2.2.0 | Last Updated: February 2026
+Built with Flutter & Firebase | Version 2.1.0 | Last Updated: February 2024
