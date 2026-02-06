@@ -12,10 +12,10 @@ dependencies:
   flutter:
     sdk: flutter
   shared_preferences: ^2.2.2
-  firebase_core: ^3.1.0 # Updated
-  firebase_auth: ^5.1.0 # Updated
-  cloud_firestore: ^5.1.0 # Updated
-  google_sign_in: ^6.2.1 # Updated
+  firebase_core: ^3.1.1 # Update this
+  firebase_auth: ^5.1.1 # Update this
+  cloud_firestore: ^5.0.2 # Update this
+  google_sign_in: ^6.2.1
   crypto: ^3.0.3
 
 dev_dependencies:
