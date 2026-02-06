@@ -1,8 +1,8 @@
-NutriZham - Complete Fitness Nutrition App 🥗💪
-A comprehensive fitness nutrition mobile app with Firebase authentication, Firestore backend, cloud sync, meal planning, ratings, multi-language support (English/Kurdish/Arabic), and welcome onboarding.
+NutriZham - Complete Food Recipe App 🥗💪
+A comprehensive food recipe mobile app with authentication, meal planning, ratings, multi-language support (English/Kurdish/Arabic), and Firebase backend.
 
 ✨ All Features Implemented
-🎉 NEW: Firebase Cloud Sync & User Data Management
+🎉 Firebase Cloud Sync & User Data Management
 ✅ Firebase Firestore Integration for user favorites and planned meals
 
 ✅ Real-time sync across multiple devices
@@ -29,8 +29,6 @@ A comprehensive fitness nutrition mobile app with Firebase authentication, Fires
 ✅ Profile Updates synced to Firebase
 
 ✅ Session Management with Firebase persistence
-
-✅ Secure storage - no plain text passwords
 
 🎉 Welcome Page & Onboarding
 ✅ Beautiful welcome screen on first launch
@@ -568,7 +566,7 @@ bash
 
 # 1. Clone and setup
 
-git clone https://github.com/apollocked/NutriZham.git
+git clone <repository>
 cd nutrizham
 
 # 2. Install dependencies
@@ -597,6 +595,6 @@ flutter run
 
 # - Dark mode
 
-Happy coding and healthy eating! 🥗💻
+Happy cooking and healthy eating! 🥗💻
 
 Built with Flutter & Firebase | Version 2.1.0 | Last Updated: February 2026
