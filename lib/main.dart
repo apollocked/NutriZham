@@ -1,4 +1,4 @@
-// ignore_for_file: unused_field
+// ignore_for_file: unused_field, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:nutrizham/pages/authotication/login_page.dart';
@@ -8,6 +8,7 @@ import 'package:nutrizham/services/preferences_helper.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nutrizham/services/favorites_helper.dart';
+import 'package:nutrizham/services/meal_planner_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
@@ -47,8 +48,34 @@ class _NutriZhamAppState extends State<NutriZhamApp> {
     final prefs = await SharedPreferences.getInstance();
     final loggedIn = prefs.getBool('is_logged_in') ?? false;
 
-    // THIS IS THE KEY CHANGE - Get welcome shown status
+    // Get welcome shown status
     final welcomeShown = await PreferencesHelper.hasWelcomeBeenShown();
+
+    // SYNC DATA WITH FIRESTORE IF LOGGED IN
+    if (loggedIn) {
+      try {
+        print('User is logged in, checking for data sync...');
+
+        // Check and sync favorites with Firestore
+        await FavoritesHelper.checkAndSync();
+        print('Favorites sync check completed');
+
+        // Check and sync planned meals with Firestore
+        await MealPlannerService.checkAndSync();
+        print('Planned meals sync check completed');
+
+        // Load favorites to initialize streams
+        await FavoritesHelper.loadFavorites();
+        print('Favorites loaded');
+
+        // Load planned meals to initialize streams
+        await MealPlannerService.loadPlannedMeals();
+        print('Planned meals loaded');
+      } catch (e) {
+        print('Error syncing data on startup: $e');
+        // Continue app even if sync fails - user can work offline
+      }
+    }
 
     setState(() {
       _isDarkMode = theme;
@@ -111,7 +138,9 @@ class _NutriZhamAppState extends State<NutriZhamApp> {
 
   @override
   void dispose() {
+    // Clean up stream controllers
     FavoritesHelper.dispose();
+    MealPlannerService.dispose();
     super.dispose();
   }
 }

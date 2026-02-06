@@ -23,7 +23,7 @@ class FirebaseAuthService {
     });
   }
 
-  // Email/Password Registration
+  // Email/Password Registration - UPDATED with favorites and plannedMeals
   Future<Map<String, dynamic>> registerWithEmail({
     required String email,
     required String password,
@@ -46,7 +46,7 @@ class FirebaseAuthService {
       await credential.user!.updateDisplayName(username);
       print('Display name updated to: $username');
 
-      // 3. Store user data in Firestore
+      // 3. Store user data in Firestore - UPDATED with favorites and plannedMeals
       final userModel = UserModel(
         id: credential.user!.uid,
         username: username,
@@ -54,6 +54,8 @@ class FirebaseAuthService {
         age: age,
         profileImage: null,
         createdAt: DateTime.now(),
+        favorites: [], // Initialize empty favorites
+        plannedMeals: [], // Initialize empty planned meals
       );
 
       await _firestore
@@ -61,14 +63,18 @@ class FirebaseAuthService {
           .doc(credential.user!.uid)
           .set(userModel.toJson());
 
-      print('Firestore user document created');
+      print('Firestore user document created with favorites and planned meals');
 
       // 4. Save to local storage for offline access
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('is_logged_in', true);
       await prefs.setString('current_user', json.encode(userModel.toJson()));
 
-      print('Local storage updated');
+      // Initialize local favorites and planned meals
+      await prefs.setStringList('favorites', []);
+      await prefs.setStringList('planned_meals', []);
+
+      print('Local storage updated with empty favorites and planned meals');
 
       return {
         'success': true,
@@ -105,7 +111,7 @@ class FirebaseAuthService {
     }
   }
 
-  // Email/Password Login - FIXED VERSION
+  // Email/Password Login - FIXED VERSION with favorites and planned meals sync
   Future<Map<String, dynamic>> loginWithEmail({
     required String email,
     required String password,
@@ -124,7 +130,7 @@ class FirebaseAuthService {
       // 2. Get user data from Firestore
       UserModel? userModel = await _getUserFromFirestore(credential.user!.uid);
 
-      // 3. If user data doesn't exist in Firestore, create it
+      // 3. If user data doesn't exist in Firestore, create it with favorites and planned meals
       if (userModel == null) {
         print('User document not found in Firestore. Creating now...');
 
@@ -136,6 +142,8 @@ class FirebaseAuthService {
           age: 20, // Default age
           profileImage: credential.user!.photoURL,
           createdAt: credential.user!.metadata.creationTime ?? DateTime.now(),
+          favorites: [], // Initialize empty favorites
+          plannedMeals: [], // Initialize empty planned meals
         );
 
         // Create the user document in Firestore
@@ -144,7 +152,8 @@ class FirebaseAuthService {
             .doc(credential.user!.uid)
             .set(userModel.toJson());
 
-        print('User document created successfully');
+        print(
+            'User document created successfully with favorites and planned meals');
       }
 
       // 4. Save to local storage
@@ -152,7 +161,10 @@ class FirebaseAuthService {
       await prefs.setBool('is_logged_in', true);
       await prefs.setString('current_user', json.encode(userModel.toJson()));
 
-      print('Login completed successfully');
+      // 5. Sync favorites and planned meals from Firestore to local storage
+      await _syncUserDataToLocal(userModel);
+
+      print('Login completed successfully with data sync');
 
       return {
         'success': true,
@@ -197,7 +209,7 @@ class FirebaseAuthService {
     }
   }
 
-  // Google Sign-In
+  // Google Sign-In - UPDATED with favorites and planned meals
   Future<Map<String, dynamic>> signInWithGoogle() async {
     try {
       print('Starting Google Sign-In');
@@ -230,7 +242,7 @@ class FirebaseAuthService {
 
       print('Firebase auth successful: ${userCredential.user!.uid}');
 
-      // 5. Check if user exists in Firestore, if not create
+      // 5. Check if user exists in Firestore, if not create with favorites and planned meals
       UserModel userModel;
       final userDoc = await _firestore
           .collection('users')
@@ -239,7 +251,7 @@ class FirebaseAuthService {
 
       if (!userDoc.exists) {
         print('Creating new Firestore document for Google user');
-        // New user - create in Firestore
+        // New user - create in Firestore with favorites and planned meals
         userModel = UserModel(
           id: userCredential.user!.uid,
           username: googleUser.displayName ?? googleUser.email.split('@')[0],
@@ -247,6 +259,8 @@ class FirebaseAuthService {
           age: 20, // Default age
           profileImage: googleUser.photoUrl,
           createdAt: DateTime.now(),
+          favorites: [], // Initialize empty favorites
+          plannedMeals: [], // Initialize empty planned meals
         );
 
         await _firestore
@@ -264,7 +278,10 @@ class FirebaseAuthService {
       await prefs.setBool('is_logged_in', true);
       await prefs.setString('current_user', json.encode(userModel.toJson()));
 
-      print('Google sign-in completed successfully');
+      // 7. Sync favorites and planned meals from Firestore to local storage
+      await _syncUserDataToLocal(userModel);
+
+      print('Google sign-in completed successfully with data sync');
 
       return {
         'success': true,
@@ -277,6 +294,24 @@ class FirebaseAuthService {
         'success': false,
         'message': 'Google sign-in failed. Please try again.',
       };
+    }
+  }
+
+  // Helper method to sync user data from Firestore to local storage
+  Future<void> _syncUserDataToLocal(UserModel userModel) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+
+      // Save favorites to local storage
+      await prefs.setStringList('favorites', userModel.favorites);
+      print('Synced ${userModel.favorites.length} favorites to local storage');
+
+      // Save planned meals to local storage
+      await prefs.setStringList('planned_meals', userModel.plannedMeals);
+      print(
+          'Synced ${userModel.plannedMeals.length} planned meals to local storage');
+    } catch (e) {
+      print('Error syncing user data to local storage: $e');
     }
   }
 
@@ -296,7 +331,7 @@ class FirebaseAuthService {
     }
   }
 
-  // Get current user
+  // Get current user - UPDATED to sync data
   Future<UserModel?> getCurrentUser() async {
     try {
       // 1. Check if user is authenticated in Firebase
@@ -308,7 +343,16 @@ class FirebaseAuthService {
 
       print('Getting current user: ${user.uid}');
 
-      // 2. Try to get from local storage first (for offline access)
+      // 2. Try to get from Firestore first (most up-to-date)
+      final userModel = await _getUserFromFirestore(user.uid);
+
+      // 3. If Firestore data exists, sync to local storage
+      if (userModel != null) {
+        await _syncUserDataToLocal(userModel);
+        return userModel;
+      }
+
+      // 4. If Firestore data doesn't exist, try local storage
       final prefs = await SharedPreferences.getInstance();
       final userJson = prefs.getString('current_user');
 
@@ -321,39 +365,32 @@ class FirebaseAuthService {
         }
       }
 
-      // 3. Get from Firestore
-      final userModel = await _getUserFromFirestore(user.uid);
+      // 5. If nothing exists, create it in Firestore with favorites and planned meals
+      print('Creating missing user document for: ${user.uid}');
 
-      // 4. If Firestore data doesn't exist, create it
-      if (userModel == null) {
-        print('Creating missing user document for: ${user.uid}');
+      final newUser = UserModel(
+        id: user.uid,
+        username: user.displayName ?? user.email!.split('@')[0],
+        email: user.email!,
+        age: 20,
+        profileImage: user.photoURL,
+        createdAt: user.metadata.creationTime ?? DateTime.now(),
+        favorites: [], // Initialize empty favorites
+        plannedMeals: [], // Initialize empty planned meals
+      );
 
-        final newUser = UserModel(
-          id: user.uid,
-          username: user.displayName ?? user.email!.split('@')[0],
-          email: user.email!,
-          age: 20,
-          profileImage: user.photoURL,
-          createdAt: user.metadata.creationTime ?? DateTime.now(),
-        );
+      await _firestore.collection('users').doc(user.uid).set(newUser.toJson());
 
-        await _firestore
-            .collection('users')
-            .doc(user.uid)
-            .set(newUser.toJson());
-        await prefs.setString('current_user', json.encode(newUser.toJson()));
+      await _syncUserDataToLocal(newUser);
 
-        return newUser;
-      }
-
-      return userModel;
+      return newUser;
     } catch (e) {
       print('Get current user error: $e');
       return null;
     }
   }
 
-  // Update user profile
+  // Update user profile - UPDATED to include sync
   Future<Map<String, dynamic>> updateUserProfile(UserModel updatedUser) async {
     try {
       final user = _auth.currentUser;
@@ -375,20 +412,25 @@ class FirebaseAuthService {
         await user.verifyBeforeUpdateEmail(updatedUser.email);
       }
 
-      // 2. Update in Firestore
-      await _firestore.collection('users').doc(user.uid).update({
-        'username': updatedUser.username,
-        'email': updatedUser.email,
-        'age': updatedUser.age,
-        'profileImage': updatedUser.profileImage,
-        'updatedAt': DateTime.now().toIso8601String(),
-      });
+      // 2. Update in Firestore - preserve favorites and planned meals
+      final currentUser = await getCurrentUser();
+      final userToSave = updatedUser.copyWith(
+        favorites: currentUser?.favorites ?? updatedUser.favorites,
+        plannedMeals: currentUser?.plannedMeals ?? updatedUser.plannedMeals,
+        updatedAt: DateTime.now(),
+      );
+
+      await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .set(userToSave.toJson(), SetOptions(merge: true));
 
       // 3. Update local storage
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('current_user', json.encode(updatedUser.toJson()));
+      await prefs.setString('current_user', json.encode(userToSave.toJson()));
 
-      print('Profile updated successfully');
+      print(
+          'Profile updated successfully with favorites and planned meals preserved');
 
       return {
         'success': true,
@@ -409,7 +451,7 @@ class FirebaseAuthService {
     }
   }
 
-  // Delete account
+  // Delete account - UPDATED to clear local data
   Future<Map<String, dynamic>> deleteAccount() async {
     try {
       final user = _auth.currentUser;
@@ -428,12 +470,14 @@ class FirebaseAuthService {
       // 2. Delete from Firebase Auth
       await user.delete();
 
-      // 3. Clear local storage
+      // 3. Clear ALL local storage data
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove('current_user');
+      await prefs.remove('favorites');
+      await prefs.remove('planned_meals');
       await prefs.setBool('is_logged_in', false);
 
-      print('Account deleted successfully');
+      print('Account deleted successfully with all local data cleared');
 
       return {
         'success': true,
@@ -583,7 +627,8 @@ class FirebaseAuthService {
 
       if (doc.exists && doc.data() != null) {
         final data = doc.data()!;
-        print('User data retrieved from Firestore');
+        print(
+            'User data retrieved from Firestore with favorites and planned meals');
         return UserModel.fromJson(data);
       }
 

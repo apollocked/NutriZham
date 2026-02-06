@@ -5,6 +5,9 @@ class UserModel {
   final int age;
   final String? profileImage;
   final DateTime createdAt;
+  final List<String> favorites;
+  final List<String> plannedMeals;
+  final DateTime? updatedAt;
 
   UserModel({
     required this.id,
@@ -13,6 +16,9 @@ class UserModel {
     required this.age,
     this.profileImage,
     required this.createdAt,
+    this.favorites = const [],
+    this.plannedMeals = const [],
+    this.updatedAt,
   });
 
   Map<String, dynamic> toJson() {
@@ -23,6 +29,9 @@ class UserModel {
       'age': age,
       'profileImage': profileImage,
       'createdAt': createdAt.toIso8601String(),
+      'favorites': favorites,
+      'plannedMeals': plannedMeals,
+      'updatedAt': updatedAt?.toIso8601String(),
     };
   }
 
@@ -34,6 +43,11 @@ class UserModel {
       age: json['age'] as int,
       profileImage: json['profileImage'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String),
+      favorites: List<String>.from(json['favorites'] ?? []),
+      plannedMeals: List<String>.from(json['plannedMeals'] ?? []),
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'] as String)
+          : null,
     );
   }
 
@@ -44,6 +58,9 @@ class UserModel {
     int? age,
     String? profileImage,
     DateTime? createdAt,
+    List<String>? favorites,
+    List<String>? plannedMeals,
+    DateTime? updatedAt,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -52,6 +69,9 @@ class UserModel {
       age: age ?? this.age,
       profileImage: profileImage ?? this.profileImage,
       createdAt: createdAt ?? this.createdAt,
+      favorites: favorites ?? this.favorites,
+      plannedMeals: plannedMeals ?? this.plannedMeals,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 }

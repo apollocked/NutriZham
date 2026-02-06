@@ -245,145 +245,148 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          // Search Bar
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: CustomSearchBar(
-              hintText: loc.searchPlaceholder,
-              searchQuery: _searchQuery,
-              onChanged: (value) {
-                setState(() {
-                  _searchQuery = value;
-                });
-              },
-              onClear: _clearSearch,
-              isDarkMode: widget.isDarkMode,
-              controller: _searchController,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Search Bar
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: CustomSearchBar(
+                hintText: loc.searchPlaceholder,
+                searchQuery: _searchQuery,
+                onChanged: (value) {
+                  setState(() {
+                    _searchQuery = value;
+                  });
+                },
+                onClear: _clearSearch,
+                isDarkMode: widget.isDarkMode,
+                controller: _searchController,
+              ),
             ),
-          ),
 
-          // Category Filter Chips
-          _buildCategoryChips(loc),
+            // Category Filter Chips
+            _buildCategoryChips(loc),
 
-          // Recipe of the Day (only show when not searching/filtering)
-          if (_searchQuery.isEmpty &&
-              _selectedCategory == null &&
-              !_showFavoritesOnly)
-            _buildRecipeOfTheDay(loc),
+            // Recipe of the Day (only show when not searching/filtering)
+            if (_searchQuery.isEmpty &&
+                _selectedCategory == null &&
+                !_showFavoritesOnly)
+              _buildRecipeOfTheDay(loc),
 
-          // Recipes List Header
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  _showFavoritesOnly ? loc.favorites : loc.recipes,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: widget.isDarkMode
-                        ? AppColors.darkText
-                        : AppColors.lightText,
-                  ),
-                ),
-                Text(
-                  '${paginatedRecipes.length}',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: widget.isDarkMode
-                        ? AppColors.darkTextSecondary
-                        : AppColors.lightTextSecondary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // Recipes List
-          Expanded(
-            child: _isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.primaryGreen,
+            // Recipes List Header
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    _showFavoritesOnly ? loc.favorites : loc.recipes,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: widget.isDarkMode
+                          ? AppColors.darkText
+                          : AppColors.lightText,
                     ),
-                  )
-                : paginatedRecipes.isEmpty
-                    ? EmptyStateWidget(
-                        icon: _showFavoritesOnly
-                            ? Icons.favorite_outline
-                            : Icons.search_off,
-                        title: _showFavoritesOnly
-                            ? loc.noFavorites
-                            : loc.noRecipesFound,
-                        subtitle: _showFavoritesOnly
-                            ? loc.tapToSave
-                            : loc.tryDifferentSearch,
-                        isDarkMode: widget.isDarkMode,
-                      )
-                    : NotificationListener<ScrollNotification>(
-                        onNotification: (ScrollNotification scrollInfo) {
-                          // Handle scroll loading here only if in "All" view
-                          if (_searchQuery.isEmpty &&
-                              _selectedCategory == null &&
-                              !_showFavoritesOnly &&
-                              !_isLoadingMore &&
-                              _hasMore &&
-                              scrollInfo.metrics.pixels >=
-                                  scrollInfo.metrics.maxScrollExtent - 200) {
-                            _loadNextBatch();
-                          }
-                          return false;
-                        },
-                        child: ListView.builder(
-                          controller: _scrollController,
-                          // If loading more, add 1 for the spinner
-                          itemCount: paginatedRecipes.length +
-                              (_hasMore && _isLoadingMore ? 1 : 0),
-                          padding: const EdgeInsets.only(bottom: 16),
-                          itemBuilder: (context, index) {
-                            // Show spinner at the bottom
-                            if (index == paginatedRecipes.length) {
-                              return const Center(
-                                child: Padding(
-                                  padding: EdgeInsets.all(16.0),
-                                  child: CircularProgressIndicator(
-                                    color: AppColors.primaryGreen,
-                                  ),
-                                ),
-                              );
+                  ),
+                  Text(
+                    '${paginatedRecipes.length}',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: widget.isDarkMode
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Recipes List
+            Expanded(
+              child: _isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.primaryGreen,
+                      ),
+                    )
+                  : paginatedRecipes.isEmpty
+                      ? EmptyStateWidget(
+                          icon: _showFavoritesOnly
+                              ? Icons.favorite_outline
+                              : Icons.search_off,
+                          title: _showFavoritesOnly
+                              ? loc.noFavorites
+                              : loc.noRecipesFound,
+                          subtitle: _showFavoritesOnly
+                              ? loc.tapToSave
+                              : loc.tryDifferentSearch,
+                          isDarkMode: widget.isDarkMode,
+                        )
+                      : NotificationListener<ScrollNotification>(
+                          onNotification: (ScrollNotification scrollInfo) {
+                            // Handle scroll loading here only if in "All" view
+                            if (_searchQuery.isEmpty &&
+                                _selectedCategory == null &&
+                                !_showFavoritesOnly &&
+                                !_isLoadingMore &&
+                                _hasMore &&
+                                scrollInfo.metrics.pixels >=
+                                    scrollInfo.metrics.maxScrollExtent - 200) {
+                              _loadNextBatch();
                             }
-
-                            final recipe = paginatedRecipes[index];
-                            final isFavorite = _favoriteIds.contains(recipe.id);
-
-                            return RecipeCard(
-                              recipe: recipe,
-                              isDarkMode: widget.isDarkMode,
-                              languageCode: widget.languageCode,
-                              isFavorite: isFavorite,
-                              onFavoriteToggle: () =>
-                                  _toggleFavorite(recipe.id),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => RecipeDetailScreen(
-                                      recipe: recipe,
-                                      isDarkMode: widget.isDarkMode,
-                                      languageCode: widget.languageCode,
+                            return false;
+                          },
+                          child: ListView.builder(
+                            controller: _scrollController,
+                            // If loading more, add 1 for the spinner
+                            itemCount: paginatedRecipes.length +
+                                (_hasMore && _isLoadingMore ? 1 : 0),
+                            padding: const EdgeInsets.only(bottom: 16),
+                            itemBuilder: (context, index) {
+                              // Show spinner at the bottom
+                              if (index == paginatedRecipes.length) {
+                                return const Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(16.0),
+                                    child: CircularProgressIndicator(
+                                      color: AppColors.primaryGreen,
                                     ),
                                   ),
                                 );
-                              },
-                            );
-                          },
+                              }
+
+                              final recipe = paginatedRecipes[index];
+                              final isFavorite =
+                                  _favoriteIds.contains(recipe.id);
+
+                              return RecipeCard(
+                                recipe: recipe,
+                                isDarkMode: widget.isDarkMode,
+                                languageCode: widget.languageCode,
+                                isFavorite: isFavorite,
+                                onFavoriteToggle: () =>
+                                    _toggleFavorite(recipe.id),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => RecipeDetailScreen(
+                                        recipe: recipe,
+                                        isDarkMode: widget.isDarkMode,
+                                        languageCode: widget.languageCode,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
                         ),
-                      ),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
