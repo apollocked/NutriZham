@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:nutrizham/services/firebase_auth_service.dart';
 import 'package:nutrizham/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
