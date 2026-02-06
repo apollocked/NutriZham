@@ -12,9 +12,11 @@ dependencies:
   flutter:
     sdk: flutter
   shared_preferences: ^2.2.2
-  cloud_firestore: ^4.0.0
-  firebase_core: ^2.24.2 # <--- I added this. Firestore requires it.
-
+  firebase_core: any # Let Flutter choose compatible version
+  firebase_auth: any # Let Flutter choose compatible version
+  cloud_firestore: any
+  google_sign_in: ^6.1.5
+  crypto: ^3.0.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

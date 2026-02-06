@@ -41,6 +41,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
     setState(() => _isLoading = false);
   }
 
+  // In _saveChanges method, update to handle new return type:
   Future<void> _saveChanges() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -53,22 +54,27 @@ class _EditAccountPageState extends State<EditAccountPage> {
       age: int.parse(_ageController.text),
     );
 
-    await _authService.updateUser(updatedUser);
+    final result = await _authService.updateUser(updatedUser);
 
     if (!mounted) return;
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(AppLocalizations.of(widget.languageCode).accountUpdated),
-        backgroundColor: AppColors.success,
+        content: Text(result['message']),
+        backgroundColor:
+            result['success'] ? AppColors.success : AppColors.error,
       ),
     );
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (_) => MainNavigation(
-              isDarkMode: widget.isDarkMode,
-              languageCode: widget.languageCode)),
-    );
+
+    if (result['success']) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => MainNavigation(
+                isDarkMode: widget.isDarkMode,
+                languageCode: widget.languageCode)),
+      );
+    }
   }
 
   @override

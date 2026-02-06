@@ -1,26 +1,18 @@
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:nutrizham/services/firebase_auth_service.dart';
 import 'package:nutrizham/models/user_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-  static const String _userKey = 'current_user';
-  static const String _usersKey = 'registered_users';
-  static const String _isLoggedInKey = 'is_logged_in';
+  final FirebaseAuthService _firebaseAuth = FirebaseAuthService();
 
   // Check if user is logged in
   Future<bool> isLoggedIn() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_isLoggedInKey) ?? false;
+    return await _firebaseAuth.isLoggedIn();
   }
 
   // Get current user
   Future<UserModel?> getCurrentUser() async {
-    final prefs = await SharedPreferences.getInstance();
-    final userJson = prefs.getString(_userKey);
-    if (userJson != null) {
-      return UserModel.fromJson(json.decode(userJson));
-    }
-    return null;
+    return await _firebaseAuth.getCurrentUser();
   }
 
   // Register new user
@@ -30,54 +22,12 @@ class AuthService {
     required String password,
     required int age,
   }) async {
-    final prefs = await SharedPreferences.getInstance();
-
-    // Get existing users
-    final usersJson = prefs.getString(_usersKey);
-    List<Map<String, dynamic>> users = [];
-    if (usersJson != null) {
-      users = List<Map<String, dynamic>>.from(json.decode(usersJson));
-    }
-
-    // Check if email already exists
-    if (users.any((user) => user['email'] == email)) {
-      return {
-        'success': false,
-        'message': 'Email already registered',
-      };
-    }
-
-    // Check if username already exists
-    if (users.any((user) => user['username'] == username)) {
-      return {
-        'success': false,
-        'message': 'Username already taken',
-      };
-    }
-
-    // Create new user
-    final newUser = UserModel(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      username: username,
+    return await _firebaseAuth.registerWithEmail(
       email: email,
+      password: password,
+      username: username,
       age: age,
-      createdAt: DateTime.now(),
     );
-
-    // Store password separately (in real app, use proper encryption)
-    final userWithPassword = {
-      ...newUser.toJson(),
-      'password': password, // In production, hash this!
-    };
-
-    users.add(userWithPassword);
-    await prefs.setString(_usersKey, json.encode(users));
-
-    return {
-      'success': true,
-      'message': 'Registration successful',
-      'user': newUser,
-    };
   }
 
   // Login user
@@ -85,229 +35,80 @@ class AuthService {
     required String email,
     required String password,
   }) async {
-    final prefs = await SharedPreferences.getInstance();
-
-    // Get existing users
-    final usersJson = prefs.getString(_usersKey);
-    if (usersJson == null) {
-      return {
-        'success': false,
-        'message': 'No registered users found',
-      };
-    }
-
-    final users = List<Map<String, dynamic>>.from(json.decode(usersJson));
-
-    // Find user with matching email and password
-    final user = users.firstWhere(
-      (user) => user['email'] == email && user['password'] == password,
-      orElse: () => {},
+    return await _firebaseAuth.loginWithEmail(
+      email: email,
+      password: password,
     );
-
-    if (user.isEmpty) {
-      return {
-        'success': false,
-        'message': 'Invalid email or password',
-      };
-    }
-
-    // Remove password from user data
-    final userData = Map<String, dynamic>.from(user);
-    userData.remove('password');
-
-    final loggedInUser = UserModel.fromJson(userData);
-
-    // Save current user
-    await prefs.setString(_userKey, json.encode(loggedInUser.toJson()));
-    await prefs.setBool(_isLoggedInKey, true);
-
-    return {
-      'success': true,
-      'message': 'Login successful',
-      'user': loggedInUser,
-    };
   }
 
   // Logout user
   Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_userKey);
-    await prefs.setBool(_isLoggedInKey, false);
+    await _firebaseAuth.logout();
   }
 
   // Update user profile
-  Future<bool> updateUser(UserModel updatedUser) async {
-    final prefs = await SharedPreferences.getInstance();
-
-    // Update current user
-    await prefs.setString(_userKey, json.encode(updatedUser.toJson()));
-
-    // Update in users list
-    final usersJson = prefs.getString(_usersKey);
-    if (usersJson != null) {
-      final users = List<Map<String, dynamic>>.from(json.decode(usersJson));
-      final index = users.indexWhere((user) => user['id'] == updatedUser.id);
-
-      if (index != -1) {
-        users[index] = {
-          ...updatedUser.toJson(),
-          'password': users[index]['password'], // Keep existing password
-        };
-        await prefs.setString(_usersKey, json.encode(users));
-      }
-    }
-
-    return true;
+  Future<Map<String, dynamic>> updateUser(UserModel updatedUser) async {
+    return await _firebaseAuth.updateUserProfile(updatedUser);
   }
 
   // Delete account
-  Future<bool> deleteAccount(String userId) async {
-    final prefs = await SharedPreferences.getInstance();
-
-    // Remove from users list
-    final usersJson = prefs.getString(_usersKey);
-    if (usersJson != null) {
-      final users = List<Map<String, dynamic>>.from(json.decode(usersJson));
-      users.removeWhere((user) => user['id'] == userId);
-      await prefs.setString(_usersKey, json.encode(users));
-    }
-
-    // Remove user data
-    await prefs.remove(_userKey);
-    await prefs.setBool(_isLoggedInKey, false);
-
-    return true;
+  Future<Map<String, dynamic>> deleteAccount(String userId) async {
+    return await _firebaseAuth.deleteAccount();
   }
 
-  // Get all registered users (for admin purposes)
-  Future<List<UserModel>> getAllUsers() async {
-    final prefs = await SharedPreferences.getInstance();
-    final usersJson = prefs.getString(_usersKey);
-
-    if (usersJson == null) {
-      return [];
-    }
-
-    final users = List<Map<String, dynamic>>.from(json.decode(usersJson));
-
-    // Remove passwords before returning
-    return users.map((userData) {
-      final data = Map<String, dynamic>.from(userData);
-      data.remove('password');
-      return UserModel.fromJson(data);
-    }).toList();
+  // NEW: Google Sign-In
+  Future<Map<String, dynamic>> signInWithGoogle() async {
+    return await _firebaseAuth.signInWithGoogle();
   }
 
-  // Get user by ID
-  Future<UserModel?> getUserById(String userId) async {
-    final prefs = await SharedPreferences.getInstance();
-    final usersJson = prefs.getString(_usersKey);
-
-    if (usersJson == null) {
-      return null;
-    }
-
-    final users = List<Map<String, dynamic>>.from(json.decode(usersJson));
-    final user = users.firstWhere(
-      (user) => user['id'] == userId,
-      orElse: () => {},
-    );
-
-    if (user.isEmpty) {
-      return null;
-    }
-
-    final userData = Map<String, dynamic>.from(user);
-    userData.remove('password');
-    return UserModel.fromJson(userData);
+  // NEW: Reset password
+  Future<Map<String, dynamic>> resetPassword(String email) async {
+    return await _firebaseAuth.resetPassword(email);
   }
 
-  // Change password
-  Future<bool> changePassword({
-    required String userId,
+  // NEW: Change password
+  Future<Map<String, dynamic>> changePassword({
     required String currentPassword,
     required String newPassword,
   }) async {
-    final prefs = await SharedPreferences.getInstance();
-    final usersJson = prefs.getString(_usersKey);
-
-    if (usersJson == null) {
-      return false;
-    }
-
-    final users = List<Map<String, dynamic>>.from(json.decode(usersJson));
-    final index = users.indexWhere((user) => user['id'] == userId);
-
-    if (index == -1) {
-      return false;
-    }
-
-    // Verify current password
-    if (users[index]['password'] != currentPassword) {
-      return false;
-    }
-
-    // Update password
-    users[index]['password'] = newPassword; // In production, hash this!
-    await prefs.setString(_usersKey, json.encode(users));
-
-    return true;
+    return await _firebaseAuth.changePassword(
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+    );
   }
 
-  // Forgot password (simple implementation)
-  Future<bool> resetPassword(String email, String newPassword) async {
-    final prefs = await SharedPreferences.getInstance();
-    final usersJson = prefs.getString(_usersKey);
-
-    if (usersJson == null) {
-      return false;
-    }
-
-    final users = List<Map<String, dynamic>>.from(json.decode(usersJson));
-    final index = users.indexWhere((user) => user['email'] == email);
-
-    if (index == -1) {
-      return false;
-    }
-
-    // Update password
-    users[index]['password'] = newPassword; // In production, hash this!
-    await prefs.setString(_usersKey, json.encode(users));
-
-    return true;
+  // NEW: Get auth state stream
+  Stream<UserModel?> get authStateChanges {
+    return _firebaseAuth.authStateChanges;
   }
 
-  // Check if email exists
+  // NEW: Check if email exists (optional - needs Firestore query)
   Future<bool> emailExists(String email) async {
-    final prefs = await SharedPreferences.getInstance();
-    final usersJson = prefs.getString(_usersKey);
-
-    if (usersJson == null) {
+    try {
+      // You need to implement this by querying Firestore
+      // This is just a placeholder
+      return false;
+    } catch (e) {
       return false;
     }
-
-    final users = List<Map<String, dynamic>>.from(json.decode(usersJson));
-    return users.any((user) => user['email'] == email);
   }
 
-  // Check if username exists
+  // NEW: Check if username exists (optional - needs Firestore query)
   Future<bool> usernameExists(String username) async {
-    final prefs = await SharedPreferences.getInstance();
-    final usersJson = prefs.getString(_usersKey);
-
-    if (usersJson == null) {
+    try {
+      // You need to implement this by querying Firestore
+      // This is just a placeholder
+      return false;
+    } catch (e) {
       return false;
     }
-
-    final users = List<Map<String, dynamic>>.from(json.decode(usersJson));
-    return users.any((user) => user['username'] == username);
   }
 
-  // Clear all user data (for testing/debugging)
+  // Keep this for testing/debugging if needed
   Future<void> clearAllUserData() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_userKey);
-    await prefs.remove(_usersKey);
-    await prefs.remove(_isLoggedInKey);
+    await prefs.remove('current_user');
+    await prefs.setBool('is_logged_in', false);
+    await _firebaseAuth.logout();
   }
 }

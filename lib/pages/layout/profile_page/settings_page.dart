@@ -38,6 +38,7 @@ class _SettingsPageState extends State<SettingsPage> {
     _currentLanguage = widget.languageCode;
   }
 
+  // In _deleteAccount method:
   Future<void> _deleteAccount() async {
     final loc = AppLocalizations.of(_currentLanguage);
     final confirmed = await showDialog<bool>(
@@ -60,10 +61,20 @@ class _SettingsPageState extends State<SettingsPage> {
     );
 
     if (confirmed == true) {
-      final user = await _authService.getCurrentUser();
-      if (user != null) {
-        await _authService.deleteAccount(user.id);
-        if (!mounted) return;
+      final result =
+          await _authService.deleteAccount(''); // Empty string or user ID
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(result['message']),
+          backgroundColor:
+              result['success'] ? AppColors.success : AppColors.error,
+        ),
+      );
+
+      if (result['success']) {
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (_) => LoginPage(

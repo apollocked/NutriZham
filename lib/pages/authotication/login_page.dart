@@ -1,6 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:nutrizham/pages/authotication/register_page.dart';
 import 'package:nutrizham/pages/layout/main_navigation.dart';
+
 import 'package:nutrizham/services/auth_service.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
@@ -36,6 +39,60 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  // Add this method in _LoginPageState:
+  Future<void> _forgotPassword() async {
+    final loc = AppLocalizations.of(widget.languageCode);
+
+    final email = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        final emailController = TextEditingController();
+        return AlertDialog(
+          title: Text(loc.forgotPassword),
+          content: CustomTextField(
+            controller: emailController,
+            labelText: loc.email,
+            prefixIcon: Icons.email_outlined,
+            isDarkMode: widget.isDarkMode,
+            keyboardType: TextInputType.emailAddress,
+            validator: (value) {
+              if (value == null || value.isEmpty || !value.contains('@')) {
+                return 'Please enter a valid email';
+              }
+              return null;
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(loc.cancel),
+            ),
+            TextButton(
+              onPressed: () {
+                if (emailController.text.contains('@')) {
+                  Navigator.pop(context, emailController.text.trim());
+                }
+              },
+              child: const Text('Send'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (email != null) {
+      final result = await _authService.resetPassword(email);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(result['message']),
+          backgroundColor:
+              result['success'] ? AppColors.success : AppColors.error,
+        ),
+      );
+    }
+  }
+
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -60,6 +117,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
     } else {
+      print('Login error: ${result['message']}');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(result['message']),
@@ -192,9 +250,22 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: _login,
                         isLoading: _isLoading,
                       ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      // Add forgot password button in login form (after login button):
+                      TextButton(
+                        onPressed: _forgotPassword,
+                        child: Text(
+                          loc.forgotPassword,
+                          style: const TextStyle(
+                            color: AppColors.primaryGreen,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 45),
+                  const SizedBox(height: 20),
 
                   // Register Link
                   Column(
