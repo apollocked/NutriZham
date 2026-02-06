@@ -12,11 +12,12 @@ dependencies:
   flutter:
     sdk: flutter
   shared_preferences: ^2.2.2
-  firebase_core: any # Let Flutter choose compatible version
-  firebase_auth: any # Let Flutter choose compatible version
-  cloud_firestore: any
-  google_sign_in: ^6.1.5
+  firebase_core: ^3.1.0 # Updated
+  firebase_auth: ^5.1.0 # Updated
+  cloud_firestore: ^5.1.0 # Updated
+  google_sign_in: ^6.2.1 # Updated
   crypto: ^3.0.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

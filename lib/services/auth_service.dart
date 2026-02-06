@@ -4,6 +4,44 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   final FirebaseAuthService _firebaseAuth = FirebaseAuthService();
+// In AuthService class
+  Future<void> testLoginFlow(String testEmail, String testPassword) async {
+    print('=== TESTING LOGIN FLOW ===');
+
+    // 1. Try to register
+    print('1. Attempting registration...');
+    final regResult = await register(
+      username: 'testuser',
+      email: testEmail,
+      password: testPassword,
+      age: 25,
+    );
+    print('Registration result: ${regResult['success']}');
+    print('Registration message: ${regResult['message']}');
+
+    if (regResult['success']) {
+      // 2. Try to login immediately
+      print('\n2. Attempting login...');
+      final loginResult = await login(
+        email: testEmail,
+        password: testPassword,
+      );
+      print('Login result: ${loginResult['success']}');
+      print('Login message: ${loginResult['message']}');
+
+      // 3. Check login status
+      print('\n3. Checking isLoggedIn...');
+      final loggedIn = await isLoggedIn();
+      print('isLoggedIn: $loggedIn');
+
+      // 4. Get current user
+      print('\n4. Getting current user...');
+      final currentUser = await getCurrentUser();
+      print('Current user: ${currentUser?.email}');
+    }
+
+    print('=== END TEST ===');
+  }
 
   // Check if user is logged in
   Future<bool> isLoggedIn() async {
