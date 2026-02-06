@@ -46,6 +46,8 @@ lib/
 ├── utils/       # Colors, Localizations, & Mock Data
 ├── widgets/     # Custom UI components (Material 3)
 └── pages/       # Authentication, Layout, & Settings
+```
+
 ⚡ Data Sync Strategy
 The app uses a Conflict Resolution Merge strategy:
 
@@ -56,20 +58,23 @@ Cloud Sync: Pushed to Firestore when a connection is detected.
 Real-time Updates: Uses StreamController to update UI components instantly across devices.
 
 🚀 Installation & Setup
+
 1. Prerequisites
-Flutter SDK (Latest Stable)
+   Flutter SDK (Latest Stable)
 
 A Firebase Project
 
 2. Configuration
-Android: Place google-services.json in android/app/
+   Android: Place google-services.json in android/app/
 
 iOS: Place GoogleService-Info.plist in ios/Runner/
 
 3. Setup Commands
-Bash
-flutter pub get
+   Bash
+   flutter pub get
+
 # Ensure your Firebase project has Firestore and Auth enabled
+
 flutter run
 🔐 Firestore Security Rules
 To protect user data, apply these rules in your Firebase Console:
@@ -77,15 +82,15 @@ To protect user data, apply these rules in your Firebase Console:
 JavaScript
 rules_version = '2';
 service cloud.firestore {
-  match /databases/{database}/documents {
-    match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-    }
-    match /recipes/{recipeId} {
-      allow read: if request.auth != null;
-      allow write: if false; // Admin only
-    }
-  }
+match /databases/{database}/documents {
+match /users/{userId} {
+allow read, write: if request.auth != null && request.auth.uid == userId;
+}
+match /recipes/{recipeId} {
+allow read: if request.auth != null;
+allow write: if false; // Admin only
+}
+}
 }
 🎨 UI/UX Highlights
 Material Design 3: Modern, clean aesthetics.
@@ -104,4 +109,3 @@ Responsive Layout: Optimized for both small and large smartphone screens.
 [ ] Social sharing for custom meal plans.
 
 Built with ❤️ by the NutriZham Team | Version 2.1.0 (2026)
-```
