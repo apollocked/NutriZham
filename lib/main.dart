@@ -2,7 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:nutrizham/pages/authotication/login_page.dart';
-import 'package:nutrizham/pages/welcome_page.dart';
+import 'package:nutrizham/pages/authotication/welcome_page.dart';
+import 'package:nutrizham/pages/layout/main_navigation.dart';
 import 'package:nutrizham/services/preferences_helper.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -97,12 +98,14 @@ class _NutriZhamAppState extends State<NutriZhamApp> {
       ),
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
       // SHOW WELCOME PAGE IF NOT SHOWN BEFORE, OTHERWISE LOGIN PAGE
-      home: _welcomeShown
-          ? LoginPage(
-              isDarkMode: _isDarkMode,
-              languageCode: _languageCode,
-            )
-          : const WelcomePage(),
+      home: _isLoggedIn
+          ? MainNavigation(isDarkMode: _isDarkMode, languageCode: _languageCode)
+          : _welcomeShown
+              ? LoginPage(
+                  isDarkMode: _isDarkMode,
+                  languageCode: _languageCode,
+                )
+              : const WelcomePage(),
     );
   }
 

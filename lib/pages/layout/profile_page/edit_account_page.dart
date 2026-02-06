@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nutrizham/pages/layout/main_navigation.dart';
 import 'package:nutrizham/services/auth_service.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
@@ -61,7 +62,13 @@ class _EditAccountPageState extends State<EditAccountPage> {
         backgroundColor: AppColors.success,
       ),
     );
-    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (_) => MainNavigation(
+              isDarkMode: widget.isDarkMode,
+              languageCode: widget.languageCode)),
+    );
   }
 
   @override

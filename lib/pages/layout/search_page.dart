@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:nutrizham/utils/meals_data.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
-import 'package:nutrizham/pages/details_screen.dart';
+import 'package:nutrizham/pages/layout/details_screen.dart';
 import 'package:nutrizham/widgets/custom_app_bar.dart';
 import 'package:nutrizham/widgets/search_bar_widget.dart';
 import 'package:nutrizham/widgets/category_widgets.dart';
