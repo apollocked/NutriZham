@@ -12,9 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
   shared_preferences: ^2.2.2
-  firebase_core: ^3.1.1 # Update this
-  firebase_auth: ^5.1.1 # Update this
-  cloud_firestore: ^5.0.2 # Update this
+  firebase_core: ^3.1.1
+  firebase_auth: ^5.1.1
+  cloud_firestore: ^5.0.2
   google_sign_in: ^6.2.1
   crypto: ^3.0.3
 
@@ -22,6 +22,16 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+  flutter_launcher_icons: ^0.13.1
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/logo/app_logo.png
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path_android: "assets/logo/app_logo.png"
+  image_path_ios: "assets/logo/app_logo.png"
+  adaptive_icon_background: "#D1FAE5"
+  adaptive_icon_foreground: "assets/logo/app_logo.png"

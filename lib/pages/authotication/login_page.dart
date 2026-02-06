@@ -39,7 +39,6 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  // Add this method in _LoginPageState:
   Future<void> _forgotPassword() async {
     final loc = AppLocalizations.of(widget.languageCode);
 
@@ -158,10 +157,10 @@ class _LoginPageState extends State<LoginPage> {
                         color: AppColors.primaryGreen.withOpacity(0.3),
                       ),
                     ),
-                    child: const Icon(
-                      Icons.restaurant_menu,
-                      size: 40,
-                      color: AppColors.primaryGreen,
+                    child: Image.asset(
+                      'assets/logo/app_logo.png',
+                      width: 40,
+                      height: 40,
                     ),
                   ),
                   const SizedBox(height: 32),

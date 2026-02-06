@@ -143,10 +143,10 @@ class _WelcomePageState extends State<WelcomePage> {
                       width: 2,
                     ),
                   ),
-                  child: const Icon(
-                    Icons.restaurant_menu,
-                    size: 50,
-                    color: AppColors.primaryGreen,
+                  child: Image.asset(
+                    'assets/logo/app_logo.png',
+                    width: 40,
+                    height: 40,
                   ),
                 ),
                 const SizedBox(height: 32),
