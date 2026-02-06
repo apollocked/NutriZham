@@ -470,7 +470,7 @@ List<Map<String, dynamic>> getFeatures(dynamic languageCode) {
           'title': 'دۆخی تاریک',
           'description': 'بەکارهێنانی ئەپ لە دۆخی تاریک یان ڕووناک',
           'icon': Icons.dark_mode,
-          'color': AppColors.darkText,
+          'color': AppColors.primaryGreen,
         },
         {
           'title': 'ڕێژەدان',

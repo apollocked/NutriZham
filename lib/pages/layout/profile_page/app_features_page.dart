@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
 import 'package:nutrizham/widgets/custom_app_bar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AppFeaturesPage extends StatelessWidget {
   final bool isDarkMode;
@@ -12,6 +13,25 @@ class AppFeaturesPage extends StatelessWidget {
     required this.isDarkMode,
     required this.languageCode,
   });
+  Future<void> _sendEmail() async {
+    final String subject = 'Support';
+    final String body = 'Hello,\n\nI need help with...';
+
+    // Use a string-based approach to ensure proper encoding
+    final Uri emailUri = Uri(
+      scheme: 'mailto',
+      path: 'hamabarznji1990@gmail.com',
+      query:
+          'subject=${Uri.encodeComponent(subject)}&body=${Uri.encodeComponent(body)}',
+    );
+
+    if (await canLaunchUrl(emailUri)) {
+      await launchUrl(emailUri, mode: LaunchMode.externalApplication);
+    } else {
+      debugPrint('Could not launch email app');
+      // Optional: Show a SnackBar to the user saying "No email app found"
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -238,7 +258,7 @@ class AppFeaturesPage extends StatelessWidget {
                   const SizedBox(height: 12),
                   Text(
                     languageCode == 'ku'
-                        ? 'ئەم ئەپە بە هۆکاری فێربوونی Flutter و Firebase دروست کراوە. کۆدەکە کراوەیە و دەتوانیت بیبینیت.'
+                        ? 'ئەم ئەپە بە فڵەتەر و فایەربەیس دروست کراوە. کۆدەکە کراوەیە و دەتوانیت بیبینیت.'
                         : languageCode == 'ar'
                             ? 'تم تطوير هذا التطبيق لأغراض تعلم Flutter و Firebase. الكود مفتوح المصدر ويمكنك الاطلاع عليه.'
                             : 'This app was developed for Flutter and Firebase learning purposes. The code is open source and you can view it.',
@@ -320,19 +340,23 @@ class AppFeaturesPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  const Row(
+                  Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.email,
                         color: AppColors.primaryGreen,
                         size: 16,
                       ),
-                      SizedBox(width: 8),
-                      Text(
-                        'support@nutrizham.com',
-                        style: TextStyle(
-                          color: AppColors.primaryGreen,
-                          fontSize: 14,
+                      const SizedBox(width: 8),
+                      InkWell(
+                        onTap: _sendEmail,
+                        child: const Text(
+                          'hamabarznji1990@gmail.com',
+                          style: TextStyle(
+                            color: AppColors.primaryGreen,
+                            fontSize: 14,
+                            decoration: TextDecoration.underline,
+                          ),
                         ),
                       ),
                     ],
