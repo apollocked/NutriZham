@@ -14,8 +14,8 @@ class AppFeaturesPage extends StatelessWidget {
     required this.languageCode,
   });
   Future<void> _sendEmail() async {
-    final String subject = 'Support';
-    final String body = 'Hello,\n\nI need help with...';
+    const String subject = 'Support';
+    const String body = 'Hello,\n\nI need help with...';
 
     // Use a string-based approach to ensure proper encoding
     final Uri emailUri = Uri(
