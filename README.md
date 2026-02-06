@@ -1,111 +1,146 @@
-Markdown
+# NutriZham 🥗💪
 
-# NutriZham - Complete Food Recipe App 🥗💪
-
-NutriZham is a high-performance, trilingual food recipe and meal planning mobile application. Built with **Flutter** and **Firebase**, it offers a seamless experience for users to discover recipes, track macros, and sync data across devices.
+**NutriZham** is a modern, trilingual **food recipe & meal planning app** focused on nutrition, performance, and usability. Built with **Flutter** and **Firebase**, it delivers fast recipe discovery, macro tracking, and seamless cross-device sync.
 
 ---
 
-## ✨ Core Features
+## 🚀 Why NutriZham?
 
-### 🔐 Firebase Authentication System
+- ⚡ Fast, scalable Flutter architecture
+- 🌍 English • Kurdish • Arabic (full RTL support)
+- 📊 Built-in macro & calorie tracking
+- ☁️ Secure Firebase-backed cloud sync
+- 🌙 Polished Material 3 UI with Dark Mode
 
-- **Multiple Auth Methods:** Email/Password & Google Sign-In integration.
-- **Secure Management:** Password reset, profile updates, and complete account deletion.
-- **Session Persistence:** Automatic login across app restarts.
+---
 
-### 🏠 Recipe Discovery & Search
+## ✨ Features
 
-- **Real-time Firestore Sync:** Features infinite scroll (20 recipes per batch).
-- **Smart Filtering:** Filter by 6 goals: _Breakfast, Lunch, Dinner, Snack, Bulking, and Cutting_.
-- **Recipe of the Day:** Featured daily content to inspire healthy eating.
-- **Interactive Search:** Real-time filtering with compact result cards.
+### 🔐 Authentication (Firebase Auth)
+- Email & Password authentication
+- Google Sign‑In
+- Password reset & account deletion
+- Persistent login sessions
+
+### 🍽 Recipe Discovery
+- Infinite scrolling (Firestore pagination – 20 items/batch)
+- Smart filters:
+  - Breakfast
+  - Lunch
+  - Dinner
+  - Snack
+  - Bulking
+  - Cutting
+- **Recipe of the Day** spotlight
+- Real‑time search with compact recipe cards
 
 ### 📅 Meal Planner & Nutrition
+- Automatic macro calculation:
+  - Calories
+  - Protein
+  - Carbohydrates
+  - Fats
+- Offline‑first experience
+- Local caching + automatic cloud merge
+- Color‑coded nutrition indicators
 
-- **Macro Tracking:** Automated calorie, protein, carb, and fat calculation.
-- **Offline-First:** Local caching with `SharedPreferences` and automatic cloud merging.
-- **Visual Organization:** Color-coded nutrition chips and responsive card layouts.
-
-### 🌐 Full Localization (i18n)
-
-- **Supported Languages:** English 🇬🇧, Kurdish (کوردی) ☀️, and Arabic (العربية) 🇸🇦.
-- **Native RTL Support:** Full Right-to-Left layout adjustment for Kurdish and Arabic.
-- **Auto-Detection:** Detects and applies device language settings on first launch.
+### 🌐 Localization & RTL
+- Languages:
+  - 🇬🇧 English
+  - ☀️ Kurdish (کوردی)
+  - 🇸🇦 Arabic (العربية)
+- Full Right‑to‑Left layout handling
+- Automatic device language detection
 
 ---
 
-## 🛠 Technical Architecture
-
-### 📂 Project Structure
+## 🧱 Project Architecture
 
 ```text
 lib/
-├── models/      # User & Recipe data structures
-├── services/    # Firebase Auth, Firestore, & Local Storage
-├── utils/       # Colors, Localizations, & Mock Data
-├── widgets/     # Custom UI components (Material 3)
-└── pages/       # Authentication, Layout, & Settings
+├── models/        # Data models (User, Recipe)
+├── services/      # Firebase, Firestore, Local Storage
+├── utils/         # Constants, Colors, Localization
+├── widgets/       # Reusable UI components
+└── pages/         # Screens (Auth, Home, Planner, Settings)
 ```
 
-⚡ Data Sync Strategy
-The app uses a Conflict Resolution Merge strategy:
+### ⚡ Data Sync Strategy
 
-Local Changes: Saved instantly to SharedPreferences.
+- **Local First:** Changes saved instantly using SharedPreferences
+- **Cloud Sync:** Auto‑sync to Firestore when online
+- **Live Updates:** Stream‑based UI refresh across devices
 
-Cloud Sync: Pushed to Firestore when a connection is detected.
+---
 
-Real-time Updates: Uses StreamController to update UI components instantly across devices.
+## 🛠 Installation
 
-🚀 Installation & Setup
+### 1️⃣ Prerequisites
+- Flutter SDK (latest stable)
+- Firebase project (Auth + Firestore enabled)
 
-1. Prerequisites
-   Flutter SDK (Latest Stable)
+### 2️⃣ Firebase Setup
 
-A Firebase Project
+**Android**
+```
+android/app/google-services.json
+```
 
-2. Configuration
-   Android: Place google-services.json in android/app/
+**iOS**
+```
+ios/Runner/GoogleService-Info.plist
+```
 
-iOS: Place GoogleService-Info.plist in ios/Runner/
+### 3️⃣ Run the App
 
-3. Setup Commands
-   Bash
-   flutter pub get
-
-# Ensure your Firebase project has Firestore and Auth enabled
-
+```bash
+flutter pub get
 flutter run
-🔐 Firestore Security Rules
-To protect user data, apply these rules in your Firebase Console:
+```
 
-JavaScript
+---
+
+## 🔐 Firestore Security Rules
+
+```js
 rules_version = '2';
 service cloud.firestore {
-match /databases/{database}/documents {
-match /users/{userId} {
-allow read, write: if request.auth != null && request.auth.uid == userId;
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    match /recipes/{recipeId} {
+      allow read: if request.auth != null;
+      allow write: if false; // Admin only
+    }
+  }
 }
-match /recipes/{recipeId} {
-allow read: if request.auth != null;
-allow write: if false; // Admin only
-}
-}
-}
-🎨 UI/UX Highlights
-Material Design 3: Modern, clean aesthetics.
+```
 
-OLED Dark Mode: High-contrast dark theme for battery saving.
+---
 
-Emerald Green Palette: Focused on health and freshness.
+## 🎨 UI / UX
 
-Responsive Layout: Optimized for both small and large smartphone screens.
+- Material Design 3
+- OLED‑optimized Dark Mode
+- Health‑focused green accent palette
+- Fully responsive layouts
 
-🎯 Future Roadmap
-[ ] Push notifications for meal reminders.
+---
 
-[ ] Barcode scanner for nutrition logging.
+## 🛣 Roadmap
 
-[ ] Social sharing for custom meal plans.
+- ⏰ Meal reminder notifications
+- 📷 Barcode scanner for nutrition logging
+- 🤝 Social sharing & meal plans
 
-Built with ❤️ by the NutriZham Team | Version 2.1.0 (2026)
+---
+
+## 📦 Version
+
+**v2.1.0 – 2026**
+
+---
+
+Built with ❤️ for healthy living.
+
