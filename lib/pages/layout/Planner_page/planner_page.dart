@@ -77,9 +77,15 @@ class _PlannerPageState extends State<PlannerPage> {
       final isInPlan = _plannedMealIds.contains(recipeId);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(isInPlan ? loc.removeFromPlan : loc.addToPlan),
+          content: Text(
+            isInPlan ? loc.addToPlan : loc.removeFromPlan,
+            style: TextStyle(
+                color: widget.isDarkMode
+                    ? AppColors.lightText
+                    : AppColors.darkText),
+          ),
           duration: const Duration(seconds: 1),
-          backgroundColor: isInPlan ? AppColors.error : AppColors.success,
+          backgroundColor: isInPlan ? AppColors.success : AppColors.error,
         ),
       );
     }
