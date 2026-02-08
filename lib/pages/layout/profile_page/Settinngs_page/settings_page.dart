@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/pages/authotication/login_page.dart';
 import 'package:nutrizham/pages/layout/Profile_page/Edit_account_page/edit_account_page.dart';
-import 'package:nutrizham/services/auth_service.dart';
+import 'package:nutrizham/services/Auth_Services/auth_service.dart';
 import 'package:nutrizham/services/preferences_helper.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';

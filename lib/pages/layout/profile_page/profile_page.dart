@@ -7,15 +7,15 @@ import 'package:nutrizham/pages/authotication/login_page.dart';
 import 'package:nutrizham/models/user_model.dart';
 import 'package:nutrizham/pages/layout/Profile_page/Settinngs_page/settings_page.dart';
 import 'package:nutrizham/pages/layout/Profile_page/features_page/app_features_page.dart';
-import 'package:nutrizham/services/auth_service.dart';
+import 'package:nutrizham/services/Auth_Services/auth_service.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
 import 'package:nutrizham/utils/meals_data.dart';
 import 'package:nutrizham/services/favorites_helper.dart';
 import 'package:nutrizham/services/meal_planner_service.dart';
-import 'package:nutrizham/widgets/stat_and_menu_widgets.dart';
+import 'package:nutrizham/widgets/Form_Wedgits/empty_state_widget.dart';
 import 'package:nutrizham/widgets/recipe_card.dart';
-import 'package:nutrizham/widgets/empty_state_widget.dart';
+import 'package:nutrizham/widgets/stat_and_menu_widgets.dart';
 
 class ProfilePage extends StatefulWidget {
   final bool isDarkMode;
