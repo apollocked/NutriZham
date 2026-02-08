@@ -73,10 +73,14 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     AppLocalizations.of(widget.languageCode);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content:
-            Text(_isFavorite ? "Removed from favorites" : 'Added to favorites'),
+        content: Text(
+            _isFavorite ? 'Added to favorites' : "Removed from favorites",
+            style: TextStyle(
+                color: widget.isDarkMode
+                    ? AppColors.lightText
+                    : AppColors.darkText)),
         duration: const Duration(seconds: 1),
-        backgroundColor: _isFavorite ? AppColors.error : AppColors.success,
+        backgroundColor: _isFavorite ? AppColors.success : AppColors.error,
       ),
     );
   }
