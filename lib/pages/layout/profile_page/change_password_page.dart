@@ -34,6 +34,19 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   bool _showConfirmPassword = false;
   bool _isCurrentPasswordValid = false;
   String? _currentPasswordError;
+  bool _showValidateButton = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Listen to current password changes
+    _currentPasswordController.addListener(() {
+      setState(() {
+        _showValidateButton = _currentPasswordController.text.isNotEmpty &&
+            !_isCurrentPasswordValid;
+      });
+    });
+  }
 
   @override
   void dispose() {
@@ -58,7 +71,6 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     setState(() => _isLoading = true);
 
     try {
-      // Attempt to validate the current password
       final result = await _authService.validateCurrentPassword(password);
 
       if (!mounted) return;
@@ -67,13 +79,15 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         _isCurrentPasswordValid = result['success'];
         _currentPasswordError = result['success'] ? null : result['message'];
         _isLoading = false;
+        _showValidateButton = !result['success'];
       });
     } catch (e) {
       if (!mounted) return;
       setState(() {
         _isCurrentPasswordValid = false;
-        _currentPasswordError = 'Error validating password';
+        _currentPasswordError = 'Wrong password';
         _isLoading = false;
+        _showValidateButton = true;
       });
     }
   }
@@ -90,22 +104,20 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       return;
     }
 
-    // Check if current password is validated
     if (!_isCurrentPasswordValid) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Current password is incorrect'),
+          content: Text('Please verify current password first'),
           backgroundColor: AppColors.error,
         ),
       );
       return;
     }
 
-    // Check if new passwords match
     if (_newPasswordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('New passwords do not match'),
+          content: Text('Passwords do not match'),
           backgroundColor: AppColors.error,
         ),
       );
@@ -131,7 +143,6 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       );
 
       if (result['success']) {
-        // Navigate back to MainNavigation after successful password change
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
@@ -146,8 +157,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: ${e.toString()}'),
+        const SnackBar(
+          content: Text('Error updating password'),
           backgroundColor: AppColors.error,
         ),
       );
@@ -200,7 +211,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'Please enter your current password and your new password.\n Your new password must be more than 6 characters.',
+                        'Please enter your current password and your new password. Your new password must be more than 6 characters.',
                         style: TextStyle(
                           fontSize: 14,
                           color: widget.isDarkMode
@@ -251,92 +262,95 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               ),
               const SizedBox(height: 8),
 
-              // Current Password Validation Status
+              // Current Password Validation Status and Button
               if (_currentPasswordController.text.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: Row(
-                    children: [
-                      if (_isLoading)
-                        const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                AppColors.primaryGreen),
-                          ),
-                        )
-                      else if (_isCurrentPasswordValid)
-                        const Icon(
-                          Icons.check_circle,
-                          color: AppColors.success,
-                          size: 16,
-                        )
-                      else if (_currentPasswordError != null)
-                        const Icon(
-                          Icons.error,
-                          color: AppColors.error,
-                          size: 16,
-                        ),
-                      const SizedBox(width: 8),
-                      Text(
-                        _isLoading
-                            ? 'Validating...'
-                            : (_isCurrentPasswordValid
-                                ? 'Password verified'
-                                : (_currentPasswordError ?? '')),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: _isLoading
-                              ? AppColors.lightTextSecondary
-                              : (_isCurrentPasswordValid
-                                  ? AppColors.success
-                                  : AppColors.error),
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-              SizedBox(
-                  height: _currentPasswordController.text.isEmpty ? 24 : 8),
-
-              // Validate Current Password Button
-              if (_currentPasswordController.text.isNotEmpty &&
-                  !_isCurrentPasswordValid)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: _isLoading ? null : _validateCurrentPassword,
-                      icon: _isLoading
-                          ? const SizedBox(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Status indicator
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: Row(
+                        children: [
+                          if (_isLoading)
+                            const SizedBox(
                               width: 16,
                               height: 16,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
                                 valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.white,
-                                ),
+                                    AppColors.primaryGreen),
                               ),
                             )
-                          : const Icon(Icons.check),
-                      label: Text(
-                        _isLoading ? 'Validating...' : 'Verify Password',
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryGreen,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                          else if (_isCurrentPasswordValid)
+                            const Icon(
+                              Icons.check_circle,
+                              color: AppColors.success,
+                              size: 16,
+                            )
+                          else if (_currentPasswordError != null)
+                            const Icon(
+                              Icons.error,
+                              color: AppColors.error,
+                              size: 16,
+                            ),
+                          const SizedBox(width: 8),
+                          Text(
+                            _isLoading
+                                ? 'Validating...'
+                                : (_isCurrentPasswordValid
+                                    ? 'Password verified'
+                                    : (_currentPasswordError ?? '')),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: _isLoading
+                                  ? AppColors.lightTextSecondary
+                                  : (_isCurrentPasswordValid
+                                      ? AppColors.success
+                                      : AppColors.error),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
+
+                    // Validate button - ONLY shown once, when needed
+                    if (_showValidateButton)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            onPressed:
+                                _isLoading ? null : _validateCurrentPassword,
+                            icon: _isLoading
+                                ? const SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white,
+                                      ),
+                                    ),
+                                  )
+                                : const Icon(Icons.check),
+                            label: Text(
+                              _isLoading ? 'Validating...' : 'Verify Password',
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryGreen,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
 
               const SizedBox(height: 24),
