@@ -542,19 +542,15 @@ class FirebaseAuthService {
     }
   }
 
-  /// Validate current password without changing it
-  /// Returns a map with 'success' and 'message' keys
   Future<Map<String, dynamic>> validateCurrentPassword(String password) async {
     try {
       final user = _auth.currentUser;
       if (user == null || user.email == null) {
         return {
           'success': false,
-          'message': 'No user logged in',
+          'message': 'Wrong password',
         };
       }
-
-      print('Validating current password for user: ${user.uid}');
 
       // Re-authenticate user to validate password
       final AuthCredential credential = EmailAuthProvider.credential(
@@ -564,48 +560,25 @@ class FirebaseAuthService {
 
       await user.reauthenticateWithCredential(credential);
 
-      print('Password validation successful');
-
       return {
         'success': true,
-        'message': 'Password is correct',
+        'message': 'Password verified',
       };
     } on FirebaseAuthException catch (e) {
-      String message;
-      switch (e.code) {
-        case 'wrong-password':
-          message = 'Current password is incorrect';
-          break;
-        case 'user-not-found':
-          message = 'User not found';
-          break;
-        case 'invalid-email':
-          message = 'Invalid email';
-          break;
-        case 'user-disabled':
-          message = 'User account is disabled';
-          break;
-        case 'too-many-requests':
-          message = 'Too many failed attempts. Try again later.';
-          break;
-        default:
-          message = 'Failed to validate password: ${e.message}';
-      }
-      print('Password validation error: ${e.code} - $message');
+      print('Password validation error: ${e.code}');
       return {
         'success': false,
-        'message': message,
+        'message': 'Wrong password',
       };
     } catch (e) {
       print('Password validation error: $e');
       return {
         'success': false,
-        'message': 'An unexpected error occurred while validating password',
+        'message': 'Wrong password',
       };
     }
-  }
+  } // Change password (requires re-authentication)
 
-  // Change password (requires re-authentication)
   Future<Map<String, dynamic>> changePassword({
     required String currentPassword,
     required String newPassword,

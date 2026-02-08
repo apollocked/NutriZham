@@ -32,8 +32,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   bool _showCurrentPassword = false;
   bool _showNewPassword = false;
   bool _showConfirmPassword = false;
-  String? _passwordStrength;
-  Color? _passwordStrengthColor;
+  bool _isCurrentPasswordValid = false;
+  String? _currentPasswordError;
 
   @override
   void dispose() {
@@ -43,15 +43,69 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     super.dispose();
   }
 
+  /// Validate current password by attempting reauthentication
+  Future<void> _validateCurrentPassword() async {
+    final password = _currentPasswordController.text.trim();
+
+    if (password.isEmpty) {
+      setState(() {
+        _isCurrentPasswordValid = false;
+        _currentPasswordError = null;
+      });
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      // Attempt to validate the current password
+      final result = await _authService.validateCurrentPassword(password);
+
+      if (!mounted) return;
+
+      setState(() {
+        _isCurrentPasswordValid = result['success'];
+        _currentPasswordError = result['success'] ? null : result['message'];
+        _isLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isCurrentPasswordValid = false;
+        _currentPasswordError = 'Error validating password';
+        _isLoading = false;
+      });
+    }
+  }
+
   /// Save changes and update password in Firebase
   Future<void> _changePassword() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill in all required fields'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+      return;
+    }
+
+    // Check if current password is validated
+    if (!_isCurrentPasswordValid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Current password is incorrect'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+      return;
+    }
 
     // Check if new passwords match
     if (_newPasswordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Passwords do not match'),
+          content: Text('New passwords do not match'),
           backgroundColor: AppColors.error,
         ),
       );
@@ -112,9 +166,6 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         : AppColors.lightBackground;
     final textColor =
         widget.isDarkMode ? AppColors.darkText : AppColors.lightText;
-    final secondaryTextColor = widget.isDarkMode
-        ? AppColors.darkTextSecondary
-        : AppColors.lightTextSecondary;
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -149,7 +200,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'Please enter your current password and your new password. Make sure your new password is strong and unique.',
+                        'Please enter your current password and your new password.\n Your new password must be more than 6 characters.',
                         style: TextStyle(
                           fontSize: 14,
                           color: widget.isDarkMode
@@ -198,6 +249,96 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   return null;
                 },
               ),
+              const SizedBox(height: 8),
+
+              // Current Password Validation Status
+              if (_currentPasswordController.text.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Row(
+                    children: [
+                      if (_isLoading)
+                        const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                AppColors.primaryGreen),
+                          ),
+                        )
+                      else if (_isCurrentPasswordValid)
+                        const Icon(
+                          Icons.check_circle,
+                          color: AppColors.success,
+                          size: 16,
+                        )
+                      else if (_currentPasswordError != null)
+                        const Icon(
+                          Icons.error,
+                          color: AppColors.error,
+                          size: 16,
+                        ),
+                      const SizedBox(width: 8),
+                      Text(
+                        _isLoading
+                            ? 'Validating...'
+                            : (_isCurrentPasswordValid
+                                ? 'Password verified'
+                                : (_currentPasswordError ?? '')),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: _isLoading
+                              ? AppColors.lightTextSecondary
+                              : (_isCurrentPasswordValid
+                                  ? AppColors.success
+                                  : AppColors.error),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+              SizedBox(
+                  height: _currentPasswordController.text.isEmpty ? 24 : 8),
+
+              // Validate Current Password Button
+              if (_currentPasswordController.text.isNotEmpty &&
+                  !_isCurrentPasswordValid)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: _isLoading ? null : _validateCurrentPassword,
+                      icon: _isLoading
+                          ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
+                              ),
+                            )
+                          : const Icon(Icons.check),
+                      label: Text(
+                        _isLoading ? 'Validating...' : 'Verify Password',
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryGreen,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
               const SizedBox(height: 24),
 
               // New Password Field
@@ -231,64 +372,13 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   if (value?.isEmpty == true) {
                     return 'New password is required';
                   }
-                  if (value!.length < 6) {
-                    return 'Password must be at least 6 characters';
+                  if (value!.length <= 6) {
+                    return 'Password must be more than 6 characters';
                   }
                   return null;
                 },
               ),
-              const SizedBox(height: 12),
-
-              // Password Strength Indicator
-              if (_passwordStrength != null && _passwordStrength!.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            'Password Strength: ',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: secondaryTextColor,
-                            ),
-                          ),
-                          Text(
-                            _passwordStrength ?? '',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: _passwordStrengthColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
-                        child: LinearProgressIndicator(
-                          value: _getPasswordStrengthValue(),
-                          minHeight: 4,
-                          backgroundColor: AppColors.lightDivider,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                              _passwordStrengthColor ?? AppColors.error),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Use a mix of uppercase, lowercase, numbers, and symbols for stronger security.',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: secondaryTextColor,
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 24),
 
               // Confirm Password Field
               Text(
@@ -330,104 +420,32 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               const SizedBox(height: 40),
 
               // Buttons Row
-              SizedBox(
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 100,
-                      child: SecondaryButton(
-                        text: 'Cancel',
-                        onPressed: () => Navigator.pop(context),
-                      ),
+              Row(
+                children: [
+                  SizedBox(
+                    width: 100,
+                    child: SecondaryButton(
+                      text: 'Cancel',
+                      onPressed: () => Navigator.pop(context),
                     ),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: PrimaryButton(
-                        text: 'Update Password',
-                        onPressed: _isLoading ? null : _changePassword,
-                        isLoading: _isLoading,
-                        icon: Icons.check,
-                      ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: PrimaryButton(
+                      text: 'Update Password',
+                      onPressed: (_isLoading || !_isCurrentPasswordValid)
+                          ? null
+                          : _changePassword,
+                      isLoading: _isLoading,
+                      icon: Icons.check,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  /// Get password strength indicator value (0 to 1)
-  double _getPasswordStrengthValue() {
-    switch (_passwordStrength) {
-      case 'Weak':
-        return 0.25;
-      case 'Fair':
-        return 0.5;
-      case 'Good':
-        return 0.75;
-      case 'Strong':
-        return 1.0;
-      default:
-        return 0.0;
-    }
-  }
-}
-
-/// Password Requirement Check Item
-// ignore: unused_element
-class _PasswordRequirement extends StatelessWidget {
-  final String text;
-  final bool isDarkMode;
-  final bool isMet;
-
-  const _PasswordRequirement({
-    required this.text,
-    required this.isDarkMode,
-    required this.isMet,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 20,
-          height: 20,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: isMet ? AppColors.success : AppColors.lightDivider,
-          ),
-          child: isMet
-              ? const Icon(
-                  Icons.check,
-                  color: Colors.white,
-                  size: 12,
-                )
-              : const Icon(
-                  Icons.close,
-                  color: Colors.white,
-                  size: 12,
-                ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            text,
-            style: TextStyle(
-              fontSize: 13,
-              color: isMet
-                  ? AppColors.success
-                  : (isDarkMode
-                      ? AppColors.darkTextSecondary
-                      : AppColors.lightTextSecondary),
-              fontWeight: isMet ? FontWeight.w500 : FontWeight.w400,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
