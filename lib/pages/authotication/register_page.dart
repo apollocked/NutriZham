@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/pages/authotication/login_page.dart';
-import 'package:nutrizham/services/auth_service.dart';
+import 'package:nutrizham/services/Auth_Services/auth_service.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
-import 'package:nutrizham/widgets/custom_text_field.dart';
-import 'package:nutrizham/widgets/custom_buttons.dart';
+import 'package:nutrizham/widgets/Form_Wedgits/custom_text_field.dart';
+import 'package:nutrizham/widgets/Form_Wedgits/custom_buttons.dart';
 
 class RegisterPage extends StatefulWidget {
   final bool isDarkMode;

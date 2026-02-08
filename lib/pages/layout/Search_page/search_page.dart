@@ -5,11 +5,11 @@ import 'package:nutrizham/utils/meals_data.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
 import 'package:nutrizham/pages/layout/Details_page/details_screen.dart';
+import 'package:nutrizham/widgets/Form_Wedgits/empty_state_widget.dart';
 import 'package:nutrizham/widgets/custom_app_bar.dart';
 import 'package:nutrizham/widgets/search_bar_widget.dart';
 import 'package:nutrizham/widgets/category_widgets.dart';
 import 'package:nutrizham/widgets/recipe_card.dart';
-import 'package:nutrizham/widgets/empty_state_widget.dart';
 
 class SearchPage extends StatefulWidget {
   final bool isDarkMode;

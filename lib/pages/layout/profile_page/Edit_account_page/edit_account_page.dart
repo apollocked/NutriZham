@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/pages/layout/main_navigation.dart';
-import 'package:nutrizham/pages/layout/Profile_page/change_password_page.dart';
-import 'package:nutrizham/services/firebase_auth_service.dart';
+import 'package:nutrizham/pages/layout/Profile_page/Edit_account_page/Change_Password_Page/change_password_page.dart';
+import 'package:nutrizham/services/Auth_Services/firebase_auth_service.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
+import 'package:nutrizham/widgets/Form_Wedgits/empty_state_widget.dart';
 import 'package:nutrizham/widgets/custom_app_bar.dart';
-import 'package:nutrizham/widgets/custom_text_field.dart';
-import 'package:nutrizham/widgets/custom_buttons.dart';
-import 'package:nutrizham/widgets/empty_state_widget.dart';
+import 'package:nutrizham/widgets/Form_Wedgits/custom_text_field.dart';
+import 'package:nutrizham/widgets/Form_Wedgits/custom_buttons.dart';
 import 'package:nutrizham/widgets/stat_and_menu_widgets.dart';
 
 class EditAccountPage extends StatefulWidget {

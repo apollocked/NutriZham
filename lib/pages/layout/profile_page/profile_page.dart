@@ -14,8 +14,8 @@ import 'package:nutrizham/utils/meals_data.dart';
 import 'package:nutrizham/services/favorites_helper.dart';
 import 'package:nutrizham/services/meal_planner_service.dart';
 import 'package:nutrizham/widgets/Form_Wedgits/empty_state_widget.dart';
-import 'package:nutrizham/widgets/recipe_card.dart';
 import 'package:nutrizham/widgets/stat_and_menu_widgets.dart';
+import 'package:nutrizham/widgets/recipe_card.dart';
 
 class ProfilePage extends StatefulWidget {
   final bool isDarkMode;

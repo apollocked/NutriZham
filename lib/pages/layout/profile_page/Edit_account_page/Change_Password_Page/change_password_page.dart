@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/pages/layout/main_navigation.dart';
-import 'package:nutrizham/services/firebase_auth_service.dart';
+import 'package:nutrizham/services/Auth_Services/firebase_auth_service.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
 import 'package:nutrizham/widgets/custom_app_bar.dart';
-import 'package:nutrizham/widgets/custom_text_field.dart';
-import 'package:nutrizham/widgets/custom_buttons.dart';
+import 'package:nutrizham/widgets/Form_Wedgits/custom_text_field.dart';
+import 'package:nutrizham/widgets/Form_Wedgits/custom_buttons.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   final bool isDarkMode;
