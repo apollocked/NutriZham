@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
   bool _isLoadingMore = false;
   bool _hasMore = true; // To check if there are more docs in DB
   DocumentSnapshot? _lastDocument; // To keep track of the last doc fetched
-  final int _pageSize = 20; // Number of items to fetch per batch
+  final int _pageSize = 50; // Number of items to fetch per batch
 
   @override
   void initState() {
