@@ -404,7 +404,11 @@ class _HomePageState extends State<HomePage> {
               backgroundColor: widget.isDarkMode
                   ? AppColors.darkSurface
                   : AppColors.lightSurface,
-              selectedColor: AppColors.primaryGreen.withOpacity(0.1),
+              selectedColor:
+                  widget.isDarkMode ? AppColors.darkCard : AppColors.lightCard,
+              selectedShadowColor: widget.isDarkMode
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
               labelStyle: TextStyle(
                 color: _selectedCategory == null
                     ? AppColors.primaryGreen
@@ -439,7 +443,9 @@ class _HomePageState extends State<HomePage> {
                   backgroundColor: widget.isDarkMode
                       ? AppColors.darkSurface
                       : AppColors.lightSurface,
-                  selectedColor: AppColors.primaryGreen.withOpacity(0.1),
+                  selectedColor: widget.isDarkMode
+                      ? AppColors.darkCard
+                      : AppColors.lightCard,
                   labelStyle: TextStyle(
                     color: _selectedCategory == category
                         ? AppColors.primaryGreen
