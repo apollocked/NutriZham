@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/pages/layout/main_navigation.dart';
-import 'package:nutrizham/services/auth_service.dart';
+import 'package:nutrizham/pages/layout/Profile_page/change_password_page.dart';
+import 'package:nutrizham/services/firebase_auth_service.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
 import 'package:nutrizham/widgets/custom_app_bar.dart';
 import 'package:nutrizham/widgets/custom_text_field.dart';
 import 'package:nutrizham/widgets/custom_buttons.dart';
 import 'package:nutrizham/widgets/empty_state_widget.dart';
+import 'package:nutrizham/widgets/stat_and_menu_widgets.dart';
 
 class EditAccountPage extends StatefulWidget {
   final bool isDarkMode;
@@ -23,12 +25,21 @@ class _EditAccountPageState extends State<EditAccountPage> {
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _ageController = TextEditingController();
-  final _authService = AuthService();
+  final _authService = FirebaseAuthService();
   bool _isLoading = true;
+
   @override
   void initState() {
     super.initState();
     _loadUserData();
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _emailController.dispose();
+    _ageController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadUserData() async {
@@ -41,39 +52,67 @@ class _EditAccountPageState extends State<EditAccountPage> {
     setState(() => _isLoading = false);
   }
 
-  // In _saveChanges method, update to handle new return type:
+  // Update user profile information
   Future<void> _saveChanges() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final user = await _authService.getCurrentUser();
-    if (user == null) return;
+    setState(() => _isLoading = true);
 
-    final updatedUser = user.copyWith(
-      username: _usernameController.text.trim(),
-      email: _emailController.text.trim(),
-      age: int.parse(_ageController.text),
-    );
+    try {
+      final user = await _authService.getCurrentUser();
+      if (user == null) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('User not found'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+        return;
+      }
 
-    final result = await _authService.updateUser(updatedUser);
-
-    if (!mounted) return;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(result['message']),
-        backgroundColor:
-            result['success'] ? AppColors.success : AppColors.error,
-      ),
-    );
-
-    if (result['success']) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (_) => MainNavigation(
-                isDarkMode: widget.isDarkMode,
-                languageCode: widget.languageCode)),
+      final updatedUser = user.copyWith(
+        username: _usernameController.text.trim(),
+        email: _emailController.text.trim(),
+        age: int.parse(_ageController.text),
       );
+
+      final result = await _authService.updateUserProfile(updatedUser);
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(result['message']),
+          backgroundColor:
+              result['success'] ? AppColors.success : AppColors.error,
+        ),
+      );
+
+      if (result['success']) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (_) => MainNavigation(
+              isDarkMode: widget.isDarkMode,
+              languageCode: widget.languageCode,
+            ),
+          ),
+          (route) => false,
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.toString()}'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -110,6 +149,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
           key: _formKey,
           child: Column(
             children: [
+              // Username Field
               CustomTextField(
                 controller: _usernameController,
                 labelText: loc.username,
@@ -117,9 +157,11 @@ class _EditAccountPageState extends State<EditAccountPage> {
                 isDarkMode: widget.isDarkMode,
                 textInputAction: TextInputAction.next,
                 validator: (value) =>
-                    value?.isEmpty == true ? 'Required' : null,
+                    value?.isEmpty == true ? 'Username is required' : null,
               ),
               const SizedBox(height: 16),
+
+              // Email Field
               CustomTextField(
                 controller: _emailController,
                 labelText: loc.email,
@@ -127,10 +169,50 @@ class _EditAccountPageState extends State<EditAccountPage> {
                 isDarkMode: widget.isDarkMode,
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
-                validator: (value) =>
-                    value?.contains('@') == false ? 'Invalid email' : null,
+                validator: (value) {
+                  if (value?.isEmpty == true) {
+                    return 'Email is required';
+                  }
+                  if (value?.contains('@') == false) {
+                    return 'Invalid email';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
+
+              // Change Password Tile
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    style: BorderStyle.solid,
+                    color: widget.isDarkMode
+                        ? AppColors.darkDivider
+                        : AppColors.lightDivider,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: MenuItemTile(
+                  icon: Icons.lock_outline,
+                  title: 'Change Password',
+                  subtitle: 'Update your password',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ChangePasswordPage(
+                          isDarkMode: widget.isDarkMode,
+                          languageCode: widget.languageCode,
+                        ),
+                      ),
+                    );
+                  },
+                  isDarkMode: widget.isDarkMode,
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Age Field
               CustomTextField(
                 controller: _ageController,
                 labelText: loc.age,
@@ -140,18 +222,39 @@ class _EditAccountPageState extends State<EditAccountPage> {
                 textInputAction: TextInputAction.done,
                 validator: (value) {
                   final age = int.tryParse(value ?? '');
-                  return age == null || age < 13 ? 'Invalid age' : null;
+                  if (age == null) {
+                    return 'Age is required';
+                  }
+                  if (age < 13) {
+                    return 'Must be at least 13 years old';
+                  }
+                  if (age > 150) {
+                    return 'Invalid age';
+                  }
+                  return null;
                 },
               ),
               const SizedBox(height: 32),
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: PrimaryButton(
-                  text: loc.save,
-                  onPressed: _saveChanges,
-                  icon: Icons.check,
-                ),
+
+              // Buttons Row
+              Row(
+                children: [
+                  Expanded(
+                    child: SecondaryButton(
+                      text: loc.cancel,
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: PrimaryButton(
+                      text: loc.save,
+                      onPressed: _isLoading ? null : _saveChanges,
+                      isLoading: _isLoading,
+                      icon: Icons.check,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

@@ -5,7 +5,6 @@ import 'package:nutrizham/services/auth_service.dart';
 import 'package:nutrizham/services/preferences_helper.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
-
 import 'package:nutrizham/widgets/custom_app_bar.dart';
 import 'package:nutrizham/widgets/stat_and_menu_widgets.dart';
 
