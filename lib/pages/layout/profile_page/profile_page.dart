@@ -57,6 +57,57 @@ class _ProfilePageState extends State<ProfilePage> {
     _setupPlannerListener();
   }
 
+  // In _deleteAccount method:
+  Future<void> _logOutAccount() async {
+    final loc = AppLocalizations.of(widget.languageCode);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: widget.isDarkMode
+            ? AppColors.darkBackground
+            : AppColors.lightBackground,
+        title: Text(loc.logout,
+            style: TextStyle(
+                color: widget.isDarkMode
+                    ? AppColors.darkText
+                    : AppColors.lightText)),
+        content: Text(
+          loc.areYouSure,
+          style: TextStyle(
+              color:
+                  widget.isDarkMode ? AppColors.darkText : AppColors.lightText),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(loc.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: AppColors.error),
+            child: Text(loc.logout),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      await _authService.logout();
+
+      if (!mounted) return;
+
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => LoginPage(
+            isDarkMode: widget.isDarkMode,
+            languageCode: widget.languageCode,
+          ),
+        ),
+        (route) => false,
+      );
+    }
+  }
+
   @override
   void dispose() {
     _favoritesSubscription?.cancel();
@@ -115,19 +166,6 @@ class _ProfilePageState extends State<ProfilePage> {
         _isLoading = false;
       });
     }
-  }
-
-  Future<void> _logout() async {
-    await _authService.logout();
-    if (!mounted) return;
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (_) => LoginPage(
-          isDarkMode: widget.isDarkMode,
-          languageCode: widget.languageCode,
-        ),
-      ),
-    );
   }
 
   @override
@@ -327,7 +365,7 @@ class _ProfilePageState extends State<ProfilePage> {
           MenuItemTile(
             icon: Icons.logout,
             title: loc.logout,
-            onTap: _logout,
+            onTap: _logOutAccount,
             iconColor: AppColors.error,
             textColor: AppColors.error,
             isDarkMode: widget.isDarkMode,

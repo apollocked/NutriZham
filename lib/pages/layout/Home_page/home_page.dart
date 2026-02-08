@@ -152,9 +152,6 @@ class _HomePageState extends State<HomePage> {
     await FavoritesHelper.toggleFavorite(recipeId);
   }
 
-  // NOTE: Pagination logic for local filtering (Search/Category)
-  // When filtering, we use the loaded _allRecipes and slice them.
-  // When scrolling in "All" mode, we trigger _loadNextBatch.
   List<Recipe> get _paginatedRecipes {
     // 1. Filter recipes (from the locally loaded list)
     var filtered = _allRecipes.where((recipe) {
@@ -169,10 +166,6 @@ class _HomePageState extends State<HomePage> {
       return matchesSearch && matchesCategory && matchesFavorites;
     }).toList();
 
-    // Note: We do NOT slice the list here anymore.
-    // The ListView.builder handles displaying all items currently in memory.
-    // Real infinite scrolling for "Search" is complex (requires backend search),
-    // so we rely on the user scrolling in "All" view to populate _allRecipes.
     return filtered;
   }
 
