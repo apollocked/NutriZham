@@ -194,8 +194,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
                 ),
                 child: MenuItemTile(
                   icon: Icons.lock_outline,
-                  title: 'Change Password',
-                  subtitle: 'Update your password',
+                  title: loc.changePassword,
                   onTap: () {
                     Navigator.push(
                       context,

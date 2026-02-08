@@ -23,6 +23,28 @@ class AppLocalizations {
   String get dontHaveAccount => _get('dontHaveAccount');
   String get forgotPassword => _get('forgotPassword');
 
+  // Change Password
+  String get changePassword => _get('changePassword');
+  String get currentPassword => _get('currentPassword');
+  String get newPassword => _get('newPassword');
+  String get enterCurrentPassword => _get('enterCurrentPassword');
+  String get enterNewPassword => _get('enterNewPassword');
+  String get confirmNewPassword => _get('confirmNewPassword');
+  String get currentPasswordRequired => _get('currentPasswordRequired');
+  String get newPasswordRequired => _get('newPasswordRequired');
+  String get passwordTooShort => _get('passwordTooShort');
+  String get confirmPasswordRequired => _get('confirmPasswordRequired');
+  String get passwordsDoNotMatch => _get('passwordsDoNotMatch');
+  String get verifyPassword => _get('verifyPassword');
+  String get validating => _get('validating');
+  String get passwordVerified => _get('passwordVerified');
+  String get wrongPassword => _get('wrongPassword');
+  String get pleaseVerifyCurrentPassword => _get('pleaseVerifyCurrentPassword');
+  String get updatePassword => _get('updatePassword');
+  String get passwordInfoMessage => _get('passwordInfoMessage');
+  String get pleaseFillAllFields => _get('pleaseFillAllFields');
+  String get errorUpdatingPassword => _get('errorUpdatingPassword');
+
   // Navigation
   String get home => _get('home');
   String get search => _get('search');
@@ -90,7 +112,6 @@ class AppLocalizations {
   // Planner
   String get mealPlanner => _get('mealPlanner');
   String get emptyplan => _get('emptyplan');
-
   String get dailyPlan => _get('dailyPlan');
   String get weeklyPlan => _get('weeklyPlan');
   String get recommendedMeals => _get('recommendedMeals');
@@ -130,6 +151,29 @@ class AppLocalizations {
       'alreadyHaveAccount': 'Already have an account?',
       'dontHaveAccount': "Don't have an account?",
       'forgotPassword': 'Forgot Password?',
+
+      // Change Password
+      'changePassword': 'Change Password',
+      'currentPassword': 'Current Password',
+      'newPassword': 'New Password',
+      'enterCurrentPassword': 'Enter current password',
+      'enterNewPassword': 'Enter new password',
+      'confirmNewPassword': 'Confirm new password',
+      'currentPasswordRequired': 'Current password is required',
+      'newPasswordRequired': 'New password is required',
+      'passwordTooShort': 'Password must be more than 6 characters',
+      'confirmPasswordRequired': 'Please confirm your password',
+      'passwordsDoNotMatch': 'Passwords do not match',
+      'verifyPassword': 'Verify Password',
+      'validating': 'Validating...',
+      'passwordVerified': 'Password verified',
+      'wrongPassword': 'Wrong password',
+      'pleaseVerifyCurrentPassword': 'Please verify current password first',
+      'updatePassword': 'Update Password',
+      'passwordInfoMessage':
+          'Please enter your current password and your new password. Your new password must be more than 6 characters.',
+      'pleaseFillAllFields': 'Please fill in all required fields',
+      'errorUpdatingPassword': 'Error updating password',
 
       // Navigation
       'home': 'Home',
@@ -208,7 +252,6 @@ class AppLocalizations {
       'removeFromPlan': 'Remove from Plan',
 
       // Messages
-      'passwordsDoNotMatch': 'Passwords do not match',
       'success': 'Success',
       'error': 'Error',
       'loading': 'Loading',
@@ -232,6 +275,30 @@ class AppLocalizations {
       'dontHaveAccount': 'هەژمارت نیە؟',
       'forgotPassword': 'وشەی نهێنیت بیر چووە؟',
 
+      // Change Password
+      'changePassword': 'گۆڕینی وشەی نهێنی',
+      'currentPassword': 'وشەی نهێنی ئێستا',
+      'newPassword': 'وشەی نهێنی نوێ',
+      'enterCurrentPassword': 'وشەی نهێنی ئێستات بنووسە',
+      'enterNewPassword': 'وشەی نهێنی نوێ بنووسە',
+      'confirmNewPassword': 'وشەی نهێنی نوێ دڵنیا بکەرەوە',
+      'currentPasswordRequired': 'وشەی نهێنی ئێستا پێویستە',
+      'newPasswordRequired': 'وشەی نهێنی نوێ پێویستە',
+      'passwordTooShort': 'وشەی نهێنی دەبێت زیاتر لە ٦ پیت بێت',
+      'confirmPasswordRequired': 'تکایە وشەی نهێنیەکەت دڵنیا بکەرەوە',
+      'passwordsDoNotMatch': 'وشەکانی نهێنی یەکناگرنەوە',
+      'verifyPassword': 'پشتڕاستکردنەوەی وشەی نهێنی',
+      'validating': 'پشتڕاستکردنەوە...',
+      'passwordVerified': 'وشەی نهێنی پشتڕاستکرایەوە',
+      'wrongPassword': 'وشەی نهێنی هەڵەیە',
+      'pleaseVerifyCurrentPassword':
+          'تکایە سەرەتا وشەی نهێنی ئێستا پشتڕاست بکەرەوە',
+      'updatePassword': 'گۆڕینی وشەی نهێنی',
+      'passwordInfoMessage':
+          'تکایە وشەی نهێنی ئێستا و وشەی نهێنی نوێ بنووسە. وشەی نهێنی نوێ دەبێت زیاتر لە ٦ پیت بێت.',
+      'pleaseFillAllFields': 'تکایە هەموو خانە پێویستەکان پڕبکەرەوە',
+      'errorUpdatingPassword': 'هەڵە لە نوێکردنەوەی وشەی نهێنی',
+
       // Navigation
       'home': 'سەرەکی',
       'search': 'گەڕان',
@@ -246,17 +313,17 @@ class AppLocalizations {
       'recipesFound': 'ڕێچەتەکان دۆزرانەوە',
       'recipeFound': 'ڕێچەتە دۆزرایەوە',
       'noRecipesFound': 'هیچ ڕێچەتەیەک نەدۆزرایەوە',
-      'tryDifferentSearch': 'گەڕانێکی جیاواز یان فلتەرێکی تر تاقی بکەرەوە',
-      'noFavorites': 'هێشتا هیچ دڵخوازێک نیە',
-      'tapToSave': ' دەست لە نیشانەی + بدە بۆ پاشەکەوتکردنیان ',
+      'tryDifferentSearch': 'گەڕانێکی جیاواز تاقی بکەرەوە',
+      'noFavorites': 'هێشتا هیچ دڵخوازێک نییە',
+      'tapToSave': 'دوگمەی + دابگرە لەسەر ڕێچەتەکان بۆ پاشەکەوتکردنیان',
 
       // Categories
-      'breakfast': 'ژەمی بەیانی',
-      'lunch': ' نیوەڕۆ',
-      'dinner': ' ئێوارە',
-      'snack': 'خواردنی سووک',
-      'bulking': 'کێش سەرخستن',
-      'cutting': 'لاوازبوون',
+      'breakfast': 'نانی بەیانی',
+      'lunch': 'نانی نیوەڕۆ',
+      'dinner': 'نانی ئێوارە',
+      'snack': 'خواردنەوەی سووک',
+      'bulking': 'زیادکردنی کێش',
+      'cutting': 'کەمکردنەوەی کێش',
 
       // Nutrition
       'nutritionalInfo': 'زانیاری خۆراکی',
@@ -270,7 +337,7 @@ class AppLocalizations {
       'preparationSteps': 'هەنگاوەکانی ئامادەکردن',
       'rating': 'هەڵسەنگاندن',
       'ratings': 'هەڵسەنگاندنەکان',
-      'rateThisMeal': 'ئەم خواردنە هەڵبسەنگێنە',
+      'rateThisMeal': 'هەڵسەنگاندنی ئەم خواردنە',
       'yourRating': 'هەڵسەنگاندنی تۆ',
       'submitRating': 'ناردنی هەڵسەنگاندن',
 
@@ -290,30 +357,29 @@ class AppLocalizations {
       'update': 'نوێکردنەوە',
 
       // Profile
-      'appfeture': 'تایبەتمەندییەکان',
-      'myProfile': 'پڕۆفایلەکەم',
+      'appfeture': 'تایبەتمەندییەکانی ئەپ',
+      'myProfile': 'پڕۆفایلی من',
       'favorites': 'دڵخوازەکان',
       'accountSettings': 'ڕێکخستنەکانی هەژمار',
-      'memberSince': 'ئەندامی لەوەتەی',
+      'memberSince': 'ئەندام لە',
 
       // Planner
-      'mealPlanner': 'پلانی خواردن',
-      'emptyplan': 'هیج پلانێکت هەڵنەبژاردوە',
+      'mealPlanner': 'پلانی ژەم',
+      'emptyplan': 'پلانی ڕۆژانەت بەتاڵە',
       'dailyPlan': 'پلانی ڕۆژانە',
       'weeklyPlan': 'پلانی هەفتانە',
       'recommendedMeals': 'خواردنە پێشنیارکراوەکان',
-      'basedOnYourGoals': 'لەسەر بنەمای ئامانجەکانت',
+      'basedOnYourGoals': 'لەسەر بنەمای ئامانجەکانی وەرزشت',
       'totalCalories': 'کۆی کالۆری',
       'todaysMeals': 'خواردنەکانی ئەمڕۆ',
-      'addToPlan': 'زیادکرا بۆ پلان',
-      'removeFromPlan': 'لابردا لە پلان',
+      'addToPlan': 'زیادکردن بۆ پلان',
+      'removeFromPlan': 'لابردن لە پلان',
 
       // Messages
-      'passwordsDoNotMatch': 'وشەی نهێنیەکان هەمان شت نین',
       'success': 'سەرکەوتوو',
       'error': 'هەڵە',
       'loading': 'بارکردن',
-      'pleaseWait': 'تکایە چاوەڕێبکە...',
+      'pleaseWait': 'تکایە چاوەڕێبە...',
       'accountDeleted': 'هەژمار بە سەرکەوتوویی سڕایەوە',
       'accountUpdated': 'هەژمار بە سەرکەوتوویی نوێکرایەوە',
       'loginSuccess': 'چوونەژوورەوە سەرکەوتوو بوو',
@@ -333,31 +399,54 @@ class AppLocalizations {
       'dontHaveAccount': 'ليس لديك حساب؟',
       'forgotPassword': 'نسيت كلمة المرور؟',
 
+      // Change Password
+      'changePassword': 'تغيير كلمة المرور',
+      'currentPassword': 'كلمة المرور الحالية',
+      'newPassword': 'كلمة المرور الجديدة',
+      'enterCurrentPassword': 'أدخل كلمة المرور الحالية',
+      'enterNewPassword': 'أدخل كلمة المرور الجديدة',
+      'confirmNewPassword': 'تأكيد كلمة المرور الجديدة',
+      'currentPasswordRequired': 'كلمة المرور الحالية مطلوبة',
+      'newPasswordRequired': 'كلمة المرور الجديدة مطلوبة',
+      'passwordTooShort': 'يجب أن تكون كلمة المرور أكثر من 6 أحرف',
+      'confirmPasswordRequired': 'يرجى تأكيد كلمة المرور',
+      'passwordsDoNotMatch': 'كلمات المرور غير متطابقة',
+      'verifyPassword': 'تحقق من كلمة المرور',
+      'validating': 'جاري التحقق...',
+      'passwordVerified': 'تم التحقق من كلمة المرور',
+      'wrongPassword': 'كلمة مرور خاطئة',
+      'pleaseVerifyCurrentPassword': 'يرجى التحقق من كلمة المرور الحالية أولاً',
+      'updatePassword': 'تحديث كلمة المرور',
+      'passwordInfoMessage':
+          'يرجى إدخال كلمة المرور الحالية وكلمة المرور الجديدة. يجب أن تكون كلمة المرور الجديدة أكثر من 6 أحرف.',
+      'pleaseFillAllFields': 'يرجى ملء جميع الحقول المطلوبة',
+      'errorUpdatingPassword': 'خطأ في تحديث كلمة المرور',
+
       // Navigation
       'home': 'الرئيسية',
-      'search': 'بحث',
+      'search': 'البحث',
       'planner': 'المخطط',
-      'profile': ' الملف الشخصي',
+      'profile': 'الملف الشخصي',
 
       // General
-      'appTitle': 'نوتري ژام',
+      'appTitle': 'نوتري ژەم',
       'recipes': 'الوصفات',
-      'searchPlaceholder': 'ابحث عن وصفات أو مكونات...',
+      'searchPlaceholder': 'ابحث عن الوصفات أو المكونات...',
       'all': 'الكل',
-      'recipesFound': 'وصفة تم العثور عليها',
-      'recipeFound': 'وصفات تم العثور عليها',
+      'recipesFound': 'وصفات موجودة',
+      'recipeFound': 'وصفة موجودة',
       'noRecipesFound': 'لم يتم العثور على وصفات',
-      'tryDifferentSearch': 'جرب بحثًا مختلفًا أو مرشحًا آخر',
-      'noFavorites': 'لا توجد مفضلات حتى الآن',
-      'tapToSave': 'انقر على أيقونة + لحفظ الوصفات',
+      'tryDifferentSearch': 'جرب بحثًا أو فلترًا مختلفًا',
+      'noFavorites': 'لا توجد مفضلات بعد',
+      'tapToSave': 'اضغط على أيقونة + على الوصفات لحفظها',
 
       // Categories
-      'breakfast': 'الفطور',
+      'breakfast': 'الإفطار',
       'lunch': 'الغداء',
       'dinner': 'العشاء',
       'snack': 'وجبة خفيفة',
       'bulking': 'زيادة الوزن',
-      'cutting': 'إنقاص الوزن',
+      'cutting': 'فقدان الوزن',
 
       // Nutrition
       'nutritionalInfo': 'المعلومات الغذائية',
@@ -399,7 +488,7 @@ class AppLocalizations {
 
       // Planner
       'mealPlanner': 'مخطط الوجبات',
-      'emptyplan': ' بلا الخطة',
+      'emptyplan': 'خطتك اليومية فارغة',
       'dailyPlan': 'الخطة اليومية',
       'weeklyPlan': 'الخطة الأسبوعية',
       'recommendedMeals': 'الوجبات الموصى بها',
@@ -410,7 +499,6 @@ class AppLocalizations {
       'removeFromPlan': 'إزالة من الخطة',
 
       // Messages
-      'passwordsDoNotMatch': 'كلمات المرور غير متطابقة',
       'success': 'نجاح',
       'error': 'خطأ',
       'loading': 'جاري التحميل',

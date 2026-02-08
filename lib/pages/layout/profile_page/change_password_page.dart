@@ -59,6 +59,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   /// Validate current password by attempting reauthentication
   Future<void> _validateCurrentPassword() async {
     final password = _currentPasswordController.text.trim();
+    final localization = AppLocalizations.of(widget.languageCode);
 
     if (password.isEmpty) {
       setState(() {
@@ -85,7 +86,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       if (!mounted) return;
       setState(() {
         _isCurrentPasswordValid = false;
-        _currentPasswordError = 'Wrong password';
+        _currentPasswordError = localization.wrongPassword;
         _isLoading = false;
         _showValidateButton = true;
       });
@@ -94,10 +95,12 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
   /// Save changes and update password in Firebase
   Future<void> _changePassword() async {
+    final localization = AppLocalizations.of(widget.languageCode);
+
     if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please fill in all required fields'),
+        SnackBar(
+          content: Text(localization.pleaseFillAllFields),
           backgroundColor: AppColors.error,
         ),
       );
@@ -106,8 +109,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
     if (!_isCurrentPasswordValid) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please verify current password first'),
+        SnackBar(
+          content: Text(localization.pleaseVerifyCurrentPassword),
           backgroundColor: AppColors.error,
         ),
       );
@@ -116,8 +119,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
     if (_newPasswordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Passwords do not match'),
+        SnackBar(
+          content: Text(localization.passwordsDoNotMatch),
           backgroundColor: AppColors.error,
         ),
       );
@@ -157,8 +160,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error updating password'),
+        SnackBar(
+          content: Text(localization.errorUpdatingPassword),
           backgroundColor: AppColors.error,
         ),
       );
@@ -171,7 +174,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    AppLocalizations.of(widget.languageCode);
+    final localization = AppLocalizations.of(widget.languageCode);
     final bgColor = widget.isDarkMode
         ? AppColors.darkBackground
         : AppColors.lightBackground;
@@ -181,7 +184,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: CustomAppBar(
-        title: 'Change Password',
+        title: localization.changePassword,
         isDarkMode: widget.isDarkMode,
       ),
       body: SingleChildScrollView(
@@ -211,7 +214,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'Please enter your current password and your new password. Your new password must be more than 6 characters.',
+                        localization.passwordInfoMessage,
                         style: TextStyle(
                           fontSize: 14,
                           color: widget.isDarkMode
@@ -226,9 +229,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               ),
               const SizedBox(height: 32),
 
-              // Current Password Field
+              // Current Password Section
               Text(
-                'Current Password',
+                localization.currentPassword,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -238,7 +241,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               const SizedBox(height: 8),
               CustomTextField(
                 controller: _currentPasswordController,
-                labelText: 'Enter current password',
+                labelText: localization.enterCurrentPassword,
                 prefixIcon: Icons.lock_outline,
                 isDarkMode: widget.isDarkMode,
                 obscureText: !_showCurrentPassword,
@@ -255,7 +258,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 ),
                 validator: (value) {
                   if (value?.isEmpty == true) {
-                    return 'Current password is required';
+                    return localization.currentPasswordRequired;
                   }
                   return null;
                 },
@@ -297,9 +300,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                           const SizedBox(width: 8),
                           Text(
                             _isLoading
-                                ? 'Validating...'
+                                ? localization.validating
                                 : (_isCurrentPasswordValid
-                                    ? 'Password verified'
+                                    ? localization.passwordVerified
                                     : (_currentPasswordError ?? '')),
                             style: TextStyle(
                               fontSize: 12,
@@ -337,7 +340,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                   )
                                 : const Icon(Icons.check),
                             label: Text(
-                              _isLoading ? 'Validating...' : 'Verify Password',
+                              _isLoading
+                                  ? localization.validating
+                                  : localization.verifyPassword,
                             ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryGreen,
@@ -357,7 +362,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
               // New Password Field
               Text(
-                'New Password',
+                localization.newPassword,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -367,7 +372,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               const SizedBox(height: 8),
               CustomTextField(
                 controller: _newPasswordController,
-                labelText: 'Enter new password',
+                labelText: localization.enterNewPassword,
                 prefixIcon: Icons.lock_outline,
                 isDarkMode: widget.isDarkMode,
                 obscureText: !_showNewPassword,
@@ -384,10 +389,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 ),
                 validator: (value) {
                   if (value?.isEmpty == true) {
-                    return 'New password is required';
+                    return localization.newPasswordRequired;
                   }
                   if (value!.length <= 6) {
-                    return 'Password must be more than 6 characters';
+                    return localization.passwordTooShort;
                   }
                   return null;
                 },
@@ -396,7 +401,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
               // Confirm Password Field
               Text(
-                'Confirm Password',
+                localization.confirmPassword,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -406,7 +411,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               const SizedBox(height: 8),
               CustomTextField(
                 controller: _confirmPasswordController,
-                labelText: 'Confirm new password',
+                labelText: localization.confirmNewPassword,
                 prefixIcon: Icons.lock_outline,
                 isDarkMode: widget.isDarkMode,
                 obscureText: !_showConfirmPassword,
@@ -423,10 +428,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 ),
                 validator: (value) {
                   if (value?.isEmpty == true) {
-                    return 'Please confirm your password';
+                    return localization.confirmPasswordRequired;
                   }
                   if (value != _newPasswordController.text) {
-                    return 'Passwords do not match';
+                    return localization.passwordsDoNotMatch;
                   }
                   return null;
                 },
@@ -436,22 +441,20 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               // Buttons Row
               Row(
                 children: [
-                  SizedBox(
-                    width: 100,
+                  Expanded(
                     child: SecondaryButton(
-                      text: 'Cancel',
+                      text: localization.cancel,
                       onPressed: () => Navigator.pop(context),
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: PrimaryButton(
-                      text: 'Update Password',
+                      text: localization.updatePassword,
                       onPressed: (_isLoading || !_isCurrentPasswordValid)
                           ? null
                           : _changePassword,
                       isLoading: _isLoading,
-                      icon: Icons.check,
                     ),
                   ),
                 ],
