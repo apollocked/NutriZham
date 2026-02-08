@@ -12,10 +12,8 @@ import 'package:nutrizham/services/meal_planner_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
-  // 1. Required for Firebase
   WidgetsFlutterBinding.ensureInitialized();
 
-  // 2. Initialize Firebase
   await Firebase.initializeApp();
 
   runApp(const NutriZhamApp());

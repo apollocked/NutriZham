@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:nutrizham/pages/layout/home_page.dart';
-import 'package:nutrizham/pages/layout/planner_page.dart';
-import 'package:nutrizham/pages/layout/profile_page/profile_page.dart';
-import 'package:nutrizham/pages/layout/search_page.dart';
+import 'package:nutrizham/pages/layout/Home_page/home_page.dart';
+import 'package:nutrizham/pages/layout/Planner_page/planner_page.dart';
+import 'package:nutrizham/pages/layout/Profile_page/profile_page.dart';
+import 'package:nutrizham/pages/layout/Search_page/search_page.dart';
 import 'package:nutrizham/services/preferences_helper.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';

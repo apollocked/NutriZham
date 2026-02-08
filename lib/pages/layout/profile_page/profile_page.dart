@@ -4,13 +4,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nutrizham/pages/authotication/login_page.dart';
-import 'package:nutrizham/pages/layout/profile_page/app_features_page.dart';
-import 'package:nutrizham/pages/layout/profile_page/settings_page.dart';
-import 'package:nutrizham/services/auth_service.dart';
 import 'package:nutrizham/models/user_model.dart';
+import 'package:nutrizham/pages/layout/Profile_page/Settinngs_page/settings_page.dart';
+import 'package:nutrizham/pages/layout/Profile_page/features_page/app_features_page.dart';
+import 'package:nutrizham/services/auth_service.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/app_localizations.dart';
-import 'package:nutrizham/utils/meals_data.dart'; // Keep for models (Recipe, etc.)
+import 'package:nutrizham/utils/meals_data.dart';
 import 'package:nutrizham/services/favorites_helper.dart';
 import 'package:nutrizham/services/meal_planner_service.dart';
 import 'package:nutrizham/widgets/stat_and_menu_widgets.dart';
