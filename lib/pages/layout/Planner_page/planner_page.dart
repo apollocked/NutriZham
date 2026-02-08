@@ -121,7 +121,7 @@ class _PlannerPageState extends State<PlannerPage> {
         _allRecipes.where((r) => _plannedMealIds.contains(r.id)).toList();
     final recommendedMeals = _allRecipes
         .where((r) => !_plannedMealIds.contains(r.id))
-        .take(5)
+        .take(25)
         .toList();
 
     return Scaffold(
