@@ -391,7 +391,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   if (value?.isEmpty == true) {
                     return localization.newPasswordRequired;
                   }
-                  if (value!.length <= 6) {
+                  if (value!.length < 6) {
                     return localization.passwordTooShort;
                   }
                   return null;
