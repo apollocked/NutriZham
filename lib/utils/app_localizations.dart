@@ -171,7 +171,7 @@ class AppLocalizations {
       'pleaseVerifyCurrentPassword': 'Please verify current password first',
       'updatePassword': 'Update Password',
       'passwordInfoMessage':
-          'Please enter your current password and your new password. Your new password must be more than 6 characters.',
+          'Please enter your current password and your new password. Your new password must be 6 characters.',
       'pleaseFillAllFields': 'Please fill in all required fields',
       'errorUpdatingPassword': 'Error updating password',
 
@@ -295,7 +295,7 @@ class AppLocalizations {
           'تکایە سەرەتا وشەی نهێنی ئێستا پشتڕاست بکەرەوە',
       'updatePassword': 'گۆڕینی وشەی نهێنی',
       'passwordInfoMessage':
-          'تکایە وشەی نهێنی ئێستا و وشەی نهێنی نوێ بنووسە. وشەی نهێنی نوێ دەبێت زیاتر لە ٦ پیت بێت.',
+          'تکایە وشەی نهێنی ئێستا و وشەی نهێنی نوێ بنووسە. وشەی نهێنی نوێ دەبێت ٦ پیت بێت.',
       'pleaseFillAllFields': 'تکایە هەموو خانە پێویستەکان پڕبکەرەوە',
       'errorUpdatingPassword': 'هەڵە لە نوێکردنەوەی وشەی نهێنی',
 
@@ -418,7 +418,7 @@ class AppLocalizations {
       'pleaseVerifyCurrentPassword': 'يرجى التحقق من كلمة المرور الحالية أولاً',
       'updatePassword': 'تحديث كلمة المرور',
       'passwordInfoMessage':
-          'يرجى إدخال كلمة المرور الحالية وكلمة المرور الجديدة. يجب أن تكون كلمة المرور الجديدة أكثر من 6 أحرف.',
+          'يرجى إدخال كلمة المرور الحالية وكلمة المرور الجديدة. يجب أن تكون كلمة المرور الجديدة 6 أحرف.',
       'pleaseFillAllFields': 'يرجى ملء جميع الحقول المطلوبة',
       'errorUpdatingPassword': 'خطأ في تحديث كلمة المرور',
 

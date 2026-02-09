@@ -54,6 +54,7 @@ class PreferencesHelper {
     final languageCode = deviceLocale.languageCode.toLowerCase();
 
     // Map device language to supported languages
+
     // Supported: English (en), Kurdish (ku), Arabic (ar)
     switch (languageCode) {
       case 'ku':
