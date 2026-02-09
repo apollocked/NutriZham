@@ -361,10 +361,35 @@ class AppFeaturesPage extends StatelessWidget {
                       ),
                     ],
                   ),
+                  const SizedBox(
+                    height: 8,
+                  ),
                 ],
               ),
             ),
             const SizedBox(height: 16),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: cardColor,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: isDarkMode
+                      ? AppColors.darkDivider
+                      : AppColors.lightDivider,
+                ),
+              ),
+              child: const Center(
+                child: Text(
+                  "Built with ❤️ in Kurdistan.",
+                  style: TextStyle(
+                    color: AppColors.primaryGreen,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),
