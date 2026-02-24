@@ -9,3 +9,17 @@ web/** linguist-vendored
 # Ignore Makefile and CMakeLists.txt if they exist in root
 Makefile linguist-vendored
 CMakeLists.txt linguist-vendored
+
+# Mark Dart tool and build artifacts as generated (excluded from language stats)
+.dart_tool/** linguist-generated
+.flutter-plugins linguist-generated
+.flutter-plugins-dependencies linguist-generated
+.packages linguist-generated
+pubspec.lock linguist-generated
+
+# Mark IDE files as generated
+.idea/** linguist-generated
+*.iml linguist-generated
+
+# Mark build directory as generated
+build/** linguist-generated
