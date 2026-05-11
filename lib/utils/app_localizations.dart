@@ -22,6 +22,7 @@ class AppLocalizations {
   String get alreadyHaveAccount => _get('alreadyHaveAccount');
   String get dontHaveAccount => _get('dontHaveAccount');
   String get forgotPassword => _get('forgotPassword');
+  String get validatingEmail => _get('validatingEmail');
 
   // Change Password
   String get changePassword => _get('changePassword');
@@ -152,6 +153,7 @@ class AppLocalizations {
       'alreadyHaveAccount': 'Already have an account?',
       'dontHaveAccount': "Don't have an account?",
       'forgotPassword': 'Forgot Password?',
+      "validatingEmail": 'Enter Your Email Address.',
 
       // Change Password
       'changePassword': 'Change Password',
@@ -276,6 +278,7 @@ class AppLocalizations {
       'alreadyHaveAccount': 'پێشتر هەژمارت هەبووە؟',
       'dontHaveAccount': 'هەژمارت نیە؟',
       'forgotPassword': 'وشەی نهێنیت بیر چووە؟',
+      "validatingEmail": "ئیمەیڵی هەژمارەکەت بنووسە ",
 
       // Change Password
       'changePassword': 'گۆڕینی وشەی نهێنی',
@@ -401,7 +404,7 @@ class AppLocalizations {
       'alreadyHaveAccount': 'هل لديك حساب بالفعل؟',
       'dontHaveAccount': 'ليس لديك حساب؟',
       'forgotPassword': 'نسيت كلمة المرور؟',
-
+      "validatingEmail": "جارى التحقق من البريد الالكتروني",
       // Change Password
       'changePassword': 'تغيير كلمة المرور',
       'currentPassword': 'كلمة المرور الحالية',

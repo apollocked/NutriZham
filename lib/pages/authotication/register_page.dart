@@ -109,7 +109,7 @@ class _RegisterPageState extends State<RegisterPage> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
             child: Form(
               key: _formKey,
               child: Column(
@@ -132,7 +132,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       height: 40,
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.005),
 
                   // App Title
                   Text(
@@ -143,7 +143,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       color: textColor,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 2),
                   Text(
                     loc.register,
                     style: TextStyle(
@@ -153,7 +153,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           : AppColors.lightTextSecondary,
                     ),
                   ),
-                  const SizedBox(height: 48),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
 
                   // Registration Form
                   Column(
@@ -291,41 +291,31 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 45),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.07),
 
                   // Login Link
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        loc.alreadyHaveAccount,
-                        style: TextStyle(
-                          color: widget.isDarkMode
-                              ? AppColors.darkTextSecondary
-                              : AppColors.lightTextSecondary,
+                  Text(
+                    loc.alreadyHaveAccount,
+                    style: TextStyle(
+                      color: widget.isDarkMode
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  IconTextButton(
+                    text: loc.login,
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => LoginPage(
+                            isDarkMode: widget.isDarkMode,
+                            languageCode: widget.languageCode,
+                          ),
                         ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => LoginPage(
-                                isDarkMode: widget.isDarkMode,
-                                languageCode: widget.languageCode,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          loc.login,
-                          style: const TextStyle(
-                              color: AppColors.primaryGreen,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18),
-                        ),
-                      ),
-                    ],
+                      );
+                    },
                   ),
                 ],
               ),

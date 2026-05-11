@@ -132,6 +132,7 @@ class IconTextButton extends StatelessWidget {
   final VoidCallback onPressed;
   final Color color;
   final double fontSize;
+  final IconData? icon;
 
   const IconTextButton({
     super.key,
@@ -139,18 +140,41 @@ class IconTextButton extends StatelessWidget {
     required this.onPressed,
     this.color = AppColors.primaryGreen,
     this.fontSize = 16,
+    this.icon = Icons.arrow_forward_ios,
   });
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: onPressed,
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: fontSize,
-          color: color,
-          fontWeight: FontWeight.w600,
+    return GestureDetector(
+      onTap: onPressed,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: color,
+            width: 0.5,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              text,
+              style: TextStyle(
+                fontSize: fontSize,
+                color: AppColors.primaryGreen,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Icon(
+              icon,
+              size: 16,
+              color: AppColors.primaryGreen,
+            ),
+          ],
         ),
       ),
     );

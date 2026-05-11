@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
       builder: (context) {
         final emailController = TextEditingController();
         return AlertDialog(
-          title: Text(loc.forgotPassword),
+          title: Text(loc.validatingEmail),
           content: CustomTextField(
             controller: emailController,
             labelText: loc.email,
@@ -65,16 +65,25 @@ class _LoginPageState extends State<LoginPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text(loc.cancel),
+              child: Text(
+                loc.cancel,
+              ),
             ),
-            TextButton(
-              onPressed: () {
-                if (emailController.text.contains('@') &&
-                    emailController.text.contains('.')) {
-                  Navigator.pop(context, emailController.text.trim());
-                }
-              },
-              child: Text(loc.send),
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.primaryGreen,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  if (emailController.text.contains('@') &&
+                      emailController.text.contains('.')) {
+                    Navigator.pop(context, emailController.text.trim());
+                  }
+                },
+                child:
+                    Text(loc.send, style: const TextStyle(color: Colors.white)),
+              ),
             ),
           ],
         );
@@ -165,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: 40,
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.005),
 
                   // App Title
                   Text(
@@ -176,9 +185,9 @@ class _LoginPageState extends State<LoginPage> {
                       color: textColor,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 2),
                   Text(
-                    loc.login,
+                    loc.register,
                     style: TextStyle(
                       fontSize: 16,
                       color: widget.isDarkMode
@@ -186,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
                           : AppColors.lightTextSecondary,
                     ),
                   ),
-                  const SizedBox(height: 48),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
 
                   // Login Form
                   Column(
@@ -209,7 +218,7 @@ class _LoginPageState extends State<LoginPage> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 8),
 
                       // Password Field
                       CustomTextField(
@@ -243,7 +252,7 @@ class _LoginPageState extends State<LoginPage> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 16),
 
                       // Login Button
                       PrimaryButton(
@@ -251,58 +260,43 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: _login,
                         isLoading: _isLoading,
                       ),
-                      const SizedBox(
-                        height: 15,
-                      ),
+                      const SizedBox(height: 16),
                       // Add forgot password button in login form (after login button):
-                      TextButton(
+
+                      IconTextButton(
                         onPressed: _forgotPassword,
-                        child: Text(
-                          loc.forgotPassword,
-                          style: const TextStyle(
-                            color: AppColors.primaryGreen,
-                          ),
-                        ),
+                        text: loc.forgotPassword,
+                        color: Colors.transparent,
+                        icon: Icons.help_outline_outlined,
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
-
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.2),
                   // Register Link
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        loc.dontHaveAccount,
-                        style: TextStyle(
-                          color: widget.isDarkMode
-                              ? AppColors.darkTextSecondary
-                              : AppColors.lightTextSecondary,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => RegisterPage(
-                                isDarkMode: widget.isDarkMode,
-                                languageCode: widget.languageCode,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          loc.register,
-                          style: const TextStyle(
-                            color: AppColors.primaryGreen,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
+                  Text(
+                    loc.dontHaveAccount,
+                    style: TextStyle(
+                      color: widget.isDarkMode
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  IconTextButton(
+                    text: loc.register,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => RegisterPage(
+                            isDarkMode: widget.isDarkMode,
+                            languageCode: widget.languageCode,
                           ),
                         ),
-                      ),
-                    ],
+                      );
+                    },
                   ),
                 ],
               ),
