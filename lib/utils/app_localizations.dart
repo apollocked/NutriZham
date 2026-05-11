@@ -101,6 +101,7 @@ class AppLocalizations {
   String get delete => _get('delete');
   String get save => _get('save');
   String get update => _get('update');
+  String get send => _get('send');
 
   // Profile
   String get myProfile => _get('myProfile');
@@ -231,6 +232,7 @@ class AppLocalizations {
       'delete': 'Delete',
       'save': 'Save',
       'update': 'Update',
+      'send': 'Send',
 
       // Profile
       'appfeture': 'App Features',
@@ -355,6 +357,7 @@ class AppLocalizations {
       'delete': 'سڕینەوە',
       'save': 'پاشەکەوتکردن',
       'update': 'نوێکردنەوە',
+      'send': 'ناردن',
 
       // Profile
       'appfeture': 'تایبەتمەندییەکانی ئەپ',
@@ -478,6 +481,7 @@ class AppLocalizations {
       'delete': 'حذف',
       'save': 'حفظ',
       'update': 'تحديث',
+      'send': 'ارسال',
 
       // Profile
       'appfeture': 'مميزات التطبيق',

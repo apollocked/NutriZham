@@ -36,6 +36,7 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+
     super.dispose();
   }
 
@@ -68,11 +69,12 @@ class _LoginPageState extends State<LoginPage> {
             ),
             TextButton(
               onPressed: () {
-                if (emailController.text.contains('@')) {
+                if (emailController.text.contains('@') &&
+                    emailController.text.contains('.')) {
                   Navigator.pop(context, emailController.text.trim());
                 }
               },
-              child: const Text('Send'),
+              child: Text(loc.send),
             ),
           ],
         );

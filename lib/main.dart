@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:nutrizham/pages/authotication/login_page.dart';
-import 'package:nutrizham/pages/authotication/welcome_page.dart';
+import 'package:nutrizham/pages/authotication/Onboard_Page/welcome_page.dart';
 import 'package:nutrizham/pages/layout/main_navigation.dart';
 import 'package:nutrizham/services/preferences_helper.dart';
 import 'package:nutrizham/utils/app_colors.dart';
@@ -13,9 +13,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp();
-
   runApp(const NutriZhamApp());
 }
 
