@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
-import 'package:nutrizham/domain/entities/meal_category.dart';
 
 class RecipeDatasource {
   static Future<List<Recipe>> getRecipes({
@@ -21,40 +20,31 @@ class RecipeDatasource {
   }
 
   static Future<List<Recipe>> getAllRecipes() async {
-    final snapshot = await FirebaseFirestore.instance
-        .collection('recipes')
-        .get();
-    return snapshot.docs
-        .map((doc) => Recipe.fromJson(doc.data() as Map<String, dynamic>))
-        .toList();
+    final snapshot =
+        await FirebaseFirestore.instance.collection('recipes').get();
+    return snapshot.docs.map((doc) => Recipe.fromJson(doc.data())).toList();
   }
 
   static Future<List<Recipe>> searchRecipes(String query) async {
     final snapshot = await FirebaseFirestore.instance
         .collection('recipes')
         .orderBy('title')
-        .startAt([query]).endAt(['$query\uf8ff'])
-        .get();
-    return snapshot.docs
-        .map((doc) => Recipe.fromJson(doc.data() as Map<String, dynamic>))
-        .toList();
+        .startAt([query]).endAt(['$query\uf8ff']).get();
+    return snapshot.docs.map((doc) => Recipe.fromJson(doc.data())).toList();
   }
 
-  static Future<List<Recipe>> getRecipesByCategory(MealCategory category) async {
+  static Future<List<Recipe>> getRecipesByCategory(
+      MealCategory category) async {
     final snapshot = await FirebaseFirestore.instance
         .collection('recipes')
         .where('category', isEqualTo: category.name)
         .get();
-    return snapshot.docs
-        .map((doc) => Recipe.fromJson(doc.data() as Map<String, dynamic>))
-        .toList();
+    return snapshot.docs.map((doc) => Recipe.fromJson(doc.data())).toList();
   }
 
   static Future<Recipe?> getRecipeById(String id) async {
-    final doc = await FirebaseFirestore.instance
-        .collection('recipes')
-        .doc(id)
-        .get();
+    final doc =
+        await FirebaseFirestore.instance.collection('recipes').doc(id).get();
     if (!doc.exists) return null;
     return Recipe.fromJson(doc.data() as Map<String, dynamic>);
   }
@@ -65,8 +55,7 @@ class RecipeDatasource {
         .collection('recipes')
         .where(FieldPath.documentId, whereIn: ids)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Recipe.fromJson(doc.data() as Map<String, dynamic>))
-            .toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Recipe.fromJson(doc.data())).toList());
   }
 }

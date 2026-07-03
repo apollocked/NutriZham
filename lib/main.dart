@@ -9,8 +9,11 @@ import 'package:nutrizham/presentation/router/app_router.dart';
 import 'package:nutrizham/core/themes/app_theme.dart';
 import 'package:nutrizham/data/datasources/favorites_helper.dart';
 import 'package:nutrizham/data/datasources/meal_planner_service.dart';
+import 'package:go_router/go_router.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
+import 'package:nutrizham/core/utils/locale_helpers.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +30,7 @@ class NutriZhamApp extends StatefulWidget {
 
 class _NutriZhamAppState extends State<NutriZhamApp> {
   late final SettingsProvider _settingsProvider;
+  GoRouter? _router;
 
   @override
   void initState() {
@@ -61,7 +65,12 @@ class _NutriZhamAppState extends State<NutriZhamApp> {
                   child: CircularProgressIndicator(color: Color(0xFF10B981)),
                 ),
               ),
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              localizationsDelegates: [
+                AppLocalizations.delegate,
+                KurdishSafeMaterialDelegate(),
+                KurdishSafeCupertinoDelegate(),
+                GlobalWidgetsLocalizations.delegate,
+              ],
               supportedLocales: AppLocalizations.supportedLocales,
             );
           }
@@ -80,9 +89,14 @@ class _NutriZhamAppState extends State<NutriZhamApp> {
               darkTheme: AppTheme.dark,
               themeMode: settings.isDarkMode ? ThemeMode.dark : ThemeMode.light,
               locale: Locale(settings.languageCode),
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                KurdishSafeMaterialDelegate(),
+                KurdishSafeCupertinoDelegate(),
+                GlobalWidgetsLocalizations.delegate,
+              ],
               supportedLocales: AppLocalizations.supportedLocales,
-              routerConfig: buildRouter(),
+              routerConfig: _router ??= buildRouter(),
             ),
           );
         },

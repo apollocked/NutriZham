@@ -8,7 +8,8 @@ import 'package:nutrizham/data/datasources/Auth_Services/firebase_auth_service.d
 import 'package:nutrizham/presentation/widgets/custom_app_bar.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/custom_text_field.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/custom_buttons.dart';
-import 'package:nutrizham/presentation/widgets/stat_and_menu_widgets.dart';
+import 'package:nutrizham/presentation/widgets/Form_Widgets/secondary_button.dart';
+import 'package:nutrizham/presentation/widgets/menu_item_tile.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class EditAccountPage extends StatefulWidget {

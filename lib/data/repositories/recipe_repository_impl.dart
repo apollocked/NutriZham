@@ -1,16 +1,15 @@
-import 'package:nutrizham/domain/entities/recipe.dart';
-import 'package:nutrizham/domain/entities/meal_category.dart';
+import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:nutrizham/domain/repositories/recipe_repository.dart';
 import 'package:nutrizham/data/datasources/recipe_datasource.dart';
 
 class RecipeRepositoryImpl implements RecipeRepository {
   @override
   Future<List<Recipe>> getRecipes({String? lastRecipeTitle, int limit = 25}) =>
-      RecipeDatasource.getRecipes(lastRecipeTitle: lastRecipeTitle, limit: limit);
+      RecipeDatasource.getRecipes(
+          lastRecipeTitle: lastRecipeTitle, limit: limit);
 
   @override
-  Future<List<Recipe>> getAllRecipes() =>
-      RecipeDatasource.getAllRecipes();
+  Future<List<Recipe>> getAllRecipes() => RecipeDatasource.getAllRecipes();
 
   @override
   Future<List<Recipe>> searchRecipes(String query) =>

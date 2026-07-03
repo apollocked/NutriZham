@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nutrizham/domain/entities/recipe.dart';
-import 'package:nutrizham/domain/entities/meal_category.dart';
+import 'package:nutrizham/data/models/meals_data.dart';
+
 import 'package:nutrizham/data/repositories/recipe_repository_impl.dart';
 
 class RecipeProvider extends ChangeNotifier {
@@ -16,7 +16,8 @@ class RecipeProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get hasMore => _hasMore;
 
-  Future<List<Recipe>> getNextBatch({String? lastRecipeTitle, int limit = 25}) async {
+  Future<List<Recipe>> getNextBatch(
+      {String? lastRecipeTitle, int limit = 25}) async {
     return await _repository.getRecipes(
       lastRecipeTitle: lastRecipeTitle,
       limit: limit,

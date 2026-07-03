@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:nutrizham/presentation/providers/settings_provider.dart';
 import 'package:nutrizham/presentation/providers/auth_provider.dart';
 import 'package:nutrizham/presentation/widgets/custom_app_bar.dart';
-import 'package:nutrizham/presentation/widgets/stat_and_menu_widgets.dart';
+import 'package:nutrizham/presentation/widgets/menu_item_tile.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class SettingsPage extends StatelessWidget {

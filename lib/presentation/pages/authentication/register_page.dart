@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:nutrizham/presentation/providers/auth_provider.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/custom_text_field.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/custom_buttons.dart';
+import 'package:nutrizham/presentation/widgets/Form_Widgets/icon_text_button.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class RegisterPage extends StatefulWidget {

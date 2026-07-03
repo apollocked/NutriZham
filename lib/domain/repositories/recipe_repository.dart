@@ -1,5 +1,4 @@
-import 'package:nutrizham/domain/entities/recipe.dart';
-import 'package:nutrizham/domain/entities/meal_category.dart';
+import 'package:nutrizham/data/models/meals_data.dart';
 
 abstract class RecipeRepository {
   Future<List<Recipe>> getRecipes({String? lastRecipeTitle, int limit});
