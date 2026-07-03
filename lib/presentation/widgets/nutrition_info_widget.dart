@@ -6,10 +6,7 @@ import 'package:nutrizham/l10n/app_localizations.dart';
 class NutritionInfoCard extends StatelessWidget {
   final NutritionalInfo nutrition;
 
-  const NutritionInfoCard({
-    super.key,
-    required this.nutrition,
-  });
+  const NutritionInfoCard({super.key, required this.nutrition});
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +14,11 @@ class NutritionInfoCard extends StatelessWidget {
     final loc = AppLocalizations.of(context)!;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: theme.cardColor,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: theme.colorScheme.outline,
-        ),
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,51 +27,28 @@ class NutritionInfoCard extends StatelessWidget {
             children: [
               Container(
                 width: 4,
-                height: 20,
+                height: 22,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primary,
+                  gradient: LinearGradient(
+                    colors: [theme.colorScheme.primary, theme.colorScheme.primary.withOpacity(0.4)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              const SizedBox(width: 10),
-              Text(
-                loc.nutritionalInfo,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: theme.colorScheme.onSurface,
-                ),
-              ),
+              const SizedBox(width: 12),
+              Text(loc.nutritionalInfo, style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _NutrientColumn(
-                value: '${nutrition.calories}',
-                label: loc.calories,
-                color: AppColors.caloriesColor,
-                icon: Icons.local_fire_department_rounded,
-              ),
-              _NutrientColumn(
-                value: '${nutrition.protein}g',
-                label: loc.protein,
-                color: AppColors.proteinColor,
-                icon: Icons.fitness_center_rounded,
-              ),
-              _NutrientColumn(
-                value: '${nutrition.carbs}g',
-                label: loc.carbs,
-                color: AppColors.carbsColor,
-                icon: Icons.bakery_dining_rounded,
-              ),
-              _NutrientColumn(
-                value: '${nutrition.fats}g',
-                label: loc.fats,
-                color: AppColors.fatsColor,
-                icon: Icons.water_drop_rounded,
-              ),
+              _NutrientPill(value: '${nutrition.calories}', label: loc.calories, color: AppColors.caloriesColor, icon: Icons.local_fire_department_rounded),
+              _NutrientPill(value: '${nutrition.protein}g', label: loc.protein, color: AppColors.proteinColor, icon: Icons.fitness_center_rounded),
+              _NutrientPill(value: '${nutrition.carbs}g', label: loc.carbs, color: AppColors.carbsColor, icon: Icons.bakery_dining_rounded),
+              _NutrientPill(value: '${nutrition.fats}g', label: loc.fats, color: AppColors.fatsColor, icon: Icons.water_drop_rounded),
             ],
           ),
         ],
@@ -85,13 +57,13 @@ class NutritionInfoCard extends StatelessWidget {
   }
 }
 
-class _NutrientColumn extends StatelessWidget {
+class _NutrientPill extends StatelessWidget {
   final String value;
   final String label;
   final Color color;
   final IconData icon;
 
-  const _NutrientColumn({
+  const _NutrientPill({
     required this.value,
     required this.label,
     required this.color,
@@ -105,31 +77,21 @@ class _NutrientColumn extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
+            gradient: LinearGradient(
+              colors: [color.withOpacity(0.15), color.withOpacity(0.05)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(14),
           ),
-          child: Icon(icon, color: color, size: 22),
+          child: Icon(icon, color: color, size: 24),
         ),
         const SizedBox(height: 8),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-            color: color,
-          ),
-        ),
+        Text(value, style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: color)),
         const SizedBox(height: 2),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w500,
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
+        Text(label, style: theme.textTheme.labelMedium),
       ],
     );
   }

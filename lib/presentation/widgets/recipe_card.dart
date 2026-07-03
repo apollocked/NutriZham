@@ -16,68 +16,100 @@ class RecipeCard extends StatelessWidget {
     required this.onFavoriteToggle,
     required this.onTap,
   });
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final locale = Localizations.localeOf(context).languageCode;
     final catName = recipe.category.toString().split('.').last;
     final catColor = AppColors.getCategoryColor(catName);
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      decoration: BoxDecoration(
-        color: theme.cardColor,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: theme.colorScheme.outline),
-        boxShadow: [BoxShadow(color: catColor.withOpacity(0.06), blurRadius: 8, offset: const Offset(0, 2))],
-      ),
+    final title = recipe.title[locale] ?? recipe.title['en'] ?? '';
+
+    return Padding(
+      padding: const EdgeInsets.all(5),
       child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(14),
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(20),
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(14),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
+          borderRadius: BorderRadius.circular(20),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
               children: [
-                Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: catColor.withOpacity(0.1)),
-                  child: Center(child: Text(recipe.icon, style: TextStyle(fontSize: 28, color: catColor))),
-                ),
-                const SizedBox(width: 12),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        recipe.title[locale] ?? recipe.title['en'] ?? '',
-                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15, color: theme.colorScheme.onSurface),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                  flex: 11,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [catColor.withOpacity(0.2), catColor.withOpacity(0.04)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                      const SizedBox(height: 6),
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                            decoration: BoxDecoration(color: catColor.withOpacity(0.1), borderRadius: BorderRadius.circular(6)),
-                            child: Text(_getCategoryName(recipe.category, context), style: TextStyle(fontSize: 11, color: catColor, fontWeight: FontWeight.w500)),
+                    ),
+                    child: Stack(
+                      children: [
+                        Center(child: Text(recipe.icon, style: TextStyle(fontSize: 38, color: catColor))),
+                        Positioned(
+                          top: 4,
+                          right: 2,
+                          child: SizedBox(
+                            width: 36,
+                            height: 36,
+                            child: IconButton(
+                              padding: EdgeInsets.zero,
+                              icon: Icon(
+                                isFavorite ? Icons.favorite : Icons.favorite_outline,
+                                size: 20,
+                              ),
+                              color: isFavorite ? AppColors.accentRed : theme.colorScheme.onSurfaceVariant,
+                              onPressed: onFavoriteToggle,
+                            ),
                           ),
-                          const SizedBox(width: 8),
-                          Text('${recipe.nutrition.calories} kcal', style: TextStyle(fontSize: 13, color: theme.colorScheme.onSurfaceVariant)),
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                Container(
-                  decoration: BoxDecoration(shape: BoxShape.circle, color: isFavorite ? AppColors.accentRed.withOpacity(0.1) : Colors.transparent),
-                  child: IconButton(
-                    icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_outline, size: 22),
-                    color: isFavorite ? AppColors.accentRed : Colors.grey,
-                    onPressed: onFavoriteToggle,
+                Expanded(
+                  flex: 9,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700, height: 1.3),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const Spacer(),
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: catColor.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                _getCategoryName(recipe.category, context),
+                                style: TextStyle(fontSize: 10, color: catColor, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            const Spacer(),
+                            Icon(Icons.local_fire_department_rounded, size: 12, color: AppColors.caloriesColor.withOpacity(0.7)),
+                            const SizedBox(width: 2),
+                            Text('${recipe.nutrition.calories}', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.caloriesColor)),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

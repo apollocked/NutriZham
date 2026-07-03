@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -27,15 +25,12 @@ class _WelcomePageState extends State<WelcomePage> {
 
   Future<void> _detectDeviceSettings() async {
     final deviceLanguage = PreferencesHelper.getDeviceLanguageCode();
-    if (mounted) {
-      setState(() {
-        _selectedLanguage = deviceLanguage;
-      });
-    }
+    if (mounted) setState(() => _selectedLanguage = deviceLanguage);
   }
 
   Future<void> _continue() async {
     final settings = context.read<SettingsProvider>();
+    final go = context.go;
     await PreferencesHelper.setLanguageCode(_selectedLanguage);
     await PreferencesHelper.setWelcomeShown(true);
     if (!mounted) return;
@@ -43,7 +38,7 @@ class _WelcomePageState extends State<WelcomePage> {
     await settings.setDarkMode(settings.isDarkMode);
     await settings.setLanguageCode(_selectedLanguage);
 
-    context.go('/login');
+    go('/login');
   }
 
   @override
@@ -60,30 +55,19 @@ class _WelcomePageState extends State<WelcomePage> {
               children: [
                 WelcomeHeader(languageCode: _selectedLanguage),
                 const SizedBox(height: 40),
-                WelcomeSettingsCard(
-                  selectedLanguage: _selectedLanguage,
-                  onLanguageChanged: (code) =>
-                      setState(() => _selectedLanguage = code),
-                ),
+                WelcomeSettingsCard(selectedLanguage: _selectedLanguage, onLanguageChanged: (code) => setState(() => _selectedLanguage = code)),
                 const SizedBox(height: 36),
                 SizedBox(
                   width: double.infinity,
-                  height: 56,
-                  child: ElevatedButton(
-                    onPressed: _continue,
-                    style: ElevatedButton.styleFrom(
+                  height: 58,
+                  child: FilledButton(
+                    style: FilledButton.styleFrom(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                       backgroundColor: theme.colorScheme.primary,
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14)),
+                      foregroundColor: theme.colorScheme.onPrimary,
                     ),
-                    child: Text(
-                        WelcomeLanguageTexts.continueText(_selectedLanguage),
-                        style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.5)),
+                    onPressed: _continue,
+                    child: Text(WelcomeLanguageTexts.continueText(_selectedLanguage), style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.onPrimary, fontWeight: FontWeight.w600)),
                   ),
                 ),
               ],

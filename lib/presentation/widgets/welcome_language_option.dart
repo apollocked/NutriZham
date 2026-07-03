@@ -17,7 +17,6 @@ class WelcomeLanguageOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return GestureDetector(
       onTap: onTap,
@@ -27,14 +26,12 @@ class WelcomeLanguageOption extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? theme.colorScheme.primary.withOpacity(0.1)
-              : (isDark ? const Color(0xFF111827) : Colors.grey[50]),
+              : theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: isSelected
                 ? theme.colorScheme.primary
-                : (isDark
-                    ? const Color(0xFF374151)
-                    : const Color(0xFFE5E7EB)),
+                : theme.colorScheme.outlineVariant,
             width: isSelected ? 2 : 1,
           ),
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nutrizham/core/constants/app_colors.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:provider/provider.dart';
 import 'package:nutrizham/presentation/providers/favorites_provider.dart';
@@ -9,7 +10,6 @@ import 'package:nutrizham/presentation/widgets/recipe_rating_card.dart';
 import 'package:nutrizham/presentation/widgets/ingredients_list_widget.dart';
 import 'package:nutrizham/presentation/widgets/steps_list_widget.dart';
 import 'package:nutrizham/presentation/widgets/section_header.dart';
-
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class RecipeDetailScreen extends StatefulWidget {
@@ -49,22 +49,58 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             widget.recipe.steps['en'] ??
             [];
 
+    final catName = widget.recipe.category.toString().split('.').last;
+    final catColor = AppColors.getCategoryColor(catName);
+
     return Scaffold(
       appBar: CustomAppBar(
         title: recipeTitle,
         actions: [
           IconButton(
             icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_outline),
-            color: isFavorite ? const Color(0xFFEF4444) : null,
+            color: isFavorite ? AppColors.accentRed : null,
             onPressed: () => favorites.toggleFavorite(widget.recipe.id),
           ),
         ],
       ),
       body: SingleChildScrollView(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: CategoryBadge(category: widget.recipe.category),
+          Container(
+            width: double.infinity,
+            margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+            padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  catColor.withOpacity(0.12),
+                  catColor.withOpacity(0.03)
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: catColor.withOpacity(0.1)),
+            ),
+            child: Column(
+              children: [
+                Text(widget.recipe.icon, style: const TextStyle(fontSize: 52)),
+                const SizedBox(height: 16),
+                CategoryBadge(category: widget.recipe.category),
+                const SizedBox(height: 16),
+                Text(recipeTitle,
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineSmall
+                        ?.copyWith(fontWeight: FontWeight.w700),
+                    textAlign: TextAlign.center),
+                const SizedBox(height: 8),
+                Text('${widget.recipe.nutrition.calories} kcal',
+                    style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.caloriesColor)),
+              ],
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -77,10 +113,10 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                 onRatingChanged: (rating) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      duration: const Duration(milliseconds: 775),
-                      behavior: SnackBarBehavior.floating,
-                      content: Text('${loc.rating}: $rating/5'),
-                      backgroundColor: const Color(0xFF10B981)),
+                        duration: const Duration(milliseconds: 775),
+                        behavior: SnackBarBehavior.floating,
+                        content: Text('${loc.rating}: $rating/5'),
+                        backgroundColor: Theme.of(context).colorScheme.primary),
                   );
                   setState(() => _userRating = rating);
                 },
@@ -89,13 +125,13 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               NutritionInfoCard(nutrition: widget.recipe.nutrition),
               const SizedBox(height: 24),
               SectionHeader(title: loc.ingredients),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               IngredientsList(ingredients: ingredients),
               const SizedBox(height: 24),
               SectionHeader(title: loc.preparationSteps),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               StepsList(steps: steps),
-              const SizedBox(height: 24),
+              const SizedBox(height: 32),
             ]),
           ),
         ]),

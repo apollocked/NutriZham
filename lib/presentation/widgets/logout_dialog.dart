@@ -15,7 +15,7 @@ Future<bool?> showLogoutDialog(BuildContext context) {
         TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(
-                foregroundColor: const Color(0xFFEF4444)),
+                foregroundColor: Theme.of(context).colorScheme.error),
             child: Text(loc.logout)),
       ],
     ),

@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:provider/provider.dart';
 import 'package:nutrizham/presentation/providers/settings_provider.dart';
+import 'package:nutrizham/data/datasources/preferences_helper.dart';
 import 'package:nutrizham/presentation/pages/authentication/Onboard_Page/welcome_page.dart';
 import 'package:nutrizham/presentation/pages/authentication/login_page.dart';
 import 'package:nutrizham/presentation/pages/authentication/register_page.dart';
@@ -19,7 +20,7 @@ import 'package:nutrizham/presentation/pages/layout/Profile_page/Edit_account_pa
 GoRouter buildRouter() {
   return GoRouter(
     initialLocation: '/welcome',
-    redirect: (context, state) {
+    redirect: (context, state) async {
       final settings = context.read<SettingsProvider>();
       final isLoggedIn = settings.isLoggedIn;
       final currentPath = state.matchedLocation;
@@ -34,6 +35,11 @@ GoRouter buildRouter() {
 
       if (isLoggedIn && isAuthRoute) {
         return '/home';
+      }
+
+      if (!isLoggedIn && currentPath == '/welcome' &&
+          await PreferencesHelper.hasWelcomeBeenShown()) {
+        return '/login';
       }
 
       return null;

@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -44,10 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
     await planner.loadPlannedMeals();
     await _loadRecipesFromFirebase();
     if (mounted) {
-      setState(() {
-        _currentUser = auth.currentUser;
-        _isLoading = false;
-      });
+      setState(() { _currentUser = auth.currentUser; _isLoading = false; });
     }
   }
 
@@ -60,10 +55,12 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _logOutAccount() async {
+    final auth = context.read<AuthProvider>();
+    final settings = context.read<SettingsProvider>();
     final confirmed = await showLogoutDialog(context);
     if (confirmed == true) {
-      await context.read<AuthProvider>().logout();
-      context.read<SettingsProvider>().setLoggedIn(false);
+      await auth.logout();
+      settings.setLoggedIn(false);
       if (mounted) context.go('/login');
     }
   }
@@ -73,18 +70,15 @@ class _ProfilePageState extends State<ProfilePage> {
     final loc = AppLocalizations.of(context)!;
     final favorites = context.watch<FavoritesProvider>();
     final planner = context.watch<MealPlannerProvider>();
-    final favoriteMeals =
-        _allRecipes.where((r) => favorites.isFavorite(r.id)).toList();
+    final favoriteMeals = _allRecipes.where((r) => favorites.isFavorite(r.id)).toList();
 
     if (_isLoading || _currentUser == null) {
       return Scaffold(
         body: Center(
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            const CircularProgressIndicator(color: Color(0xFF10B981)),
+            CircularProgressIndicator(color: Theme.of(context).colorScheme.primary),
             const SizedBox(height: 16),
-            Text(loc.loading,
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant)),
+            Text(loc.loading, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
           ]),
         ),
       );
@@ -94,25 +88,12 @@ class _ProfilePageState extends State<ProfilePage> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(children: [
-            ProfileHeader(
-              username: _currentUser!.username,
-              email: _currentUser!.email,
-              age: _currentUser!.age,
-            ),
-            ProfileStatsRow(
-              favoriteCount: favoriteMeals.length,
-              plannedCount: planner.count,
-            ),
-            ProfileMenuCard(
-              onFeatures: () => context.push('/features'),
-              onSettings: () => context.push('/settings'),
-              onLogout: _logOutAccount,
-            ),
-            ProfileFavoritesSection(
-              favoriteMeals: favoriteMeals,
-              favoritesProvider: favorites,
-              onToggleFavorite: (id) => favorites.toggleFavorite(id),
-            ),
+            const SizedBox(height: 8),
+            ProfileHeader(username: _currentUser!.username, email: _currentUser!.email, age: _currentUser!.age),
+            ProfileStatsRow(favoriteCount: favoriteMeals.length, plannedCount: planner.count),
+            ProfileMenuCard(onFeatures: () => context.push('/features'), onSettings: () => context.push('/settings'), onLogout: _logOutAccount),
+            ProfileFavoritesSection(favoriteMeals: favoriteMeals, favoritesProvider: favorites, onToggleFavorite: (id) => favorites.toggleFavorite(id)),
+            const SizedBox(height: 24),
           ]),
         ),
       ),

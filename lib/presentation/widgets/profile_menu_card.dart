@@ -22,26 +22,22 @@ class ProfileMenuCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-          color: theme.cardColor,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: theme.colorScheme.outline)),
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+      ),
       child: Column(children: [
-        MenuItemTile(
-            icon: Icons.favorite_rounded,
-            title: loc.appFeature,
-            onTap: onFeatures),
-        Divider(color: theme.colorScheme.outline, height: 1, indent: 60),
-        MenuItemTile(
-            icon: Icons.settings_outlined,
-            title: loc.settings,
-            onTap: onSettings),
-        Divider(color: theme.colorScheme.outline, height: 1, indent: 60),
-        MenuItemTile(
-            icon: Icons.logout,
-            title: loc.logout,
-            onTap: onLogout,
-            iconColor: const Color(0xFFEF4444),
-            textColor: const Color(0xFFEF4444)),
+        MenuItemTile(icon: Icons.favorite_rounded, title: loc.appFeature, onTap: onFeatures),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 60),
+          child: Divider(color: theme.colorScheme.outlineVariant, height: 1),
+        ),
+        MenuItemTile(icon: Icons.settings_outlined, title: loc.settings, onTap: onSettings),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 60),
+          child: Divider(color: theme.colorScheme.outlineVariant, height: 1),
+        ),
+        MenuItemTile(icon: Icons.logout_rounded, title: loc.logout, onTap: onLogout, iconColor: theme.colorScheme.error, textColor: theme.colorScheme.error),
       ]),
     );
   }

@@ -19,47 +19,53 @@ class ProfileHeader extends StatelessWidget {
     final loc = AppLocalizations.of(context)!;
 
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(32),
+      margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [
-          theme.colorScheme.primary.withOpacity(0.08),
-          theme.colorScheme.secondary.withOpacity(0.04)
-        ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-        border: Border(bottom: BorderSide(color: theme.colorScheme.outline)),
+        gradient: LinearGradient(
+          colors: [theme.colorScheme.primary.withOpacity(0.10), theme.colorScheme.primary.withOpacity(0.02)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: theme.colorScheme.primary.withOpacity(0.08)),
       ),
       child: Column(children: [
-        CircleAvatar(
-          radius: 50,
-          backgroundColor: theme.colorScheme.primary.withOpacity(0.12),
-          child: Text(username[0].toUpperCase(),
-              style: const TextStyle(
-                  fontSize: 36,
-                  color: Color(0xFF10B981),
-                  fontWeight: FontWeight.w700)),
+        Stack(
+          children: [
+            Container(
+              width: 96,
+              height: 96,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [theme.colorScheme.primary.withOpacity(0.2), theme.colorScheme.primary.withOpacity(0.05)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  username[0].toUpperCase(),
+                  style: TextStyle(fontSize: 36, fontWeight: FontWeight.w700, color: theme.colorScheme.primary),
+                ),
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 16),
-        Text(username,
-            style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-                color: theme.colorScheme.onSurface)),
-        const SizedBox(height: 4),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-          decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8)),
-          child: Text(email,
-              style: const TextStyle(
-                  fontSize: 13,
-                  color: Color(0xFF10B981),
-                  fontWeight: FontWeight.w500)),
-        ),
+        Text(username, style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700)),
         const SizedBox(height: 8),
-        Text('${loc.age}: $age',
-            style: TextStyle(
-                color: theme.colorScheme.onSurfaceVariant, fontSize: 14)),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primary.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text(email, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: theme.colorScheme.primary)),
+        ),
+        const SizedBox(height: 6),
+        Text('${loc.age}: $age', style: theme.textTheme.bodySmall),
       ]),
     );
   }

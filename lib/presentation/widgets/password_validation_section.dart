@@ -31,13 +31,13 @@ class PasswordValidationSection extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 16),
         child: Row(children: [
           if (isLoading)
-            const SizedBox(width: 16, height: 16,
+            SizedBox(width: 16, height: 16,
                 child: CircularProgressIndicator(strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF10B981))))
+                    valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary)))
           else if (isValid)
-            const Icon(Icons.check_circle, color: Color(0xFF10B981), size: 16)
+            Icon(Icons.check_circle, color: theme.colorScheme.primary, size: 16)
           else if (errorMessage != null)
-            const Icon(Icons.error, color: Color(0xFFEF4444), size: 16),
+            Icon(Icons.error, color: theme.colorScheme.error, size: 16),
           const SizedBox(width: 8),
           Text(
             isLoading
@@ -46,10 +46,10 @@ class PasswordValidationSection extends StatelessWidget {
             style: TextStyle(
                 fontSize: 12,
                 color: isLoading
-                    ? const Color(0xFF6B7280)
+                    ? theme.colorScheme.onSurfaceVariant
                     : (isValid
-                        ? const Color(0xFF10B981)
-                        : const Color(0xFFEF4444)),
+                        ? theme.colorScheme.primary
+                        : theme.colorScheme.error),
                 fontWeight: FontWeight.w500),
           ),
         ]),

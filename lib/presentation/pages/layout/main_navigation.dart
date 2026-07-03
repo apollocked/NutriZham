@@ -1,7 +1,6 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
-import 'package:nutrizham/presentation/providers/settings_provider.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class MainNavigation extends StatelessWidget {
@@ -12,7 +11,6 @@ class MainNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-    final settings = context.watch<SettingsProvider>();
     final theme = Theme.of(context);
 
     final currentLocation = GoRouterState.of(context).matchedLocation;
@@ -24,61 +22,60 @@ class MainNavigation extends StatelessWidget {
     return Scaffold(
       body: child,
       bottomNavigationBar: Container(
+        margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
         decoration: BoxDecoration(
-          color: settings.isDarkMode ? const Color(0xFF1A1A2E) : Colors.white,
+          borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
-              blurRadius: 12,
-              offset: const Offset(0, -2),
+              color: theme.shadowColor.withOpacity(0.08),
+              blurRadius: 16,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: NavigationBar(
-                selectedIndex: currentIndex,
-                onDestinationSelected: (index) {
-                  switch (index) {
-                    case 0: context.go('/home');
-                    case 1: context.go('/search');
-                    case 2: context.go('/planner');
-                    case 3: context.go('/profile');
-                  }
-                },
-                backgroundColor: Colors.transparent,
-                surfaceTintColor: Colors.transparent,
-                elevation: 0,
-                indicatorColor: theme.colorScheme.primary.withOpacity(0.15),
-                indicatorShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-                height: 64,
-                destinations: [
-                  NavigationDestination(
-                    icon: const Icon(Icons.home_outlined),
-                    selectedIcon: const Icon(Icons.home, color: Color(0xFF10B981)),
-                    label: loc.home,
-                  ),
-                  NavigationDestination(
-                    icon: const Icon(Icons.search_outlined),
-                    selectedIcon: const Icon(Icons.search, color: Color(0xFF10B981)),
-                    label: loc.search,
-                  ),
-                  NavigationDestination(
-                    icon: const Icon(Icons.calendar_today_outlined),
-                    selectedIcon: const Icon(Icons.calendar_today, color: Color(0xFF10B981)),
-                    label: loc.planner,
-                  ),
-                  NavigationDestination(
-                    icon: const Icon(Icons.person_outline),
-                    selectedIcon: const Icon(Icons.person, color: Color(0xFF10B981)),
-                    label: loc.profile,
-                  ),
-                ],
-              ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+            child: NavigationBar(
+              selectedIndex: currentIndex,
+              onDestinationSelected: (index) {
+                switch (index) {
+                  case 0: context.go('/home');
+                  case 1: context.go('/search');
+                  case 2: context.go('/planner');
+                  case 3: context.go('/profile');
+                }
+              },
+              backgroundColor: theme.colorScheme.surface.withOpacity(0.75),
+              surfaceTintColor: Colors.transparent,
+              elevation: 0,
+              indicatorColor: theme.colorScheme.primary.withOpacity(0.15),
+              indicatorShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+              height: 64,
+              destinations: [
+                NavigationDestination(
+                  icon: const Icon(Icons.home_outlined),
+                  selectedIcon: Icon(Icons.home, color: theme.colorScheme.primary),
+                  label: loc.home,
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.search_outlined),
+                  selectedIcon: Icon(Icons.search, color: theme.colorScheme.primary),
+                  label: loc.search,
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.calendar_today_outlined),
+                  selectedIcon: Icon(Icons.calendar_today, color: theme.colorScheme.primary),
+                  label: loc.planner,
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.person_outline),
+                  selectedIcon: Icon(Icons.person, color: theme.colorScheme.primary),
+                  label: loc.profile,
+                ),
+              ],
             ),
           ),
         ),

@@ -42,7 +42,7 @@ class AppFeaturesPage extends StatelessWidget {
             ),
             child: Row(children: [
               Container(width: 60, height: 60, decoration: BoxDecoration(color: theme.colorScheme.primary.withOpacity(0.2), borderRadius: BorderRadius.circular(16)),
-                child: const Icon(Icons.restaurant_menu_rounded, color: Color(0xFF10B981), size: 32)),
+                child: Icon(Icons.restaurant_menu_rounded, color: theme.colorScheme.primary, size: 32)),
               const SizedBox(width: 16),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text('NutriZham', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: theme.colorScheme.onSurface)),
@@ -50,7 +50,7 @@ class AppFeaturesPage extends StatelessWidget {
                 Text(loc.recipesApp, style: TextStyle(color: theme.colorScheme.onSurfaceVariant, fontSize: 14)),
                 const SizedBox(height: 4),
                 Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), decoration: BoxDecoration(color: theme.colorScheme.primary.withOpacity(0.15), borderRadius: BorderRadius.circular(6)),
-                  child: Text('${loc.version} v2.0.0', style: const TextStyle(color: Color(0xFF10B981), fontSize: 11, fontWeight: FontWeight.w600)),
+                  child: Text('${loc.version} v2.0.0', style: TextStyle(color: theme.colorScheme.primary, fontSize: 11, fontWeight: FontWeight.w600)),
                 ),
               ])),
             ]),
@@ -97,7 +97,7 @@ class AppFeaturesPage extends StatelessWidget {
               gradient: LinearGradient(colors: [theme.colorScheme.primary.withOpacity(0.08), theme.colorScheme.secondary.withOpacity(0.04)], begin: Alignment.topLeft, end: Alignment.bottomRight),
               borderRadius: BorderRadius.circular(14), border: Border.all(color: theme.colorScheme.primary.withOpacity(0.15)),
             ),
-            child: Center(child: Text(loc.builtWith, style: const TextStyle(color: Color(0xFF10B981), fontSize: 14, fontWeight: FontWeight.w600))),
+            child: Center(child: Text(loc.builtWith, style: TextStyle(color: theme.colorScheme.primary, fontSize: 14, fontWeight: FontWeight.w600))),
           ),
         ]),
       ),

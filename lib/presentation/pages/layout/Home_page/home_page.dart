@@ -11,7 +11,6 @@ import 'package:nutrizham/presentation/widgets/search_bar_widget.dart';
 import 'package:nutrizham/presentation/widgets/recipe_card.dart';
 import 'package:nutrizham/presentation/widgets/home_category_chips.dart';
 import 'package:nutrizham/presentation/widgets/recipe_of_the_day_card.dart';
-import 'package:nutrizham/presentation/widgets/section_header.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
@@ -31,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   String? _lastRecipeTitle;
   final int _pageSize = 25;
   late final FavoritesProvider _favoritesProvider;
+
   @override void initState() {
     super.initState();
     _favoritesProvider = context.read<FavoritesProvider>();
@@ -43,17 +43,18 @@ class _HomePageState extends State<HomePage> {
       }
     });
   }
+
   @override void dispose() {
     _searchController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
+
   Future<void> _loadNextBatch() async {
     if (_isLoadingMore || !_hasMore) return;
     setState(() => _isLoadingMore = true);
     try {
-      final newRecipes = await context.read<RecipeProvider>().getNextBatch(
-        lastRecipeTitle: _lastRecipeTitle, limit: _pageSize);
+      final newRecipes = await context.read<RecipeProvider>().getNextBatch(lastRecipeTitle: _lastRecipeTitle, limit: _pageSize);
       if (newRecipes.isEmpty) {
         setState(() { _hasMore = false; _isLoadingMore = false; _isLoading = false; });
         return;
@@ -61,23 +62,26 @@ class _HomePageState extends State<HomePage> {
       if (mounted) { setState(() { _allRecipes.addAll(newRecipes); _lastRecipeTitle = newRecipes.last.title['en'] ?? ''; _hasMore = newRecipes.length == _pageSize; _isLoadingMore = false; _isLoading = false; }); }
     } catch (_) { if (mounted) { setState(() { _isLoadingMore = false; _isLoading = false; }); } }
   }
+
   List<Recipe> get _paginatedRecipes => _allRecipes.where((r) {
     final c = context.read<SettingsProvider>().languageCode;
     final t = r.title[c] ?? r.title['en'] ?? '';
     return (_searchQuery.isEmpty || t.toLowerCase().contains(_searchQuery.toLowerCase())) && (_selectedCategory == null || r.category == _selectedCategory) && (!_showFavoritesOnly || _favoritesProvider.isFavorite(r.id));
   }).toList();
+
   Recipe get _recipeOfTheDay => _allRecipes.isEmpty ? Recipe(id: '0', title: {}, icon: '', nutrition: NutritionalInfo(calories: 0, protein: 0, carbs: 0, fats: 0), ingredients: {}, steps: {}, category: MealCategory.snack) : _allRecipes[DateTime.now().difference(DateTime(DateTime.now().year, 1, 1)).inDays % _allRecipes.length];
+
   @override Widget build(BuildContext context) {
     final paginatedRecipes = _paginatedRecipes;
     final loc = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: CustomAppBar(title: loc.appTitle, actions: [
         IconButton(
-          icon: Icon(_showFavoritesOnly ? Icons.favorite : Icons.favorite_outline, color: _showFavoritesOnly ? const Color(0xFFEF4444) : null),
+          icon: Icon(_showFavoritesOnly ? Icons.favorite : Icons.favorite_outline, color: _showFavoritesOnly ? Colors.red.shade400 : null),
           onPressed: () => setState(() => _showFavoritesOnly = !_showFavoritesOnly)),
       ]),
       body: SafeArea(child: Column(children: [
-        Padding(padding: const EdgeInsets.all(16), child: CustomSearchBar(
+        Padding(padding: const EdgeInsets.fromLTRB(16, 16, 16, 8), child: CustomSearchBar(
           hintText: loc.searchPlaceholder, searchQuery: _searchQuery,
           onChanged: (v) => setState(() => _searchQuery = v),
           onClear: () { setState(() { _searchQuery = ''; _searchController.clear(); }); },
@@ -86,15 +90,38 @@ class _HomePageState extends State<HomePage> {
         HomeCategoryChips(selectedCategory: _selectedCategory, onCategorySelected: (v) => setState(() => _selectedCategory = v)),
         if (_searchQuery.isEmpty && _selectedCategory == null && !_showFavoritesOnly)
           RecipeOfTheDayCard(recipe: _recipeOfTheDay),
-        SectionHeader(title: _showFavoritesOnly ? loc.favorites : loc.recipes, count: paginatedRecipes.length),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+          child: Row(children: [
+            Container(
+              width: 4, height: 22,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.primary.withOpacity(0.4)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(_showFavoritesOnly ? loc.favorites : loc.recipes, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
+            const Spacer(),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text('${paginatedRecipes.length}', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.primary)),
+            ),
+          ]),
+        ),
         Expanded(
           child: _isLoading
-              ? const Center(child: CircularProgressIndicator(color: Color(0xFF10B981)))
+              ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary))
               : paginatedRecipes.isEmpty
-                  ? EmptyStateWidget(
-                      icon: _showFavoritesOnly ? Icons.favorite_outline : Icons.search_off,
-                      title: _showFavoritesOnly ? loc.noFavorites : loc.noRecipesFound,
-                      subtitle: _showFavoritesOnly ? loc.tapToSave : loc.tryDifferentSearch)
+                  ? EmptyStateWidget(icon: _showFavoritesOnly ? Icons.favorite_outline : Icons.search_off, title: _showFavoritesOnly ? loc.noFavorites : loc.noRecipesFound, subtitle: _showFavoritesOnly ? loc.tapToSave : loc.tryDifferentSearch)
                   : NotificationListener<ScrollNotification>(
                       onNotification: (scrollInfo) {
                         if (_searchQuery.isEmpty && _selectedCategory == null && !_showFavoritesOnly &&
@@ -104,13 +131,22 @@ class _HomePageState extends State<HomePage> {
                         }
                         return false;
                       },
-                      child: ListView.builder(
+                      child: GridView.builder(
                         controller: _scrollController,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.82,
+                          crossAxisSpacing: 0,
+                          mainAxisSpacing: 0,
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 11),
                         itemCount: paginatedRecipes.length + (_hasMore && _isLoadingMore ? 1 : 0),
-                        padding: const EdgeInsets.only(bottom: 16),
                         itemBuilder: (context, index) {
                           if (index == paginatedRecipes.length) {
-                            return const Center(child: Padding(padding: EdgeInsets.all(16), child: CircularProgressIndicator(color: Color(0xFF10B981))));
+                            return Padding(
+                              padding: const EdgeInsets.all(5),
+                              child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),
+                            );
                           }
                           final recipe = paginatedRecipes[index];
                           return RecipeCard(

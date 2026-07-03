@@ -17,21 +17,11 @@ class ProfileStatsRow extends StatelessWidget {
     final loc = AppLocalizations.of(context)!;
 
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
       child: Row(children: [
-        Expanded(
-            child: StatCard(
-                icon: Icons.favorite_outline,
-                label: loc.favorites,
-                value: '$favoriteCount',
-                color: const Color(0xFFEF4444))),
+        Expanded(child: StatCard(icon: Icons.favorite_outline, label: loc.favorites, value: '$favoriteCount', color: Colors.red.shade400)),
         const SizedBox(width: 16),
-        Expanded(
-            child: StatCard(
-                icon: Icons.calendar_today_outlined,
-                label: loc.mealPlanner,
-                value: '$plannedCount',
-                color: const Color(0xFF3B82F6))),
+        Expanded(child: StatCard(icon: Icons.calendar_today_outlined, label: loc.mealPlanner, value: '$plannedCount', color: Theme.of(context).colorScheme.primary)),
       ]),
     );
   }

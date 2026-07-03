@@ -61,13 +61,28 @@ class _NutriZhamAppState extends State<NutriZhamApp> {
       child: Consumer<SettingsProvider>(
         builder: (context, settings, _) {
           if (settings.isLoading) {
-            return const MaterialApp(
+            return MaterialApp(
               home: Scaffold(
                 body: Center(
-                  child: CircularProgressIndicator(color: Color(0xFF10B981)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset('assets/logo/app_logo.png',
+                          width: 56, height: 56),
+                      const SizedBox(height: 24),
+                      const SizedBox(
+                        width: 28,
+                        height: 28,
+                        child: CircularProgressIndicator(
+                          color: Color(0xFF059669),
+                          strokeWidth: 3,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              localizationsDelegates: [
+              localizationsDelegates: const [
                 AppLocalizations.delegate,
                 KurdishSafeMaterialDelegate(),
                 KurdishSafeCupertinoDelegate(),

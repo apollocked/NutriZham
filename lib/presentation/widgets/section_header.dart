@@ -3,51 +3,47 @@ import 'package:flutter/material.dart';
 class SectionHeader extends StatelessWidget {
   final String title;
   final int? count;
-  final double? fontSize;
-  final FontWeight? fontWeight;
-  final double? barHeight;
   final EdgeInsetsGeometry? padding;
-  final Color? textColor;
 
   const SectionHeader({
     super.key,
     required this.title,
     this.count,
-    this.fontSize,
-    this.fontWeight,
-    this.barHeight,
     this.padding,
-    this.textColor,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final defaultFontSize = fontSize ?? 18;
-    final defaultFontWeight = fontWeight ?? FontWeight.w700;
-    final defaultBarHeight = barHeight ?? 20;
-    final defaultPadding = padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 8);
-    final defaultTextColor = textColor ?? theme.colorScheme.onSurface;
+    final p = padding ?? const EdgeInsets.fromLTRB(16, 20, 16, 12);
 
     return Padding(
-      padding: defaultPadding,
+      padding: p,
       child: Row(children: [
         Container(
-            width: 4, height: defaultBarHeight,
-            decoration: BoxDecoration(
-                color: theme.colorScheme.primary,
-                borderRadius: BorderRadius.circular(2))),
-        const SizedBox(width: 10),
-        Text(title, style: TextStyle(
-            fontSize: defaultFontSize,
-            fontWeight: defaultFontWeight,
-            color: defaultTextColor)),
+          width: 4,
+          height: 22,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [theme.colorScheme.primary, theme.colorScheme.primary.withOpacity(0.4)],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Text(title, style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
         const Spacer(),
         if (count != null)
           Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(color: theme.colorScheme.primary.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
-              child: Text('$count', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF10B981)))),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text('$count', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: theme.colorScheme.primary)),
+          ),
       ]),
     );
   }

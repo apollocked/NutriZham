@@ -22,47 +22,24 @@ class CustomSearchBar extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: theme.colorScheme.primary.withOpacity(0.06),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
       ),
       child: TextField(
         controller: controller,
-        style: TextStyle(color: theme.colorScheme.onSurface, fontSize: 15),
+        style: theme.textTheme.bodyLarge,
         onChanged: onChanged,
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: TextStyle(
-            color: theme.colorScheme.onSurfaceVariant,
-            fontSize: 15,
-          ),
-          prefixIcon: Icon(
-            Icons.search_rounded,
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
+          hintStyle: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+          prefixIcon: Icon(Icons.search_rounded, color: theme.colorScheme.onSurfaceVariant),
           suffixIcon: searchQuery.isNotEmpty && onClear != null
-              ? IconButton(
-                  icon: Icon(
-                    Icons.clear_rounded,
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                  onPressed: onClear,
-                )
+              ? IconButton(icon: const Icon(Icons.clear_rounded), color: theme.colorScheme.onSurfaceVariant, onPressed: onClear)
               : null,
           filled: true,
           fillColor: theme.colorScheme.surfaceContainerHighest,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide.none,
-          ),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 14,
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         ),
       ),
     );

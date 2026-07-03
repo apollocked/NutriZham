@@ -7,7 +7,6 @@ class PrimaryButton extends StatelessWidget {
   final bool isLoading;
   final IconData? icon;
   final Color? backgroundColor;
-  final Color? textColor;
   final double height;
   final double? width;
 
@@ -18,7 +17,6 @@ class PrimaryButton extends StatelessWidget {
     this.isLoading = false,
     this.icon,
     this.backgroundColor,
-    this.textColor,
     this.height = 56,
     this.width,
   });
@@ -28,23 +26,17 @@ class PrimaryButton extends StatelessWidget {
     return SizedBox(
       width: width ?? double.infinity,
       height: height,
-      child: ElevatedButton(
+      child: FilledButton(
         onPressed: isLoading ? null : onPressed,
-        style: ElevatedButton.styleFrom(
+        style: FilledButton.styleFrom(
           backgroundColor: backgroundColor ?? AppColors.primaryGreen,
-          foregroundColor: textColor ?? Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-          elevation: 0,
-          shadowColor: AppColors.primaryGreen.withOpacity(0.3),
           disabledBackgroundColor:
               (backgroundColor ?? AppColors.primaryGreen).withOpacity(0.6),
         ),
         child: isLoading
             ? const SizedBox(
-                width: 24,
-                height: 24,
+                width: 22,
+                height: 22,
                 child: CircularProgressIndicator(
                   color: Colors.white,
                   strokeWidth: 2.5,
@@ -58,17 +50,12 @@ class PrimaryButton extends StatelessWidget {
                     Icon(icon, size: 20),
                     const SizedBox(width: 8),
                   ],
-                  Text(
-                    text,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.3,
-                    ),
-                  ),
+                  Text(text),
                 ],
               ),
       ),
     );
   }
 }
+
+

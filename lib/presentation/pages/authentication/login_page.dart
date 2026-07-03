@@ -1,13 +1,11 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:nutrizham/presentation/widgets/Form_Widgets/icon_text_button.dart';
 import 'package:provider/provider.dart';
 import 'package:nutrizham/presentation/providers/auth_provider.dart';
 import 'package:nutrizham/presentation/providers/settings_provider.dart';
 import 'package:nutrizham/presentation/widgets/login_form.dart';
 import 'package:nutrizham/presentation/widgets/forgot_password_dialog.dart';
+import 'package:nutrizham/presentation/widgets/Form_Widgets/icon_text_button.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class LoginPage extends StatefulWidget {
@@ -30,17 +28,14 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _forgotPassword() async {
+    final auth = context.read<AuthProvider>();
     final email = await showForgotPasswordDialog(context);
-    if (email == null) return;
-    final result = await context.read<AuthProvider>().resetPassword(email);
+    if (email == null || !mounted) return;
+    final result = await auth.resetPassword(email);
     if (mounted) {
+      final theme = Theme.of(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(result['message']),
-          backgroundColor: result['success']
-              ? Theme.of(context).colorScheme.primary
-              : Theme.of(context).colorScheme.error,
-        ),
+        SnackBar(content: Text(result['message']), backgroundColor: result['success'] ? theme.colorScheme.primary : theme.colorScheme.error),
       );
     }
   }
@@ -48,10 +43,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
-    final result = await context.read<AuthProvider>().login(
-          email: _emailController.text.trim(),
-          password: _passwordController.text,
-        );
+    final result = await context.read<AuthProvider>().login(email: _emailController.text.trim(), password: _passwordController.text);
     setState(() => _isLoading = false);
     if (!mounted) return;
     if (result['success']) {
@@ -59,10 +51,7 @@ class _LoginPageState extends State<LoginPage> {
       context.go('/home');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(result['message']),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
+        SnackBar(content: Text(result['message']), backgroundColor: Theme.of(context).colorScheme.error),
       );
     }
   }
@@ -82,48 +71,29 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    width: 80,
-                    height: 80,
+                    width: 96,
+                    height: 96,
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(22),
-                      border: Border.all(
-                          color: theme.colorScheme.primary.withOpacity(0.3),
-                          width: 1.5),
+                      gradient: LinearGradient(
+                        colors: [theme.colorScheme.primary.withOpacity(0.12), theme.colorScheme.primary.withOpacity(0.04)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(28),
+                      border: Border.all(color: theme.colorScheme.primary.withOpacity(0.15), width: 1.5),
                     ),
-                    child: Image.asset('assets/logo/app_logo.png',
-                        width: 40, height: 40),
+                    child: Center(child: Image.asset('assets/logo/app_logo.png', width: 48, height: 48)),
                   ),
-                  const SizedBox(height: 24),
-                  Text(loc.appTitle,
-                      style: TextStyle(
-                          fontSize: 34,
-                          fontWeight: FontWeight.w700,
-                          color: theme.colorScheme.onSurface,
-                          letterSpacing: -0.5)),
+                  const SizedBox(height: 28),
+                  Text(loc.appTitle, style: theme.textTheme.displaySmall),
                   const SizedBox(height: 8),
-                  Text(loc.login,
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: theme.colorScheme.onSurfaceVariant)),
+                  Text(loc.login, style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
                   const SizedBox(height: 40),
-                  LoginForm(
-                    formKey: _formKey,
-                    emailController: _emailController,
-                    passwordController: _passwordController,
-                    isLoading: _isLoading,
-                    onLogin: _login,
-                    onForgotPassword: _forgotPassword,
-                  ),
-                  const SizedBox(height: 48),
-                  Text(loc.dontHaveAccount,
-                      style: TextStyle(
-                          color: theme.colorScheme.onSurfaceVariant,
-                          fontSize: 14)),
+                  LoginForm(formKey: _formKey, emailController: _emailController, passwordController: _passwordController, isLoading: _isLoading, onLogin: _login, onForgotPassword: _forgotPassword),
+                  const SizedBox(height: 40),
+                  Text(loc.dontHaveAccount, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
                   const SizedBox(height: 12),
-                  IconTextButton(
-                      text: loc.register,
-                      onPressed: () => context.push('/register')),
+                  IconTextButton(text: loc.register, onPressed: () => context.push('/register')),
                 ],
               ),
             ),

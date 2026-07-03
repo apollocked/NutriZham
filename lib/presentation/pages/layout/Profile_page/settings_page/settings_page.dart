@@ -22,21 +22,13 @@ class SettingsPage extends StatelessWidget {
       appBar: CustomAppBar(title: loc.settings),
       body: ListView(children: [
         const SizedBox(height: 16),
-        SectionHeader(
-            title: loc.accountSettings,
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            barHeight: 16),
+        SectionHeader(title: loc.accountSettings, padding: const EdgeInsets.fromLTRB(16, 0, 16, 8)),
         AccountMenuSection(
           onEditAccount: () => context.push('/settings/edit-account'),
           onDeleteAccount: () => _deleteAccount(context, loc),
         ),
         const SizedBox(height: 24),
-        const SectionHeader(
-            title: 'Appearance',
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            barHeight: 16),
+        const SectionHeader(title: 'Appearance', padding: EdgeInsets.fromLTRB(16, 0, 16, 8)),
         const AppearanceSection(),
       ]),
     );
@@ -55,7 +47,7 @@ class SettingsPage extends StatelessWidget {
           TextButton(
               onPressed: () => Navigator.pop(context, true),
               style: TextButton.styleFrom(
-                  foregroundColor: const Color(0xFFEF4444)),
+                  foregroundColor: Theme.of(context).colorScheme.error),
               child: Text(loc.delete)),
         ],
       ),

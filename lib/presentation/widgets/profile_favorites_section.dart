@@ -24,57 +24,50 @@ class ProfileFavoritesSection extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(children: [
-          Container(
-              width: 4,
-              height: 20,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(children: [
+            Container(
+              width: 4, height: 22,
               decoration: BoxDecoration(
-                  color: theme.colorScheme.primary,
-                  borderRadius: BorderRadius.circular(2))),
-          const SizedBox(width: 10),
-          Text(loc.favorites,
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: theme.colorScheme.onSurface)),
-        ]),
-        const SizedBox(height: 16),
-        if (favoriteMeals.isEmpty)
-          EmptyStateWidget(
-              icon: Icons.favorite_outline,
-              title: loc.noFavorites,
-              subtitle: loc.tapToSave)
-        else
-          Column(children: [
-            ...favoriteMeals.take(5).map((recipe) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: RecipeCard(
-                      recipe: recipe,
-                      isFavorite: true,
-                      onFavoriteToggle: () => onToggleFavorite(recipe.id),
-                      onTap: () {}),
-                )),
-            if (favoriteMeals.length > 5)
-              Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Center(
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [theme.colorScheme.primary, theme.colorScheme.primary.withOpacity(0.4)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(loc.favorites, style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
+          ]),
+          const SizedBox(height: 16),
+          if (favoriteMeals.isEmpty)
+            EmptyStateWidget(icon: Icons.favorite_outline, title: loc.noFavorites, subtitle: loc.tapToSave)
+          else
+            Column(children: [
+              ...favoriteMeals.take(5).map((recipe) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: RecipeCard(recipe: recipe, isFavorite: true, onFavoriteToggle: () => onToggleFavorite(recipe.id), onTap: () {}),
+                  )),
+              if (favoriteMeals.length > 5)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      decoration: BoxDecoration(
                         color: theme.colorScheme.primary.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Text('+ ${favoriteMeals.length - 5} more',
-                        style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF10B981))),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text('+ ${favoriteMeals.length - 5} more', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: theme.colorScheme.primary)),
+                    ),
                   ),
                 ),
-              ),
-          ]),
-      ]),
+            ]),
+        ],
+      ),
     );
   }
 }

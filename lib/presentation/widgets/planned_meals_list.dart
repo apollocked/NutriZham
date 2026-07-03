@@ -21,22 +21,17 @@ class PlannedMealsList extends StatelessWidget {
     if (plannedMeals.isEmpty) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: EmptyStateWidget(
-            icon: Icons.calendar_today_outlined,
-            title: loc.emptyPlan,
-            subtitle: loc.tapToSave),
+        child: EmptyStateWidget(icon: Icons.calendar_today_outlined, title: loc.emptyPlan, subtitle: loc.tapToSave),
       );
     }
     return Column(
         children: plannedMeals
             .map((recipe) => Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                   child: CompactRecipeCard(
                     recipe: recipe,
                     trailing: IconButton(
-                        icon: const Icon(Icons.remove_circle_outline,
-                            color: Color(0xFFEF4444)),
+                        icon: Icon(Icons.remove_circle_outline, color: Theme.of(context).colorScheme.error),
                         onPressed: () => onRemoveMeal(recipe.id)),
                   ),
                 ))

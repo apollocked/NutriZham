@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/data/datasources/preferences_helper.dart';
+import 'package:nutrizham/core/cache/cache_service.dart';
 
 class SettingsProvider extends ChangeNotifier {
   bool _isDarkMode = false;
@@ -15,6 +16,7 @@ class SettingsProvider extends ChangeNotifier {
   Future<void> initialize() async {
     _isDarkMode = await PreferencesHelper.getIsDarkMode();
     _languageCode = await PreferencesHelper.getLanguageCode();
+    _isLoggedIn = await CacheService().getIsLoggedIn();
     _isLoading = false;
     notifyListeners();
   }
@@ -31,8 +33,9 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setLoggedIn(bool value) {
+  Future<void> setLoggedIn(bool value) async {
     _isLoggedIn = value;
+    await CacheService().setIsLoggedIn(value);
     notifyListeners();
   }
 

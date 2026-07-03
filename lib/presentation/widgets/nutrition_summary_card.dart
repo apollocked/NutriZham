@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nutrizham/core/constants/app_colors.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class NutritionSummaryCard extends StatelessWidget {
@@ -25,51 +26,33 @@ class NutritionSummaryCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(20),
+      margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [
-          theme.colorScheme.primary.withOpacity(0.05),
-          theme.colorScheme.secondary.withOpacity(0.03)
-        ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-        border: Border(bottom: BorderSide(color: theme.colorScheme.outline)),
+        gradient: LinearGradient(
+          colors: [theme.colorScheme.primary.withOpacity(0.08), theme.colorScheme.primary.withOpacity(0.02)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: theme.colorScheme.primary.withOpacity(0.08)),
       ),
       child: Column(children: [
-        Text(loc.todaysMeals,
-            style: TextStyle(
-                color: theme.colorScheme.onSurfaceVariant,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.5)),
+        Text(loc.todaysMeals.toUpperCase(), style: TextStyle(color: theme.colorScheme.onSurfaceVariant, fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 1.5)),
         const SizedBox(height: 16),
         Container(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
           decoration: BoxDecoration(
-              color: theme.cardColor,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: theme.colorScheme.outline),
-              boxShadow: [
-                BoxShadow(
-                    color: theme.colorScheme.primary.withOpacity(0.06),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4))
-              ]),
+            color: theme.colorScheme.surface.withOpacity(0.7),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+          ),
           child: Column(children: [
-            Text('$totalCalories',
-                style: TextStyle(
-                    color: theme.colorScheme.onSurface,
-                    fontSize: 40,
-                    fontWeight: FontWeight.w700)),
+            Text('$totalCalories', style: TextStyle(color: theme.colorScheme.onSurface, fontSize: 44, fontWeight: FontWeight.w700)),
             const SizedBox(height: 2),
-            const Text('kcal',
-                style: TextStyle(
-                    color: Color(0xFF10B981),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500)),
-            const SizedBox(height: 4),
-            Text(
-                '$plannedMealCount ${plannedMealCount == 1 ? loc.recipeFound : loc.recipesFound}',
-                style: TextStyle(
-                    color: theme.colorScheme.onSurfaceVariant, fontSize: 13)),
+            Text('kcal', style: TextStyle(color: theme.colorScheme.primary, fontSize: 18, fontWeight: FontWeight.w600)),
+            const SizedBox(height: 6),
+            Text('$plannedMealCount ${plannedMealCount == 1 ? loc.recipeFound : loc.recipesFound}', style: theme.textTheme.bodySmall),
           ]),
         ),
         const SizedBox(height: 16),
@@ -77,59 +60,38 @@ class NutritionSummaryCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-                color: theme.cardColor,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: theme.colorScheme.outline)),
+              color: theme.colorScheme.surface.withOpacity(0.7),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+            ),
             child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _MacroItem(
-                      label: 'Protein',
-                      value: '${totalProtein.toStringAsFixed(0)}g',
-                      color: const Color(0xFF3B82F6)),
-                  Container(
-                      width: 1, height: 40, color: theme.colorScheme.outline),
-                  _MacroItem(
-                      label: 'Carbs',
-                      value: '${totalCarbs.toStringAsFixed(0)}g',
-                      color: const Color(0xFFF59E0B)),
-                  Container(
-                      width: 1, height: 40, color: theme.colorScheme.outline),
-                  _MacroItem(
-                      label: 'Fats',
-                      value: '${totalFats.toStringAsFixed(0)}g',
-                      color: const Color(0xFF8B5CF6)),
-                ]),
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _MacroPill(label: 'Protein', value: '${totalProtein.toStringAsFixed(0)}g', color: AppColors.proteinColor),
+                _MacroPill(label: 'Carbs', value: '${totalCarbs.toStringAsFixed(0)}g', color: AppColors.carbsColor),
+                _MacroPill(label: 'Fats', value: '${totalFats.toStringAsFixed(0)}g', color: AppColors.fatsColor),
+              ],
+            ),
           ),
       ]),
     );
   }
 }
 
-class _MacroItem extends StatelessWidget {
+class _MacroPill extends StatelessWidget {
   final String label;
   final String value;
   final Color color;
 
-  const _MacroItem({
-    required this.label,
-    required this.value,
-    required this.color,
-  });
+  const _MacroPill({required this.label, required this.value, required this.color});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Column(children: [
-      Text(value,
-          style: TextStyle(
-              color: color, fontSize: 18, fontWeight: FontWeight.w700)),
+      Text(value, style: TextStyle(color: color, fontSize: 18, fontWeight: FontWeight.w700)),
       const SizedBox(height: 4),
-      Text(label,
-          style: TextStyle(
-              color: theme.colorScheme.onSurfaceVariant,
-              fontSize: 12,
-              fontWeight: FontWeight.w500)),
+      Text(label, style: theme.textTheme.labelMedium),
     ]);
   }
 }

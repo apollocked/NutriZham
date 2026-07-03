@@ -22,90 +22,53 @@ class WelcomeSettingsCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: theme.cardColor,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-            color: isDark
-                ? const Color(0xFF374151)
-                : const Color(0xFFE5E7EB)),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 16,
-              offset: const Offset(0, 6))
-        ],
+        color: theme.colorScheme.surface.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
       ),
       child: Column(children: [
         Row(children: [
           Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12)),
-              child: Icon(
-                  isDark
-                      ? Icons.dark_mode_rounded
-                      : Icons.light_mode_rounded,
-                  color: theme.colorScheme.primary,
-                  size: 24)),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [theme.colorScheme.primary.withOpacity(0.15), theme.colorScheme.primary.withOpacity(0.05)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Icon(isDark ? Icons.dark_mode_rounded : Icons.light_mode_rounded, color: theme.colorScheme.primary, size: 24),
+          ),
           const SizedBox(width: 16),
-          Expanded(
-              child: Text(
-                  WelcomeLanguageTexts.darkModeText(selectedLanguage),
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.onSurface))),
-          Switch(
-              value: isDark,
-              onChanged: (v) => settings.setDarkMode(v),
-              activeColor: theme.colorScheme.primary),
+          Expanded(child: Text(WelcomeLanguageTexts.darkModeText(selectedLanguage), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface))),
+          Switch(value: isDark, onChanged: (v) => settings.setDarkMode(v), activeColor: theme.colorScheme.primary),
         ]),
         const SizedBox(height: 24),
-        Divider(
-            color: isDark
-                ? const Color(0xFF374151)
-                : const Color(0xFFE5E7EB),
-            height: 1),
+        Divider(color: theme.colorScheme.outlineVariant, height: 1),
         const SizedBox(height: 24),
         Row(children: [
           Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12)),
-              child: const Icon(Icons.language_rounded,
-                  color: Color(0xFF10B981), size: 24)),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [theme.colorScheme.primary.withOpacity(0.15), theme.colorScheme.primary.withOpacity(0.05)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Icon(Icons.language_rounded, color: theme.colorScheme.primary, size: 24),
+          ),
           const SizedBox(width: 16),
-          Expanded(
-              child: Text(
-                  WelcomeLanguageTexts.languageText(selectedLanguage),
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.onSurface))),
+          Expanded(child: Text(WelcomeLanguageTexts.languageText(selectedLanguage), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface))),
         ]),
         const SizedBox(height: 16),
-        WelcomeLanguageOption(
-          code: 'en',
-          name: 'English',
-          isSelected: selectedLanguage == 'en',
-          onTap: () => onLanguageChanged('en'),
-        ),
+        WelcomeLanguageOption(code: 'en', name: 'English', isSelected: selectedLanguage == 'en', onTap: () => onLanguageChanged('en')),
         const SizedBox(height: 10),
-        WelcomeLanguageOption(
-          code: 'ku',
-          name: 'کوردی',
-          isSelected: selectedLanguage == 'ku',
-          onTap: () => onLanguageChanged('ku'),
-        ),
+        WelcomeLanguageOption(code: 'ku', name: 'کوردی', isSelected: selectedLanguage == 'ku', onTap: () => onLanguageChanged('ku')),
         const SizedBox(height: 10),
-        WelcomeLanguageOption(
-          code: 'ar',
-          name: 'العربية',
-          isSelected: selectedLanguage == 'ar',
-          onTap: () => onLanguageChanged('ar'),
-        ),
+        WelcomeLanguageOption(code: 'ar', name: 'العربية', isSelected: selectedLanguage == 'ar', onTap: () => onLanguageChanged('ar')),
       ]),
     );
   }

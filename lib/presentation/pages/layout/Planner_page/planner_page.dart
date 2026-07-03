@@ -3,7 +3,6 @@ import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:provider/provider.dart';
 import 'package:nutrizham/presentation/providers/meal_planner_provider.dart';
 import 'package:nutrizham/presentation/providers/recipe_provider.dart';
-
 import 'package:nutrizham/presentation/widgets/custom_app_bar.dart';
 import 'package:nutrizham/presentation/widgets/nutrition_summary_card.dart';
 import 'package:nutrizham/presentation/widgets/section_header.dart';
@@ -45,65 +44,41 @@ class _PlannerPageState extends State<PlannerPage> {
         SnackBar(
           content: Text(isInPlan ? loc.addToPlan : loc.removeFromPlan),
           duration: const Duration(seconds: 1),
-          backgroundColor: isInPlan
-              ? Theme.of(context).colorScheme.primary
-              : Theme.of(context).colorScheme.error,
+          backgroundColor: isInPlan ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.error,
         ),
       );
     }
   }
 
-  int get _totalCalories => _allRecipes
-      .where((r) => _plannerProvider.isInPlan(r.id))
-      .fold(0, (total, r) => total + r.nutrition.calories);
-
-  double get _totalProtein => _allRecipes
-      .where((r) => _plannerProvider.isInPlan(r.id))
-      .fold(0.0, (total, r) => total + r.nutrition.protein);
-  double get _totalCarbs => _allRecipes
-      .where((r) => _plannerProvider.isInPlan(r.id))
-      .fold(0.0, (total, r) => total + r.nutrition.carbs);
-  double get _totalFats => _allRecipes
-      .where((r) => _plannerProvider.isInPlan(r.id))
-      .fold(0.0, (total, r) => total + r.nutrition.fats);
+  int get _totalCalories => _allRecipes.where((r) => _plannerProvider.isInPlan(r.id)).fold(0, (total, r) => total + r.nutrition.calories);
+  double get _totalProtein => _allRecipes.where((r) => _plannerProvider.isInPlan(r.id)).fold(0.0, (total, r) => total + r.nutrition.protein);
+  double get _totalCarbs => _allRecipes.where((r) => _plannerProvider.isInPlan(r.id)).fold(0.0, (total, r) => total + r.nutrition.carbs);
+  double get _totalFats => _allRecipes.where((r) => _plannerProvider.isInPlan(r.id)).fold(0.0, (total, r) => total + r.nutrition.fats);
 
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     final planner = context.watch<MealPlannerProvider>();
 
-    final plannedMeals =
-        _allRecipes.where((r) => planner.isInPlan(r.id)).toList();
-    final recommendedMeals =
-        _allRecipes.where((r) => !planner.isInPlan(r.id)).take(25).toList();
+    final plannedMeals = _allRecipes.where((r) => planner.isInPlan(r.id)).toList();
+    final recommendedMeals = _allRecipes.where((r) => !planner.isInPlan(r.id)).take(25).toList();
 
     return Scaffold(
       appBar: CustomAppBar(title: loc.mealPlanner),
       body: Column(children: [
         NutritionSummaryCard(
-          totalCalories: _totalCalories,
-          totalProtein: _totalProtein,
-          totalCarbs: _totalCarbs,
-          totalFats: _totalFats,
-          plannedMealCount: plannedMeals.length,
-          hasPlannedMeals: plannedMeals.isNotEmpty,
+          totalCalories: _totalCalories, totalProtein: _totalProtein, totalCarbs: _totalCarbs, totalFats: _totalFats,
+          plannedMealCount: plannedMeals.length, hasPlannedMeals: plannedMeals.isNotEmpty,
         ),
         Expanded(
           child: SingleChildScrollView(
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               SectionHeader(title: loc.dailyPlan),
-              PlannedMealsList(
-                plannedMeals: plannedMeals,
-                onRemoveMeal: _toggleMealInPlan,
-              ),
-              const SizedBox(height: 24),
-              SectionHeader(title: loc.recommendedMeals),
-              RecommendedMealsList(
-                recommendedMeals: recommendedMeals,
-                onAddMeal: _toggleMealInPlan,
-              ),
+              PlannedMealsList(plannedMeals: plannedMeals, onRemoveMeal: _toggleMealInPlan),
               const SizedBox(height: 16),
+              SectionHeader(title: loc.recommendedMeals),
+              RecommendedMealsList(recommendedMeals: recommendedMeals, onAddMeal: _toggleMealInPlan),
+              const SizedBox(height: 24),
             ]),
           ),
         ),

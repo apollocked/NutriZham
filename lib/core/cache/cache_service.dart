@@ -7,10 +7,14 @@ class CacheService {
   CacheService._();
 
   SharedPreferences? _prefs;
-  final FlutterSecureStorage _secure = const FlutterSecureStorage();
+  late final FlutterSecureStorage _secure;
 
   Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
+    // Initialize secure storage after Flutter bindings are ready to ensure
+    // platform channel handlers are registered. This avoids MissingPluginException
+    // when the CacheService is constructed before plugin registration.
+    _secure = const FlutterSecureStorage();
   }
 
   Future<bool> initCalled() async => _prefs != null;
@@ -42,8 +46,7 @@ class CacheService {
   Future<void> setSecure(String key, String v) async =>
       await _secure.write(key: key, value: v);
 
-  Future<void> removeSecure(String key) async =>
-      await _secure.delete(key: key);
+  Future<void> removeSecure(String key) async => await _secure.delete(key: key);
 
   // Convenience: Theme
   static const _isDarkMode = 'isDarkMode';
@@ -57,8 +60,7 @@ class CacheService {
 
   // Convenience: First launch
   static const _firstLaunch = 'isFirstLaunch';
-  Future<bool> isFirstLaunch() async =>
-      getBool(_firstLaunch, d: true);
+  Future<bool> isFirstLaunch() async => getBool(_firstLaunch, d: true);
   Future<void> setFirstLaunch(bool v) async => setBool(_firstLaunch, v);
 
   // Convenience: Welcome
@@ -75,8 +77,7 @@ class CacheService {
 
   // Convenience: Planned meals
   static const _plannedMeals = 'planned_meals';
-  Future<List<String>> getPlannedMeals() async =>
-      getStringList(_plannedMeals);
+  Future<List<String>> getPlannedMeals() async => getStringList(_plannedMeals);
   Future<void> setPlannedMeals(List<String> v) async =>
       setStringList(_plannedMeals, v);
   Future<void> removePlannedMeals() async => remove(_plannedMeals);
@@ -95,8 +96,7 @@ class CacheService {
   static const _currentUser = 'current_user';
   static const _isLoggedIn = 'is_logged_in';
   Future<String?> getCurrentUserJson() async => getSecure(_currentUser);
-  Future<void> setCurrentUserJson(String v) async =>
-      setSecure(_currentUser, v);
+  Future<void> setCurrentUserJson(String v) async => setSecure(_currentUser, v);
   Future<void> removeCurrentUser() async => removeSecure(_currentUser);
 
   Future<bool> getIsLoggedIn() async {

@@ -43,9 +43,7 @@ class _LoginFormState extends State<LoginForm> {
           keyboardType: TextInputType.emailAddress,
           textInputAction: TextInputAction.next,
           validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter your email';
-            }
+            if (value == null || value.isEmpty) return 'Please enter your email';
             if (!value.contains('@')) return 'Please enter a valid email';
             return null;
           },
@@ -58,38 +56,19 @@ class _LoginFormState extends State<LoginForm> {
           obscureText: _obscurePassword,
           textInputAction: TextInputAction.done,
           suffixIcon: IconButton(
-            icon: Icon(
-              _obscurePassword
-                  ? Icons.visibility_off_rounded
-                  : Icons.visibility_rounded,
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-            onPressed: () =>
-                setState(() => _obscurePassword = !_obscurePassword),
+            icon: Icon(_obscurePassword ? Icons.visibility_off_rounded : Icons.visibility_rounded, color: theme.colorScheme.onSurfaceVariant),
+            onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
           ),
           validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter your password';
-            }
-            if (value.length < 6) {
-              return 'Password must be at least 6 characters';
-            }
+            if (value == null || value.isEmpty) return 'Please enter your password';
+            if (value.length < 6) return 'Password must be at least 6 characters';
             return null;
           },
         ),
         const SizedBox(height: 24),
-        PrimaryButton(
-          text: loc.login,
-          onPressed: widget.onLogin,
-          isLoading: widget.isLoading,
-        ),
+        PrimaryButton(text: loc.login, onPressed: widget.onLogin, isLoading: widget.isLoading),
         const SizedBox(height: 16),
-        IconTextButton(
-          onPressed: widget.onForgotPassword,
-          text: loc.forgotPassword,
-          color: Colors.transparent,
-          icon: Icons.help_outline_outlined,
-        ),
+        IconTextButton(onPressed: widget.onForgotPassword, text: loc.forgotPassword, color: Colors.transparent, icon: Icons.help_outline_outlined),
       ],
     );
   }

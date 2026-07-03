@@ -97,7 +97,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
         body: Center(
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          const CircularProgressIndicator(color: Color(0xFF10B981)),
+          CircularProgressIndicator(color: theme.colorScheme.primary),
           const SizedBox(height: 16),
           Text(loc.loading,
               style: TextStyle(color: theme.colorScheme.onSurfaceVariant)),
