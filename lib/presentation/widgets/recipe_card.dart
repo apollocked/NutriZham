@@ -40,9 +40,10 @@ class RecipeCard extends StatelessWidget {
             ),
             clipBehavior: Clip.antiAlias,
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Expanded(
-                  flex: 11,
+                AspectRatio(
+                  aspectRatio: 1.6,
                   child: Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -75,41 +76,38 @@ class RecipeCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                Expanded(
-                  flex: 9,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700, height: 1.3),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const Spacer(),
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                              decoration: BoxDecoration(
-                                color: catColor.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                _getCategoryName(recipe.category, context),
-                                style: TextStyle(fontSize: 10, color: catColor, fontWeight: FontWeight.w600),
-                              ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700, height: 1.3),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: catColor.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(6),
                             ),
-                            const Spacer(),
-                            Icon(Icons.local_fire_department_rounded, size: 12, color: AppColors.caloriesColor.withOpacity(0.7)),
-                            const SizedBox(width: 2),
-                            Text('${recipe.nutrition.calories}', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.caloriesColor)),
-                          ],
-                        ),
-                      ],
-                    ),
+                            child: Text(
+                              _getCategoryName(recipe.category, context),
+                              style: TextStyle(fontSize: 10, color: catColor, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          const Spacer(),
+                          Icon(Icons.local_fire_department_rounded, size: 12, color: AppColors.caloriesColor.withOpacity(0.7)),
+                          const SizedBox(width: 2),
+                          Text('${recipe.nutrition.calories}', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.caloriesColor)),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ],

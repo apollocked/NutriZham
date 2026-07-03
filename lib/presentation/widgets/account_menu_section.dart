@@ -19,11 +19,11 @@ class AccountMenuSection extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Container(
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
+      child: Material(
+        color: theme.colorScheme.surface,
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+          side: BorderSide(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
         ),
         child: Column(children: [
           MenuItemTile(icon: Icons.edit_outlined, title: loc.editAccount, onTap: onEditAccount),

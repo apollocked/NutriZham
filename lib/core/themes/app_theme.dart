@@ -3,8 +3,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:nutrizham/core/constants/app_colors.dart';
 
 class AppTheme {
+  static const _font = 'Rudaw';
+
+  static TextStyle _style({
+    required double fontSize,
+    required FontWeight fontWeight,
+    Color? color,
+    double? letterSpacing,
+  }) {
+    return TextStyle(
+      fontFamily: _font,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      letterSpacing: letterSpacing,
+      color: color,
+    );
+  }
+
   static ThemeData _base(Brightness brightness) {
     return ThemeData(
+      fontFamily: _font,
       useMaterial3: true,
       brightness: brightness,
       primaryColor: AppColors.primaryGreen,
@@ -44,80 +62,37 @@ class AppTheme {
       surfaceContainer: Color(0xFFEAF3EA),
       surfaceContainerHigh: Color(0xFFE0EDE0),
     ),
-    textTheme: const TextTheme(
-      displayLarge: TextStyle(
-          fontSize: 36,
-          fontWeight: FontWeight.w700,
-          letterSpacing: -1.0,
-          color: AppColors.lightText),
-      displayMedium: TextStyle(
-          fontSize: 30,
-          fontWeight: FontWeight.w700,
-          letterSpacing: -0.5,
-          color: AppColors.lightText),
-      displaySmall: TextStyle(
-          fontSize: 26,
-          fontWeight: FontWeight.w600,
-          letterSpacing: -0.25,
-          color: AppColors.lightText),
-      headlineLarge: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.w600,
-          letterSpacing: -0.25,
-          color: AppColors.lightText),
-      headlineMedium: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          color: AppColors.lightText),
-      headlineSmall: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-          color: AppColors.lightText),
-      titleLarge: TextStyle(
-          fontSize: 17,
-          fontWeight: FontWeight.w600,
-          letterSpacing: 0.15,
-          color: AppColors.lightText),
-      titleMedium: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w500,
-          letterSpacing: 0.1,
-          color: AppColors.lightText),
-      titleSmall: TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
-          letterSpacing: 0.1,
-          color: AppColors.lightText),
-      bodyLarge: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w400,
-          letterSpacing: 0.15,
-          color: AppColors.lightText),
-      bodyMedium: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
-          letterSpacing: 0.25,
-          color: AppColors.lightText),
-      bodySmall: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w400,
-          letterSpacing: 0.4,
-          color: AppColors.lightTextSecondary),
-      labelLarge: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          letterSpacing: 0.1,
-          color: AppColors.lightText),
-      labelMedium: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-          letterSpacing: 0.5,
-          color: AppColors.lightTextSecondary),
-      labelSmall: TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w500,
-          letterSpacing: 0.5,
-          color: AppColors.lightTextSecondary),
+    textTheme: TextTheme(
+      displayLarge: _style(
+          fontSize: 36, fontWeight: FontWeight.w700, letterSpacing: -1.0, color: AppColors.lightText),
+      displayMedium: _style(
+          fontSize: 30, fontWeight: FontWeight.w700, letterSpacing: -0.5, color: AppColors.lightText),
+      displaySmall: _style(
+          fontSize: 26, fontWeight: FontWeight.w600, letterSpacing: -0.25, color: AppColors.lightText),
+      headlineLarge: _style(
+          fontSize: 24, fontWeight: FontWeight.w600, letterSpacing: -0.25, color: AppColors.lightText),
+      headlineMedium: _style(
+          fontSize: 20, fontWeight: FontWeight.w600, color: AppColors.lightText),
+      headlineSmall: _style(
+          fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.lightText),
+      titleLarge: _style(
+          fontSize: 17, fontWeight: FontWeight.w600, letterSpacing: 0.15, color: AppColors.lightText),
+      titleMedium: _style(
+          fontSize: 15, fontWeight: FontWeight.w500, letterSpacing: 0.1, color: AppColors.lightText),
+      titleSmall: _style(
+          fontSize: 13, fontWeight: FontWeight.w500, letterSpacing: 0.1, color: AppColors.lightText),
+      bodyLarge: _style(
+          fontSize: 16, fontWeight: FontWeight.w400, letterSpacing: 0.15, color: AppColors.lightText),
+      bodyMedium: _style(
+          fontSize: 14, fontWeight: FontWeight.w400, letterSpacing: 0.25, color: AppColors.lightText),
+      bodySmall: _style(
+          fontSize: 12, fontWeight: FontWeight.w400, letterSpacing: 0.4, color: AppColors.lightTextSecondary),
+      labelLarge: _style(
+          fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 0.1, color: AppColors.lightText),
+      labelMedium: _style(
+          fontSize: 12, fontWeight: FontWeight.w500, letterSpacing: 0.5, color: AppColors.lightTextSecondary),
+      labelSmall: _style(
+          fontSize: 11, fontWeight: FontWeight.w500, letterSpacing: 0.5, color: AppColors.lightTextSecondary),
     ),
     appBarTheme: const AppBarTheme(
       elevation: 0,
