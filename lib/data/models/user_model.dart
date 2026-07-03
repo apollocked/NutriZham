@@ -1,24 +1,16 @@
-class UserModel {
-  final String id;
-  final String username;
-  final String email;
-  final int age;
-  final String? profileImage;
-  final DateTime createdAt;
-  final List<String> favorites;
-  final List<String> plannedMeals;
-  final DateTime? updatedAt;
+import 'package:nutrizham/domain/entities/user.dart';
 
+class UserModel extends User {
   UserModel({
-    required this.id,
-    required this.username,
-    required this.email,
-    required this.age,
-    this.profileImage,
-    required this.createdAt,
-    this.favorites = const [],
-    this.plannedMeals = const [],
-    this.updatedAt,
+    required super.id,
+    required super.username,
+    required super.email,
+    required super.age,
+    super.profileImage,
+    required super.createdAt,
+    super.favorites = const [],
+    super.plannedMeals = const [],
+    super.updatedAt,
   });
 
   Map<String, dynamic> toJson() {
