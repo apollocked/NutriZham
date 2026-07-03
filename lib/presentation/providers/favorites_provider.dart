@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nutrizham/services/favorites_helper.dart';
+import 'package:nutrizham/data/datasources/favorites_helper.dart';
 
 class FavoritesProvider extends ChangeNotifier {
   Set<String> _favoriteIds = {};

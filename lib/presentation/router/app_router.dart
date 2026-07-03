@@ -1,20 +1,20 @@
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:nutrizham/presentation/providers/settings_provider.dart';
-import 'package:nutrizham/pages/authentication/Onboard_Page/welcome_page.dart';
-import 'package:nutrizham/pages/authentication/login_page.dart';
-import 'package:nutrizham/pages/authentication/register_page.dart';
-import 'package:nutrizham/pages/layout/main_navigation.dart';
-import 'package:nutrizham/pages/layout/Home_page/home_page.dart';
-import 'package:nutrizham/pages/layout/Search_page/search_page.dart';
-import 'package:nutrizham/pages/layout/Planner_page/planner_page.dart';
-import 'package:nutrizham/pages/layout/Profile_page/profile_page.dart';
-import 'package:nutrizham/pages/layout/Details_page/details_screen.dart';
-import 'package:nutrizham/pages/layout/Profile_page/settings_page/settings_page.dart';
-import 'package:nutrizham/pages/layout/Profile_page/features_page/app_features_page.dart';
-import 'package:nutrizham/pages/layout/Profile_page/Edit_account_page/edit_account_page.dart';
-import 'package:nutrizham/pages/layout/Profile_page/Edit_account_page/Change_Password_Page/change_password_page.dart';
-import 'package:nutrizham/utils/meals_data.dart';
+import 'package:nutrizham/presentation/pages/authentication/Onboard_Page/welcome_page.dart';
+import 'package:nutrizham/presentation/pages/authentication/login_page.dart';
+import 'package:nutrizham/presentation/pages/authentication/register_page.dart';
+import 'package:nutrizham/presentation/pages/layout/main_navigation.dart';
+import 'package:nutrizham/presentation/pages/layout/Home_page/home_page.dart';
+import 'package:nutrizham/presentation/pages/layout/Search_page/search_page.dart';
+import 'package:nutrizham/presentation/pages/layout/Planner_page/planner_page.dart';
+import 'package:nutrizham/presentation/pages/layout/Profile_page/profile_page.dart';
+import 'package:nutrizham/presentation/pages/layout/Details_page/details_screen.dart';
+import 'package:nutrizham/presentation/pages/layout/Profile_page/settings_page/settings_page.dart';
+import 'package:nutrizham/presentation/pages/layout/Profile_page/features_page/app_features_page.dart';
+import 'package:nutrizham/presentation/pages/layout/Profile_page/Edit_account_page/edit_account_page.dart';
+import 'package:nutrizham/presentation/pages/layout/Profile_page/Edit_account_page/Change_Password_Page/change_password_page.dart';
+import 'package:nutrizham/data/models/meals_data.dart';
 
 GoRouter buildRouter() {
   return GoRouter(

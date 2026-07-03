@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nutrizham/services/meal_planner_service.dart';
+import 'package:nutrizham/data/datasources/meal_planner_service.dart';
 
 class MealPlannerProvider extends ChangeNotifier {
   List<String> _plannedMealIds = [];

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nutrizham/models/user_model.dart';
-import 'package:nutrizham/services/Auth_Services/auth_service.dart';
+import 'package:nutrizham/data/models/user_model.dart';
+import 'package:nutrizham/data/datasources/Auth_Services/auth_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   final _authService = AuthService();

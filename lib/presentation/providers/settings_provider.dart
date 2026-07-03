@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nutrizham/services/preferences_helper.dart';
+import 'package:nutrizham/data/datasources/preferences_helper.dart';
 
 class SettingsProvider extends ChangeNotifier {
   bool _isDarkMode = false;

@@ -6,8 +6,8 @@ import 'package:nutrizham/presentation/providers/favorites_provider.dart';
 import 'package:nutrizham/presentation/providers/meal_planner_provider.dart';
 import 'package:nutrizham/presentation/router/app_router.dart';
 import 'package:nutrizham/core/themes/app_theme.dart';
-import 'package:nutrizham/services/favorites_helper.dart';
-import 'package:nutrizham/services/meal_planner_service.dart';
+import 'package:nutrizham/data/datasources/favorites_helper.dart';
+import 'package:nutrizham/data/datasources/meal_planner_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 

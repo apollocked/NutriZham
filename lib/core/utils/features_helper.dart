@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nutrizham/utils/app_colors.dart';
+import 'package:nutrizham/core/constants/app_colors.dart';
 
 List<Map<String, dynamic>> getFeatures(String languageCode) {
   switch (languageCode) {
