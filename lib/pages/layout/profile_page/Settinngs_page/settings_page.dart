@@ -1,294 +1,107 @@
 import 'package:flutter/material.dart';
-import 'package:nutrizham/pages/authotication/login_page.dart';
-import 'package:nutrizham/pages/layout/Profile_page/Edit_account_page/edit_account_page.dart';
-import 'package:nutrizham/services/Auth_Services/auth_service.dart';
-import 'package:nutrizham/services/preferences_helper.dart';
-import 'package:nutrizham/utils/app_colors.dart';
-import 'package:nutrizham/utils/app_localizations.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:nutrizham/presentation/providers/settings_provider.dart';
+import 'package:nutrizham/presentation/providers/auth_provider.dart';
 import 'package:nutrizham/widgets/custom_app_bar.dart';
 import 'package:nutrizham/widgets/stat_and_menu_widgets.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class SettingsPage extends StatefulWidget {
-  final bool isDarkMode;
-  final String languageCode;
-  final Function(bool) onThemeChanged;
-  final Function(String) onLanguageChanged;
-
-  const SettingsPage({
-    super.key,
-    required this.isDarkMode,
-    required this.languageCode,
-    required this.onThemeChanged,
-    required this.onLanguageChanged,
-  });
+class SettingsPage extends StatelessWidget {
+  const SettingsPage({super.key});
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
-}
+  Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final settings = context.watch<SettingsProvider>();
 
-class _SettingsPageState extends State<SettingsPage> {
-  final _authService = AuthService();
-  bool _currentDarkMode = false;
-  String _currentLanguage = 'en';
-
-  @override
-  void initState() {
-    super.initState();
-    _currentDarkMode = widget.isDarkMode;
-    _currentLanguage = widget.languageCode;
+    return Scaffold(
+      appBar: CustomAppBar(title: loc.settings),
+      body: ListView(children: [
+        const SizedBox(height: 16),
+        _buildSectionHeader(loc.accountSettings),
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(color: theme.cardColor, borderRadius: BorderRadius.circular(14), border: Border.all(color: theme.colorScheme.outline)),
+          child: Column(children: [
+            MenuItemTile(icon: Icons.edit_outlined, title: loc.editAccount, onTap: () => context.push('/settings/edit-account')),
+            Divider(color: theme.colorScheme.outline, height: 1, indent: 60),
+            MenuItemTile(icon: Icons.delete_outline, title: loc.deleteAccount, onTap: () => _deleteAccount(context, loc), iconColor: const Color(0xFFEF4444), textColor: const Color(0xFFEF4444), showTrailing: false),
+          ]),
+        ),
+        const SizedBox(height: 24),
+        _buildSectionHeader('Appearance'),
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(color: theme.cardColor, borderRadius: BorderRadius.circular(14), border: Border.all(color: theme.colorScheme.outline)),
+          child: Column(children: [
+            SwitchListTile(
+              secondary: Icon(settings.isDarkMode ? Icons.dark_mode_outlined : Icons.light_mode_outlined, color: theme.colorScheme.primary),
+              title: Text(loc.darkMode, style: TextStyle(color: theme.colorScheme.onSurface)),
+              value: settings.isDarkMode,
+              activeColor: theme.colorScheme.primary,
+              onChanged: (value) => settings.setDarkMode(value),
+            ),
+            Divider(color: theme.colorScheme.outline, height: 1),
+            ListTile(
+              leading: const Icon(Icons.language_outlined, color: Color(0xFF10B981)),
+              title: Text(loc.language, style: TextStyle(color: theme.colorScheme.onSurface)),
+              trailing: DropdownButton<String>(
+                value: settings.languageCode,
+                dropdownColor: theme.cardColor,
+                underline: Container(height: 0),
+                items: [
+                  DropdownMenuItem(value: 'en', child: Text(loc.english, style: TextStyle(color: theme.colorScheme.onSurface))),
+                  DropdownMenuItem(value: 'ku', child: Text(loc.kurdish, style: TextStyle(color: theme.colorScheme.onSurface))),
+                  DropdownMenuItem(value: 'ar', child: Text(loc.arabic, style: TextStyle(color: theme.colorScheme.onSurface))),
+                ],
+                onChanged: (value) {
+                  if (value != null) settings.setLanguageCode(value);
+                },
+              ),
+            ),
+          ]),
+        ),
+      ]),
+    );
   }
 
-  // In _deleteAccount method:
-  Future<void> _deleteAccount() async {
-    final loc = AppLocalizations.of(_currentLanguage);
+  void _deleteAccount(BuildContext context, AppLocalizations loc) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(loc.deleteAccount),
         content: Text(loc.areYouSure),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(loc.cancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(foregroundColor: AppColors.error),
-            child: Text(loc.delete),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(loc.cancel)),
+          TextButton(onPressed: () => Navigator.pop(context, true), style: TextButton.styleFrom(foregroundColor: const Color(0xFFEF4444)), child: Text(loc.delete)),
         ],
       ),
     );
-
     if (confirmed == true) {
-      final result =
-          await _authService.deleteAccount(''); // Empty string or user ID
-
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(result['message']),
-          backgroundColor:
-              result['success'] ? AppColors.success : AppColors.error,
-        ),
-      );
-
-      if (result['success']) {
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (_) => LoginPage(
-              isDarkMode: _currentDarkMode,
-              languageCode: _currentLanguage,
-            ),
-          ),
-          (route) => false,
+      final result = await context.read<AuthProvider>().deleteAccount();
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(result['message']), backgroundColor: result['success'] ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.error),
         );
+        if (result['success']) {
+          context.read<SettingsProvider>().setLoggedIn(false);
+          context.go('/login');
+        }
       }
     }
   }
 
-  Future<void> _handleThemeChanged(bool isDark) async {
-    setState(() {
-      _currentDarkMode = isDark;
-    });
-    await PreferencesHelper.setIsDarkMode(isDark);
-    widget.onThemeChanged(isDark);
-  }
-
-  Future<void> _handleLanguageChanged(String lang) async {
-    setState(() {
-      _currentLanguage = lang;
-    });
-    await PreferencesHelper.setLanguageCode(lang);
-    widget.onLanguageChanged(lang);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final loc = AppLocalizations.of(_currentLanguage);
-    final bgColor =
-        _currentDarkMode ? AppColors.darkBackground : AppColors.lightBackground;
-    final textColor =
-        _currentDarkMode ? AppColors.darkText : AppColors.lightText;
-
-    return Scaffold(
-      backgroundColor: bgColor,
-      appBar: CustomAppBar(
-        title: loc.settings,
-        isDarkMode: _currentDarkMode,
-      ),
-      body: ListView(
-        children: [
-          const SizedBox(height: 16),
-
-          // Account Section
-          _buildSectionHeader(loc.accountSettings),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              color: _currentDarkMode ? AppColors.darkCard : Colors.white,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                color: _currentDarkMode
-                    ? AppColors.darkDivider
-                    : AppColors.lightDivider,
-              ),
-            ),
-            child: Column(
-              children: [
-                MenuItemTile(
-                  icon: Icons.edit_outlined,
-                  title: loc.editAccount,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => EditAccountPage(
-                          isDarkMode: _currentDarkMode,
-                          languageCode: _currentLanguage,
-                        ),
-                      ),
-                    );
-                  },
-                  isDarkMode: _currentDarkMode,
-                ),
-                Divider(
-                    color: _currentDarkMode
-                        ? AppColors.darkDivider
-                        : AppColors.lightDivider,
-                    height: 1,
-                    indent: 60),
-                MenuItemTile(
-                  icon: Icons.delete_outline,
-                  title: loc.deleteAccount,
-                  onTap: _deleteAccount,
-                  iconColor: AppColors.error,
-                  textColor: AppColors.error,
-                  showTrailing: false,
-                  isDarkMode: _currentDarkMode,
-                )
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 24),
-
-          // Appearance Section
-          _buildSectionHeader('Appearance'),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              color: _currentDarkMode ? AppColors.darkCard : Colors.white,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                color: _currentDarkMode
-                    ? AppColors.darkDivider
-                    : AppColors.lightDivider,
-              ),
-            ),
-            child: Column(
-              children: [
-                SwitchListTile(
-                  secondary: Icon(
-                    _currentDarkMode
-                        ? Icons.dark_mode_outlined
-                        : Icons.light_mode_outlined,
-                    color: AppColors.primaryGreen,
-                  ),
-                  title: Text(loc.darkMode, style: TextStyle(color: textColor)),
-                  value: _currentDarkMode,
-                  activeColor: AppColors.primaryGreen,
-                  onChanged: _handleThemeChanged,
-                ),
-                Divider(
-                    color: _currentDarkMode
-                        ? AppColors.darkDivider
-                        : AppColors.lightDivider,
-                    height: 1),
-                ListTile(
-                  leading: const Icon(Icons.language_outlined,
-                      color: AppColors.primaryGreen),
-                  title: Text(loc.language, style: TextStyle(color: textColor)),
-                  trailing: DropdownButton<String>(
-                    value: _currentLanguage,
-                    dropdownColor:
-                        _currentDarkMode ? AppColors.darkCard : Colors.white,
-                    underline: Container(height: 0),
-                    items: [
-                      DropdownMenuItem(
-                        value: 'en',
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(loc.english,
-                                style: TextStyle(color: textColor)),
-                          ],
-                        ),
-                      ),
-                      DropdownMenuItem(
-                        value: 'ku',
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(loc.kurdish,
-                                style: TextStyle(color: textColor)),
-                          ],
-                        ),
-                      ),
-                      DropdownMenuItem(
-                        value: 'ar',
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(loc.arabic,
-                                style: TextStyle(color: textColor)),
-                          ],
-                        ),
-                      ),
-                    ],
-                    onChanged: (value) {
-                      if (value != null) {
-                        _handleLanguageChanged(value);
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildSectionHeader(String title) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-      child: Row(
-        children: [
-          Container(
-            width: 4,
-            height: 16,
-            decoration: BoxDecoration(
-              color: AppColors.primaryGreen,
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(width: 10),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: _currentDarkMode
-                  ? AppColors.darkTextSecondary
-                  : AppColors.lightTextSecondary,
-              letterSpacing: 0.5,
-            ),
-          ),
-        ],
-      ),
+      child: Row(children: [
+        Container(width: 4, height: 16, decoration: BoxDecoration(color: theme.colorScheme.primary, borderRadius: BorderRadius.circular(2))),
+        const SizedBox(width: 10),
+        Text(title, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurfaceVariant, letterSpacing: 0.5)),
+      ]),
     );
   }
 }

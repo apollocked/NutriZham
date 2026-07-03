@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:nutrizham/pages/layout/main_navigation.dart';
-import 'package:nutrizham/pages/layout/Profile_page/Edit_account_page/Change_Password_Page/change_password_page.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:nutrizham/presentation/providers/auth_provider.dart';
 import 'package:nutrizham/services/Auth_Services/firebase_auth_service.dart';
-import 'package:nutrizham/utils/app_colors.dart';
-import 'package:nutrizham/utils/app_localizations.dart';
-import 'package:nutrizham/widgets/Form_Wedgits/empty_state_widget.dart';
 import 'package:nutrizham/widgets/custom_app_bar.dart';
 import 'package:nutrizham/widgets/Form_Wedgits/custom_text_field.dart';
 import 'package:nutrizham/widgets/Form_Wedgits/custom_buttons.dart';
 import 'package:nutrizham/widgets/stat_and_menu_widgets.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditAccountPage extends StatefulWidget {
-  final bool isDarkMode;
-  final String languageCode;
-  const EditAccountPage(
-      {super.key, required this.isDarkMode, required this.languageCode});
+  const EditAccountPage({super.key});
 
   @override
   State<EditAccountPage> createState() => _EditAccountPageState();
@@ -52,24 +48,13 @@ class _EditAccountPageState extends State<EditAccountPage> {
     setState(() => _isLoading = false);
   }
 
-  // Update user profile information
   Future<void> _saveChanges() async {
     if (!_formKey.currentState!.validate()) return;
-
     setState(() => _isLoading = true);
 
     try {
       final user = await _authService.getCurrentUser();
-      if (user == null) {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('User not found'),
-            backgroundColor: AppColors.error,
-          ),
-        );
-        return;
-      }
+      if (user == null) return;
 
       final updatedUser = user.copyWith(
         username: _usernameController.text.trim(),
@@ -77,186 +62,67 @@ class _EditAccountPageState extends State<EditAccountPage> {
         age: int.parse(_ageController.text),
       );
 
-      final result = await _authService.updateUserProfile(updatedUser);
-
+      final result = await context.read<AuthProvider>().updateProfile(updatedUser);
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(result['message']),
-          backgroundColor:
-              result['success'] ? AppColors.success : AppColors.error,
-        ),
+        SnackBar(content: Text(result['message']), backgroundColor: result['success'] ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.error),
       );
 
-      if (result['success']) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (_) => MainNavigation(
-              isDarkMode: widget.isDarkMode,
-              languageCode: widget.languageCode,
-            ),
-          ),
-          (route) => false,
-        );
-      }
+      if (result['success']) context.go('/home');
     } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: ${e.toString()}'),
-          backgroundColor: AppColors.error,
-        ),
-      );
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}'), backgroundColor: Theme.of(context).colorScheme.error));
     } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final loc = AppLocalizations.of(widget.languageCode);
-    final bgColor = widget.isDarkMode
-        ? AppColors.darkBackground
-        : AppColors.lightBackground;
+    final loc = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     if (_isLoading) {
       return Scaffold(
-        backgroundColor: bgColor,
-        appBar: CustomAppBar(
-          title: loc.editAccount,
-          isDarkMode: widget.isDarkMode,
-        ),
-        body: LoadingWidget(
-          message: loc.loading,
-          isDarkMode: widget.isDarkMode,
-        ),
+        appBar: CustomAppBar(title: loc.editAccount),
+        body: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          const CircularProgressIndicator(color: Color(0xFF10B981)),
+          const SizedBox(height: 16),
+          Text(loc.loading, style: TextStyle(color: theme.colorScheme.onSurfaceVariant)),
+        ])),
       );
     }
 
     return Scaffold(
-      backgroundColor: bgColor,
-      appBar: CustomAppBar(
-        title: loc.editAccount,
-        isDarkMode: widget.isDarkMode,
-      ),
+      appBar: CustomAppBar(title: loc.editAccount),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Form(
           key: _formKey,
-          child: Column(
-            children: [
-              // Username Field
-              CustomTextField(
-                controller: _usernameController,
-                labelText: loc.username,
-                prefixIcon: Icons.person_outline,
-                isDarkMode: widget.isDarkMode,
-                textInputAction: TextInputAction.next,
-                validator: (value) =>
-                    value?.isEmpty == true ? 'Username is required' : null,
-              ),
-              const SizedBox(height: 16),
-
-              // Email Field
-              CustomTextField(
-                controller: _emailController,
-                labelText: loc.email,
-                prefixIcon: Icons.email_outlined,
-                isDarkMode: widget.isDarkMode,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                validator: (value) {
-                  if (value?.isEmpty == true) {
-                    return 'Email is required';
-                  }
-                  if (value?.contains('@') == false) {
-                    return 'Invalid email';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
-              Container(
-                decoration: BoxDecoration(
-                  color: widget.isDarkMode ? AppColors.darkCard : Colors.white,
-                  border: Border.all(
-                    style: BorderStyle.solid,
-                    color: widget.isDarkMode
-                        ? AppColors.darkDivider
-                        : AppColors.lightDivider,
-                  ),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: MenuItemTile(
-                  icon: Icons.lock_outline,
-                  title: loc.changePassword,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ChangePasswordPage(
-                          isDarkMode: widget.isDarkMode,
-                          languageCode: widget.languageCode,
-                        ),
-                      ),
-                    );
-                  },
-                  isDarkMode: widget.isDarkMode,
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Age Field
-              CustomTextField(
-                controller: _ageController,
-                labelText: loc.age,
-                prefixIcon: Icons.calendar_today_outlined,
-                isDarkMode: widget.isDarkMode,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.done,
-                validator: (value) {
-                  final age = int.tryParse(value ?? '');
-                  if (age == null) {
-                    return 'Age is required';
-                  }
-                  if (age < 13) {
-                    return 'Must be at least 13 years old';
-                  }
-                  if (age > 150) {
-                    return 'Invalid age';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 32),
-
-              // Buttons Row
-              Row(
-                children: [
-                  Expanded(
-                    child: SecondaryButton(
-                      text: loc.cancel,
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: PrimaryButton(
-                      text: loc.save,
-                      onPressed: _isLoading ? null : _saveChanges,
-                      isLoading: _isLoading,
-                      icon: Icons.check,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+          child: Column(children: [
+            CustomTextField(controller: _usernameController, labelText: loc.username, prefixIcon: Icons.person_outline, textInputAction: TextInputAction.next, validator: (v) => v?.isEmpty == true ? 'Username is required' : null),
+            const SizedBox(height: 16),
+            CustomTextField(controller: _emailController, labelText: loc.email, prefixIcon: Icons.email_outlined, keyboardType: TextInputType.emailAddress, textInputAction: TextInputAction.next, validator: (v) => v?.isEmpty == true ? 'Email is required' : (!v!.contains('@') ? 'Invalid email' : null)),
+            const SizedBox(height: 16),
+            Container(
+              decoration: BoxDecoration(color: theme.cardColor, border: Border.all(style: BorderStyle.solid, color: theme.colorScheme.outline), borderRadius: BorderRadius.circular(14)),
+              child: MenuItemTile(icon: Icons.lock_outline, title: loc.changePassword, onTap: () => context.push('/settings/change-password')),
+            ),
+            const SizedBox(height: 16),
+            CustomTextField(controller: _ageController, labelText: loc.age, prefixIcon: Icons.calendar_today_outlined, keyboardType: TextInputType.number, textInputAction: TextInputAction.done, validator: (v) {
+              final age = int.tryParse(v ?? '');
+              if (age == null) return 'Age is required';
+              if (age < 13) return 'Must be at least 13 years old';
+              if (age > 150) return 'Invalid age';
+              return null;
+            }),
+            const SizedBox(height: 32),
+            Row(children: [
+              Expanded(child: SecondaryButton(text: loc.cancel, onPressed: () => Navigator.pop(context))),
+              const SizedBox(width: 16),
+              Expanded(child: PrimaryButton(text: loc.save, onPressed: _isLoading ? null : _saveChanges, isLoading: _isLoading, icon: Icons.check)),
+            ]),
+          ]),
         ),
       ),
     );
