@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:nutrizham/presentation/providers/settings_provider.dart';
 import 'package:nutrizham/presentation/providers/favorites_provider.dart';
-import 'package:nutrizham/data/models/meals_data.dart';
+import 'package:nutrizham/presentation/providers/recipe_provider.dart';
+import 'package:nutrizham/domain/entities/recipe.dart';
+import 'package:nutrizham/domain/entities/meal_category.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/empty_state_widget.dart';
 import 'package:nutrizham/presentation/widgets/custom_app_bar.dart';
 import 'package:nutrizham/presentation/widgets/search_bar_widget.dart';
@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
   bool _isLoading = true;
   bool _isLoadingMore = false;
   bool _hasMore = true;
-  DocumentSnapshot? _lastDocument;
+  String? _lastRecipeTitle;
   final int _pageSize = 25;
 
   late final FavoritesProvider _favoritesProvider;
@@ -64,20 +64,19 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _loadNextBatch() async {
-    if (_isLoadingMore || !_hasMore) return;
+    if (_isLoadingMore || !_hasMore) {
+      return;
+    }
     setState(() => _isLoadingMore = true);
 
     try {
-      Query query = FirebaseFirestore.instance
-          .collection('recipes')
-          .orderBy('title')
-          .limit(_pageSize);
-      if (_lastDocument != null) {
-        query = query.startAfterDocument(_lastDocument!);
-      }
+      final recipeProvider = context.read<RecipeProvider>();
+      final newRecipes = await recipeProvider.getNextBatch(
+        lastRecipeTitle: _lastRecipeTitle,
+        limit: _pageSize,
+      );
 
-      final snapshot = await query.get();
-      if (snapshot.docs.isEmpty) {
+      if (newRecipes.isEmpty) {
         setState(() {
           _hasMore = false;
           _isLoadingMore = false;
@@ -86,13 +85,10 @@ class _HomePageState extends State<HomePage> {
         return;
       }
 
-      final newRecipes = snapshot.docs
-          .map((doc) => Recipe.fromJson(doc.data() as Map<String, dynamic>))
-          .toList();
       if (mounted) {
         setState(() {
           _allRecipes.addAll(newRecipes);
-          _lastDocument = snapshot.docs.last;
+          _lastRecipeTitle = newRecipes.last.title['en'] ?? '';
           _hasMore = newRecipes.length == _pageSize;
           _isLoadingMore = false;
           _isLoading = false;

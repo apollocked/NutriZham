@@ -4,6 +4,7 @@ import 'package:nutrizham/presentation/providers/settings_provider.dart';
 import 'package:nutrizham/presentation/providers/auth_provider.dart';
 import 'package:nutrizham/presentation/providers/favorites_provider.dart';
 import 'package:nutrizham/presentation/providers/meal_planner_provider.dart';
+import 'package:nutrizham/presentation/providers/recipe_provider.dart';
 import 'package:nutrizham/presentation/router/app_router.dart';
 import 'package:nutrizham/core/themes/app_theme.dart';
 import 'package:nutrizham/data/datasources/favorites_helper.dart';
@@ -70,6 +71,7 @@ class _NutriZhamAppState extends State<NutriZhamApp> {
               ChangeNotifierProvider(create: (_) => AuthProvider()),
               ChangeNotifierProvider(create: (_) => FavoritesProvider()),
               ChangeNotifierProvider(create: (_) => MealPlannerProvider()),
+              ChangeNotifierProvider(create: (_) => RecipeProvider()),
             ],
             child: MaterialApp.router(
               debugShowCheckedModeBanner: false,

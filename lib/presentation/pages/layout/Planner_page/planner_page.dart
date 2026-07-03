@@ -1,10 +1,8 @@
-// ignore_for_file: avoid_types_as_parameter_names
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:nutrizham/presentation/providers/meal_planner_provider.dart';
-import 'package:nutrizham/data/models/meals_data.dart';
+import 'package:nutrizham/presentation/providers/recipe_provider.dart';
+import 'package:nutrizham/domain/entities/recipe.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/empty_state_widget.dart';
 import 'package:nutrizham/presentation/widgets/custom_app_bar.dart';
 import 'package:nutrizham/presentation/widgets/recipe_card.dart';
@@ -30,10 +28,8 @@ class _PlannerPageState extends State<PlannerPage> {
   }
 
   Future<void> _loadRecipes() async {
-    final snapshot =
-        await FirebaseFirestore.instance.collection('recipes').get();
-    final recipesList =
-        snapshot.docs.map((doc) => Recipe.fromJson(doc.data())).toList();
+    final recipes = context.read<RecipeProvider>();
+    final recipesList = await recipes.getAll();
     if (mounted) setState(() => _allRecipes = recipesList);
   }
 
@@ -56,17 +52,17 @@ class _PlannerPageState extends State<PlannerPage> {
 
   int get _totalCalories => _allRecipes
       .where((r) => _plannerProvider.isInPlan(r.id))
-      .fold(0, (sum, r) => sum + r.nutrition.calories);
+      .fold(0, (total, r) => total + r.nutrition.calories);
 
   double get _totalProtein => _allRecipes
       .where((r) => _plannerProvider.isInPlan(r.id))
-      .fold(0.0, (sum, r) => sum + r.nutrition.protein);
+      .fold(0.0, (total, r) => total + r.nutrition.protein);
   double get _totalCarbs => _allRecipes
       .where((r) => _plannerProvider.isInPlan(r.id))
-      .fold(0.0, (sum, r) => sum + r.nutrition.carbs);
+      .fold(0.0, (total, r) => total + r.nutrition.carbs);
   double get _totalFats => _allRecipes
       .where((r) => _plannerProvider.isInPlan(r.id))
-      .fold(0.0, (sum, r) => sum + r.nutrition.fats);
+      .fold(0.0, (total, r) => total + r.nutrition.fats);
 
   @override
   Widget build(BuildContext context) {

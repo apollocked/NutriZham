@@ -37,10 +37,10 @@ class _WelcomePageState extends State<WelcomePage> {
   Future<void> _continue() async {
     await PreferencesHelper.setLanguageCode(_selectedLanguage);
     await PreferencesHelper.setIsDarkMode(_isDarkMode);
+    final settings = context.read<SettingsProvider>();
     await PreferencesHelper.setWelcomeShown(true);
     if (!mounted) return;
 
-    final settings = context.read<SettingsProvider>();
     await settings.setDarkMode(_isDarkMode);
     await settings.setLanguageCode(_selectedLanguage);
 

@@ -1,15 +1,15 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:nutrizham/presentation/providers/auth_provider.dart';
 import 'package:nutrizham/presentation/providers/settings_provider.dart';
 import 'package:nutrizham/presentation/providers/favorites_provider.dart';
 import 'package:nutrizham/presentation/providers/meal_planner_provider.dart';
+import 'package:nutrizham/presentation/providers/recipe_provider.dart';
 import 'package:nutrizham/data/models/user_model.dart';
-import 'package:nutrizham/data/models/meals_data.dart';
+import 'package:nutrizham/domain/entities/recipe.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/empty_state_widget.dart';
 import 'package:nutrizham/presentation/widgets/stat_and_menu_widgets.dart';
 import 'package:nutrizham/presentation/widgets/recipe_card.dart';
@@ -51,11 +51,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _loadRecipesFromFirebase() async {
     try {
-      final snapshot =
-          await FirebaseFirestore.instance.collection('recipes').get();
-      final recipesList =
-          snapshot.docs.map((doc) => Recipe.fromJson(doc.data())).toList();
-      if (mounted) setState(() => _allRecipes = recipesList);
+      final recipes = context.read<RecipeProvider>();
+      final allRecipes = await recipes.getAll();
+      if (mounted) setState(() => _allRecipes = allRecipes);
     } catch (_) {}
   }
 

@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:nutrizham/presentation/providers/settings_provider.dart';
-import 'package:nutrizham/data/models/meals_data.dart';
+import 'package:nutrizham/presentation/providers/recipe_provider.dart';
+import 'package:nutrizham/domain/entities/recipe.dart';
+import 'package:nutrizham/domain/entities/meal_category.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/empty_state_widget.dart';
 import 'package:nutrizham/presentation/widgets/custom_app_bar.dart';
 import 'package:nutrizham/presentation/widgets/search_bar_widget.dart';
@@ -31,8 +31,8 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Future<void> _loadRecipes() async {
-    final snapshot = await FirebaseFirestore.instance.collection('recipes').get();
-    final recipesList = snapshot.docs.map((doc) => Recipe.fromJson(doc.data())).toList();
+    final recipes = context.read<RecipeProvider>();
+    final recipesList = await recipes.getAll();
     if (mounted) setState(() => _allRecipes = recipesList);
   }
 
@@ -43,7 +43,8 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   List<Recipe> get _filteredRecipes {
-    final langCode = context.read<SettingsProvider>().languageCode;
+    final loc = AppLocalizations.of(context);
+    final langCode = loc?.localeName ?? 'en';
     return _allRecipes.where((recipe) {
       final title = recipe.title[langCode] ?? recipe.title['en'] ?? '';
       final matchesSearch = _searchQuery.isEmpty || title.toLowerCase().contains(_searchQuery.toLowerCase());

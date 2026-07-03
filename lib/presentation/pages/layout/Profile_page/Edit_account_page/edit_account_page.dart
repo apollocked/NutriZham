@@ -55,6 +55,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
     setState(() => _isLoading = true);
 
     try {
+      final authProvider = context.read<AuthProvider>();
       final user = await _authService.getCurrentUser();
       if (user == null) return;
 
@@ -64,8 +65,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
         age: int.parse(_ageController.text),
       );
 
-      final result =
-          await context.read<AuthProvider>().updateProfile(updatedUser);
+      final result = await authProvider.updateProfile(updatedUser);
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
