@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:nutrizham/presentation/providers/auth_provider.dart';
-import 'package:nutrizham/widgets/Form_Wedgits/custom_text_field.dart';
-import 'package:nutrizham/widgets/Form_Wedgits/custom_buttons.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:nutrizham/widgets/Form_Widgets/custom_text_field.dart';
+import 'package:nutrizham/widgets/Form_Widgets/custom_buttons.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:nutrizham/presentation/providers/settings_provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 
 class MainNavigation extends StatelessWidget {
   final Widget child;

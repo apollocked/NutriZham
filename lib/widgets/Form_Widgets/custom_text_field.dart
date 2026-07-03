@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nutrizham/utils/app_colors.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -9,7 +8,6 @@ class CustomTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
   final Widget? suffixIcon;
-  final bool isDarkMode;
   final int? maxLines;
   final TextInputAction? textInputAction;
 
@@ -18,7 +16,6 @@ class CustomTextField extends StatelessWidget {
     required this.controller,
     required this.labelText,
     required this.prefixIcon,
-    required this.isDarkMode,
     this.obscureText = false,
     this.keyboardType = TextInputType.text,
     this.validator,
@@ -29,12 +26,11 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textColor = isDarkMode ? AppColors.darkText : AppColors.lightText;
-    final fillColor = isDarkMode ? AppColors.darkCard : const Color(0xFFF9FAFB);
+    final theme = Theme.of(context);
 
     return TextFormField(
       controller: controller,
-      style: TextStyle(color: textColor, fontSize: 15),
+      style: TextStyle(color: theme.colorScheme.onSurface, fontSize: 15),
       obscureText: obscureText,
       keyboardType: keyboardType,
       maxLines: maxLines,
@@ -42,19 +38,17 @@ class CustomTextField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: labelText,
         labelStyle: TextStyle(
-          color: isDarkMode
-              ? AppColors.darkTextSecondary
-              : AppColors.lightTextSecondary,
+          color: theme.colorScheme.onSurfaceVariant,
           fontSize: 14,
         ),
-        floatingLabelStyle: const TextStyle(
-          color: AppColors.primaryGreen,
+        floatingLabelStyle: TextStyle(
+          color: theme.colorScheme.primary,
           fontWeight: FontWeight.w600,
         ),
-        prefixIcon: Icon(prefixIcon, color: AppColors.primaryGreen, size: 22),
+        prefixIcon: Icon(prefixIcon, color: theme.colorScheme.primary, size: 22),
         suffixIcon: suffixIcon,
         filled: true,
-        fillColor: fillColor,
+        fillColor: theme.colorScheme.surfaceContainerHighest,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide.none,
@@ -62,20 +56,20 @@ class CustomTextField extends StatelessWidget {
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide(
-            color: isDarkMode ? AppColors.darkDivider : AppColors.lightDivider,
+            color: theme.colorScheme.outline,
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppColors.primaryGreen, width: 1.5),
+          borderSide: BorderSide(color: theme.colorScheme.primary, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppColors.error, width: 1),
+          borderSide: const BorderSide(color: Color(0xFFEF4444), width: 1),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppColors.error, width: 1.5),
+          borderSide: const BorderSide(color: Color(0xFFEF4444), width: 1.5),
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),

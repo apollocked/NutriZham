@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:nutrizham/utils/app_colors.dart';
 
 class EmptyStateWidget extends StatelessWidget {
   final IconData icon;
   final String title;
   final String? subtitle;
-  final bool isDarkMode;
   final Widget? action;
 
   const EmptyStateWidget({
     super.key,
     required this.icon,
     required this.title,
-    required this.isDarkMode,
     this.subtitle,
     this.action,
   });
 
   @override
   Widget build(BuildContext context) {
-    final textColor = isDarkMode ? AppColors.darkText : AppColors.lightText;
+    final theme = Theme.of(context);
 
     return Center(
       child: Padding(
@@ -30,7 +27,7 @@ class EmptyStateWidget extends StatelessWidget {
             Icon(
               icon,
               size: 64,
-              color: textColor.withOpacity(0.3),
+              color: theme.colorScheme.onSurface.withOpacity(0.3),
             ),
             const SizedBox(height: 24),
             Text(
@@ -38,7 +35,7 @@ class EmptyStateWidget extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: textColor.withOpacity(0.7),
+                color: theme.colorScheme.onSurface.withOpacity(0.7),
               ),
               textAlign: TextAlign.center,
             ),
@@ -48,7 +45,7 @@ class EmptyStateWidget extends StatelessWidget {
                 subtitle!,
                 style: TextStyle(
                   fontSize: 14,
-                  color: textColor.withOpacity(0.5),
+                  color: theme.colorScheme.onSurface.withOpacity(0.5),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -66,31 +63,29 @@ class EmptyStateWidget extends StatelessWidget {
 
 class LoadingWidget extends StatelessWidget {
   final String? message;
-  final bool isDarkMode;
 
   const LoadingWidget({
     super.key,
     this.message,
-    this.isDarkMode = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const CircularProgressIndicator(
-            color: AppColors.primaryGreen,
+            color: Color(0xFF10B981),
           ),
           if (message != null) ...[
             const SizedBox(height: 16),
             Text(
               message!,
               style: TextStyle(
-                color: isDarkMode
-                    ? AppColors.darkTextSecondary
-                    : AppColors.lightTextSecondary,
+                color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
           ],
@@ -103,17 +98,17 @@ class LoadingWidget extends StatelessWidget {
 class ErrorWidget extends StatelessWidget {
   final String message;
   final VoidCallback? onRetry;
-  final bool isDarkMode;
 
   const ErrorWidget({
     super.key,
     required this.message,
-    required this.isDarkMode,
     this.onRetry,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -123,14 +118,14 @@ class ErrorWidget extends StatelessWidget {
             Icon(
               Icons.error_outline,
               size: 64,
-              color: AppColors.error.withOpacity(0.7),
+              color: const Color(0xFFEF4444).withOpacity(0.7),
             ),
             const SizedBox(height: 24),
             Text(
               message,
               style: TextStyle(
                 fontSize: 16,
-                color: isDarkMode ? AppColors.darkText : AppColors.lightText,
+                color: theme.colorScheme.onSurface,
               ),
               textAlign: TextAlign.center,
             ),
@@ -141,7 +136,7 @@ class ErrorWidget extends StatelessWidget {
                 icon: const Icon(Icons.refresh),
                 label: const Text('Retry'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryGreen,
+                  backgroundColor: const Color(0xFF10B981),
                   foregroundColor: Colors.white,
                 ),
               ),

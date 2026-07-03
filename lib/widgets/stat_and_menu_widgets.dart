@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:nutrizham/utils/app_colors.dart';
 
 class StatCard extends StatelessWidget {
   final IconData icon;
   final String label;
   final String value;
   final Color color;
-  final bool isDarkMode;
 
   const StatCard({
     super.key,
@@ -14,18 +12,19 @@ class StatCard extends StatelessWidget {
     required this.label,
     required this.value,
     required this.color,
-    required this.isDarkMode,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDarkMode ? AppColors.darkCard : Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: isDarkMode ? AppColors.darkDivider : AppColors.lightDivider,
+          color: theme.colorScheme.outline,
         ),
         boxShadow: [
           BoxShadow(
@@ -61,9 +60,7 @@ class StatCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w500,
-              color: isDarkMode
-                  ? AppColors.darkTextSecondary
-                  : AppColors.lightTextSecondary,
+              color: theme.colorScheme.onSurfaceVariant,
             ),
             textAlign: TextAlign.center,
           ),
@@ -81,14 +78,12 @@ class MenuItemTile extends StatelessWidget {
   final Color? iconColor;
   final Color? textColor;
   final bool showTrailing;
-  final bool isDarkMode;
 
   const MenuItemTile({
     super.key,
     required this.icon,
     required this.title,
     required this.onTap,
-    required this.isDarkMode,
     this.subtitle,
     this.iconColor,
     this.textColor,
@@ -97,9 +92,10 @@ class MenuItemTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final defaultTextColor =
-        textColor ?? (isDarkMode ? AppColors.darkText : AppColors.lightText);
-    final defaultIconColor = iconColor ?? AppColors.primaryGreen;
+        textColor ?? theme.colorScheme.onSurface;
+    final defaultIconColor = iconColor ?? theme.colorScheme.primary;
 
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
@@ -123,9 +119,7 @@ class MenuItemTile extends StatelessWidget {
           ? Text(
               subtitle!,
               style: TextStyle(
-                color: isDarkMode
-                    ? AppColors.darkTextSecondary
-                    : AppColors.lightTextSecondary,
+                color: theme.colorScheme.onSurfaceVariant,
                 fontSize: 13,
               ),
             )

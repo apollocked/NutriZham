@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:nutrizham/utils/app_colors.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final bool isDarkMode;
   final List<Widget>? actions;
   final Widget? leading;
   final bool centerTitle;
@@ -12,7 +10,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
     super.key,
     required this.title,
-    required this.isDarkMode,
     this.actions,
     this.leading,
     this.centerTitle = false,
@@ -29,8 +26,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           fontWeight: FontWeight.w700,
         ),
       ),
-      backgroundColor: isDarkMode ? AppColors.darkBackground : Colors.white,
-      foregroundColor: isDarkMode ? AppColors.darkText : AppColors.lightText,
       elevation: 0,
       centerTitle: centerTitle,
       actions: actions,

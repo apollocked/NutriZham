@@ -43,7 +43,7 @@ class AppTheme {
             color: AppColors.primaryGreen,
           );
         }
-        return TextStyle(
+        return const TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w500,
           color: AppColors.lightTextSecondary,
@@ -53,7 +53,8 @@ class AppTheme {
         if (states.contains(WidgetState.selected)) {
           return const IconThemeData(color: AppColors.primaryGreen, size: 24);
         }
-        return const IconThemeData(color: AppColors.lightTextSecondary, size: 24);
+        return const IconThemeData(
+            color: AppColors.lightTextSecondary, size: 24);
       }),
     ),
     inputDecorationTheme: InputDecorationTheme(
@@ -125,7 +126,8 @@ class AppTheme {
       backgroundColor: AppColors.lightSurface,
       selectedColor: AppColors.primaryGreen.withOpacity(0.12),
       labelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-      secondaryLabelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+      secondaryLabelStyle:
+          const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: const BorderSide(color: AppColors.lightDivider),
@@ -135,7 +137,7 @@ class AppTheme {
       color: AppColors.lightDivider,
       thickness: 1,
     ),
-    dialogTheme: DialogTheme(
+    dialogTheme: DialogThemeData(
       backgroundColor: AppColors.lightBackground,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -177,7 +179,7 @@ class AppTheme {
     ),
     navigationBarTheme: NavigationBarThemeData(
       elevation: 0,
-      backgroundColor: Color(0xFF1A1A2E),
+      backgroundColor: const Color(0xFF1A1A2E),
       indicatorColor: AppColors.primaryGreen.withOpacity(0.15),
       labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
       surfaceTintColor: Colors.transparent,
@@ -251,7 +253,8 @@ class AppTheme {
       backgroundColor: AppColors.darkCard.withOpacity(0.5),
       selectedColor: AppColors.primaryGreen.withOpacity(0.12),
       labelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-      secondaryLabelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+      secondaryLabelStyle:
+          const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: const BorderSide(color: AppColors.darkDivider),
@@ -261,7 +264,7 @@ class AppTheme {
       color: AppColors.darkDivider,
       thickness: 1,
     ),
-    dialogTheme: DialogTheme(
+    dialogTheme: DialogThemeData(
       backgroundColor: AppColors.darkBackground,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),

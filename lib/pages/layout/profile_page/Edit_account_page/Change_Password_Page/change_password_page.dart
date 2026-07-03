@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:nutrizham/services/Auth_Services/firebase_auth_service.dart';
 import 'package:nutrizham/widgets/custom_app_bar.dart';
-import 'package:nutrizham/widgets/Form_Wedgits/custom_text_field.dart';
-import 'package:nutrizham/widgets/Form_Wedgits/custom_buttons.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:nutrizham/widgets/Form_Widgets/custom_text_field.dart';
+import 'package:nutrizham/widgets/Form_Widgets/custom_buttons.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({super.key});

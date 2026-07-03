@@ -4,7 +4,7 @@ import 'package:nutrizham/presentation/providers/settings_provider.dart';
 import 'package:nutrizham/core/utils/features_helper.dart';
 import 'package:nutrizham/widgets/custom_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 
 class AppFeaturesPage extends StatelessWidget {
   const AppFeaturesPage({super.key});

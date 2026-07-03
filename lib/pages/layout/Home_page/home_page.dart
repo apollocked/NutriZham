@@ -5,11 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:nutrizham/presentation/providers/settings_provider.dart';
 import 'package:nutrizham/presentation/providers/favorites_provider.dart';
 import 'package:nutrizham/utils/meals_data.dart';
-import 'package:nutrizham/widgets/Form_Wedgits/empty_state_widget.dart';
+import 'package:nutrizham/widgets/Form_Widgets/empty_state_widget.dart';
 import 'package:nutrizham/widgets/custom_app_bar.dart';
 import 'package:nutrizham/widgets/search_bar_widget.dart';
 import 'package:nutrizham/widgets/recipe_card.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -121,7 +121,6 @@ class _HomePageState extends State<HomePage> {
     final paginatedRecipes = _paginatedRecipes;
     final loc = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final settings = context.watch<SettingsProvider>();
     final favorites = context.watch<FavoritesProvider>();
 
     return Scaffold(

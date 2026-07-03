@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:nutrizham/utils/app_colors.dart';
 
 class CustomSearchBar extends StatelessWidget {
   final String hintText;
   final String searchQuery;
   final Function(String) onChanged;
   final VoidCallback? onClear;
-  final bool isDarkMode;
   final TextEditingController? controller;
 
   const CustomSearchBar({
@@ -14,20 +12,19 @@ class CustomSearchBar extends StatelessWidget {
     required this.hintText,
     required this.searchQuery,
     required this.onChanged,
-    required this.isDarkMode,
     this.onClear,
     this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
-    final textColor = isDarkMode ? AppColors.darkText : AppColors.lightText;
+    final theme = Theme.of(context);
 
     return Container(
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: AppColors.primaryGreen.withOpacity(0.06),
+            color: theme.colorScheme.primary.withOpacity(0.06),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -35,35 +32,29 @@ class CustomSearchBar extends StatelessWidget {
       ),
       child: TextField(
         controller: controller,
-        style: TextStyle(color: textColor, fontSize: 15),
+        style: TextStyle(color: theme.colorScheme.onSurface, fontSize: 15),
         onChanged: onChanged,
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: TextStyle(
-            color: isDarkMode
-                ? AppColors.darkTextSecondary
-                : AppColors.lightTextSecondary,
+            color: theme.colorScheme.onSurfaceVariant,
             fontSize: 15,
           ),
           prefixIcon: Icon(
             Icons.search_rounded,
-            color: isDarkMode
-                ? AppColors.darkTextSecondary
-                : AppColors.lightTextSecondary,
+            color: theme.colorScheme.onSurfaceVariant,
           ),
           suffixIcon: searchQuery.isNotEmpty && onClear != null
               ? IconButton(
                   icon: Icon(
                     Icons.clear_rounded,
-                    color: isDarkMode
-                        ? AppColors.darkTextSecondary
-                        : AppColors.lightTextSecondary,
+                    color: theme.colorScheme.onSurfaceVariant,
                   ),
                   onPressed: onClear,
                 )
               : null,
           filled: true,
-          fillColor: isDarkMode ? AppColors.darkCard : const Color(0xFFF3F4F6),
+          fillColor: theme.colorScheme.surfaceContainerHighest,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
             borderSide: BorderSide.none,

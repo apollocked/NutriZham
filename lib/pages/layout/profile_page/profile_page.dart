@@ -8,10 +8,10 @@ import 'package:nutrizham/presentation/providers/favorites_provider.dart';
 import 'package:nutrizham/presentation/providers/meal_planner_provider.dart';
 import 'package:nutrizham/models/user_model.dart';
 import 'package:nutrizham/utils/meals_data.dart';
-import 'package:nutrizham/widgets/Form_Wedgits/empty_state_widget.dart';
+import 'package:nutrizham/widgets/Form_Widgets/empty_state_widget.dart';
 import 'package:nutrizham/widgets/stat_and_menu_widgets.dart';
 import 'package:nutrizham/widgets/recipe_card.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -50,7 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _loadRecipesFromFirebase() async {
     try {
       final snapshot = await FirebaseFirestore.instance.collection('recipes').get();
-      final recipesList = snapshot.docs.map((doc) => Recipe.fromJson(doc.data() as Map<String, dynamic>)).toList();
+      final recipesList = snapshot.docs.map((doc) => Recipe.fromJson(doc.data())).toList();
       if (mounted) setState(() => _allRecipes = recipesList);
     } catch (_) {}
   }

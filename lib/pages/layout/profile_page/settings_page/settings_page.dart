@@ -5,7 +5,7 @@ import 'package:nutrizham/presentation/providers/settings_provider.dart';
 import 'package:nutrizham/presentation/providers/auth_provider.dart';
 import 'package:nutrizham/widgets/custom_app_bar.dart';
 import 'package:nutrizham/widgets/stat_and_menu_widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -20,7 +20,7 @@ class SettingsPage extends StatelessWidget {
       appBar: CustomAppBar(title: loc.settings),
       body: ListView(children: [
         const SizedBox(height: 16),
-        _buildSectionHeader(loc.accountSettings),
+        _buildSectionHeader(loc.accountSettings, theme),
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(color: theme.cardColor, borderRadius: BorderRadius.circular(14), border: Border.all(color: theme.colorScheme.outline)),
@@ -31,7 +31,7 @@ class SettingsPage extends StatelessWidget {
           ]),
         ),
         const SizedBox(height: 24),
-        _buildSectionHeader('Appearance'),
+        _buildSectionHeader('Appearance', theme),
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(color: theme.cardColor, borderRadius: BorderRadius.circular(14), border: Border.all(color: theme.colorScheme.outline)),
@@ -93,8 +93,7 @@ class SettingsPage extends StatelessWidget {
     }
   }
 
-  Widget _buildSectionHeader(String title) {
-    final theme = Theme.of(context);
+  Widget _buildSectionHeader(String title, ThemeData theme) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
       child: Row(children: [

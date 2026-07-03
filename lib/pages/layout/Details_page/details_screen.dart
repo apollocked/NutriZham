@@ -5,7 +5,7 @@ import 'package:nutrizham/widgets/custom_app_bar.dart';
 import 'package:nutrizham/widgets/nutrition_info_widget.dart';
 import 'package:nutrizham/widgets/category_widgets.dart';
 import 'package:nutrizham/utils/meals_data.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 
 class RecipeDetailScreen extends StatefulWidget {
   final Recipe recipe;

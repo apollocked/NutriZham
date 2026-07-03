@@ -1,0 +1,384 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for English (`en`).
+class AppLocalizationsEn extends AppLocalizations {
+  AppLocalizationsEn([String locale = 'en']) : super(locale);
+
+  @override
+  String get appTitle => 'NutriZham';
+
+  @override
+  String get login => 'Login';
+
+  @override
+  String get register => 'Register';
+
+  @override
+  String get logout => 'Logout';
+
+  @override
+  String get username => 'Username';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get age => 'Age';
+
+  @override
+  String get confirmPassword => 'Confirm Password';
+
+  @override
+  String get alreadyHaveAccount => 'Already have an account?';
+
+  @override
+  String get dontHaveAccount => 'Don\'t have an account?';
+
+  @override
+  String get forgotPassword => 'Forgot Password?';
+
+  @override
+  String get validatingEmail => 'Enter Your Email Address.';
+
+  @override
+  String get changePassword => 'Change Password';
+
+  @override
+  String get currentPassword => 'Current Password';
+
+  @override
+  String get newPassword => 'New Password';
+
+  @override
+  String get enterCurrentPassword => 'Enter current password';
+
+  @override
+  String get enterNewPassword => 'Enter new password';
+
+  @override
+  String get confirmNewPassword => 'Confirm new password';
+
+  @override
+  String get currentPasswordRequired => 'Current password is required';
+
+  @override
+  String get newPasswordRequired => 'New password is required';
+
+  @override
+  String get passwordTooShort => 'Password must be 6 characters';
+
+  @override
+  String get confirmPasswordRequired => 'Please confirm your password';
+
+  @override
+  String get passwordsDoNotMatch => 'Passwords do not match';
+
+  @override
+  String get verifyPassword => 'Verify Password';
+
+  @override
+  String get validating => 'Validating...';
+
+  @override
+  String get passwordVerified => 'Password verified';
+
+  @override
+  String get wrongPassword => 'Wrong password';
+
+  @override
+  String get pleaseVerifyCurrentPassword =>
+      'Please verify current password first';
+
+  @override
+  String get updatePassword => 'Update Password';
+
+  @override
+  String get passwordInfoMessage =>
+      'Please enter your current password and your new password. Your new password must be 6 characters.';
+
+  @override
+  String get pleaseFillAllFields => 'Please fill in all required fields';
+
+  @override
+  String get errorUpdatingPassword => 'Error updating password';
+
+  @override
+  String get home => 'Home';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get planner => 'Planner';
+
+  @override
+  String get profile => 'Profile';
+
+  @override
+  String get recipes => 'Recipes';
+
+  @override
+  String get searchPlaceholder => 'Search recipes or ingredients...';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get recipesFound => 'recipes found';
+
+  @override
+  String get recipeFound => 'recipe found';
+
+  @override
+  String get noRecipesFound => 'No recipes found';
+
+  @override
+  String get tryDifferentSearch => 'Try a different search or filter';
+
+  @override
+  String get noFavorites => 'No favorites yet';
+
+  @override
+  String get tapToSave => 'Tap the + icon on recipes to save them';
+
+  @override
+  String get recipeOfTheDay => 'Recipe of the Day';
+
+  @override
+  String get breakfast => 'Breakfast';
+
+  @override
+  String get lunch => 'Lunch';
+
+  @override
+  String get dinner => 'Dinner';
+
+  @override
+  String get snack => 'Snack';
+
+  @override
+  String get bulking => 'Bulking';
+
+  @override
+  String get cutting => 'Cutting';
+
+  @override
+  String get nutritionalInfo => 'Nutritional Information';
+
+  @override
+  String get calories => 'Calories';
+
+  @override
+  String get protein => 'Protein';
+
+  @override
+  String get carbs => 'Carbs';
+
+  @override
+  String get fats => 'Fats';
+
+  @override
+  String get ingredients => 'Ingredients';
+
+  @override
+  String get preparationSteps => 'Preparation Steps';
+
+  @override
+  String get rating => 'Rating';
+
+  @override
+  String get ratings => 'ratings';
+
+  @override
+  String get rateThisMeal => 'Rate this Meal';
+
+  @override
+  String get yourRating => 'Your Rating';
+
+  @override
+  String get submitRating => 'Submit Rating';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get darkMode => 'Dark Mode';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get kurdish => 'کوردی';
+
+  @override
+  String get arabic => 'العربية';
+
+  @override
+  String get editAccount => 'Edit Account';
+
+  @override
+  String get deleteAccount => 'Delete Account';
+
+  @override
+  String get areYouSure => 'Are you sure?';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get update => 'Update';
+
+  @override
+  String get send => 'Send';
+
+  @override
+  String get appFeature => 'App Features';
+
+  @override
+  String get myProfile => 'My Profile';
+
+  @override
+  String get favorites => 'Favorites';
+
+  @override
+  String get accountSettings => 'Account Settings';
+
+  @override
+  String get memberSince => 'Member since';
+
+  @override
+  String get mealPlanner => 'Meal Planner';
+
+  @override
+  String get emptyPlan => 'Your Daily Plan is Empty';
+
+  @override
+  String get dailyPlan => 'Daily Plan';
+
+  @override
+  String get weeklyPlan => 'Weekly Plan';
+
+  @override
+  String get recommendedMeals => 'Recommended Meals';
+
+  @override
+  String get basedOnYourGoals => 'Based on your fitness goals';
+
+  @override
+  String get totalCalories => 'Total Calories';
+
+  @override
+  String get todaysMeals => 'Today\'s Meals';
+
+  @override
+  String get addToPlan => 'Add to Plan';
+
+  @override
+  String get removeFromPlan => 'Remove from Plan';
+
+  @override
+  String get success => 'Success';
+
+  @override
+  String get error => 'Error';
+
+  @override
+  String get loading => 'Loading';
+
+  @override
+  String get pleaseWait => 'Please wait...';
+
+  @override
+  String get accountDeleted => 'Account deleted successfully';
+
+  @override
+  String get accountUpdated => 'Account updated successfully';
+
+  @override
+  String get loginSuccess => 'Login successful';
+
+  @override
+  String get registerSuccess => 'Registration successful';
+
+  @override
+  String get yourPlanIsEmpty => 'Your daily meal plan is empty';
+
+  @override
+  String get startAddingMeals => 'Start adding meals from the home page';
+
+  @override
+  String get noRecipesAvailable => 'No recipes available';
+
+  @override
+  String get welcomeTo => 'Welcome to';
+
+  @override
+  String get selectLanguage => 'Select your preferred language';
+
+  @override
+  String get continue_text => 'Continue';
+
+  @override
+  String get emailAddress => 'Email Address';
+
+  @override
+  String get welcome => 'Welcome';
+
+  @override
+  String get selectTheme => 'Choose your preferred theme';
+
+  @override
+  String get lightMode => 'Light Mode';
+
+  @override
+  String get appFeatures => 'App Features';
+
+  @override
+  String get version => 'Version';
+
+  @override
+  String get developedBy => 'Developed By';
+
+  @override
+  String get helpSupport => 'Help & Support';
+
+  @override
+  String get contactUs =>
+      'If you have any issues or questions, please contact us:';
+
+  @override
+  String get builtWith => 'Built with ❤️ in Kurdistan.';
+
+  @override
+  String get allFeatures => 'All Features';
+
+  @override
+  String get recipesApp => 'Recipes & Meal Planning App';
+
+  @override
+  String get descriptionFlutterFirebase =>
+      'This app was developed for Flutter and Firebase learning purposes. The code is open source.';
+
+  @override
+  String get emailSupport => 'hamabarznji1990@gmail.com';
+
+  @override
+  String get appDescription =>
+      'A comprehensive fitness nutrition app with meal planning';
+}

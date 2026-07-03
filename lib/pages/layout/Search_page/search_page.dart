@@ -4,12 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:nutrizham/presentation/providers/settings_provider.dart';
 import 'package:nutrizham/utils/meals_data.dart';
-import 'package:nutrizham/widgets/Form_Wedgits/empty_state_widget.dart';
+import 'package:nutrizham/widgets/Form_Widgets/empty_state_widget.dart';
 import 'package:nutrizham/widgets/custom_app_bar.dart';
 import 'package:nutrizham/widgets/search_bar_widget.dart';
 import 'package:nutrizham/widgets/category_widgets.dart';
 import 'package:nutrizham/widgets/recipe_card.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -32,7 +32,7 @@ class _SearchPageState extends State<SearchPage> {
 
   Future<void> _loadRecipes() async {
     final snapshot = await FirebaseFirestore.instance.collection('recipes').get();
-    final recipesList = snapshot.docs.map((doc) => Recipe.fromJson(doc.data() as Map<String, dynamic>)).toList();
+    final recipesList = snapshot.docs.map((doc) => Recipe.fromJson(doc.data())).toList();
     if (mounted) setState(() => _allRecipes = recipesList);
   }
 
@@ -56,7 +56,6 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     final filteredRecipes = _filteredRecipes;
-    final settings = context.watch<SettingsProvider>();
 
     return Scaffold(
       appBar: CustomAppBar(title: loc.search),

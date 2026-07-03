@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/utils/app_colors.dart';
 import 'package:nutrizham/utils/meals_data.dart';
-import 'package:nutrizham/utils/app_localizations.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 
 class RecipeCard extends StatelessWidget {
   final Recipe recipe;
-  final bool isDarkMode;
-  final String languageCode;
   final bool isFavorite;
   final VoidCallback onFavoriteToggle;
   final VoidCallback onTap;
@@ -14,44 +12,25 @@ class RecipeCard extends StatelessWidget {
   const RecipeCard({
     super.key,
     required this.recipe,
-    required this.isDarkMode,
-    required this.languageCode,
     required this.isFavorite,
     required this.onFavoriteToggle,
     required this.onTap,
   });
 
-  String _getCategoryName(MealCategory category) {
-    final loc = AppLocalizations.of(languageCode);
-    switch (category) {
-      case MealCategory.breakfast:
-        return loc.breakfast;
-      case MealCategory.lunch:
-        return loc.lunch;
-      case MealCategory.dinner:
-        return loc.dinner;
-      case MealCategory.snack:
-        return loc.snack;
-      case MealCategory.bulking:
-        return loc.bulking;
-      case MealCategory.cutting:
-        return loc.cutting;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final textColor = isDarkMode ? AppColors.darkText : AppColors.lightText;
+    final theme = Theme.of(context);
+    final locale = Localizations.localeOf(context).languageCode;
     final catName = recipe.category.toString().split('.').last;
     final catColor = AppColors.getCategoryColor(catName);
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
-        color: isDarkMode ? AppColors.darkCard : Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: isDarkMode ? AppColors.darkDivider : AppColors.lightDivider,
+          color: theme.colorScheme.outline,
         ),
         boxShadow: [
           BoxShadow(
@@ -91,11 +70,11 @@ class RecipeCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        recipe.title[languageCode] ?? recipe.title['en'] ?? '',
+                        recipe.title[locale] ?? recipe.title['en'] ?? '',
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 15,
-                          color: textColor,
+                          color: theme.colorScheme.onSurface,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -111,7 +90,7 @@ class RecipeCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
-                              _getCategoryName(recipe.category),
+                              _getCategoryName(recipe.category, context),
                               style: TextStyle(
                                 fontSize: 11,
                                 color: catColor,
@@ -124,9 +103,7 @@ class RecipeCard extends StatelessWidget {
                             '${recipe.nutrition.calories} kcal',
                             style: TextStyle(
                               fontSize: 13,
-                              color: isDarkMode
-                                  ? AppColors.darkTextSecondary
-                                  : AppColors.lightTextSecondary,
+                              color: theme.colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -157,37 +134,52 @@ class RecipeCard extends StatelessWidget {
       ),
     );
   }
+
+  String _getCategoryName(MealCategory category, BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+    switch (category) {
+      case MealCategory.breakfast:
+        return loc.breakfast;
+      case MealCategory.lunch:
+        return loc.lunch;
+      case MealCategory.dinner:
+        return loc.dinner;
+      case MealCategory.snack:
+        return loc.snack;
+      case MealCategory.bulking:
+        return loc.bulking;
+      case MealCategory.cutting:
+        return loc.cutting;
+    }
+  }
 }
 
 class CompactRecipeCard extends StatelessWidget {
   final Recipe recipe;
-  final bool isDarkMode;
-  final String languageCode;
   final VoidCallback? onTap;
   final Widget? trailing;
 
   const CompactRecipeCard({
     super.key,
     required this.recipe,
-    required this.isDarkMode,
-    required this.languageCode,
     this.onTap,
     this.trailing,
   });
 
   @override
   Widget build(BuildContext context) {
-    final textColor = isDarkMode ? AppColors.darkText : AppColors.lightText;
+    final theme = Theme.of(context);
+    final locale = Localizations.localeOf(context).languageCode;
     final catName = recipe.category.toString().split('.').last;
     final catColor = AppColors.getCategoryColor(catName);
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
-        color: isDarkMode ? AppColors.darkCard : Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isDarkMode ? AppColors.darkDivider : AppColors.lightDivider,
+          color: theme.colorScheme.outline,
         ),
       ),
       child: Material(
@@ -221,11 +213,9 @@ class CompactRecipeCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        recipe.title[languageCode] ??
-                            recipe.title['en'] ??
-                            '',
+                        recipe.title[locale] ?? recipe.title['en'] ?? '',
                         style: TextStyle(
-                          color: textColor,
+                          color: theme.colorScheme.onSurface,
                           fontWeight: FontWeight.w500,
                           fontSize: 14,
                         ),
@@ -237,9 +227,7 @@ class CompactRecipeCard extends StatelessWidget {
                         '${recipe.nutrition.calories} kcal',
                         style: TextStyle(
                           fontSize: 12,
-                          color: isDarkMode
-                              ? AppColors.darkTextSecondary
-                              : AppColors.lightTextSecondary,
+                          color: theme.colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],
