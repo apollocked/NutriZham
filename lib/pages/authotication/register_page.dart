@@ -115,15 +115,15 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // App Logo
                   Container(
                     width: 80,
                     height: 80,
                     decoration: BoxDecoration(
                       color: AppColors.primaryGreen.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(22),
                       border: Border.all(
                         color: AppColors.primaryGreen.withOpacity(0.3),
+                        width: 1.5,
                       ),
                     ),
                     child: Image.asset(
@@ -132,18 +132,18 @@ class _RegisterPageState extends State<RegisterPage> {
                       height: 40,
                     ),
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.005),
+                  const SizedBox(height: 24),
 
-                  // App Title
                   Text(
                     loc.appTitle,
                     style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 34,
+                      fontWeight: FontWeight.w700,
                       color: textColor,
+                      letterSpacing: -0.5,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 8),
                   Text(
                     loc.register,
                     style: TextStyle(
@@ -153,12 +153,10 @@ class _RegisterPageState extends State<RegisterPage> {
                           : AppColors.lightTextSecondary,
                     ),
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                  const SizedBox(height: 36),
 
-                  // Registration Form
                   Column(
                     children: [
-                      // Username Field
                       CustomTextField(
                         controller: _usernameController,
                         labelText: loc.username,
@@ -177,7 +175,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Email Field
                       CustomTextField(
                         controller: _emailController,
                         labelText: loc.email,
@@ -197,7 +194,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Age Field
                       CustomTextField(
                         controller: _ageController,
                         labelText: loc.age,
@@ -218,7 +214,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Password Field
                       CustomTextField(
                         controller: _passwordController,
                         labelText: loc.password,
@@ -229,8 +224,8 @@ class _RegisterPageState extends State<RegisterPage> {
                         suffixIcon: IconButton(
                           icon: Icon(
                             _obscurePassword
-                                ? Icons.visibility_off
-                                : Icons.visibility,
+                                ? Icons.visibility_off_rounded
+                                : Icons.visibility_rounded,
                             color: widget.isDarkMode
                                 ? AppColors.darkTextSecondary
                                 : AppColors.lightTextSecondary,
@@ -252,7 +247,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Confirm Password Field
                       CustomTextField(
                         controller: _confirmPasswordController,
                         labelText: loc.confirmPassword,
@@ -263,8 +257,8 @@ class _RegisterPageState extends State<RegisterPage> {
                         suffixIcon: IconButton(
                           icon: Icon(
                             _obscureConfirmPassword
-                                ? Icons.visibility_off
-                                : Icons.visibility,
+                                ? Icons.visibility_off_rounded
+                                : Icons.visibility_rounded,
                             color: widget.isDarkMode
                                 ? AppColors.darkTextSecondary
                                 : AppColors.lightTextSecondary,
@@ -281,9 +275,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 28),
 
-                      // Register Button
                       PrimaryButton(
                         text: loc.register,
                         onPressed: _register,
@@ -291,18 +284,18 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.07),
+                  const SizedBox(height: 40),
 
-                  // Login Link
                   Text(
                     loc.alreadyHaveAccount,
                     style: TextStyle(
                       color: widget.isDarkMode
                           ? AppColors.darkTextSecondary
                           : AppColors.lightTextSecondary,
+                      fontSize: 14,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 10),
                   IconTextButton(
                     text: loc.login,
                     onPressed: () {

@@ -157,15 +157,15 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // App Logo
                   Container(
                     width: 80,
                     height: 80,
                     decoration: BoxDecoration(
                       color: AppColors.primaryGreen.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(22),
                       border: Border.all(
                         color: AppColors.primaryGreen.withOpacity(0.3),
+                        width: 1.5,
                       ),
                     ),
                     child: Image.asset(
@@ -174,20 +174,20 @@ class _LoginPageState extends State<LoginPage> {
                       height: 40,
                     ),
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.005),
+                  const SizedBox(height: 24),
 
-                  // App Title
                   Text(
                     loc.appTitle,
                     style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 34,
+                      fontWeight: FontWeight.w700,
                       color: textColor,
+                      letterSpacing: -0.5,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 8),
                   Text(
-                    loc.register,
+                    loc.login,
                     style: TextStyle(
                       fontSize: 16,
                       color: widget.isDarkMode
@@ -195,12 +195,10 @@ class _LoginPageState extends State<LoginPage> {
                           : AppColors.lightTextSecondary,
                     ),
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                  const SizedBox(height: 40),
 
-                  // Login Form
                   Column(
                     children: [
-                      // Email Field
                       CustomTextField(
                         controller: _emailController,
                         labelText: loc.email,
@@ -218,9 +216,8 @@ class _LoginPageState extends State<LoginPage> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 16),
 
-                      // Password Field
                       CustomTextField(
                         controller: _passwordController,
                         labelText: loc.password,
@@ -231,8 +228,8 @@ class _LoginPageState extends State<LoginPage> {
                         suffixIcon: IconButton(
                           icon: Icon(
                             _obscurePassword
-                                ? Icons.visibility_off
-                                : Icons.visibility,
+                                ? Icons.visibility_off_rounded
+                                : Icons.visibility_rounded,
                             color: widget.isDarkMode
                                 ? AppColors.darkTextSecondary
                                 : AppColors.lightTextSecondary,
@@ -252,16 +249,14 @@ class _LoginPageState extends State<LoginPage> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 24),
 
-                      // Login Button
                       PrimaryButton(
                         text: loc.login,
                         onPressed: _login,
                         isLoading: _isLoading,
                       ),
                       const SizedBox(height: 16),
-                      // Add forgot password button in login form (after login button):
 
                       IconTextButton(
                         onPressed: _forgotPassword,
@@ -271,19 +266,18 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.2),
-                  // Register Link
+                  const SizedBox(height: 48),
+
                   Text(
                     loc.dontHaveAccount,
                     style: TextStyle(
                       color: widget.isDarkMode
                           ? AppColors.darkTextSecondary
                           : AppColors.lightTextSecondary,
+                      fontSize: 14,
                     ),
                   ),
-                  const SizedBox(
-                    height: 12,
-                  ),
+                  const SizedBox(height: 12),
                   IconTextButton(
                     text: loc.register,
                     onPressed: () {

@@ -24,7 +24,7 @@ class NutritionInfoCard extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isDarkMode ? AppColors.darkCard : Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(
           color: isDarkMode ? AppColors.darkDivider : AppColors.lightDivider,
         ),
@@ -32,15 +32,28 @@ class NutritionInfoCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            loc.nutritionalInfo,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: textColor,
-            ),
+          Row(
+            children: [
+              Container(
+                width: 4,
+                height: 20,
+                decoration: BoxDecoration(
+                  color: AppColors.primaryGreen,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                loc.nutritionalInfo,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: textColor,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -48,28 +61,28 @@ class NutritionInfoCard extends StatelessWidget {
                 value: '${nutrition.calories}',
                 label: loc.calories,
                 color: AppColors.caloriesColor,
-                icon: Icons.local_fire_department_outlined,
+                icon: Icons.local_fire_department_rounded,
                 isDarkMode: isDarkMode,
               ),
               _NutrientColumn(
                 value: '${nutrition.protein}g',
                 label: loc.protein,
                 color: AppColors.proteinColor,
-                icon: Icons.fitness_center_outlined,
+                icon: Icons.fitness_center_rounded,
                 isDarkMode: isDarkMode,
               ),
               _NutrientColumn(
                 value: '${nutrition.carbs}g',
                 label: loc.carbs,
                 color: AppColors.carbsColor,
-                icon: Icons.bakery_dining_outlined,
+                icon: Icons.bakery_dining_rounded,
                 isDarkMode: isDarkMode,
               ),
               _NutrientColumn(
                 value: '${nutrition.fats}g',
                 label: loc.fats,
                 color: AppColors.fatsColor,
-                icon: Icons.water_drop_outlined,
+                icon: Icons.water_drop_rounded,
                 isDarkMode: isDarkMode,
               ),
             ],
@@ -100,27 +113,28 @@ class _NutrientColumn extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: color.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(icon, color: color, size: 24),
+          child: Icon(icon, color: color, size: 22),
         ),
         const SizedBox(height: 8),
         Text(
           value,
           style: TextStyle(
             fontSize: 16,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w700,
             color: color,
           ),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 2),
         Text(
           label,
           style: TextStyle(
-            fontSize: 12,
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
             color: isDarkMode
                 ? AppColors.darkTextSecondary
                 : AppColors.lightTextSecondary,
@@ -208,7 +222,7 @@ class NutritionSummaryBar extends StatelessWidget {
         Text(
           value,
           style: TextStyle(
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w700,
             fontSize: 14,
             color: color,
           ),

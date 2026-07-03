@@ -63,6 +63,7 @@ class AppLocalizations {
   String get tryDifferentSearch => _get('tryDifferentSearch');
   String get noFavorites => _get('noFavorites');
   String get tapToSave => _get('tapToSave');
+  String get recipeOfTheDay => _get('recipeOfTheDay');
 
   // Categories
   String get breakfast => _get('breakfast');
@@ -195,6 +196,7 @@ class AppLocalizations {
       'tryDifferentSearch': 'Try a different search or filter',
       'noFavorites': 'No favorites yet',
       'tapToSave': 'Tap the + icon on recipes to save them',
+      'recipeOfTheDay': 'Recipe of the Day',
 
       // Categories
       'breakfast': 'Breakfast',
@@ -321,6 +323,7 @@ class AppLocalizations {
       'tryDifferentSearch': 'گەڕانێکی جیاواز تاقی بکەرەوە',
       'noFavorites': 'هێشتا هیچ دڵخوازێک نییە',
       'tapToSave': 'دوگمەی + دابگرە لەسەر ڕێچەتەکان بۆ پاشەکەوتکردنیان',
+      'recipeOfTheDay': 'ڕێچەتەی ڕۆژ',
 
       // Categories
       'breakfast': 'نانی بەیانی',
@@ -445,6 +448,7 @@ class AppLocalizations {
       'tryDifferentSearch': 'جرب بحثًا أو فلترًا مختلفًا',
       'noFavorites': 'لا توجد مفضلات بعد',
       'tapToSave': 'اضغط على أيقونة + على الوصفات لحفظها',
+      'recipeOfTheDay': 'وصفة اليوم',
 
       // Categories
       'breakfast': 'الإفطار',

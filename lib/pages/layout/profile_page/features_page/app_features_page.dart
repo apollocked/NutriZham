@@ -62,10 +62,17 @@ class AppFeaturesPage extends StatelessWidget {
           children: [
             // App Info Card
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: AppColors.primaryGreen.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.primaryGreen.withOpacity(0.1),
+                    AppColors.primaryGreenLight.withOpacity(0.05),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: AppColors.primaryGreen.withOpacity(0.3),
                 ),
@@ -77,10 +84,10 @@ class AppFeaturesPage extends StatelessWidget {
                     height: 60,
                     decoration: BoxDecoration(
                       color: AppColors.primaryGreen.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(16),
                     ),
                     child: const Icon(
-                      Icons.restaurant_menu,
+                      Icons.restaurant_menu_rounded,
                       color: AppColors.primaryGreen,
                       size: 32,
                     ),
@@ -94,7 +101,7 @@ class AppFeaturesPage extends StatelessWidget {
                           'NutriZham',
                           style: TextStyle(
                             fontSize: 20,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w700,
                             color: textColor,
                           ),
                         ),
@@ -107,14 +114,24 @@ class AppFeaturesPage extends StatelessWidget {
                                   : ' Recipes App',
                           style: TextStyle(
                             color: secondaryTextColor,
+                            fontSize: 14,
                           ),
                         ),
                         const SizedBox(height: 4),
-                        Text(
-                          'v2.0.0',
-                          style: TextStyle(
-                            color: secondaryTextColor,
-                            fontSize: 12,
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryGreen.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: const Text(
+                            'v2.0.0',
+                            style: TextStyle(
+                              color: AppColors.primaryGreen,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                       ],
@@ -125,18 +142,30 @@ class AppFeaturesPage extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            // Features Grid
-            Text(
-              languageCode == 'ku'
-                  ? 'هەموو تایبەتمەندییەکان'
-                  : languageCode == 'ar'
-                      ? 'جميع المميزات'
-                      : 'All Features',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: textColor,
-              ),
+              Row(
+              children: [
+                Container(
+                  width: 4,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryGreen,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  languageCode == 'ku'
+                      ? 'هەموو تایبەتمەندییەکان'
+                      : languageCode == 'ar'
+                          ? 'جميع المميزات'
+                          : 'All Features',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: textColor,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 16),
 
@@ -155,7 +184,7 @@ class AppFeaturesPage extends StatelessWidget {
                 return Container(
                   decoration: BoxDecoration(
                     color: cardColor,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(14),
                     border: Border.all(
                       color: isDarkMode
                           ? AppColors.darkDivider
@@ -163,7 +192,7 @@ class AppFeaturesPage extends StatelessWidget {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: feature['color'].withOpacity(0.06),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -175,11 +204,11 @@ class AppFeaturesPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          width: 40,
-                          height: 40,
+                          width: 44,
+                          height: 44,
                           decoration: BoxDecoration(
                             color: feature['color'].withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(
                             feature['icon'],
@@ -192,7 +221,7 @@ class AppFeaturesPage extends StatelessWidget {
                           feature['title'],
                           style: TextStyle(
                             fontSize: 15,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w700,
                             color: textColor,
                           ),
                           maxLines: 2,
@@ -221,10 +250,10 @@ class AppFeaturesPage extends StatelessWidget {
 
             // Development Info
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: cardColor,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(14),
                 border: Border.all(
                   color: isDarkMode
                       ? AppColors.darkDivider
@@ -236,12 +265,19 @@ class AppFeaturesPage extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const Icon(
-                        Icons.developer_mode,
-                        color: AppColors.primaryGreen,
-                        size: 20,
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryGreen.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(
+                          Icons.developer_mode_rounded,
+                          color: AppColors.primaryGreen,
+                          size: 20,
+                        ),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 12),
                       Text(
                         languageCode == 'ku'
                             ? 'گەشەپێدەران'
@@ -249,13 +285,14 @@ class AppFeaturesPage extends StatelessWidget {
                                 ? 'المطورون'
                                 : 'Developed By',
                         style: TextStyle(
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
                           color: textColor,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
                   Text(
                     languageCode == 'ku'
                         ? 'ئەم ئەپە بە فڵەتەر و فایەربەیس دروست کراوە. کۆدەکە کراوەیە و دەتوانیت بیبینیت.'
@@ -265,26 +302,35 @@ class AppFeaturesPage extends StatelessWidget {
                     style: TextStyle(
                       color: secondaryTextColor,
                       fontSize: 14,
-                      height: 1.5,
+                      height: 1.6,
                     ),
                   ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.code,
-                        color: AppColors.accentBlue,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Flutter • Firebase • Dart',
-                        style: TextStyle(
-                          color: secondaryTextColor,
-                          fontSize: 13,
+                  const SizedBox(height: 16),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: AppColors.accentBlue.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.code_rounded,
+                          color: AppColors.accentBlue,
+                          size: 16,
                         ),
-                      ),
-                    ],
+                        SizedBox(width: 8),
+                        Text(
+                          'Flutter • Firebase • Dart',
+                          style: TextStyle(
+                            color: AppColors.accentBlue,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -293,10 +339,10 @@ class AppFeaturesPage extends StatelessWidget {
 
             // Contact Support
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: cardColor,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(14),
                 border: Border.all(
                   color: isDarkMode
                       ? AppColors.darkDivider
@@ -308,12 +354,19 @@ class AppFeaturesPage extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const Icon(
-                        Icons.support_agent,
-                        color: AppColors.accentOrange,
-                        size: 20,
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColors.accentOrange.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(
+                          Icons.support_agent_rounded,
+                          color: AppColors.accentOrange,
+                          size: 20,
+                        ),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 12),
                       Text(
                         languageCode == 'ku'
                             ? 'یارمەتی و پشتگیری'
@@ -321,13 +374,14 @@ class AppFeaturesPage extends StatelessWidget {
                                 ? 'المساعدة والدعم'
                                 : 'Help & Support',
                         style: TextStyle(
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
                           color: textColor,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
                   Text(
                     languageCode == 'ku'
                         ? 'ئەگەر کێشەیەک یان پرسیارێکت هەیە، تکایە پەیوەندیمان پێوە بکە:'
@@ -337,32 +391,39 @@ class AppFeaturesPage extends StatelessWidget {
                     style: TextStyle(
                       color: secondaryTextColor,
                       fontSize: 14,
+                      height: 1.5,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.email,
-                        color: AppColors.primaryGreen,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 8),
-                      InkWell(
-                        onTap: _sendEmail,
-                        child: const Text(
-                          'hamabarznji1990@gmail.com',
-                          style: TextStyle(
-                            color: AppColors.primaryGreen,
-                            fontSize: 14,
-                            decoration: TextDecoration.underline,
+                  const SizedBox(height: 12),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryGreen.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.email_rounded,
+                          color: AppColors.primaryGreen,
+                          size: 18,
+                        ),
+                        const SizedBox(width: 10),
+                        InkWell(
+                          onTap: _sendEmail,
+                          child: const Text(
+                            'hamabarznji1990@gmail.com',
+                            style: TextStyle(
+                              color: AppColors.primaryGreen,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              decoration: TextDecoration.underline,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 8,
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -370,14 +431,19 @@ class AppFeaturesPage extends StatelessWidget {
             const SizedBox(height: 16),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: cardColor,
-                borderRadius: BorderRadius.circular(12),
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.primaryGreen.withOpacity(0.08),
+                    AppColors.primaryGreenLight.withOpacity(0.04),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(14),
                 border: Border.all(
-                  color: isDarkMode
-                      ? AppColors.darkDivider
-                      : AppColors.lightDivider,
+                  color: AppColors.primaryGreen.withOpacity(0.15),
                 ),
               ),
               child: const Center(
@@ -386,6 +452,7 @@ class AppFeaturesPage extends StatelessWidget {
                   style: TextStyle(
                     color: AppColors.primaryGreen,
                     fontSize: 14,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),

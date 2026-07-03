@@ -273,23 +273,43 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    _showFavoritesOnly ? loc.favorites : loc.recipes,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: widget.isDarkMode
-                          ? AppColors.darkText
-                          : AppColors.lightText,
-                    ),
+                  Row(
+                    children: [
+                      Container(
+                        width: 4,
+                        height: 20,
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryGreen,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        _showFavoritesOnly ? loc.favorites : loc.recipes,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: widget.isDarkMode
+                              ? AppColors.darkText
+                              : AppColors.lightText,
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    '${paginatedRecipes.length}',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: widget.isDarkMode
-                          ? AppColors.darkTextSecondary
-                          : AppColors.lightTextSecondary,
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryGreen.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      '${paginatedRecipes.length}',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primaryGreen,
+                      ),
                     ),
                   ),
                 ],
@@ -477,29 +497,53 @@ class _HomePageState extends State<HomePage> {
     final isFavorite = _favoriteIds.contains(recipe.id);
 
     return Container(
-      margin: const EdgeInsets.all(16),
+      margin: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        gradient: LinearGradient(
+          colors: [
+            AppColors.primaryGreen.withOpacity(0.08),
+            AppColors.primaryGreenLight.withOpacity(0.05),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        border: Border.all(
+          color: AppColors.primaryGreen.withOpacity(0.15),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Row(
-              children: [
-                const Icon(Icons.star, color: AppColors.primaryGreen, size: 20),
-                const SizedBox(width: 8),
-                Text(
-                  "Recipe of the Day",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: widget.isDarkMode
-                        ? AppColors.darkText
-                        : AppColors.lightText,
-                  ),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryGreen.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-              ],
-            ),
+                child: const Icon(
+                  Icons.star_rounded,
+                  color: AppColors.primaryGreen,
+                  size: 18,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                loc.recipeOfTheDay,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: widget.isDarkMode
+                      ? AppColors.darkText
+                      : AppColors.lightText,
+                ),
+              ),
+            ],
           ),
+          const SizedBox(height: 12),
           RecipeCard(
             recipe: recipe,
             isDarkMode: widget.isDarkMode,

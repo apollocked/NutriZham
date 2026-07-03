@@ -40,20 +40,21 @@ class CategoryFilterChips extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 40,
+      height: 42,
       child: ListView(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
-          // "All" chip
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: ChoiceChip(
               label: Text(_getCategoryName(null)),
               selected: selectedCategory == null,
               onSelected: (_) => onCategorySelected(null),
-              backgroundColor: Colors.transparent,
-              selectedColor: AppColors.primaryGreen.withOpacity(0.1),
+              backgroundColor: isDarkMode
+                  ? AppColors.darkCard.withOpacity(0.5)
+                  : Colors.grey[50],
+              selectedColor: AppColors.primaryGreen.withOpacity(0.12),
               labelStyle: TextStyle(
                 color: selectedCategory == null
                     ? AppColors.primaryGreen
@@ -61,6 +62,7 @@ class CategoryFilterChips extends StatelessWidget {
                         ? AppColors.darkTextSecondary
                         : AppColors.lightTextSecondary),
                 fontWeight: FontWeight.w500,
+                fontSize: 13,
               ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
@@ -70,12 +72,11 @@ class CategoryFilterChips extends StatelessWidget {
                       : (isDarkMode
                           ? AppColors.darkDivider
                           : AppColors.lightDivider),
-                  width: 1,
+                  width: selectedCategory == null ? 1.5 : 1,
                 ),
               ),
             ),
           ),
-          // Category chips
           ...MealCategory.values.map((category) => Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: ChoiceChip(
@@ -84,8 +85,10 @@ class CategoryFilterChips extends StatelessWidget {
                   onSelected: (bool selected) {
                     onCategorySelected(selected ? category : null);
                   },
-                  backgroundColor: Colors.transparent,
-                  selectedColor: AppColors.primaryGreen.withOpacity(0.1),
+                  backgroundColor: isDarkMode
+                      ? AppColors.darkCard.withOpacity(0.5)
+                      : Colors.grey[50],
+                  selectedColor: AppColors.primaryGreen.withOpacity(0.12),
                   labelStyle: TextStyle(
                     color: selectedCategory == category
                         ? AppColors.primaryGreen
@@ -93,6 +96,7 @@ class CategoryFilterChips extends StatelessWidget {
                             ? AppColors.darkTextSecondary
                             : AppColors.lightTextSecondary),
                     fontWeight: FontWeight.w500,
+                    fontSize: 13,
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
@@ -102,7 +106,7 @@ class CategoryFilterChips extends StatelessWidget {
                           : (isDarkMode
                               ? AppColors.darkDivider
                               : AppColors.lightDivider),
-                      width: 1,
+                      width: selectedCategory == category ? 1.5 : 1,
                     ),
                   ),
                 ),

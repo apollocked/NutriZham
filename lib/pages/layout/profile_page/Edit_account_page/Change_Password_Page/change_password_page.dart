@@ -194,22 +194,29 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Information section
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: AppColors.primaryGreenLight.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(14),
                   border: Border.all(
                     color: AppColors.primaryGreen.withOpacity(0.3),
                   ),
                 ),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(
-                      Icons.info_outline,
-                      color: AppColors.primaryGreen,
-                      size: 20,
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryGreen.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(
+                        Icons.info_outline_rounded,
+                        color: AppColors.primaryGreen,
+                        size: 18,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -229,14 +236,26 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               ),
               const SizedBox(height: 32),
 
-              // Current Password Section
-              Text(
-                localization.currentPassword,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: textColor,
-                ),
+              Row(
+                children: [
+                  Container(
+                    width: 4,
+                    height: 16,
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryGreen,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    localization.currentPassword,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: textColor,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 8),
               CustomTextField(
@@ -360,14 +379,26 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
               const SizedBox(height: 24),
 
-              // New Password Field
-              Text(
-                localization.newPassword,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: textColor,
-                ),
+              Row(
+                children: [
+                  Container(
+                    width: 4,
+                    height: 16,
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryGreen,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    localization.newPassword,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: textColor,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 8),
               CustomTextField(
@@ -399,14 +430,26 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               ),
               const SizedBox(height: 24),
 
-              // Confirm Password Field
-              Text(
-                localization.confirmPassword,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: textColor,
-                ),
+              Row(
+                children: [
+                  Container(
+                    width: 4,
+                    height: 16,
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryGreen,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    localization.confirmPassword,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: textColor,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 8),
               CustomTextField(

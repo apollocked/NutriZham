@@ -63,10 +63,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     }
   }
 
-  Future<void> _loadUserRating() async {
-    // For now, we'll keep this simple
-    // You can implement actual rating logic later
-  }
+  Future<void> _loadUserRating() async {}
 
   Future<void> _toggleFavorite() async {
     await FavoritesHelper.toggleFavorite(widget.recipe.id);
@@ -86,7 +83,6 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   }
 
   Future<void> _saveRating(int rating) async {
-    // Implement rating logic here
     final loc = AppLocalizations.of(widget.languageCode);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -99,6 +95,30 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     setState(() => _userRating = rating);
   }
 
+  Widget _buildSectionHeader(String title) {
+    return Row(
+      children: [
+        Container(
+          width: 4,
+          height: 20,
+          decoration: BoxDecoration(
+            color: AppColors.primaryGreen,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: widget.isDarkMode ? AppColors.darkText : AppColors.lightText,
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(widget.languageCode);
@@ -107,6 +127,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
         : AppColors.lightBackground;
     final textColor =
         widget.isDarkMode ? AppColors.darkText : AppColors.lightText;
+    final cardColor = widget.isDarkMode ? AppColors.darkCard : Colors.white;
     final recipeTitle = widget.recipe.title[widget.languageCode] ??
         widget.recipe.title['en'] ??
         '';
@@ -134,132 +155,114 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Category Badge
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
               child: CategoryBadge(
                 category: widget.recipe.category,
                 languageCode: widget.languageCode,
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Rating Section
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color:
-                          widget.isDarkMode ? AppColors.darkCard : Colors.white,
-                      borderRadius: BorderRadius.circular(12),
+                      color: cardColor,
+                      borderRadius: BorderRadius.circular(14),
                       border: Border.all(
                         color: widget.isDarkMode
                             ? AppColors.darkDivider
                             : AppColors.lightDivider,
                       ),
                     ),
-                    child: Column(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            Row(
                               children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      widget.recipe.rating.toStringAsFixed(1),
-                                      style: const TextStyle(
-                                        fontSize: 28,
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColors.starActive,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    const Icon(
-                                      Icons.star,
-                                      color: AppColors.starActive,
-                                      size: 28,
-                                    ),
-                                  ],
-                                ),
                                 Text(
-                                  '${widget.recipe.ratingCount} ${loc.ratings}',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: widget.isDarkMode
-                                        ? AppColors.darkTextSecondary
-                                        : AppColors.lightTextSecondary,
+                                  widget.recipe.rating.toStringAsFixed(1),
+                                  style: const TextStyle(
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.starActive,
                                   ),
+                                ),
+                                const SizedBox(width: 8),
+                                const Icon(
+                                  Icons.star_rounded,
+                                  color: AppColors.starActive,
+                                  size: 28,
                                 ),
                               ],
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  loc.yourRating,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: widget.isDarkMode
-                                        ? AppColors.darkTextSecondary
-                                        : AppColors.lightTextSecondary,
+                            const SizedBox(height: 4),
+                            Text(
+                              '${widget.recipe.ratingCount} ${loc.ratings}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: widget.isDarkMode
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              loc.yourRating,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: widget.isDarkMode
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextSecondary,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Row(
+                              children: List.generate(5, (index) {
+                                return GestureDetector(
+                                  onTap: () => _saveRating(index + 1),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 2),
+                                    child: Icon(
+                                      index < _userRating
+                                          ? Icons.star_rounded
+                                          : Icons.star_outline_rounded,
+                                      color: AppColors.starActive,
+                                      size: 22,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 4),
-                                Row(
-                                  children: List.generate(5, (index) {
-                                    return GestureDetector(
-                                      onTap: () => _saveRating(index + 1),
-                                      child: Icon(
-                                        index < _userRating
-                                            ? Icons.star
-                                            : Icons.star_outline,
-                                        color: AppColors.starActive,
-                                        size: 20,
-                                      ),
-                                    );
-                                  }),
-                                ),
-                              ],
+                                );
+                              }),
                             ),
                           ],
                         ),
                       ],
                     ),
                   ),
-
                   const SizedBox(height: 16),
-
-                  // Nutrition Info
                   NutritionInfoCard(
                     nutrition: widget.recipe.nutrition,
                     isDarkMode: widget.isDarkMode,
                     languageCode: widget.languageCode,
                   ),
-
                   const SizedBox(height: 24),
-
-                  // Ingredients
-                  Text(
-                    loc.ingredients,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: textColor,
-                    ),
-                  ),
+                  _buildSectionHeader(loc.ingredients),
                   const SizedBox(height: 12),
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color:
-                          widget.isDarkMode ? AppColors.darkCard : Colors.white,
-                      borderRadius: BorderRadius.circular(12),
+                      color: cardColor,
+                      borderRadius: BorderRadius.circular(14),
                       border: Border.all(
                         color: widget.isDarkMode
                             ? AppColors.darkDivider
@@ -270,22 +273,27 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: ingredients
                           .map((ing) => Padding(
-                                padding: const EdgeInsets.only(bottom: 8),
+                                padding: const EdgeInsets.only(bottom: 10),
                                 child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      '• ',
-                                      style: TextStyle(
-                                        fontSize: 16,
+                                    Container(
+                                      width: 6,
+                                      height: 6,
+                                      margin: const EdgeInsets.only(top: 7),
+                                      decoration: const BoxDecoration(
                                         color: AppColors.primaryGreen,
+                                        shape: BoxShape.circle,
                                       ),
                                     ),
+                                    const SizedBox(width: 12),
                                     Expanded(
                                       child: Text(
                                         ing,
                                         style: TextStyle(
                                           fontSize: 15,
                                           color: textColor,
+                                          height: 1.4,
                                         ),
                                       ),
                                     ),
@@ -295,70 +303,62 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                           .toList(),
                     ),
                   ),
-
                   const SizedBox(height: 24),
-
-                  // Preparation Steps
-                  Text(
-                    loc.preparationSteps,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: textColor,
-                    ),
-                  ),
+                  _buildSectionHeader(loc.preparationSteps),
                   const SizedBox(height: 12),
                   ...steps.asMap().entries.map((entry) => Container(
-                        margin: const EdgeInsets.only(bottom: 8),
+                        margin: const EdgeInsets.only(bottom: 10),
+                        padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: widget.isDarkMode
-                              ? AppColors.darkCard
-                              : Colors.white,
-                          borderRadius: BorderRadius.circular(12),
+                          color: cardColor,
+                          borderRadius: BorderRadius.circular(14),
                           border: Border.all(
                             color: widget.isDarkMode
                                 ? AppColors.darkDivider
                                 : AppColors.lightDivider,
                           ),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 28,
-                                height: 28,
-                                decoration: BoxDecoration(
-                                  color: AppColors.primaryGreen,
-                                  borderRadius: BorderRadius.circular(14),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [
+                                    AppColors.primaryGreen,
+                                    AppColors.primaryGreenDark,
+                                  ],
                                 ),
-                                child: Center(
-                                  child: Text(
-                                    '${entry.key + 1}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              const SizedBox(width: 12),
-                              Expanded(
+                              child: Center(
                                 child: Text(
-                                  entry.value,
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: textColor,
+                                  '${entry.key + 1}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 13,
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                            const SizedBox(width: 14),
+                            Expanded(
+                              child: Text(
+                                entry.value,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: textColor,
+                                  height: 1.4,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       )),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 24),
                 ],
               ),
             ),

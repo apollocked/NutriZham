@@ -66,47 +66,84 @@ class _MainNavigationState extends State<MainNavigation> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(_languageCode);
     final pages = _getPages();
+    final navColor = _isDarkMode ? const Color(0xFF1A1A2E) : Colors.white;
 
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
         children: pages,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: _isDarkMode ? AppColors.darkBackground : Colors.white,
-        selectedItemColor: AppColors.primaryGreen,
-        unselectedItemColor: _isDarkMode
-            ? AppColors.darkTextSecondary
-            : AppColors.lightTextSecondary,
-        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
-        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w400),
-        showUnselectedLabels: true,
-        elevation: 0,
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.home_outlined),
-            activeIcon: const Icon(Icons.home),
-            label: loc.home,
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: navColor,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 12,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: NavigationBar(
+                selectedIndex: _currentIndex,
+                onDestinationSelected: (index) =>
+                    setState(() => _currentIndex = index),
+                backgroundColor: Colors.transparent,
+                surfaceTintColor: Colors.transparent,
+                elevation: 0,
+                indicatorColor: AppColors.primaryGreen.withOpacity(0.15),
+                indicatorShape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+                height: 64,
+                destinations: [
+                  NavigationDestination(
+                    icon: Icon(Icons.home_outlined,
+                        color: _isDarkMode
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary),
+                    selectedIcon:
+                        const Icon(Icons.home, color: AppColors.primaryGreen),
+                    label: loc.home,
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.search_outlined,
+                        color: _isDarkMode
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary),
+                    selectedIcon:
+                        const Icon(Icons.search, color: AppColors.primaryGreen),
+                    label: loc.search,
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.calendar_today_outlined,
+                        color: _isDarkMode
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary),
+                    selectedIcon: const Icon(Icons.calendar_today,
+                        color: AppColors.primaryGreen),
+                    label: loc.planner,
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.person_outline,
+                        color: _isDarkMode
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary),
+                    selectedIcon:
+                        const Icon(Icons.person, color: AppColors.primaryGreen),
+                    label: loc.profile,
+                  ),
+                ],
+              ),
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.search_outlined),
-            activeIcon: const Icon(Icons.search),
-            label: loc.search,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.calendar_today_outlined),
-            activeIcon: const Icon(Icons.calendar_today),
-            label: loc.planner,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.person_outline),
-            activeIcon: const Icon(Icons.person),
-            label: loc.profile,
-          ),
-        ],
+        ),
       ),
     );
   }

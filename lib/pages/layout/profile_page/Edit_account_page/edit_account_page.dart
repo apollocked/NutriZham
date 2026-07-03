@@ -181,16 +181,16 @@ class _EditAccountPageState extends State<EditAccountPage> {
               ),
               const SizedBox(height: 16),
 
-              // Change Password Tile
               Container(
                 decoration: BoxDecoration(
+                  color: widget.isDarkMode ? AppColors.darkCard : Colors.white,
                   border: Border.all(
                     style: BorderStyle.solid,
                     color: widget.isDarkMode
                         ? AppColors.darkDivider
                         : AppColors.lightDivider,
                   ),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(14),
                 ),
                 child: MenuItemTile(
                   icon: Icons.lock_outline,

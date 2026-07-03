@@ -127,7 +127,8 @@ class _SettingsPageState extends State<SettingsPage> {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
+              color: _currentDarkMode ? AppColors.darkCard : Colors.white,
+              borderRadius: BorderRadius.circular(14),
               border: Border.all(
                 color: _currentDarkMode
                     ? AppColors.darkDivider
@@ -156,7 +157,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     color: _currentDarkMode
                         ? AppColors.darkDivider
                         : AppColors.lightDivider,
-                    height: 1),
+                    height: 1,
+                    indent: 60),
                 MenuItemTile(
                   icon: Icons.delete_outline,
                   title: loc.deleteAccount,
@@ -177,7 +179,8 @@ class _SettingsPageState extends State<SettingsPage> {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
+              color: _currentDarkMode ? AppColors.darkCard : Colors.white,
+              borderRadius: BorderRadius.circular(14),
               border: Border.all(
                 color: _currentDarkMode
                     ? AppColors.darkDivider
@@ -262,15 +265,29 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget _buildSectionHeader(String title) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-      child: Text(
-        title,
-        style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: _currentDarkMode
-              ? AppColors.darkTextSecondary
-              : AppColors.lightTextSecondary,
-        ),
+      child: Row(
+        children: [
+          Container(
+            width: 4,
+            height: 16,
+            decoration: BoxDecoration(
+              color: AppColors.primaryGreen,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: _currentDarkMode
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ],
       ),
     );
   }

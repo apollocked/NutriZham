@@ -23,21 +23,35 @@ class StatCard extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isDarkMode ? AppColors.darkCard : Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(
           color: isDarkMode ? AppColors.darkDivider : AppColors.lightDivider,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.06),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: color, size: 28),
-          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: color, size: 22),
+          ),
+          const SizedBox(height: 12),
           Text(
             value,
             style: TextStyle(
               fontSize: 24,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w700,
               color: color,
             ),
           ),
@@ -45,7 +59,8 @@ class StatCard extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
               color: isDarkMode
                   ? AppColors.darkTextSecondary
                   : AppColors.lightTextSecondary,
@@ -87,12 +102,21 @@ class MenuItemTile extends StatelessWidget {
     final defaultIconColor = iconColor ?? AppColors.primaryGreen;
 
     return ListTile(
-      leading: Icon(icon, color: defaultIconColor),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: defaultIconColor.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Icon(icon, color: defaultIconColor, size: 20),
+      ),
       title: Text(
         title,
         style: TextStyle(
           color: defaultTextColor,
           fontWeight: FontWeight.w500,
+          fontSize: 15,
         ),
       ),
       subtitle: subtitle != null
@@ -102,17 +126,21 @@ class MenuItemTile extends StatelessWidget {
                 color: isDarkMode
                     ? AppColors.darkTextSecondary
                     : AppColors.lightTextSecondary,
+                fontSize: 13,
               ),
             )
           : null,
       trailing: showTrailing
           ? Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: defaultTextColor.withOpacity(0.5),
+              Icons.chevron_right_rounded,
+              size: 22,
+              color: defaultTextColor.withOpacity(0.4),
             )
           : null,
       onTap: onTap,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
     );
   }
 }

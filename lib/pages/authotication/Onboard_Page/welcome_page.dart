@@ -131,13 +131,19 @@ class _WelcomePageState extends State<WelcomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // App Logo
                 Container(
                   width: 100,
                   height: 100,
                   decoration: BoxDecoration(
-                    color: AppColors.primaryGreen.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(25),
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.primaryGreen.withOpacity(0.12),
+                        AppColors.primaryGreenLight.withOpacity(0.08),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(28),
                     border: Border.all(
                       color: AppColors.primaryGreen.withOpacity(0.3),
                       width: 2,
@@ -149,9 +155,8 @@ class _WelcomePageState extends State<WelcomePage> {
                     height: 40,
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 36),
 
-                // Welcome Text
                 Text(
                   _getWelcomeText(),
                   style: TextStyle(
@@ -160,36 +165,35 @@ class _WelcomePageState extends State<WelcomePage> {
                     color: textColor,
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
 
-                // App Title
                 const Text(
                   'NutriZham',
                   style: TextStyle(
                     fontSize: 28,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w700,
                     color: AppColors.primaryGreen,
+                    letterSpacing: -0.5,
                   ),
                 ),
                 const SizedBox(height: 16),
 
-                // Subtitle
                 Text(
                   _getSubtitleText(),
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 15,
                     color: secondaryTextColor,
+                    height: 1.4,
                   ),
                 ),
-                const SizedBox(height: 48),
+                const SizedBox(height: 40),
 
-                // Settings Card
                 Container(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
                     color: cardColor,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(20),
                     border: Border.all(
                       color: _isDarkMode
                           ? AppColors.darkDivider
@@ -197,25 +201,24 @@ class _WelcomePageState extends State<WelcomePage> {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
+                        color: Colors.black.withOpacity(0.04),
+                        blurRadius: 16,
+                        offset: const Offset(0, 6),
                       ),
                     ],
                   ),
                   child: Column(
                     children: [
-                      // Dark Mode Toggle
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
                               color: AppColors.primaryGreen.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(12),
                             ),
                             child: Icon(
-                              _isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                              _isDarkMode ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
                               color: AppColors.primaryGreen,
                               size: 24,
                             ),
@@ -226,7 +229,7 @@ class _WelcomePageState extends State<WelcomePage> {
                               _getDarkModeText(),
                               style: TextStyle(
                                 fontSize: 16,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
                                 color: textColor,
                               ),
                             ),
@@ -240,28 +243,26 @@ class _WelcomePageState extends State<WelcomePage> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 24),
 
-                      // Divider
                       Divider(
                         color: _isDarkMode
                             ? AppColors.darkDivider
                             : AppColors.lightDivider,
                         height: 1,
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 24),
 
-                      // Language Selection
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
                               color: AppColors.primaryGreen.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(12),
                             ),
                             child: const Icon(
-                              Icons.language,
+                              Icons.language_rounded,
                               color: AppColors.primaryGreen,
                               size: 24,
                             ),
@@ -272,7 +273,7 @@ class _WelcomePageState extends State<WelcomePage> {
                               _getLanguageText(),
                               style: TextStyle(
                                 fontSize: 16,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
                                 color: textColor,
                               ),
                             ),
@@ -281,21 +282,20 @@ class _WelcomePageState extends State<WelcomePage> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Language Options
                       _buildLanguageOption(
                         'en',
                         'English',
                         textColor,
                         cardColor,
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 10),
                       _buildLanguageOption(
                         'ku',
                         'کوردی',
                         textColor,
                         cardColor,
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 10),
                       _buildLanguageOption(
                         'ar',
                         'العربية',
@@ -305,9 +305,8 @@ class _WelcomePageState extends State<WelcomePage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 36),
 
-                // Continue Button
                 SizedBox(
                   width: double.infinity,
                   height: 56,
@@ -317,8 +316,9 @@ class _WelcomePageState extends State<WelcomePage> {
                       backgroundColor: AppColors.primaryGreen,
                       foregroundColor: Colors.white,
                       elevation: 0,
+                      shadowColor: AppColors.primaryGreen.withOpacity(0.3),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(14),
                       ),
                     ),
                     child: Text(
@@ -326,6 +326,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
+                        letterSpacing: 0.5,
                       ),
                     ),
                   ),
@@ -350,13 +351,14 @@ class _WelcomePageState extends State<WelcomePage> {
       onTap: () {
         setState(() => _selectedLanguage = code);
       },
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.primaryGreen.withOpacity(0.1)
               : (_isDarkMode ? AppColors.darkBackground : Colors.grey[50]),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: isSelected
                 ? AppColors.primaryGreen
@@ -368,6 +370,25 @@ class _WelcomePageState extends State<WelcomePage> {
         ),
         child: Row(
           children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? AppColors.primaryGreen.withOpacity(0.15)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                code == 'en'
+                    ? Icons.language
+                    : code == 'ku'
+                        ? Icons.translate
+                        : Icons.translate,
+                size: 20,
+                color: isSelected ? AppColors.primaryGreen : textColor.withOpacity(0.5),
+              ),
+            ),
+            const SizedBox(width: 12),
             Expanded(
               child: Text(
                 name,
@@ -379,10 +400,17 @@ class _WelcomePageState extends State<WelcomePage> {
               ),
             ),
             if (isSelected)
-              const Icon(
-                Icons.check_circle,
-                color: AppColors.primaryGreen,
-                size: 24,
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryGreen,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Icon(
+                  Icons.check_rounded,
+                  color: Colors.white,
+                  size: 16,
+                ),
               ),
           ],
         ),

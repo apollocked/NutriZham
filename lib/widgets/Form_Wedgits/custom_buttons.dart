@@ -34,9 +34,10 @@ class PrimaryButton extends StatelessWidget {
           backgroundColor: backgroundColor ?? AppColors.primaryGreen,
           foregroundColor: textColor ?? Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(14),
           ),
           elevation: 0,
+          shadowColor: AppColors.primaryGreen.withOpacity(0.3),
           disabledBackgroundColor:
               (backgroundColor ?? AppColors.primaryGreen).withOpacity(0.6),
         ),
@@ -46,7 +47,7 @@ class PrimaryButton extends StatelessWidget {
                 height: 24,
                 child: CircularProgressIndicator(
                   color: Colors.white,
-                  strokeWidth: 2,
+                  strokeWidth: 2.5,
                 ),
               )
             : Row(
@@ -62,6 +63,7 @@ class PrimaryButton extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
+                      letterSpacing: 0.3,
                     ),
                   ),
                 ],
@@ -100,10 +102,10 @@ class SecondaryButton extends StatelessWidget {
           foregroundColor: textColor ?? AppColors.primaryGreen,
           side: BorderSide(
             color: borderColor ?? AppColors.primaryGreen,
-            width: 1,
+            width: 1.5,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(14),
           ),
         ),
         child: Row(
@@ -149,9 +151,9 @@ class IconTextButton extends StatelessWidget {
       onTap: onPressed,
       behavior: HitTestBehavior.opaque,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: color,
             width: 0.5,

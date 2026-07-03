@@ -23,43 +23,55 @@ class CustomSearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final textColor = isDarkMode ? AppColors.darkText : AppColors.lightText;
 
-    return TextField(
-      controller: controller,
-      style: TextStyle(color: textColor),
-      onChanged: onChanged,
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: TextStyle(
-          color: isDarkMode
-              ? AppColors.darkTextSecondary
-              : AppColors.lightTextSecondary,
-        ),
-        prefixIcon: Icon(
-          Icons.search,
-          color: isDarkMode
-              ? AppColors.darkTextSecondary
-              : AppColors.lightTextSecondary,
-        ),
-        suffixIcon: searchQuery.isNotEmpty && onClear != null
-            ? IconButton(
-                icon: Icon(
-                  Icons.clear,
-                  color: isDarkMode
-                      ? AppColors.darkTextSecondary
-                      : AppColors.lightTextSecondary,
-                ),
-                onPressed: onClear,
-              )
-            : null,
-        filled: true,
-        fillColor: isDarkMode ? AppColors.darkCard : Colors.grey[100],
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 14,
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primaryGreen.withOpacity(0.06),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller: controller,
+        style: TextStyle(color: textColor, fontSize: 15),
+        onChanged: onChanged,
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(
+            color: isDarkMode
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
+            fontSize: 15,
+          ),
+          prefixIcon: Icon(
+            Icons.search_rounded,
+            color: isDarkMode
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
+          ),
+          suffixIcon: searchQuery.isNotEmpty && onClear != null
+              ? IconButton(
+                  icon: Icon(
+                    Icons.clear_rounded,
+                    color: isDarkMode
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
+                  ),
+                  onPressed: onClear,
+                )
+              : null,
+          filled: true,
+          fillColor: isDarkMode ? AppColors.darkCard : const Color(0xFFF3F4F6),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: BorderSide.none,
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
+          ),
         ),
       ),
     );

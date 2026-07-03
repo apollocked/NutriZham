@@ -170,9 +170,16 @@ class _PlannerPageState extends State<PlannerPage> {
   Widget _buildNutritionSummary(
       AppLocalizations loc, List<Recipe> plannedMeals) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: widget.isDarkMode ? AppColors.darkCard : Colors.white,
+        gradient: LinearGradient(
+          colors: [
+            AppColors.primaryGreen.withOpacity(0.05),
+            AppColors.primaryGreenLight.withOpacity(0.03),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
         border: Border(
           bottom: BorderSide(
             color: widget.isDarkMode
@@ -189,41 +196,74 @@ class _PlannerPageState extends State<PlannerPage> {
               color: widget.isDarkMode
                   ? AppColors.darkTextSecondary
                   : AppColors.lightTextSecondary,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 12),
-
-          // Total Calories
-          Text(
-            '$_totalCalories kcal',
-            style: TextStyle(
-              color:
-                  widget.isDarkMode ? AppColors.darkText : AppColors.lightText,
-              fontSize: 32,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            '${plannedMeals.length} ${plannedMeals.length == 1 ? loc.recipeFound : loc.recipesFound}',
-            style: TextStyle(
-              color: widget.isDarkMode
-                  ? AppColors.darkTextSecondary
-                  : AppColors.lightTextSecondary,
               fontSize: 14,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.5,
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+            decoration: BoxDecoration(
+              color: widget.isDarkMode ? AppColors.darkCard : Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: widget.isDarkMode
+                    ? AppColors.darkDivider
+                    : AppColors.lightDivider,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.primaryGreen.withOpacity(0.06),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                Text(
+                  '$_totalCalories',
+                  style: TextStyle(
+                    color: widget.isDarkMode
+                        ? AppColors.darkText
+                        : AppColors.lightText,
+                    fontSize: 40,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                const Text(
+                  'kcal',
+                  style: TextStyle(
+                    color: AppColors.primaryGreen,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '${plannedMeals.length} ${plannedMeals.length == 1 ? loc.recipeFound : loc.recipesFound}',
+                  style: TextStyle(
+                    color: widget.isDarkMode
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
             ),
           ),
 
           const SizedBox(height: 16),
 
-          // Macros breakdown
           if (plannedMeals.isNotEmpty)
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
+                color: widget.isDarkMode ? AppColors.darkCard : Colors.white,
+                borderRadius: BorderRadius.circular(14),
                 border: Border.all(
                   color: widget.isDarkMode
                       ? AppColors.darkDivider
@@ -233,23 +273,26 @@ class _PlannerPageState extends State<PlannerPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildMacroItem('P', '${_totalProtein.toStringAsFixed(0)}g',
+                  _buildMacroItem(
+                      'Protein', '${_totalProtein.toStringAsFixed(0)}g',
                       AppColors.proteinColor),
                   Container(
                       width: 1,
-                      height: 30,
+                      height: 40,
                       color: widget.isDarkMode
                           ? AppColors.darkDivider
                           : AppColors.lightDivider),
-                  _buildMacroItem('C', '${_totalCarbs.toStringAsFixed(0)}g',
+                  _buildMacroItem(
+                      'Carbs', '${_totalCarbs.toStringAsFixed(0)}g',
                       AppColors.carbsColor),
                   Container(
                       width: 1,
-                      height: 30,
+                      height: 40,
                       color: widget.isDarkMode
                           ? AppColors.darkDivider
                           : AppColors.lightDivider),
-                  _buildMacroItem('F', '${_totalFats.toStringAsFixed(0)}g',
+                  _buildMacroItem(
+                      'Fats', '${_totalFats.toStringAsFixed(0)}g',
                       AppColors.fatsColor),
                 ],
               ),
@@ -263,6 +306,15 @@ class _PlannerPageState extends State<PlannerPage> {
     return Column(
       children: [
         Text(
+          value,
+          style: TextStyle(
+            color: color,
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
           label,
           style: TextStyle(
             color: widget.isDarkMode
@@ -272,15 +324,6 @@ class _PlannerPageState extends State<PlannerPage> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: TextStyle(
-            color: color,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
       ],
     );
   }
@@ -288,13 +331,26 @@ class _PlannerPageState extends State<PlannerPage> {
   Widget _buildSectionHeader(String title, Color textColor) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
-      child: Text(
-        title,
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-          color: textColor,
-        ),
+      child: Row(
+        children: [
+          Container(
+            width: 4,
+            height: 20,
+            decoration: BoxDecoration(
+              color: AppColors.primaryGreen,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: textColor,
+            ),
+          ),
+        ],
       ),
     );
   }

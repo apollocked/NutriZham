@@ -218,7 +218,14 @@ class _ProfilePageState extends State<ProfilePage> {
       width: double.infinity,
       padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
-        color: widget.isDarkMode ? AppColors.darkCard : Colors.white,
+        gradient: LinearGradient(
+          colors: [
+            AppColors.primaryGreen.withOpacity(0.08),
+            AppColors.primaryGreenLight.withOpacity(0.04),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
         border: Border(
           bottom: BorderSide(
             color: widget.isDarkMode
@@ -229,37 +236,42 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       child: Column(
         children: [
-          // Avatar
           CircleAvatar(
             radius: 50,
-            backgroundColor: AppColors.primaryGreen.withOpacity(0.1),
+            backgroundColor: AppColors.primaryGreen.withOpacity(0.12),
             child: Text(
               _currentUser!.username[0].toUpperCase(),
               style: const TextStyle(
                 fontSize: 36,
                 color: AppColors.primaryGreen,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),
           const SizedBox(height: 16),
-
-          // User Info
           Text(
             _currentUser!.username,
             style: TextStyle(
               fontSize: 24,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w700,
               color:
                   widget.isDarkMode ? AppColors.darkText : AppColors.lightText,
             ),
           ),
-          Text(
-            _currentUser!.email,
-            style: TextStyle(
-              color: widget.isDarkMode
-                  ? AppColors.darkTextSecondary
-                  : AppColors.lightTextSecondary,
+          const SizedBox(height: 4),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppColors.primaryGreen.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              _currentUser!.email,
+              style: const TextStyle(
+                fontSize: 13,
+                color: AppColors.primaryGreen,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
           const SizedBox(height: 8),
@@ -269,6 +281,7 @@ class _ProfilePageState extends State<ProfilePage> {
               color: widget.isDarkMode
                   ? AppColors.darkTextSecondary
                   : AppColors.lightTextSecondary,
+              fontSize: 14,
             ),
           ),
         ],
@@ -307,9 +320,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildMenuSection(AppLocalizations loc) {
     return Container(
-      margin: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        color: widget.isDarkMode ? AppColors.darkCard : Colors.white,
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(
           color: widget.isDarkMode
               ? AppColors.darkDivider
@@ -337,6 +351,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ? AppColors.darkDivider
                 : AppColors.lightDivider,
             height: 1,
+            indent: 60,
           ),
           MenuItemTile(
             icon: Icons.settings_outlined,
@@ -361,6 +376,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ? AppColors.darkDivider
                 : AppColors.lightDivider,
             height: 1,
+            indent: 60,
           ),
           MenuItemTile(
             icon: Icons.logout,
@@ -381,21 +397,32 @@ class _ProfilePageState extends State<ProfilePage> {
         widget.isDarkMode ? AppColors.darkText : AppColors.lightText;
 
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            loc.favorites,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: textColor,
-            ),
+          Row(
+            children: [
+              Container(
+                width: 4,
+                height: 20,
+                decoration: BoxDecoration(
+                  color: AppColors.primaryGreen,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                loc.favorites,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: textColor,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 12),
-
-          // Empty State or Favorites List
+          const SizedBox(height: 16),
           if (favoriteMeals.isEmpty)
             EmptyStateWidget(
               icon: Icons.favorite_outline,
@@ -406,31 +433,36 @@ class _ProfilePageState extends State<ProfilePage> {
           else
             Column(
               children: [
-                // Using standard RecipeCard for consistency
                 ...favoriteMeals.take(5).map((recipe) => Padding(
                       padding: const EdgeInsets.only(bottom: 12),
                       child: RecipeCard(
                         recipe: recipe,
                         isDarkMode: widget.isDarkMode,
                         languageCode: widget.languageCode,
-                        isFavorite: true, // These are favorites by definition
+                        isFavorite: true,
                         onFavoriteToggle: () =>
                             FavoritesHelper.toggleFavorite(recipe.id),
-                        onTap: () {
-                          // Optional: Navigate to details if you have the route
-                          // Navigator.push(...);
-                        },
+                        onTap: () {},
                       ),
                     )),
                 if (favoriteMeals.length > 5)
                   Padding(
-                    padding: const EdgeInsets.only(top: 12),
+                    padding: const EdgeInsets.only(top: 4),
                     child: Center(
-                      child: Text(
-                        '+ ${favoriteMeals.length - 5} more',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: textColor.withOpacity(0.6),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryGreen.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          '+ ${favoriteMeals.length - 5} more',
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primaryGreen,
+                          ),
                         ),
                       ),
                     ),
