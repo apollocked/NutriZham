@@ -2,7 +2,7 @@
 
 import 'package:nutrizham/data/datasources/Auth_Services/firebase_auth_service.dart';
 import 'package:nutrizham/data/models/user_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:nutrizham/core/cache/cache_service.dart';
 
 class AuthService {
   final FirebaseAuthService _firebaseAuth = FirebaseAuthService();
@@ -144,11 +144,8 @@ class AuthService {
     }
   }
 
-  // Keep this for testing/debugging if needed
   Future<void> clearAllUserData() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('current_user');
-    await prefs.setBool('is_logged_in', false);
+    await CacheService().clearAuth();
     await _firebaseAuth.logout();
   }
 }

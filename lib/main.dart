@@ -14,10 +14,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 import 'package:nutrizham/core/utils/locale_helpers.dart';
+import 'package:nutrizham/core/cache/cache_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await CacheService().init();
   runApp(const NutriZhamApp());
 }
 

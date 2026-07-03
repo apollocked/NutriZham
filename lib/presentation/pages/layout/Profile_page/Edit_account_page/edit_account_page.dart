@@ -6,10 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:nutrizham/presentation/providers/auth_provider.dart';
 import 'package:nutrizham/data/datasources/Auth_Services/firebase_auth_service.dart';
 import 'package:nutrizham/presentation/widgets/custom_app_bar.dart';
-import 'package:nutrizham/presentation/widgets/Form_Widgets/custom_text_field.dart';
-import 'package:nutrizham/presentation/widgets/Form_Widgets/custom_buttons.dart';
-import 'package:nutrizham/presentation/widgets/Form_Widgets/secondary_button.dart';
-import 'package:nutrizham/presentation/widgets/menu_item_tile.dart';
+import 'package:nutrizham/presentation/widgets/edit_account_form.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class EditAccountPage extends StatefulWidget {
@@ -112,68 +109,15 @@ class _EditAccountPageState extends State<EditAccountPage> {
       appBar: CustomAppBar(title: loc.editAccount),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
-        child: Form(
-          key: _formKey,
-          child: Column(children: [
-            CustomTextField(
-                controller: _usernameController,
-                labelText: loc.username,
-                prefixIcon: Icons.person_outline,
-                textInputAction: TextInputAction.next,
-                validator: (v) =>
-                    v?.isEmpty == true ? 'Username is required' : null),
-            const SizedBox(height: 16),
-            CustomTextField(
-                controller: _emailController,
-                labelText: loc.email,
-                prefixIcon: Icons.email_outlined,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                validator: (v) => v?.isEmpty == true
-                    ? 'Email is required'
-                    : (!v!.contains('@') ? 'Invalid email' : null)),
-            const SizedBox(height: 16),
-            Container(
-              decoration: BoxDecoration(
-                  color: theme.cardColor,
-                  border: Border.all(
-                      style: BorderStyle.solid,
-                      color: theme.colorScheme.outline),
-                  borderRadius: BorderRadius.circular(14)),
-              child: MenuItemTile(
-                  icon: Icons.lock_outline,
-                  title: loc.changePassword,
-                  onTap: () => context.push('/settings/change-password')),
-            ),
-            const SizedBox(height: 16),
-            CustomTextField(
-                controller: _ageController,
-                labelText: loc.age,
-                prefixIcon: Icons.calendar_today_outlined,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.done,
-                validator: (v) {
-                  final age = int.tryParse(v ?? '');
-                  if (age == null) return 'Age is required';
-                  if (age < 13) return 'Must be at least 13 years old';
-                  if (age > 150) return 'Invalid age';
-                  return null;
-                }),
-            const SizedBox(height: 32),
-            Row(children: [
-              Expanded(
-                  child: SecondaryButton(
-                      text: loc.cancel,
-                      onPressed: () => Navigator.pop(context))),
-              const SizedBox(width: 16),
-              Expanded(
-                  child: PrimaryButton(
-                      text: loc.save,
-                      onPressed: _isLoading ? null : _saveChanges,
-                      isLoading: _isLoading,
-                      icon: Icons.check)),
-            ]),
-          ]),
+        child: EditAccountForm(
+          formKey: _formKey,
+          usernameController: _usernameController,
+          emailController: _emailController,
+          ageController: _ageController,
+          onChangePassword: () => context.push('/settings/change-password'),
+          onCancel: () => Navigator.pop(context),
+          onSave: _saveChanges,
+          isLoading: _isLoading,
         ),
       ),
     );

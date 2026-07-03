@@ -3,14 +3,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:nutrizham/data/models/user_model.dart';
+import 'package:nutrizham/core/cache/cache_service.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final _cache = CacheService();
 
   // Get current Firebase user
   User? get currentFirebaseUser => _auth.currentUser;
@@ -65,16 +66,13 @@ class FirebaseAuthService {
 
       print('Firestore user document created with favorites and planned meals');
 
-      // 4. Save to local storage for offline access
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('is_logged_in', true);
-      await prefs.setString('current_user', json.encode(userModel.toJson()));
+      // 4. Save to secure storage for offline access
+      await _cache.setIsLoggedIn(true);
+      await _cache.setCurrentUserJson(json.encode(userModel.toJson()));
 
       // Initialize local favorites and planned meals
-      await prefs.setStringList('favorites', []);
-      await prefs.setStringList('planned_meals', []);
-
-      print('Local storage updated with empty favorites and planned meals');
+      await _cache.setFavorites([]);
+      await _cache.setPlannedMeals([]);
 
       return {
         'success': true,
@@ -156,15 +154,12 @@ class FirebaseAuthService {
             'User document created successfully with favorites and planned meals');
       }
 
-      // 4. Save to local storage
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('is_logged_in', true);
-      await prefs.setString('current_user', json.encode(userModel.toJson()));
+      // 4. Save to secure storage
+      await _cache.setIsLoggedIn(true);
+      await _cache.setCurrentUserJson(json.encode(userModel.toJson()));
 
       // 5. Sync favorites and planned meals from Firestore to local storage
       await _syncUserDataToLocal(userModel);
-
-      print('Login completed successfully with data sync');
 
       return {
         'success': true,
@@ -273,15 +268,12 @@ class FirebaseAuthService {
         userModel = UserModel.fromJson(userDoc.data() as Map<String, dynamic>);
       }
 
-      // 6. Save to local storage
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('is_logged_in', true);
-      await prefs.setString('current_user', json.encode(userModel.toJson()));
+      // 6. Save to secure storage
+      await _cache.setIsLoggedIn(true);
+      await _cache.setCurrentUserJson(json.encode(userModel.toJson()));
 
       // 7. Sync favorites and planned meals from Firestore to local storage
       await _syncUserDataToLocal(userModel);
-
-      print('Google sign-in completed successfully with data sync');
 
       return {
         'success': true,
@@ -297,38 +289,19 @@ class FirebaseAuthService {
     }
   }
 
-  // Helper method to sync user data from Firestore to local storage
   Future<void> _syncUserDataToLocal(UserModel userModel) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-
-      // Save favorites to local storage
-      await prefs.setStringList('favorites', userModel.favorites);
-      print('Synced ${userModel.favorites.length} favorites to local storage');
-
-      // Save planned meals to local storage
-      await prefs.setStringList('planned_meals', userModel.plannedMeals);
-      print(
-          'Synced ${userModel.plannedMeals.length} planned meals to local storage');
-    } catch (e) {
-      print('Error syncing user data to local storage: $e');
-    }
+      await _cache.setFavorites(userModel.favorites);
+      await _cache.setPlannedMeals(userModel.plannedMeals);
+    } catch (_) {}
   }
 
-  // Logout
   Future<void> logout() async {
     try {
       await _googleSignIn.signOut();
       await _auth.signOut();
-
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('is_logged_in', false);
-      await prefs.remove('current_user');
-
-      print('Logout successful');
-    } catch (e) {
-      print('Logout error: $e');
-    }
+      await _cache.clearAuth();
+    } catch (_) {}
   }
 
   // Get current user - UPDATED to sync data
@@ -352,9 +325,8 @@ class FirebaseAuthService {
         return userModel;
       }
 
-      // 4. If Firestore data doesn't exist, try local storage
-      final prefs = await SharedPreferences.getInstance();
-      final userJson = prefs.getString('current_user');
+      // 4. If Firestore data doesn't exist, try local secure storage
+      final userJson = await _cache.getCurrentUserJson();
 
       if (userJson != null) {
         try {
@@ -425,12 +397,8 @@ class FirebaseAuthService {
           .doc(user.uid)
           .set(userToSave.toJson(), SetOptions(merge: true));
 
-      // 3. Update local storage
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('current_user', json.encode(userToSave.toJson()));
-
-      print(
-          'Profile updated successfully with favorites and planned meals preserved');
+      // 3. Update local secure storage
+      await _cache.setCurrentUserJson(json.encode(userToSave.toJson()));
 
       return {
         'success': true,
@@ -470,14 +438,10 @@ class FirebaseAuthService {
       // 2. Delete from Firebase Auth
       await user.delete();
 
-      // 3. Clear ALL local storage data
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('current_user');
-      await prefs.remove('favorites');
-      await prefs.remove('planned_meals');
-      await prefs.setBool('is_logged_in', false);
-
-      print('Account deleted successfully with all local data cleared');
+      // 3. Clear ALL local data
+      await _cache.clearAuth();
+      await _cache.removeFavorites();
+      await _cache.removePlannedMeals();
 
       return {
         'success': true,

@@ -1,116 +1,61 @@
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:ui' as ui;
+import 'package:nutrizham/core/cache/cache_service.dart';
 
 class PreferencesHelper {
-  static const String _isDarkModeKey = 'isDarkMode';
-  static const String _languageCodeKey = 'languageCode';
-  static const String _isFirstLaunchKey = 'isFirstLaunch';
-  static const String _welcomeShownKey = 'welcomeShown';
+  static final _cache = CacheService();
 
-  // Theme Preferences
-  static Future<bool> getIsDarkMode() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_isDarkModeKey) ?? false;
-  }
+  static Future<bool> getIsDarkMode() async => _cache.getIsDarkMode();
 
-  static Future<void> setIsDarkMode(bool isDarkMode) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_isDarkModeKey, isDarkMode);
-  }
+  static Future<void> setIsDarkMode(bool v) async => _cache.setIsDarkMode(v);
 
-  // Language Preferences
   static Future<String> getLanguageCode() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    // Check if this is the first launch
-    final isFirstLaunch = prefs.getBool(_isFirstLaunchKey) ?? true;
-
-    if (isFirstLaunch) {
-      // Get device language
+    if (await _cache.isFirstLaunch()) {
       final deviceLanguage = _getDeviceLanguage();
-
-      // Save the detected language
-      await prefs.setString(_languageCodeKey, deviceLanguage);
-
-      // Mark that the app has been launched
-      await prefs.setBool(_isFirstLaunchKey, false);
-
+      await _cache.setLanguageCode(deviceLanguage);
+      await _cache.setFirstLaunch(false);
       return deviceLanguage;
     }
-
-    // Return saved language or default to English
-    return prefs.getString(_languageCodeKey) ?? 'en';
+    return _cache.getLanguageCode();
   }
 
-  static Future<void> setLanguageCode(String languageCode) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_languageCodeKey, languageCode);
-  }
+  static Future<void> setLanguageCode(String v) async =>
+      _cache.setLanguageCode(v);
 
-  // Detect device language
   static String _getDeviceLanguage() {
-    // Get the device's locale
-    final deviceLocale = ui.PlatformDispatcher.instance.locale;
-    final languageCode = deviceLocale.languageCode.toLowerCase();
-
-    // Map device language to supported languages
-
-    // Supported: English (en), Kurdish (ku), Arabic (ar)
-    switch (languageCode) {
+    final locale = ui.PlatformDispatcher.instance.locale;
+    switch (locale.languageCode.toLowerCase()) {
       case 'ku':
-      case 'ckb': // Central Kurdish
+      case 'ckb':
         return 'ku';
       case 'ar':
         return 'ar';
-      case 'en':
       default:
         return 'en';
     }
   }
 
-  // Get device language without saving (for display purposes)
-  static String getDeviceLanguageCode() {
-    return _getDeviceLanguage();
-  }
+  static String getDeviceLanguageCode() => _getDeviceLanguage();
 
-  // Check if this is the first launch
-  static Future<bool> isFirstLaunch() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_isFirstLaunchKey) ?? true;
-  }
+  static Future<bool> isFirstLaunch() async => _cache.isFirstLaunch();
 
-  // Check if welcome page has been shown
-  static Future<bool> hasWelcomeBeenShown() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_welcomeShownKey) ?? false;
-  }
+  static Future<bool> hasWelcomeBeenShown() async =>
+      _cache.hasWelcomeBeenShown();
 
-  // Set welcome page as shown
-  static Future<void> setWelcomeShown(bool shown) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_welcomeShownKey, shown);
-  }
+  static Future<void> setWelcomeShown(bool v) async =>
+      _cache.setWelcomeShown(v);
 
-  // Reset first launch flag (useful for testing)
-  static Future<void> resetFirstLaunch() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_isFirstLaunchKey, true);
-  }
+  static Future<void> resetFirstLaunch() async =>
+      _cache.setFirstLaunch(true);
 
-  // Clear all preferences
   static Future<void> clearAllPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_isDarkModeKey);
-    await prefs.remove(_languageCodeKey);
-    // Keep the first launch flag to maintain the behavior
+    await _cache.remove('isDarkMode');
+    await _cache.remove('languageCode');
   }
 
-  // Complete reset (including first launch flag and welcome shown)
   static Future<void> completeReset() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_isDarkModeKey);
-    await prefs.remove(_languageCodeKey);
-    await prefs.remove(_isFirstLaunchKey);
-    await prefs.remove(_welcomeShownKey);
+    await _cache.remove('isDarkMode');
+    await _cache.remove('languageCode');
+    await _cache.remove('isFirstLaunch');
+    await _cache.remove('welcomeShown');
   }
 }
