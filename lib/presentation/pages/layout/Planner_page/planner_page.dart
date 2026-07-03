@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_types_as_parameter_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -55,7 +57,7 @@ class _PlannerPageState extends State<PlannerPage> {
   int get _totalCalories => _allRecipes
       .where((r) => _plannerProvider.isInPlan(r.id))
       .fold(0, (sum, r) => sum + r.nutrition.calories);
-  // ignore: avoid_types_as_parameter_names
+
   double get _totalProtein => _allRecipes
       .where((r) => _plannerProvider.isInPlan(r.id))
       .fold(0.0, (sum, r) => sum + r.nutrition.protein);

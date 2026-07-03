@@ -52,8 +52,11 @@ class _HomePageState extends State<HomePage> {
 
   void _setupScrollListener() {
     _scrollController.addListener(() {
-      if (_searchQuery.isEmpty && _selectedCategory == null && !_showFavoritesOnly) {
-        if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+      if (_searchQuery.isEmpty &&
+          _selectedCategory == null &&
+          !_showFavoritesOnly) {
+        if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 200) {
           _loadNextBatch();
         }
       }
@@ -65,25 +68,43 @@ class _HomePageState extends State<HomePage> {
     setState(() => _isLoadingMore = true);
 
     try {
-      Query query = FirebaseFirestore.instance.collection('recipes').orderBy('title').limit(_pageSize);
-      if (_lastDocument != null) query = query.startAfterDocument(_lastDocument!);
+      Query query = FirebaseFirestore.instance
+          .collection('recipes')
+          .orderBy('title')
+          .limit(_pageSize);
+      if (_lastDocument != null) {
+        query = query.startAfterDocument(_lastDocument!);
+      }
 
       final snapshot = await query.get();
       if (snapshot.docs.isEmpty) {
-        setState(() { _hasMore = false; _isLoadingMore = false; _isLoading = false; });
+        setState(() {
+          _hasMore = false;
+          _isLoadingMore = false;
+          _isLoading = false;
+        });
         return;
       }
 
-      final newRecipes = snapshot.docs.map((doc) => Recipe.fromJson(doc.data() as Map<String, dynamic>)).toList();
-      if (mounted) setState(() {
-        _allRecipes.addAll(newRecipes);
-        _lastDocument = snapshot.docs.last;
-        _hasMore = newRecipes.length == _pageSize;
-        _isLoadingMore = false;
-        _isLoading = false;
-      });
+      final newRecipes = snapshot.docs
+          .map((doc) => Recipe.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+      if (mounted) {
+        setState(() {
+          _allRecipes.addAll(newRecipes);
+          _lastDocument = snapshot.docs.last;
+          _hasMore = newRecipes.length == _pageSize;
+          _isLoadingMore = false;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
-      if (mounted) setState(() { _isLoadingMore = false; _isLoading = false; });
+      if (mounted) {
+        setState(() {
+          _isLoadingMore = false;
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -91,28 +112,48 @@ class _HomePageState extends State<HomePage> {
     final langCode = context.read<SettingsProvider>().languageCode;
     return _allRecipes.where((recipe) {
       final title = recipe.title[langCode] ?? recipe.title['en'] ?? '';
-      final matchesSearch = _searchQuery.isEmpty || title.toLowerCase().contains(_searchQuery.toLowerCase());
-      final matchesCategory = _selectedCategory == null || recipe.category == _selectedCategory;
-      final matchesFavorites = !_showFavoritesOnly || _favoritesProvider.isFavorite(recipe.id);
+      final matchesSearch = _searchQuery.isEmpty ||
+          title.toLowerCase().contains(_searchQuery.toLowerCase());
+      final matchesCategory =
+          _selectedCategory == null || recipe.category == _selectedCategory;
+      final matchesFavorites =
+          !_showFavoritesOnly || _favoritesProvider.isFavorite(recipe.id);
       return matchesSearch && matchesCategory && matchesFavorites;
     }).toList();
   }
 
   Recipe get _recipeOfTheDay {
-    if (_allRecipes.isEmpty) return Recipe(id: '0', title: {}, icon: '', nutrition: NutritionalInfo(calories: 0, protein: 0, carbs: 0, fats: 0), ingredients: {}, steps: {}, category: MealCategory.snack);
-    final dayOfYear = DateTime.now().difference(DateTime(DateTime.now().year, 1, 1)).inDays;
+    if (_allRecipes.isEmpty) {
+      return Recipe(
+          id: '0',
+          title: {},
+          icon: '',
+          nutrition:
+              NutritionalInfo(calories: 0, protein: 0, carbs: 0, fats: 0),
+          ingredients: {},
+          steps: {},
+          category: MealCategory.snack);
+    }
+    final dayOfYear =
+        DateTime.now().difference(DateTime(DateTime.now().year, 1, 1)).inDays;
     return _allRecipes[dayOfYear % _allRecipes.length];
   }
 
   String _getCategoryName(MealCategory category) {
     final loc = AppLocalizations.of(context)!;
     switch (category) {
-      case MealCategory.breakfast: return loc.breakfast;
-      case MealCategory.lunch: return loc.lunch;
-      case MealCategory.dinner: return loc.dinner;
-      case MealCategory.snack: return loc.snack;
-      case MealCategory.bulking: return loc.bulking;
-      case MealCategory.cutting: return loc.cutting;
+      case MealCategory.breakfast:
+        return loc.breakfast;
+      case MealCategory.lunch:
+        return loc.lunch;
+      case MealCategory.dinner:
+        return loc.dinner;
+      case MealCategory.snack:
+        return loc.snack;
+      case MealCategory.bulking:
+        return loc.bulking;
+      case MealCategory.cutting:
+        return loc.cutting;
     }
   }
 
@@ -128,8 +169,11 @@ class _HomePageState extends State<HomePage> {
         title: loc.appTitle,
         actions: [
           IconButton(
-            icon: Icon(_showFavoritesOnly ? Icons.favorite : Icons.favorite_outline, color: _showFavoritesOnly ? const Color(0xFFEF4444) : null),
-            onPressed: () => setState(() => _showFavoritesOnly = !_showFavoritesOnly),
+            icon: Icon(
+                _showFavoritesOnly ? Icons.favorite : Icons.favorite_outline,
+                color: _showFavoritesOnly ? const Color(0xFFEF4444) : null),
+            onPressed: () =>
+                setState(() => _showFavoritesOnly = !_showFavoritesOnly),
           ),
         ],
       ),
@@ -141,51 +185,100 @@ class _HomePageState extends State<HomePage> {
               hintText: loc.searchPlaceholder,
               searchQuery: _searchQuery,
               onChanged: (v) => setState(() => _searchQuery = v),
-              onClear: () { setState(() { _searchQuery = ''; _searchController.clear(); }); },
+              onClear: () {
+                setState(() {
+                  _searchQuery = '';
+                  _searchController.clear();
+                });
+              },
               controller: _searchController,
             ),
           ),
           _buildCategoryChips(),
-          if (_searchQuery.isEmpty && _selectedCategory == null && !_showFavoritesOnly) _buildRecipeOfTheDay(),
+          if (_searchQuery.isEmpty &&
+              _selectedCategory == null &&
+              !_showFavoritesOnly)
+            _buildRecipeOfTheDay(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(children: [
-              Container(width: 4, height: 20, decoration: BoxDecoration(color: theme.colorScheme.primary, borderRadius: BorderRadius.circular(2))),
+              Container(
+                  width: 4,
+                  height: 20,
+                  decoration: BoxDecoration(
+                      color: theme.colorScheme.primary,
+                      borderRadius: BorderRadius.circular(2))),
               const SizedBox(width: 10),
-              Text(_showFavoritesOnly ? loc.favorites : loc.recipes, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: theme.colorScheme.onSurface)),
+              Text(_showFavoritesOnly ? loc.favorites : loc.recipes,
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: theme.colorScheme.onSurface)),
               const Spacer(),
-              Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4), decoration: BoxDecoration(color: theme.colorScheme.primary.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
-                child: Text('${paginatedRecipes.length}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF10B981)))),
+              Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                      color: theme.colorScheme.primary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8)),
+                  child: Text('${paginatedRecipes.length}',
+                      style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF10B981)))),
             ]),
           ),
           Expanded(
             child: _isLoading
-                ? const Center(child: CircularProgressIndicator(color: Color(0xFF10B981)))
+                ? const Center(
+                    child: CircularProgressIndicator(color: Color(0xFF10B981)))
                 : paginatedRecipes.isEmpty
                     ? EmptyStateWidget(
-                        icon: _showFavoritesOnly ? Icons.favorite_outline : Icons.search_off,
-                        title: _showFavoritesOnly ? loc.noFavorites : loc.noRecipesFound,
-                        subtitle: _showFavoritesOnly ? loc.tapToSave : loc.tryDifferentSearch,
+                        icon: _showFavoritesOnly
+                            ? Icons.favorite_outline
+                            : Icons.search_off,
+                        title: _showFavoritesOnly
+                            ? loc.noFavorites
+                            : loc.noRecipesFound,
+                        subtitle: _showFavoritesOnly
+                            ? loc.tapToSave
+                            : loc.tryDifferentSearch,
                       )
                     : NotificationListener<ScrollNotification>(
                         onNotification: (scrollInfo) {
-                          if (_searchQuery.isEmpty && _selectedCategory == null && !_showFavoritesOnly && !_isLoadingMore && _hasMore &&
-                              scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent - 200) _loadNextBatch();
+                          if (_searchQuery.isEmpty &&
+                              _selectedCategory == null &&
+                              !_showFavoritesOnly &&
+                              !_isLoadingMore &&
+                              _hasMore &&
+                              scrollInfo.metrics.pixels >=
+                                  scrollInfo.metrics.maxScrollExtent - 200) {
+                            _loadNextBatch();
+                          }
                           return false;
                         },
                         child: ListView.builder(
                           controller: _scrollController,
-                          itemCount: paginatedRecipes.length + (_hasMore && _isLoadingMore ? 1 : 0),
+                          itemCount: paginatedRecipes.length +
+                              (_hasMore && _isLoadingMore ? 1 : 0),
                           padding: const EdgeInsets.only(bottom: 16),
                           itemBuilder: (context, index) {
-                            if (index == paginatedRecipes.length) return const Center(child: Padding(padding: EdgeInsets.all(16), child: CircularProgressIndicator(color: Color(0xFF10B981))));
+                            if (index == paginatedRecipes.length) {
+                              return const Center(
+                                  child: Padding(
+                                      padding: EdgeInsets.all(16),
+                                      child: CircularProgressIndicator(
+                                          color: Color(0xFF10B981))));
+                            }
                             final recipe = paginatedRecipes[index];
                             final isFavorite = favorites.isFavorite(recipe.id);
                             return RecipeCard(
                               recipe: recipe,
                               isFavorite: isFavorite,
-                              onFavoriteToggle: () => favorites.toggleFavorite(recipe.id),
-                              onTap: () => context.push('/recipe/${recipe.id}', extra: recipe),
+                              onFavoriteToggle: () =>
+                                  favorites.toggleFavorite(recipe.id),
+                              onTap: () => context.push('/recipe/${recipe.id}',
+                                  extra: recipe),
                             );
                           },
                         ),
@@ -213,22 +306,43 @@ class _HomePageState extends State<HomePage> {
               onSelected: (_) => setState(() => _selectedCategory = null),
               backgroundColor: theme.colorScheme.surface,
               selectedColor: theme.cardColor,
-              labelStyle: TextStyle(color: _selectedCategory == null ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant, fontWeight: FontWeight.w500),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: _selectedCategory == null ? theme.colorScheme.primary : theme.colorScheme.outline, width: 1)),
+              labelStyle: TextStyle(
+                  color: _selectedCategory == null
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w500),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  side: BorderSide(
+                      color: _selectedCategory == null
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.outline,
+                      width: 1)),
             ),
           ),
           ...MealCategory.values.map((category) => Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: ChoiceChip(
-              label: Text(_getCategoryName(category)),
-              selected: _selectedCategory == category,
-              onSelected: (bool selected) => setState(() => _selectedCategory = selected ? category : null),
-              backgroundColor: theme.colorScheme.surface,
-              selectedColor: theme.cardColor,
-              labelStyle: TextStyle(color: _selectedCategory == category ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant, fontWeight: FontWeight.w500),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: _selectedCategory == category ? theme.colorScheme.primary : theme.colorScheme.outline, width: 1)),
-            ),
-          )),
+                padding: const EdgeInsets.only(right: 8),
+                child: ChoiceChip(
+                  label: Text(_getCategoryName(category)),
+                  selected: _selectedCategory == category,
+                  onSelected: (bool selected) => setState(
+                      () => _selectedCategory = selected ? category : null),
+                  backgroundColor: theme.colorScheme.surface,
+                  selectedColor: theme.cardColor,
+                  labelStyle: TextStyle(
+                      color: _selectedCategory == category
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w500),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side: BorderSide(
+                          color: _selectedCategory == category
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.outline,
+                          width: 1)),
+                ),
+              )),
         ],
       ),
     );
@@ -245,19 +359,32 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        gradient: LinearGradient(colors: [theme.colorScheme.primary.withOpacity(0.08), theme.colorScheme.secondary.withOpacity(0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+        gradient: LinearGradient(colors: [
+          theme.colorScheme.primary.withOpacity(0.08),
+          theme.colorScheme.secondary.withOpacity(0.05)
+        ], begin: Alignment.topLeft, end: Alignment.bottomRight),
         border: Border.all(color: theme.colorScheme.primary.withOpacity(0.15)),
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
-          Container(padding: const EdgeInsets.all(6), decoration: BoxDecoration(color: theme.colorScheme.primary.withOpacity(0.15), borderRadius: BorderRadius.circular(8)),
-            child: const Icon(Icons.star_rounded, color: Color(0xFF10B981), size: 18)),
+          Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                  color: theme.colorScheme.primary.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(8)),
+              child: const Icon(Icons.star_rounded,
+                  color: Color(0xFF10B981), size: 18)),
           const SizedBox(width: 10),
-          Text(loc.recipeOfTheDay, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: theme.colorScheme.onSurface)),
+          Text(loc.recipeOfTheDay,
+              style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: theme.colorScheme.onSurface)),
         ]),
         const SizedBox(height: 12),
         RecipeCard(
-          recipe: recipe, isFavorite: favorites.isFavorite(recipe.id),
+          recipe: recipe,
+          isFavorite: favorites.isFavorite(recipe.id),
           onFavoriteToggle: () => favorites.toggleFavorite(recipe.id),
           onTap: () => context.push('/recipe/${recipe.id}', extra: recipe),
         ),

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -62,16 +64,25 @@ class _EditAccountPageState extends State<EditAccountPage> {
         age: int.parse(_ageController.text),
       );
 
-      final result = await context.read<AuthProvider>().updateProfile(updatedUser);
+      final result =
+          await context.read<AuthProvider>().updateProfile(updatedUser);
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result['message']), backgroundColor: result['success'] ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.error),
+        SnackBar(
+            content: Text(result['message']),
+            backgroundColor: result['success']
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.error),
       );
 
       if (result['success']) context.go('/home');
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}'), backgroundColor: Theme.of(context).colorScheme.error));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: Theme.of(context).colorScheme.error));
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -85,10 +96,13 @@ class _EditAccountPageState extends State<EditAccountPage> {
     if (_isLoading) {
       return Scaffold(
         appBar: CustomAppBar(title: loc.editAccount),
-        body: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        body: Center(
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           const CircularProgressIndicator(color: Color(0xFF10B981)),
           const SizedBox(height: 16),
-          Text(loc.loading, style: TextStyle(color: theme.colorScheme.onSurfaceVariant)),
+          Text(loc.loading,
+              style: TextStyle(color: theme.colorScheme.onSurfaceVariant)),
         ])),
       );
     }
@@ -100,27 +114,63 @@ class _EditAccountPageState extends State<EditAccountPage> {
         child: Form(
           key: _formKey,
           child: Column(children: [
-            CustomTextField(controller: _usernameController, labelText: loc.username, prefixIcon: Icons.person_outline, textInputAction: TextInputAction.next, validator: (v) => v?.isEmpty == true ? 'Username is required' : null),
+            CustomTextField(
+                controller: _usernameController,
+                labelText: loc.username,
+                prefixIcon: Icons.person_outline,
+                textInputAction: TextInputAction.next,
+                validator: (v) =>
+                    v?.isEmpty == true ? 'Username is required' : null),
             const SizedBox(height: 16),
-            CustomTextField(controller: _emailController, labelText: loc.email, prefixIcon: Icons.email_outlined, keyboardType: TextInputType.emailAddress, textInputAction: TextInputAction.next, validator: (v) => v?.isEmpty == true ? 'Email is required' : (!v!.contains('@') ? 'Invalid email' : null)),
+            CustomTextField(
+                controller: _emailController,
+                labelText: loc.email,
+                prefixIcon: Icons.email_outlined,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+                validator: (v) => v?.isEmpty == true
+                    ? 'Email is required'
+                    : (!v!.contains('@') ? 'Invalid email' : null)),
             const SizedBox(height: 16),
             Container(
-              decoration: BoxDecoration(color: theme.cardColor, border: Border.all(style: BorderStyle.solid, color: theme.colorScheme.outline), borderRadius: BorderRadius.circular(14)),
-              child: MenuItemTile(icon: Icons.lock_outline, title: loc.changePassword, onTap: () => context.push('/settings/change-password')),
+              decoration: BoxDecoration(
+                  color: theme.cardColor,
+                  border: Border.all(
+                      style: BorderStyle.solid,
+                      color: theme.colorScheme.outline),
+                  borderRadius: BorderRadius.circular(14)),
+              child: MenuItemTile(
+                  icon: Icons.lock_outline,
+                  title: loc.changePassword,
+                  onTap: () => context.push('/settings/change-password')),
             ),
             const SizedBox(height: 16),
-            CustomTextField(controller: _ageController, labelText: loc.age, prefixIcon: Icons.calendar_today_outlined, keyboardType: TextInputType.number, textInputAction: TextInputAction.done, validator: (v) {
-              final age = int.tryParse(v ?? '');
-              if (age == null) return 'Age is required';
-              if (age < 13) return 'Must be at least 13 years old';
-              if (age > 150) return 'Invalid age';
-              return null;
-            }),
+            CustomTextField(
+                controller: _ageController,
+                labelText: loc.age,
+                prefixIcon: Icons.calendar_today_outlined,
+                keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.done,
+                validator: (v) {
+                  final age = int.tryParse(v ?? '');
+                  if (age == null) return 'Age is required';
+                  if (age < 13) return 'Must be at least 13 years old';
+                  if (age > 150) return 'Invalid age';
+                  return null;
+                }),
             const SizedBox(height: 32),
             Row(children: [
-              Expanded(child: SecondaryButton(text: loc.cancel, onPressed: () => Navigator.pop(context))),
+              Expanded(
+                  child: SecondaryButton(
+                      text: loc.cancel,
+                      onPressed: () => Navigator.pop(context))),
               const SizedBox(width: 16),
-              Expanded(child: PrimaryButton(text: loc.save, onPressed: _isLoading ? null : _saveChanges, isLoading: _isLoading, icon: Icons.check)),
+              Expanded(
+                  child: PrimaryButton(
+                      text: loc.save,
+                      onPressed: _isLoading ? null : _saveChanges,
+                      isLoading: _isLoading,
+                      icon: Icons.check)),
             ]),
           ]),
         ),
