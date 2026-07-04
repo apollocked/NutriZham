@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
-import 'package:nutrizham/presentation/blocs/settings_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
 import 'package:nutrizham/presentation/blocs/recipe_cubit.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/empty_state_widget.dart';
 import 'package:nutrizham/presentation/widgets/common/custom_app_bar.dart';
-import 'package:nutrizham/presentation/widgets/common/search_bar_widget.dart';
 import 'package:nutrizham/presentation/widgets/common/shimmer_loading.dart';
 import 'package:nutrizham/presentation/widgets/recipe/recipe_card.dart';
 import 'package:nutrizham/presentation/widgets/home/home_category_chips.dart';
@@ -21,12 +19,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String _searchQuery = '';
   MealCategory? _selectedCategory;
   bool _showFavoritesOnly = false;
-  final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  List<Recipe> _allRecipes = [];
   late final FavoritesCubit _favoritesProvider;
 
   @override
@@ -36,8 +31,7 @@ class _HomePageState extends State<HomePage> {
     _favoritesProvider.loadFavorites();
     _loadNextBatch();
     _scrollController.addListener(() {
-      if (_searchQuery.isEmpty &&
-          _selectedCategory == null &&
+      if (_selectedCategory == null &&
           !_showFavoritesOnly &&
           _scrollController.position.pixels >=
               _scrollController.position.maxScrollExtent - 200) {
@@ -48,7 +42,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    _searchController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -57,24 +50,21 @@ class _HomePageState extends State<HomePage> {
     final cubit = context.read<RecipeCubit>();
     if (cubit.isLoadingMore || !cubit.hasMore) return;
     await cubit.loadNextBatch();
-    if (mounted) {
-      setState(() {
-        _allRecipes = cubit.recipes;
-      });
-    }
   }
 
-  List<Recipe> get _paginatedRecipes => _allRecipes.where((r) {
-        final c = context.read<SettingsCubit>().state.languageCode;
-        final t = r.title[c] ?? r.title['en'] ?? '';
-        return (_searchQuery.isEmpty ||
-                t.toLowerCase().contains(_searchQuery.toLowerCase())) &&
-            (_selectedCategory == null || r.category == _selectedCategory) &&
-            (!_showFavoritesOnly || _favoritesProvider.isFavorite(r.id));
-      }).toList();
+  List<Recipe> get _paginatedRecipes {
+    final cubit = context.read<RecipeCubit>();
+    return cubit.recipes.where((r) {
+      return (_selectedCategory == null || r.category == _selectedCategory) &&
+          (!_showFavoritesOnly || _favoritesProvider.isFavorite(r.id));
+    }).toList();
+  }
 
-  Recipe get _recipeOfTheDay => _allRecipes.isEmpty
-      ? Recipe(
+  Recipe get _recipeOfTheDay {
+    final cubit = context.read<RecipeCubit>();
+    final all = cubit.recipes;
+    if (all.isEmpty) {
+      return Recipe(
           id: '0',
           title: {},
           icon: '',
@@ -82,14 +72,17 @@ class _HomePageState extends State<HomePage> {
               NutritionalInfo(calories: 0, protein: 0, carbs: 0, fats: 0),
           ingredients: {},
           steps: {},
-          category: MealCategory.snack)
-      : _allRecipes[DateTime.now()
-              .difference(DateTime(DateTime.now().year, 1, 1))
-              .inDays %
-          _allRecipes.length];
+          category: MealCategory.snack);
+    }
+    return all[DateTime.now()
+            .difference(DateTime(DateTime.now().year, 1, 1))
+            .inDays %
+        all.length];
+  }
 
   @override
   Widget build(BuildContext context) {
+    final cubit = context.watch<RecipeCubit>();
     final paginatedRecipes = _paginatedRecipes;
     final loc = AppLocalizations.of(context)!;
     return Scaffold(
@@ -103,26 +96,10 @@ class _HomePageState extends State<HomePage> {
       ]),
       body: SafeArea(
           child: Column(children: [
-        Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: CustomSearchBar(
-              hintText: loc.searchPlaceholder,
-              searchQuery: _searchQuery,
-              onChanged: (v) => setState(() => _searchQuery = v),
-              onClear: () {
-                setState(() {
-                  _searchQuery = '';
-                  _searchController.clear();
-                });
-              },
-              controller: _searchController,
-            )),
         HomeCategoryChips(
             selectedCategory: _selectedCategory,
             onCategorySelected: (v) => setState(() => _selectedCategory = v)),
-        if (_searchQuery.isEmpty &&
-            _selectedCategory == null &&
-            !_showFavoritesOnly)
+        if (_selectedCategory == null && !_showFavoritesOnly)
           RecipeOfTheDayCard(recipe: _recipeOfTheDay),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
@@ -164,7 +141,7 @@ class _HomePageState extends State<HomePage> {
           ]),
         ),
         Expanded(
-          child: context.watch<RecipeCubit>().isLoading
+          child: cubit.recipes.isEmpty && cubit.isLoading
               ? const ShimmerRecipeGrid()
               : paginatedRecipes.isEmpty
                   ? EmptyStateWidget(
@@ -179,11 +156,10 @@ class _HomePageState extends State<HomePage> {
                           : loc.tryDifferentSearch)
                   : NotificationListener<ScrollNotification>(
                       onNotification: (scrollInfo) {
-                        if (_searchQuery.isEmpty &&
-                            _selectedCategory == null &&
+                        if (_selectedCategory == null &&
                             !_showFavoritesOnly &&
-                            !context.read<RecipeCubit>().isLoadingMore &&
-                            context.read<RecipeCubit>().hasMore &&
+                            !cubit.isLoadingMore &&
+                            cubit.hasMore &&
                             scrollInfo.metrics.pixels >=
                                 scrollInfo.metrics.maxScrollExtent - 200) {
                           _loadNextBatch();
@@ -201,20 +177,10 @@ class _HomePageState extends State<HomePage> {
                         ),
                         padding: const EdgeInsets.symmetric(horizontal: 11),
                         itemCount: paginatedRecipes.length +
-                            (context.watch<RecipeCubit>().hasMore &&
-                                    context.watch<RecipeCubit>().isLoadingMore
-                                ? 1
-                                : 0),
+                            (cubit.hasMore && cubit.isLoadingMore ? 1 : 0),
                         itemBuilder: (context, index) {
                           if (index == paginatedRecipes.length) {
-                            return Padding(
-                              padding: const EdgeInsets.all(5),
-                              child: Center(
-                                  child: CircularProgressIndicator(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary)),
-                            );
+                            return const ShimmerRecipeCard();
                           }
                           final recipe = paginatedRecipes[index];
                           return RecipeCard(

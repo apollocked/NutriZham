@@ -36,7 +36,7 @@ class _SearchPageState extends State<SearchPage> {
     _isLoading = true;
     if (mounted) setState(() {});
     final recipes = context.read<RecipeCubit>();
-    final recipesList = await recipes.getAll();
+    final recipesList = await recipes.getAllFresh();
     if (mounted) setState(() { _allRecipes = recipesList; _isLoading = false; });
   }
 

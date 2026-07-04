@@ -50,7 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _loadRecipesFromFirebase() async {
     try {
       final recipes = context.read<RecipeCubit>();
-      final allRecipes = await recipes.getAll();
+      final allRecipes = await recipes.getAllFresh();
       if (mounted) setState(() => _allRecipes = allRecipes);
     } catch (_) {}
   }

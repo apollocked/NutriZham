@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:nutrizham/core/cache/cache_service.dart';
+import 'package:nutrizham/core/cache/recipe_cache_service.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/meal_planner_cubit.dart';
@@ -22,18 +24,34 @@ class _PlannerPageState extends State<PlannerPage> {
   List<Recipe> _allRecipes = [];
   bool _isLoading = true;
   late final MealPlannerCubit _plannerProvider;
+  late final RecipeCacheService _recipeCache;
 
   @override
   void initState() {
     super.initState();
+    _recipeCache = RecipeCacheService(CacheService());
     _plannerProvider = context.read<MealPlannerCubit>();
     _plannerProvider.loadPlannedMeals();
+    _loadCachedRecipes();
     _loadRecipes();
+  }
+
+  Future<void> _loadCachedRecipes() async {
+    final cached = await _recipeCache.getCachedPlannedRecipes();
+    if (cached.isNotEmpty && mounted) {
+      setState(() {
+        _allRecipes = cached;
+        _isLoading = false;
+      });
+    }
   }
 
   Future<void> _loadRecipes() async {
     final recipes = context.read<RecipeCubit>();
     final recipesList = await recipes.getAll();
+    final plannedIds = _plannerProvider.ids;
+    final planned = recipesList.where((r) => plannedIds.contains(r.id)).toList();
+    _recipeCache.cachePlannedRecipes(planned);
     if (mounted) setState(() { _allRecipes = recipesList; _isLoading = false; });
   }
 

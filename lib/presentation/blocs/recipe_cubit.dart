@@ -1,4 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nutrizham/core/cache/cache_service.dart';
+import 'package:nutrizham/core/cache/recipe_cache_service.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:nutrizham/data/repositories/recipe_repository_impl.dart';
 
@@ -27,6 +29,7 @@ class RecipeError extends RecipeState {
 
 class RecipeCubit extends Cubit<RecipeState> {
   final _repository = RecipeRepositoryImpl();
+  final _cache = RecipeCacheService(CacheService());
   static const int _pageSize = 25;
 
   RecipeCubit() : super(const RecipeInitial());
@@ -61,7 +64,12 @@ class RecipeCubit extends Cubit<RecipeState> {
     if (current is RecipeLoaded && !current.hasMore) return;
 
     if (current is RecipeInitial) {
-      emit(const RecipeLoading());
+      final cached = await _cache.getCachedRecipes();
+      if (cached.isNotEmpty) {
+        emit(RecipeLoaded(cached, hasMore: true));
+      } else {
+        emit(const RecipeLoading());
+      }
     } else if (current is RecipeLoaded) {
       emit(RecipeLoadingMore(current.recipes));
     }
@@ -77,9 +85,12 @@ class RecipeCubit extends Cubit<RecipeState> {
         limit: _pageSize,
       );
 
-      final allRecipes = [...currentRecipes, ...newRecipes];
+      final prevIds = currentRecipes.map((r) => r.id).toSet();
+      final deduped = newRecipes.where((r) => !prevIds.contains(r.id)).toList();
+      final allRecipes = [...currentRecipes, ...deduped];
       final more = newRecipes.length == _pageSize;
       emit(RecipeLoaded(allRecipes, hasMore: more));
+      _cache.cacheRecipes(allRecipes);
     } catch (e) {
       if (current is RecipeLoaded) {
         emit(RecipeLoaded(current.recipes, hasMore: current.hasMore));
@@ -90,15 +101,56 @@ class RecipeCubit extends Cubit<RecipeState> {
   }
 
   Future<List<Recipe>> getAll() async {
-    return await _repository.getAllRecipes();
+    final cached = await _cache.getCachedRecipes();
+    if (cached.isNotEmpty) return cached;
+    final recipes = await _repository.getAllRecipes();
+    _cache.cacheRecipes(recipes);
+    return recipes;
+  }
+
+  Future<List<Recipe>> getAllFresh() async {
+    final recipes = await _repository.getAllRecipes();
+    _cache.cacheRecipes(recipes);
+    return recipes;
   }
 
   Future<List<Recipe>> search(String query) async {
-    return await _repository.searchRecipes(query);
+    try {
+      return await _repository.searchRecipes(query);
+    } catch (_) {
+      final cached = await _cache.getCachedRecipes();
+      if (cached.isNotEmpty) {
+        final q = query.toLowerCase();
+        return cached.where((r) {
+          final t = r.title['en'] ?? '';
+          return t.toLowerCase().contains(q);
+        }).toList();
+      }
+      rethrow;
+    }
   }
 
   Future<List<Recipe>> getByCategory(MealCategory category) async {
-    return await _repository.getRecipesByCategory(category);
+    try {
+      return await _repository.getRecipesByCategory(category);
+    } catch (_) {
+      final cached = await _cache.getCachedRecipes();
+      return cached.where((r) => r.category == category).toList();
+    }
+  }
+
+  Future<Recipe?> getById(String id) async {
+    final cached = await _cache.getCachedRecipes();
+    try {
+      return cached.firstWhere((r) => r.id == id);
+    } catch (_) {}
+    try {
+      final recipe = await _repository.getRecipeById(id);
+      if (recipe != null) _cache.cacheRecipes([...cached, recipe]);
+      return recipe;
+    } catch (_) {
+      return null;
+    }
   }
 
   Stream<List<Recipe>> streamByIds(List<String> ids) {
