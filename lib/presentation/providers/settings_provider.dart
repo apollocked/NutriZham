@@ -5,20 +5,16 @@ import 'package:nutrizham/core/cache/cache_service.dart';
 class SettingsProvider extends ChangeNotifier {
   bool _isDarkMode = false;
   String _languageCode = 'en';
-  bool _isLoading = true;
   bool _isLoggedIn = false;
 
   bool get isDarkMode => _isDarkMode;
   String get languageCode => _languageCode;
-  bool get isLoading => _isLoading;
   bool get isLoggedIn => _isLoggedIn;
 
   Future<void> initialize() async {
     _isDarkMode = await PreferencesHelper.getIsDarkMode();
     _languageCode = await PreferencesHelper.getLanguageCode();
     _isLoggedIn = await CacheService().getIsLoggedIn();
-    _isLoading = false;
-    notifyListeners();
   }
 
   Future<void> setDarkMode(bool value) async {

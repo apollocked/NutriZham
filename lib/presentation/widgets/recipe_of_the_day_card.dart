@@ -111,20 +111,24 @@ class RecipeOfTheDayCard extends StatelessWidget {
                             const SizedBox(height: 8),
                             Row(
                               children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: catColor.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(8),
+                                Flexible(
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: catColor.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Text(
+                                        _getCategoryName(
+                                            recipe.category, context),
+                                        style: TextStyle(
+                                            fontSize: 11,
+                                            color: catColor,
+                                            fontWeight: FontWeight.w600),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1),
                                   ),
-                                  child: Text(
-                                      _getCategoryName(
-                                          recipe.category, context),
-                                      style: TextStyle(
-                                          fontSize: 11,
-                                          color: catColor,
-                                          fontWeight: FontWeight.w600)),
                                 ),
                                 const SizedBox(width: 10),
                                 Icon(Icons.local_fire_department_rounded,

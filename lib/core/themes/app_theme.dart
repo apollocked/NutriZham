@@ -112,7 +112,8 @@ class AppTheme {
           fontSize: 20,
           fontWeight: FontWeight.w700,
           letterSpacing: -0.25,
-          color: AppColors.lightText),
+          color: AppColors.lightText,
+          textBaseline: TextBaseline.alphabetic),
     ),
     navigationBarTheme: NavigationBarThemeData(
       elevation: 0,
@@ -130,14 +131,16 @@ class AppTheme {
               fontSize: 11,
               fontWeight: FontWeight.w600,
               color: AppColors.primaryGreen,
-              letterSpacing: 0.3);
+              letterSpacing: 0.3,
+              textBaseline: TextBaseline.alphabetic);
         }
         return const TextStyle(
             fontFamily: _font, inherit: false,
             fontSize: 11,
             fontWeight: FontWeight.w500,
             color: AppColors.lightTextSecondary,
-            letterSpacing: 0.3);
+            letterSpacing: 0.3,
+            textBaseline: TextBaseline.alphabetic);
       }),
       iconTheme: WidgetStateProperty.resolveWith((s) {
         if (s.contains(WidgetState.selected)) {
@@ -200,7 +203,8 @@ class AppTheme {
             fontFamily: _font, inherit: false,
             fontSize: 15,
             fontWeight: FontWeight.w600,
-            letterSpacing: 0.3),
+            letterSpacing: 0.3,
+            textBaseline: TextBaseline.alphabetic),
       ),
     ),
     filledButtonTheme: FilledButtonThemeData(
@@ -213,7 +217,8 @@ class AppTheme {
             fontFamily: _font, inherit: false,
             fontSize: 15,
             fontWeight: FontWeight.w600,
-            letterSpacing: 0.3),
+            letterSpacing: 0.3,
+            textBaseline: TextBaseline.alphabetic),
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
@@ -223,7 +228,7 @@ class AppTheme {
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         textStyle: const TextStyle(
-            fontFamily: _font, inherit: false, fontSize: 15, fontWeight: FontWeight.w600),
+            fontFamily: _font, inherit: false, fontSize: 15, fontWeight: FontWeight.w600, textBaseline: TextBaseline.alphabetic),
       ),
     ),
     textButtonTheme: TextButtonThemeData(
@@ -232,7 +237,7 @@ class AppTheme {
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         textStyle: const TextStyle(
-            fontFamily: _font, inherit: false, fontSize: 14, fontWeight: FontWeight.w600),
+            fontFamily: _font, inherit: false, fontSize: 14, fontWeight: FontWeight.w600, textBaseline: TextBaseline.alphabetic),
       ),
     ),
     chipTheme: ChipThemeData(
@@ -242,12 +247,14 @@ class AppTheme {
           fontFamily: _font, inherit: false,
           fontSize: 13,
           fontWeight: FontWeight.w500,
-          color: AppColors.lightText),
+          color: AppColors.lightText,
+          textBaseline: TextBaseline.alphabetic),
       secondaryLabelStyle: const TextStyle(
           fontFamily: _font, inherit: false,
           fontSize: 13,
           fontWeight: FontWeight.w500,
-          color: AppColors.lightTextSecondary),
+          color: AppColors.lightTextSecondary,
+          textBaseline: TextBaseline.alphabetic),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24), side: BorderSide.none),
       padding: const EdgeInsets.symmetric(horizontal: 6),
@@ -261,14 +268,15 @@ class AppTheme {
           fontFamily: _font, inherit: false,
           fontSize: 18,
           fontWeight: FontWeight.w600,
-          color: AppColors.lightText),
+          color: AppColors.lightText,
+          textBaseline: TextBaseline.alphabetic),
     ),
     snackBarTheme: const SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(14))),
       contentTextStyle: TextStyle(
-          fontFamily: _font, inherit: false, fontSize: 14, fontWeight: FontWeight.w500),
+          fontFamily: _font, inherit: false, fontSize: 14, fontWeight: FontWeight.w500, textBaseline: TextBaseline.alphabetic),
     ),
     bottomSheetTheme: const BottomSheetThemeData(
       shape: RoundedRectangleBorder(
@@ -283,9 +291,10 @@ class AppTheme {
           fontFamily: _font, inherit: false,
           fontSize: 15,
           fontWeight: FontWeight.w500,
-          color: AppColors.lightText),
+          color: AppColors.lightText,
+          textBaseline: TextBaseline.alphabetic),
       subtitleTextStyle: const TextStyle(
-          fontFamily: _font, inherit: false, fontSize: 13, color: AppColors.lightTextSecondary),
+          fontFamily: _font, inherit: false, fontSize: 13, color: AppColors.lightTextSecondary, textBaseline: TextBaseline.alphabetic),
     ),
     menuTheme: MenuThemeData(
       style: MenuStyle(
@@ -337,7 +346,8 @@ class AppTheme {
           fontSize: 20,
           fontWeight: FontWeight.w700,
           letterSpacing: -0.25,
-          color: AppColors.darkText),
+          color: AppColors.darkText,
+          textBaseline: TextBaseline.alphabetic),
     ),
     navigationBarTheme: NavigationBarThemeData(
       elevation: 0,
@@ -355,14 +365,16 @@ class AppTheme {
               fontSize: 11,
               fontWeight: FontWeight.w600,
               color: AppColors.primaryGreen,
-              letterSpacing: 0.3);
+              letterSpacing: 0.3,
+              textBaseline: TextBaseline.alphabetic);
         }
         return const TextStyle(
             fontFamily: _font, inherit: false,
             fontSize: 11,
             fontWeight: FontWeight.w500,
             color: AppColors.darkTextSecondary,
-            letterSpacing: 0.3);
+            letterSpacing: 0.3,
+            textBaseline: TextBaseline.alphabetic);
       }),
       iconTheme: WidgetStateProperty.resolveWith((s) {
         if (s.contains(WidgetState.selected)) {
@@ -420,12 +432,14 @@ class AppTheme {
           fontFamily: _font, inherit: false,
           fontSize: 13,
           fontWeight: FontWeight.w500,
-          color: AppColors.darkText),
+          color: AppColors.darkText,
+          textBaseline: TextBaseline.alphabetic),
       secondaryLabelStyle: const TextStyle(
           fontFamily: _font, inherit: false,
           fontSize: 13,
           fontWeight: FontWeight.w500,
-          color: AppColors.darkTextSecondary),
+          color: AppColors.darkTextSecondary,
+          textBaseline: TextBaseline.alphabetic),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24), side: BorderSide.none),
     ),
@@ -438,14 +452,15 @@ class AppTheme {
           fontFamily: _font, inherit: false,
           fontSize: 18,
           fontWeight: FontWeight.w600,
-          color: AppColors.darkText),
+          color: AppColors.darkText,
+          textBaseline: TextBaseline.alphabetic),
     ),
     snackBarTheme: const SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(14))),
       contentTextStyle: TextStyle(
-          fontFamily: _font, inherit: false, fontSize: 14, fontWeight: FontWeight.w500),
+          fontFamily: _font, inherit: false, fontSize: 14, fontWeight: FontWeight.w500, textBaseline: TextBaseline.alphabetic),
     ),
     bottomSheetTheme: const BottomSheetThemeData(
       shape: RoundedRectangleBorder(
@@ -460,9 +475,9 @@ class AppTheme {
           fontFamily: _font, inherit: false,
           fontSize: 15,
           fontWeight: FontWeight.w500,
-          color: AppColors.darkText),
+          color: AppColors.darkText,
+          textBaseline: TextBaseline.alphabetic),
       subtitleTextStyle: const TextStyle(
-          fontFamily: _font, inherit: false, fontSize: 13, color: AppColors.darkTextSecondary),
+          fontFamily: _font, inherit: false, fontSize: 13, color: AppColors.darkTextSecondary, textBaseline: TextBaseline.alphabetic),
     ),
-  );
-}
+  );}

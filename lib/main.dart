@@ -1,111 +1,57 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:nutrizham/presentation/providers/settings_provider.dart';
-import 'package:nutrizham/presentation/providers/auth_provider.dart';
-import 'package:nutrizham/presentation/providers/favorites_provider.dart';
-import 'package:nutrizham/presentation/providers/meal_planner_provider.dart';
-import 'package:nutrizham/presentation/providers/recipe_provider.dart';
-import 'package:nutrizham/presentation/router/app_router.dart';
-import 'package:nutrizham/core/themes/app_theme.dart';
-import 'package:nutrizham/data/datasources/favorites_helper.dart';
-import 'package:nutrizham/data/datasources/meal_planner_service.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:nutrizham/l10n/app_localizations.dart';
-import 'package:nutrizham/core/utils/locale_helpers.dart';
 import 'package:nutrizham/core/cache/cache_service.dart';
+import 'package:nutrizham/core/themes/app_theme.dart';
+import 'package:nutrizham/core/utils/locale_helpers.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
+import 'package:nutrizham/presentation/blocs/settings_cubit.dart';
+import 'package:nutrizham/presentation/blocs/auth_cubit.dart';
+import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
+import 'package:nutrizham/presentation/blocs/meal_planner_cubit.dart';
+import 'package:nutrizham/presentation/blocs/recipe_cubit.dart';
+import 'package:nutrizham/presentation/router/app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp();
   await CacheService().init();
-  runApp(const NutriZhamApp());
+
+  final settings = SettingsCubit();
+  await settings.initialize();
+
+  runApp(NutriZhamApp(settings: settings));
 }
 
-class NutriZhamApp extends StatefulWidget {
-  const NutriZhamApp({super.key});
+class NutriZhamApp extends StatelessWidget {
+  final SettingsCubit settings;
 
-  @override
-  State<NutriZhamApp> createState() => _NutriZhamAppState();
-}
-
-class _NutriZhamAppState extends State<NutriZhamApp> {
-  late final SettingsProvider _settingsProvider;
-  GoRouter? _router;
-
-  @override
-  void initState() {
-    super.initState();
-    _settingsProvider = SettingsProvider();
-    _initialize();
-  }
-
-  Future<void> _initialize() async {
-    await _settingsProvider.initialize();
-
-    if (_settingsProvider.isLoggedIn) {
-      try {
-        await FavoritesHelper.checkAndSync();
-        await MealPlannerService.checkAndSync();
-        await FavoritesHelper.loadFavorites();
-        await MealPlannerService.loadPlannedMeals();
-      } catch (_) {}
-    }
-  }
+  const NutriZhamApp({super.key, required this.settings});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<SettingsProvider>.value(
-      value: _settingsProvider,
-      child: Consumer<SettingsProvider>(
-        builder: (context, settings, _) {
-          if (settings.isLoading) {
-            return MaterialApp(
-              home: Scaffold(
-                body: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset('assets/logo/app_logo.png',
-                          width: 56, height: 56),
-                      const SizedBox(height: 24),
-                      const SizedBox(
-                        width: 28,
-                        height: 28,
-                        child: CircularProgressIndicator(
-                          color: Color(0xFF059669),
-                          strokeWidth: 3,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              localizationsDelegates: const [
-                AppLocalizations.delegate,
-                KurdishSafeMaterialDelegate(),
-                KurdishSafeCupertinoDelegate(),
-                GlobalWidgetsLocalizations.delegate,
-              ],
-              supportedLocales: AppLocalizations.supportedLocales,
-            );
-          }
-
-          return MultiProvider(
-            providers: [
-              ChangeNotifierProvider(create: (_) => AuthProvider()),
-              ChangeNotifierProvider(create: (_) => FavoritesProvider()),
-              ChangeNotifierProvider(create: (_) => MealPlannerProvider()),
-              ChangeNotifierProvider(create: (_) => RecipeProvider()),
-            ],
-            child: MaterialApp.router(
+    return BlocProvider<SettingsCubit>.value(
+      value: settings,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => AuthCubit()),
+          BlocProvider(create: (_) => FavoritesCubit()),
+          BlocProvider(create: (_) => MealPlannerCubit()),
+          BlocProvider(create: (_) => RecipeCubit()),
+        ],
+        child: BlocBuilder<SettingsCubit, SettingsState>(
+          builder: (context, settingsState) {
+            return MaterialApp.router(
               debugShowCheckedModeBanner: false,
               title: 'NutriZham',
               theme: AppTheme.light,
               darkTheme: AppTheme.dark,
-              themeMode: settings.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-              locale: Locale(settings.languageCode),
+              themeMode: settingsState.isDarkMode
+                  ? ThemeMode.dark
+                  : ThemeMode.light,
+              locale: Locale(settingsState.languageCode),
               localizationsDelegates: const [
                 AppLocalizations.delegate,
                 KurdishSafeMaterialDelegate(),
@@ -113,18 +59,11 @@ class _NutriZhamAppState extends State<NutriZhamApp> {
                 GlobalWidgetsLocalizations.delegate,
               ],
               supportedLocales: AppLocalizations.supportedLocales,
-              routerConfig: _router ??= buildRouter(),
-            ),
-          );
-        },
+              routerConfig: buildRouter(),
+            );
+          },
+        ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    FavoritesHelper.dispose();
-    MealPlannerService.dispose();
-    super.dispose();
   }
 }

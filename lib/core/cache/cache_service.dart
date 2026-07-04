@@ -20,33 +20,74 @@ class CacheService {
   Future<bool> initCalled() async => _prefs != null;
 
   // SharedPreferences (non-sensitive)
-  Future<bool> getBool(String key, {bool d = false}) async =>
-      _prefs?.getBool(key) ?? d;
+  Future<bool> getBool(String key, {bool d = false}) async {
+    try {
+      return _prefs?.getBool(key) ?? d;
+    } catch (e) {
+      return d;
+    }
+  }
 
-  Future<void> setBool(String key, bool v) async =>
+  Future<void> setBool(String key, bool v) async {
+    try {
       await _prefs?.setBool(key, v);
+    } catch (_) {}
+  }
 
-  Future<String> getString(String key, {String d = ''}) async =>
-      _prefs?.getString(key) ?? d;
+  Future<String> getString(String key, {String d = ''}) async {
+    try {
+      return _prefs?.getString(key) ?? d;
+    } catch (e) {
+      return d;
+    }
+  }
 
-  Future<void> setString(String key, String v) async =>
+  Future<void> setString(String key, String v) async {
+    try {
       await _prefs?.setString(key, v);
+    } catch (_) {}
+  }
 
-  Future<List<String>> getStringList(String key) async =>
-      _prefs?.getStringList(key) ?? [];
+  Future<List<String>> getStringList(String key) async {
+    try {
+      return _prefs?.getStringList(key) ?? [];
+    } catch (e) {
+      return [];
+    }
+  }
 
-  Future<void> setStringList(String key, List<String> v) async =>
+  Future<void> setStringList(String key, List<String> v) async {
+    try {
       await _prefs?.setStringList(key, v);
+    } catch (_) {}
+  }
 
-  Future<void> remove(String key) async => await _prefs?.remove(key);
+  Future<void> remove(String key) async {
+    try {
+      await _prefs?.remove(key);
+    } catch (_) {}
+  }
 
-  // FlutterSecureStorage (sensitive - auth)
-  Future<String?> getSecure(String key) async => await _secure.read(key: key);
+  // FlutterSecureStorage (sensitive - auth tokens only)
+  Future<String?> getSecure(String key) async {
+    try {
+      return await _secure.read(key: key);
+    } catch (e) {
+      return null;
+    }
+  }
 
-  Future<void> setSecure(String key, String v) async =>
+  Future<void> setSecure(String key, String v) async {
+    try {
       await _secure.write(key: key, value: v);
+    } catch (_) {}
+  }
 
-  Future<void> removeSecure(String key) async => await _secure.delete(key: key);
+  Future<void> removeSecure(String key) async {
+    try {
+      await _secure.delete(key: key);
+    } catch (_) {}
+  }
 
   // Convenience: Theme
   static const _isDarkMode = 'isDarkMode';
@@ -92,25 +133,23 @@ class CacheService {
   Future<void> setPlannedMealsNeedsSync(bool v) async =>
       setBool(_plannedSync, v);
 
-  // Secure: Auth session
-  static const _currentUser = 'current_user';
+  // Auth session (secure storage — sensitive)
   static const _isLoggedIn = 'is_logged_in';
-  Future<String?> getCurrentUserJson() async => getSecure(_currentUser);
-  Future<void> setCurrentUserJson(String v) async => setSecure(_currentUser, v);
-  Future<void> removeCurrentUser() async => removeSecure(_currentUser);
-
+  static const _currentUser = 'current_user';
   Future<bool> getIsLoggedIn() async {
     final v = await getSecure(_isLoggedIn);
     return v == 'true';
   }
-
   Future<void> setIsLoggedIn(bool v) async =>
       setSecure(_isLoggedIn, v.toString());
-
   Future<void> removeIsLoggedIn() async => removeSecure(_isLoggedIn);
 
+  Future<String?> getCurrentUserJson() async => getSecure(_currentUser);
+  Future<void> setCurrentUserJson(String v) async => setSecure(_currentUser, v);
+  Future<void> removeCurrentUser() async => removeSecure(_currentUser);
+
   Future<void> clearAuth() async {
-    await removeCurrentUser();
     await removeIsLoggedIn();
+    await removeCurrentUser();
   }
 }
