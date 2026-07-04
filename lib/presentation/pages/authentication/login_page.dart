@@ -6,6 +6,7 @@ import 'package:nutrizham/presentation/blocs/settings_cubit.dart';
 import 'package:nutrizham/presentation/widgets/auth/login_form.dart';
 import 'package:nutrizham/presentation/widgets/auth/forgot_password_dialog.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/icon_text_button.dart';
+import 'package:nutrizham/core/utils/connectivity_helper.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class LoginPage extends StatefulWidget {
@@ -27,6 +28,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _forgotPassword() async {
+    if (!context.guardOnline()) return;
     final auth = context.read<AuthCubit>();
     final email = await showForgotPasswordDialog(context);
     if (email == null || !mounted) return;
@@ -40,6 +42,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _login() async {
+    if (!context.guardOnline()) return;
     if (!_formKey.currentState!.validate()) return;
     final result = await context.read<AuthCubit>().login(email: _emailController.text.trim(), password: _passwordController.text);
     if (!mounted) return;

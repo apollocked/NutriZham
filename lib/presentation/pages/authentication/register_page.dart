@@ -6,6 +6,7 @@ import 'package:nutrizham/presentation/blocs/auth_cubit.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/custom_text_field.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/custom_buttons.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/icon_text_button.dart';
+import 'package:nutrizham/core/utils/connectivity_helper.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -36,6 +37,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Future<void> _register() async {
+    if (!context.guardOnline()) return;
     if (!_formKey.currentState!.validate()) return;
     if (_passwordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(

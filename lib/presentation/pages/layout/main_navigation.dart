@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
+import 'package:nutrizham/presentation/widgets/common/offline_banner.dart';
 
 class MainNavigation extends StatelessWidget {
   final Widget child;
@@ -20,7 +21,12 @@ class MainNavigation extends StatelessWidget {
     if (currentLocation.startsWith('/profile')) currentIndex = 3;
 
     return Scaffold(
-      body: child,
+      body: Column(
+        children: [
+          const OfflineBanner(),
+          Expanded(child: child),
+        ],
+      ),
       bottomNavigationBar: Container(
         margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
         decoration: BoxDecoration(

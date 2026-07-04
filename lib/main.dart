@@ -11,6 +11,7 @@ import 'package:nutrizham/presentation/blocs/auth_cubit.dart';
 import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
 import 'package:nutrizham/presentation/blocs/meal_planner_cubit.dart';
 import 'package:nutrizham/presentation/blocs/recipe_cubit.dart';
+import 'package:nutrizham/presentation/blocs/connectivity_cubit.dart';
 import 'package:nutrizham/core/router/app_router.dart';
 
 void main() async {
@@ -37,7 +38,17 @@ class NutriZhamApp extends StatelessWidget {
           BlocProvider(create: (_) => AuthCubit()),
           BlocProvider(create: (_) => FavoritesCubit()),
           BlocProvider(create: (_) => MealPlannerCubit()),
-          BlocProvider(create: (_) => RecipeCubit()),
+          BlocProvider(create: (_) {
+            final cubit = ConnectivityCubit();
+            cubit.initialize();
+            return cubit;
+          }),
+          BlocProvider(create: (ctx) {
+            final connectivity = ctx.read<ConnectivityCubit>();
+            final cubit = RecipeCubit();
+            cubit.injectConnectivity(connectivity);
+            return cubit;
+          }),
         ],
         child: BlocBuilder<SettingsCubit, SettingsState>(
           builder: (context, settingsState) {

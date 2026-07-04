@@ -8,6 +8,7 @@ import 'package:nutrizham/presentation/widgets/Form_Widgets/custom_text_field.da
 import 'package:nutrizham/presentation/widgets/Form_Widgets/custom_buttons.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/secondary_button.dart';
 import 'package:nutrizham/presentation/widgets/auth/password_validation_section.dart';
+import 'package:nutrizham/core/utils/connectivity_helper.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class ChangePasswordPage extends StatefulWidget {
@@ -80,6 +81,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   }
 
   Future<void> _changePassword() async {
+    if (!context.guardOnline()) return;
     final loc = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

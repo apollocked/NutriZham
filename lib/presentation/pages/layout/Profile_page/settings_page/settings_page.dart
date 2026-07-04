@@ -9,6 +9,7 @@ import 'package:nutrizham/presentation/widgets/common/custom_app_bar.dart';
 import 'package:nutrizham/presentation/widgets/common/section_header.dart';
 import 'package:nutrizham/presentation/widgets/settings/appearance_section.dart';
 import 'package:nutrizham/presentation/widgets/profile/account_menu_section.dart';
+import 'package:nutrizham/core/utils/connectivity_helper.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -35,6 +36,7 @@ class SettingsPage extends StatelessWidget {
   }
 
   void _deleteAccount(BuildContext context, AppLocalizations loc) async {
+    if (!context.guardOnline()) return;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(

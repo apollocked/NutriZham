@@ -14,6 +14,7 @@ import 'package:nutrizham/presentation/widgets/profile/profile_header.dart';
 import 'package:nutrizham/presentation/widgets/profile/profile_stats_row.dart';
 import 'package:nutrizham/presentation/widgets/profile/profile_menu_card.dart';
 import 'package:nutrizham/presentation/widgets/profile/profile_favorites_section.dart';
+import 'package:nutrizham/core/utils/connectivity_helper.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -56,6 +57,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _logOutAccount() async {
+    if (!context.guardOnline()) return;
     final auth = context.read<AuthCubit>();
     final settings = context.read<SettingsCubit>();
     final confirmed = await showLogoutDialog(context);

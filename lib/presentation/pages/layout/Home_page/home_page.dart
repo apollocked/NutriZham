@@ -50,6 +50,17 @@ class _HomePageState extends State<HomePage> {
   Future<void> _loadNextBatch() async {
     final cubit = context.read<RecipeCubit>();
     if (cubit.isLoadingMore || !cubit.hasMore) return;
+    if (cubit.isOffline) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('No internet connection'),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+      return;
+    }
     await cubit.loadNextBatch();
   }
 
@@ -144,7 +155,12 @@ class _HomePageState extends State<HomePage> {
         Expanded(
           child: cubit.recipes.isEmpty && cubit.isLoading
               ? const ShimmerRecipeGrid()
-              : paginatedRecipes.isEmpty
+              : cubit.isOffline && cubit.recipes.isEmpty
+                  ? const EmptyStateWidget(
+                      icon: Icons.wifi_off_rounded,
+                      title: 'No internet connection',
+                      subtitle: 'Connect to the internet to load recipes')
+                  : paginatedRecipes.isEmpty
                   ? EmptyStateWidget(
                       icon: _showFavoritesOnly
                           ? Icons.favorite_outline
