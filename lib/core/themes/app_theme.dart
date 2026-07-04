@@ -13,10 +13,47 @@ class AppTheme {
   }) {
     return TextStyle(
       fontFamily: _font,
+      inherit: false,
       fontSize: fontSize,
       fontWeight: fontWeight,
       letterSpacing: letterSpacing,
       color: color,
+      textBaseline: TextBaseline.alphabetic,
+    );
+  }
+
+  static TextTheme _textTheme(Color primary, Color secondary) {
+    return TextTheme(
+      displayLarge: _style(
+          fontSize: 36, fontWeight: FontWeight.w700, letterSpacing: -1.0, color: primary),
+      displayMedium: _style(
+          fontSize: 30, fontWeight: FontWeight.w700, letterSpacing: -0.5, color: primary),
+      displaySmall: _style(
+          fontSize: 26, fontWeight: FontWeight.w600, letterSpacing: -0.25, color: primary),
+      headlineLarge: _style(
+          fontSize: 24, fontWeight: FontWeight.w600, letterSpacing: -0.25, color: primary),
+      headlineMedium: _style(
+          fontSize: 20, fontWeight: FontWeight.w600, color: primary),
+      headlineSmall: _style(
+          fontSize: 18, fontWeight: FontWeight.w600, color: primary),
+      titleLarge: _style(
+          fontSize: 17, fontWeight: FontWeight.w600, letterSpacing: 0.15, color: primary),
+      titleMedium: _style(
+          fontSize: 15, fontWeight: FontWeight.w500, letterSpacing: 0.1, color: primary),
+      titleSmall: _style(
+          fontSize: 13, fontWeight: FontWeight.w500, letterSpacing: 0.1, color: primary),
+      bodyLarge: _style(
+          fontSize: 16, fontWeight: FontWeight.w400, letterSpacing: 0.15, color: primary),
+      bodyMedium: _style(
+          fontSize: 14, fontWeight: FontWeight.w400, letterSpacing: 0.25, color: primary),
+      bodySmall: _style(
+          fontSize: 12, fontWeight: FontWeight.w400, letterSpacing: 0.4, color: secondary),
+      labelLarge: _style(
+          fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 0.1, color: primary),
+      labelMedium: _style(
+          fontSize: 12, fontWeight: FontWeight.w500, letterSpacing: 0.5, color: secondary),
+      labelSmall: _style(
+          fontSize: 11, fontWeight: FontWeight.w500, letterSpacing: 0.5, color: secondary),
     );
   }
 
@@ -62,38 +99,7 @@ class AppTheme {
       surfaceContainer: Color(0xFFEAF3EA),
       surfaceContainerHigh: Color(0xFFE0EDE0),
     ),
-    textTheme: TextTheme(
-      displayLarge: _style(
-          fontSize: 36, fontWeight: FontWeight.w700, letterSpacing: -1.0, color: AppColors.lightText),
-      displayMedium: _style(
-          fontSize: 30, fontWeight: FontWeight.w700, letterSpacing: -0.5, color: AppColors.lightText),
-      displaySmall: _style(
-          fontSize: 26, fontWeight: FontWeight.w600, letterSpacing: -0.25, color: AppColors.lightText),
-      headlineLarge: _style(
-          fontSize: 24, fontWeight: FontWeight.w600, letterSpacing: -0.25, color: AppColors.lightText),
-      headlineMedium: _style(
-          fontSize: 20, fontWeight: FontWeight.w600, color: AppColors.lightText),
-      headlineSmall: _style(
-          fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.lightText),
-      titleLarge: _style(
-          fontSize: 17, fontWeight: FontWeight.w600, letterSpacing: 0.15, color: AppColors.lightText),
-      titleMedium: _style(
-          fontSize: 15, fontWeight: FontWeight.w500, letterSpacing: 0.1, color: AppColors.lightText),
-      titleSmall: _style(
-          fontSize: 13, fontWeight: FontWeight.w500, letterSpacing: 0.1, color: AppColors.lightText),
-      bodyLarge: _style(
-          fontSize: 16, fontWeight: FontWeight.w400, letterSpacing: 0.15, color: AppColors.lightText),
-      bodyMedium: _style(
-          fontSize: 14, fontWeight: FontWeight.w400, letterSpacing: 0.25, color: AppColors.lightText),
-      bodySmall: _style(
-          fontSize: 12, fontWeight: FontWeight.w400, letterSpacing: 0.4, color: AppColors.lightTextSecondary),
-      labelLarge: _style(
-          fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 0.1, color: AppColors.lightText),
-      labelMedium: _style(
-          fontSize: 12, fontWeight: FontWeight.w500, letterSpacing: 0.5, color: AppColors.lightTextSecondary),
-      labelSmall: _style(
-          fontSize: 11, fontWeight: FontWeight.w500, letterSpacing: 0.5, color: AppColors.lightTextSecondary),
-    ),
+    textTheme: _textTheme(AppColors.lightText, AppColors.lightTextSecondary),
     appBarTheme: const AppBarTheme(
       elevation: 0,
       scrolledUnderElevation: 0.5,
@@ -102,6 +108,7 @@ class AppTheme {
       foregroundColor: AppColors.lightText,
       surfaceTintColor: Colors.transparent,
       titleTextStyle: TextStyle(
+          fontFamily: _font, inherit: false,
           fontSize: 20,
           fontWeight: FontWeight.w700,
           letterSpacing: -0.25,
@@ -119,12 +126,14 @@ class AppTheme {
       labelTextStyle: WidgetStateProperty.resolveWith((s) {
         if (s.contains(WidgetState.selected)) {
           return const TextStyle(
+              fontFamily: _font, inherit: false,
               fontSize: 11,
               fontWeight: FontWeight.w600,
               color: AppColors.primaryGreen,
               letterSpacing: 0.3);
         }
         return const TextStyle(
+            fontFamily: _font, inherit: false,
             fontSize: 11,
             fontWeight: FontWeight.w500,
             color: AppColors.lightTextSecondary,
@@ -165,13 +174,17 @@ class AppTheme {
           borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: AppColors.error, width: 1.5)),
       labelStyle: const TextStyle(
+          fontFamily: _font, inherit: false,
           color: AppColors.lightTextSecondary,
           fontSize: 14,
-          fontWeight: FontWeight.w500),
+          fontWeight: FontWeight.w500,
+          textBaseline: TextBaseline.alphabetic),
       floatingLabelStyle: const TextStyle(
+          fontFamily: _font, inherit: false,
           color: AppColors.primaryGreen,
           fontWeight: FontWeight.w600,
-          fontSize: 13),
+          fontSize: 13,
+          textBaseline: TextBaseline.alphabetic),
       prefixIconColor: AppColors.lightTextSecondary,
       suffixIconColor: AppColors.lightTextSecondary,
     ),
@@ -184,7 +197,10 @@ class AppTheme {
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         textStyle: const TextStyle(
-            fontSize: 15, fontWeight: FontWeight.w600, letterSpacing: 0.3),
+            fontFamily: _font, inherit: false,
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.3),
       ),
     ),
     filledButtonTheme: FilledButtonThemeData(
@@ -194,7 +210,10 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
         textStyle: const TextStyle(
-            fontSize: 15, fontWeight: FontWeight.w600, letterSpacing: 0.3),
+            fontFamily: _font, inherit: false,
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.3),
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
@@ -203,7 +222,8 @@ class AppTheme {
         side: const BorderSide(color: AppColors.primaryGreen, width: 1.5),
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+        textStyle: const TextStyle(
+            fontFamily: _font, inherit: false, fontSize: 15, fontWeight: FontWeight.w600),
       ),
     ),
     textButtonTheme: TextButtonThemeData(
@@ -211,17 +231,20 @@ class AppTheme {
         foregroundColor: AppColors.primaryGreen,
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+        textStyle: const TextStyle(
+            fontFamily: _font, inherit: false, fontSize: 14, fontWeight: FontWeight.w600),
       ),
     ),
     chipTheme: ChipThemeData(
       backgroundColor: const Color(0xFFEAF3EA),
       selectedColor: AppColors.primaryGreen.withOpacity(0.15),
       labelStyle: const TextStyle(
+          fontFamily: _font, inherit: false,
           fontSize: 13,
           fontWeight: FontWeight.w500,
           color: AppColors.lightText),
       secondaryLabelStyle: const TextStyle(
+          fontFamily: _font, inherit: false,
           fontSize: 13,
           fontWeight: FontWeight.w500,
           color: AppColors.lightTextSecondary),
@@ -235,6 +258,7 @@ class AppTheme {
       backgroundColor: const Color(0xFFFFFFFF),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       titleTextStyle: const TextStyle(
+          fontFamily: _font, inherit: false,
           fontSize: 18,
           fontWeight: FontWeight.w600,
           color: AppColors.lightText),
@@ -243,7 +267,8 @@ class AppTheme {
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(14))),
-      contentTextStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+      contentTextStyle: TextStyle(
+          fontFamily: _font, inherit: false, fontSize: 14, fontWeight: FontWeight.w500),
     ),
     bottomSheetTheme: const BottomSheetThemeData(
       shape: RoundedRectangleBorder(
@@ -255,11 +280,12 @@ class AppTheme {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       titleTextStyle: const TextStyle(
+          fontFamily: _font, inherit: false,
           fontSize: 15,
           fontWeight: FontWeight.w500,
           color: AppColors.lightText),
-      subtitleTextStyle:
-          const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary),
+      subtitleTextStyle: const TextStyle(
+          fontFamily: _font, inherit: false, fontSize: 13, color: AppColors.lightTextSecondary),
     ),
     menuTheme: MenuThemeData(
       style: MenuStyle(
@@ -298,6 +324,7 @@ class AppTheme {
       surfaceContainer: Color(0xFF1E331E),
       surfaceContainerHigh: Color(0xFF2D4A2D),
     ),
+    textTheme: _textTheme(AppColors.darkText, AppColors.darkTextSecondary),
     appBarTheme: const AppBarTheme(
       elevation: 0,
       scrolledUnderElevation: 0.5,
@@ -306,6 +333,7 @@ class AppTheme {
       foregroundColor: AppColors.darkText,
       surfaceTintColor: Colors.transparent,
       titleTextStyle: TextStyle(
+          fontFamily: _font, inherit: false,
           fontSize: 20,
           fontWeight: FontWeight.w700,
           letterSpacing: -0.25,
@@ -323,12 +351,14 @@ class AppTheme {
       labelTextStyle: WidgetStateProperty.resolveWith((s) {
         if (s.contains(WidgetState.selected)) {
           return const TextStyle(
+              fontFamily: _font, inherit: false,
               fontSize: 11,
               fontWeight: FontWeight.w600,
               color: AppColors.primaryGreen,
               letterSpacing: 0.3);
         }
         return const TextStyle(
+            fontFamily: _font, inherit: false,
             fontSize: 11,
             fontWeight: FontWeight.w500,
             color: AppColors.darkTextSecondary,
@@ -369,13 +399,17 @@ class AppTheme {
           borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: AppColors.error, width: 1.5)),
       labelStyle: const TextStyle(
+          fontFamily: _font, inherit: false,
           color: AppColors.darkTextSecondary,
           fontSize: 14,
-          fontWeight: FontWeight.w500),
+          fontWeight: FontWeight.w500,
+          textBaseline: TextBaseline.alphabetic),
       floatingLabelStyle: const TextStyle(
+          fontFamily: _font, inherit: false,
           color: AppColors.primaryGreen,
           fontWeight: FontWeight.w600,
-          fontSize: 13),
+          fontSize: 13,
+          textBaseline: TextBaseline.alphabetic),
       prefixIconColor: AppColors.darkTextSecondary,
       suffixIconColor: AppColors.darkTextSecondary,
     ),
@@ -383,8 +417,12 @@ class AppTheme {
       backgroundColor: const Color(0xFF1E331E),
       selectedColor: AppColors.primaryGreen.withOpacity(0.2),
       labelStyle: const TextStyle(
-          fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.darkText),
+          fontFamily: _font, inherit: false,
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
+          color: AppColors.darkText),
       secondaryLabelStyle: const TextStyle(
+          fontFamily: _font, inherit: false,
           fontSize: 13,
           fontWeight: FontWeight.w500,
           color: AppColors.darkTextSecondary),
@@ -397,13 +435,17 @@ class AppTheme {
       backgroundColor: const Color(0xFF162816),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       titleTextStyle: const TextStyle(
-          fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.darkText),
+          fontFamily: _font, inherit: false,
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          color: AppColors.darkText),
     ),
     snackBarTheme: const SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(14))),
-      contentTextStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+      contentTextStyle: TextStyle(
+          fontFamily: _font, inherit: false, fontSize: 14, fontWeight: FontWeight.w500),
     ),
     bottomSheetTheme: const BottomSheetThemeData(
       shape: RoundedRectangleBorder(
@@ -415,9 +457,12 @@ class AppTheme {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       titleTextStyle: const TextStyle(
-          fontSize: 15, fontWeight: FontWeight.w500, color: AppColors.darkText),
-      subtitleTextStyle:
-          const TextStyle(fontSize: 13, color: AppColors.darkTextSecondary),
+          fontFamily: _font, inherit: false,
+          fontSize: 15,
+          fontWeight: FontWeight.w500,
+          color: AppColors.darkText),
+      subtitleTextStyle: const TextStyle(
+          fontFamily: _font, inherit: false, fontSize: 13, color: AppColors.darkTextSecondary),
     ),
   );
 }
