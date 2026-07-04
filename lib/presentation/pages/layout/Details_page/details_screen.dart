@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/core/constants/app_colors.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
-import 'package:provider/provider.dart';
-import 'package:nutrizham/presentation/providers/favorites_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
 import 'package:nutrizham/presentation/widgets/custom_app_bar.dart';
 import 'package:nutrizham/presentation/widgets/nutrition_info_widget.dart';
 import 'package:nutrizham/presentation/widgets/category_badge.dart';
@@ -27,13 +27,13 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<FavoritesProvider>().loadFavorites();
+    context.read<FavoritesCubit>().loadFavorites();
   }
 
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-    final favorites = context.watch<FavoritesProvider>();
+    final favorites = context.watch<FavoritesCubit>();
     final isFavorite = favorites.isFavorite(widget.recipe.id);
 
     final recipeTitle =

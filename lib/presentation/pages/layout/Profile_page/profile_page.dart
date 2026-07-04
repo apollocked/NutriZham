@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
-import 'package:nutrizham/presentation/providers/auth_provider.dart';
-import 'package:nutrizham/presentation/providers/settings_provider.dart';
-import 'package:nutrizham/presentation/providers/favorites_provider.dart';
-import 'package:nutrizham/presentation/providers/meal_planner_provider.dart';
-import 'package:nutrizham/presentation/providers/recipe_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nutrizham/presentation/blocs/auth_cubit.dart';
+import 'package:nutrizham/presentation/blocs/settings_cubit.dart';
+import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
+import 'package:nutrizham/presentation/blocs/meal_planner_cubit.dart';
+import 'package:nutrizham/presentation/blocs/recipe_cubit.dart';
 import 'package:nutrizham/data/models/user_model.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:nutrizham/presentation/widgets/logout_dialog.dart';
@@ -25,7 +25,6 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   UserModel? _currentUser;
   List<Recipe> _allRecipes = [];
-  bool _isLoading = true;
 
   @override
   void initState() {
@@ -34,29 +33,29 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _loadData() async {
-    final auth = context.read<AuthProvider>();
-    final favorites = context.read<FavoritesProvider>();
-    final planner = context.read<MealPlannerProvider>();
+    final auth = context.read<AuthCubit>();
+    final favorites = context.read<FavoritesCubit>();
+    final planner = context.read<MealPlannerCubit>();
     await auth.loadCurrentUser();
     await favorites.loadFavorites();
     await planner.loadPlannedMeals();
     await _loadRecipesFromFirebase();
     if (mounted) {
-      setState(() { _currentUser = auth.currentUser; _isLoading = false; });
+      setState(() { _currentUser = auth.currentUser; });
     }
   }
 
   Future<void> _loadRecipesFromFirebase() async {
     try {
-      final recipes = context.read<RecipeProvider>();
+      final recipes = context.read<RecipeCubit>();
       final allRecipes = await recipes.getAll();
       if (mounted) setState(() => _allRecipes = allRecipes);
     } catch (_) {}
   }
 
   Future<void> _logOutAccount() async {
-    final auth = context.read<AuthProvider>();
-    final settings = context.read<SettingsProvider>();
+    final auth = context.read<AuthCubit>();
+    final settings = context.read<SettingsCubit>();
     final confirmed = await showLogoutDialog(context);
     if (confirmed == true) {
       await auth.logout();
@@ -68,11 +67,12 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-    final favorites = context.watch<FavoritesProvider>();
-    final planner = context.watch<MealPlannerProvider>();
+    final favorites = context.watch<FavoritesCubit>();
+    final planner = context.watch<MealPlannerCubit>();
     final favoriteMeals = _allRecipes.where((r) => favorites.isFavorite(r.id)).toList();
 
-    if (_isLoading || _currentUser == null) {
+    final authState = context.watch<AuthCubit>().state;
+    if (authState is AuthLoading || _currentUser == null) {
       return Scaffold(
         body: Center(
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:nutrizham/presentation/providers/settings_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nutrizham/presentation/blocs/settings_cubit.dart';
 import 'package:nutrizham/core/utils/features_helper.dart';
 import 'package:nutrizham/presentation/widgets/custom_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -26,7 +26,7 @@ class AppFeaturesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final langCode = context.watch<SettingsProvider>().languageCode;
+    final langCode = context.watch<SettingsCubit>().state.languageCode;
     final features = getFeatures(langCode);
 
     return Scaffold(

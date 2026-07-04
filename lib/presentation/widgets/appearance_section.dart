@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:nutrizham/presentation/providers/settings_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nutrizham/presentation/blocs/settings_cubit.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class AppearanceSection extends StatelessWidget {
@@ -10,7 +10,7 @@ class AppearanceSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final settings = context.watch<SettingsProvider>();
+    final settingsState = context.watch<SettingsCubit>().state;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -32,12 +32,12 @@ class AppearanceSection extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(settings.isDarkMode ? Icons.dark_mode_outlined : Icons.light_mode_outlined, color: theme.colorScheme.primary, size: 22),
+              child: Icon(settingsState.isDarkMode ? Icons.dark_mode_outlined : Icons.light_mode_outlined, color: theme.colorScheme.primary, size: 22),
             ),
             title: Text(loc.darkMode, style: TextStyle(color: theme.colorScheme.onSurface, fontWeight: FontWeight.w600)),
-            value: settings.isDarkMode,
+            value: settingsState.isDarkMode,
             activeColor: theme.colorScheme.primary,
-            onChanged: (value) => settings.setDarkMode(value),
+            onChanged: (value) => context.read<SettingsCubit>().setDarkMode(value),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 60),
@@ -58,7 +58,7 @@ class AppearanceSection extends StatelessWidget {
             ),
             title: Text(loc.language, style: TextStyle(color: theme.colorScheme.onSurface, fontWeight: FontWeight.w600)),
             trailing: DropdownButton<String>(
-              value: settings.languageCode,
+              value: settingsState.languageCode,
               dropdownColor: theme.cardColor,
               underline: Container(height: 0),
               items: [
@@ -67,7 +67,7 @@ class AppearanceSection extends StatelessWidget {
                 DropdownMenuItem(value: 'ar', child: Text(loc.arabic, style: TextStyle(color: theme.colorScheme.onSurface))),
               ],
               onChanged: (value) {
-                if (value != null) settings.setLanguageCode(value);
+                if (value != null) context.read<SettingsCubit>().setLanguageCode(value);
               },
             ),
           ),

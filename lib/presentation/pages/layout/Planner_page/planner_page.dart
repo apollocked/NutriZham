@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
-import 'package:provider/provider.dart';
-import 'package:nutrizham/presentation/providers/meal_planner_provider.dart';
-import 'package:nutrizham/presentation/providers/recipe_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nutrizham/presentation/blocs/meal_planner_cubit.dart';
+import 'package:nutrizham/presentation/blocs/recipe_cubit.dart';
 import 'package:nutrizham/presentation/widgets/custom_app_bar.dart';
 import 'package:nutrizham/presentation/widgets/nutrition_summary_card.dart';
 import 'package:nutrizham/presentation/widgets/section_header.dart';
@@ -19,18 +19,18 @@ class PlannerPage extends StatefulWidget {
 
 class _PlannerPageState extends State<PlannerPage> {
   List<Recipe> _allRecipes = [];
-  late final MealPlannerProvider _plannerProvider;
+  late final MealPlannerCubit _plannerProvider;
 
   @override
   void initState() {
     super.initState();
-    _plannerProvider = context.read<MealPlannerProvider>();
+    _plannerProvider = context.read<MealPlannerCubit>();
     _plannerProvider.loadPlannedMeals();
     _loadRecipes();
   }
 
   Future<void> _loadRecipes() async {
-    final recipes = context.read<RecipeProvider>();
+    final recipes = context.read<RecipeCubit>();
     final recipesList = await recipes.getAll();
     if (mounted) setState(() => _allRecipes = recipesList);
   }
@@ -58,7 +58,7 @@ class _PlannerPageState extends State<PlannerPage> {
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-    final planner = context.watch<MealPlannerProvider>();
+    final planner = context.watch<MealPlannerCubit>();
 
     final plannedMeals = _allRecipes.where((r) => planner.isInPlan(r.id)).toList();
     final recommendedMeals = _allRecipes.where((r) => !planner.isInPlan(r.id)).take(25).toList();

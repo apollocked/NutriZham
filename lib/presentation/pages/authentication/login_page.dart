@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
-import 'package:nutrizham/presentation/providers/auth_provider.dart';
-import 'package:nutrizham/presentation/providers/settings_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nutrizham/presentation/blocs/auth_cubit.dart';
+import 'package:nutrizham/presentation/blocs/settings_cubit.dart';
 import 'package:nutrizham/presentation/widgets/login_form.dart';
 import 'package:nutrizham/presentation/widgets/forgot_password_dialog.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/icon_text_button.dart';
@@ -18,7 +18,6 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -28,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _forgotPassword() async {
-    final auth = context.read<AuthProvider>();
+    final auth = context.read<AuthCubit>();
     final email = await showForgotPasswordDialog(context);
     if (email == null || !mounted) return;
     final result = await auth.resetPassword(email);
@@ -42,12 +41,10 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
-    setState(() => _isLoading = true);
-    final result = await context.read<AuthProvider>().login(email: _emailController.text.trim(), password: _passwordController.text);
-    setState(() => _isLoading = false);
+    final result = await context.read<AuthCubit>().login(email: _emailController.text.trim(), password: _passwordController.text);
     if (!mounted) return;
     if (result['success']) {
-      context.read<SettingsProvider>().setLoggedIn(true);
+      context.read<SettingsCubit>().setLoggedIn(true);
       context.go('/home');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -89,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 8),
                   Text(loc.login, style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
                   const SizedBox(height: 40),
-                  LoginForm(formKey: _formKey, emailController: _emailController, passwordController: _passwordController, isLoading: _isLoading, onLogin: _login, onForgotPassword: _forgotPassword),
+                  LoginForm(formKey: _formKey, emailController: _emailController, passwordController: _passwordController, isLoading: context.watch<AuthCubit>().state is AuthLoading, onLogin: _login, onForgotPassword: _forgotPassword),
                   const SizedBox(height: 40),
                   Text(loc.dontHaveAccount, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
                   const SizedBox(height: 12),

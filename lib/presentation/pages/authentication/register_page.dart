@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
-import 'package:nutrizham/presentation/providers/auth_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nutrizham/presentation/blocs/auth_cubit.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/custom_text_field.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/custom_buttons.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/icon_text_button.dart';
@@ -22,7 +22,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _ageController = TextEditingController();
-  bool _isLoading = false;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 
@@ -44,14 +43,12 @@ class _RegisterPageState extends State<RegisterPage> {
       );
       return;
     }
-    setState(() => _isLoading = true);
-    final result = await context.read<AuthProvider>().register(
+    final result = await context.read<AuthCubit>().register(
       username: _usernameController.text.trim(),
       email: _emailController.text.trim(),
       password: _passwordController.text,
       age: int.tryParse(_ageController.text) ?? 20,
     );
-    setState(() => _isLoading = false);
     if (!mounted) return;
     if (result['success']) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -117,7 +114,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       suffixIcon: IconButton(icon: Icon(_obscureConfirmPassword ? Icons.visibility_off_rounded : Icons.visibility_rounded, color: theme.colorScheme.onSurfaceVariant), onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword)),
                       validator: (v) => v?.isEmpty == true ? 'Please confirm your password' : (v != _passwordController.text ? 'Passwords do not match' : null)),
                     const SizedBox(height: 28),
-                    PrimaryButton(text: loc.register, onPressed: _register, isLoading: _isLoading),
+                    PrimaryButton(text: loc.register, onPressed: _register, isLoading: context.watch<AuthCubit>().state is AuthLoading),
                     const SizedBox(height: 20),
                     IconTextButton(text: loc.login, onPressed: () => context.go('/login'), icon: Icons.arrow_back_rounded),
                   ]),

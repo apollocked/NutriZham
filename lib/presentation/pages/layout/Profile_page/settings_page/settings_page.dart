@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
-import 'package:nutrizham/presentation/providers/settings_provider.dart';
-import 'package:nutrizham/presentation/providers/auth_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nutrizham/presentation/blocs/settings_cubit.dart';
+import 'package:nutrizham/presentation/blocs/auth_cubit.dart';
 import 'package:nutrizham/presentation/widgets/custom_app_bar.dart';
 import 'package:nutrizham/presentation/widgets/section_header.dart';
 import 'package:nutrizham/presentation/widgets/appearance_section.dart';
@@ -53,7 +53,7 @@ class SettingsPage extends StatelessWidget {
       ),
     );
     if (confirmed == true) {
-      final result = await context.read<AuthProvider>().deleteAccount();
+      final result = await context.read<AuthCubit>().deleteAccount();
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -63,7 +63,7 @@ class SettingsPage extends StatelessWidget {
                   : Theme.of(context).colorScheme.error),
         );
         if (result['success']) {
-          context.read<SettingsProvider>().setLoggedIn(false);
+          context.read<SettingsCubit>().setLoggedIn(false);
           context.go('/login');
         }
       }

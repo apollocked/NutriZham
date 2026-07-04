@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
-import 'package:nutrizham/presentation/providers/settings_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nutrizham/presentation/blocs/settings_cubit.dart';
 import 'package:nutrizham/data/datasources/preferences_helper.dart';
 import 'package:nutrizham/presentation/widgets/welcome_header.dart';
 import 'package:nutrizham/presentation/widgets/welcome_settings_card.dart';
@@ -29,14 +29,14 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   Future<void> _continue() async {
-    final settings = context.read<SettingsProvider>();
+    final settingsCubit = context.read<SettingsCubit>();
     final go = context.go;
     await PreferencesHelper.setLanguageCode(_selectedLanguage);
     await PreferencesHelper.setWelcomeShown(true);
     if (!mounted) return;
 
-    await settings.setDarkMode(settings.isDarkMode);
-    await settings.setLanguageCode(_selectedLanguage);
+    await settingsCubit.setDarkMode(settingsCubit.state.isDarkMode);
+    await settingsCubit.setLanguageCode(_selectedLanguage);
 
     go('/login');
   }

@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
-import 'package:nutrizham/presentation/providers/auth_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nutrizham/presentation/blocs/auth_cubit.dart';
 import 'package:nutrizham/data/datasources/Auth_Services/firebase_auth_service.dart';
 import 'package:nutrizham/presentation/widgets/custom_app_bar.dart';
 import 'package:nutrizham/presentation/widgets/edit_account_form.dart';
@@ -53,7 +53,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
     setState(() => _isLoading = true);
 
     try {
-      final authProvider = context.read<AuthProvider>();
+      final authCubit = context.read<AuthCubit>();
       final user = await _authService.getCurrentUser();
       if (user == null) return;
 
@@ -63,7 +63,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
         age: int.parse(_ageController.text),
       );
 
-      final result = await authProvider.updateProfile(updatedUser);
+      final result = await authCubit.updateProfile(updatedUser);
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(

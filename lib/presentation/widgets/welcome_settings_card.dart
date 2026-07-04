@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:nutrizham/presentation/providers/settings_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nutrizham/presentation/blocs/settings_cubit.dart';
 import 'package:nutrizham/presentation/widgets/welcome_language_option.dart';
 
 class WelcomeSettingsCard extends StatelessWidget {
@@ -16,8 +16,8 @@ class WelcomeSettingsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final settings = context.watch<SettingsProvider>();
-    final isDark = settings.isDarkMode;
+    final settingsState = context.watch<SettingsCubit>().state;
+    final isDark = settingsState.isDarkMode;
 
     return Container(
       padding: const EdgeInsets.all(24),
@@ -42,7 +42,7 @@ class WelcomeSettingsCard extends StatelessWidget {
           ),
           const SizedBox(width: 16),
           Expanded(child: Text(WelcomeLanguageTexts.darkModeText(selectedLanguage), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface))),
-          Switch(value: isDark, onChanged: (v) => settings.setDarkMode(v), activeColor: theme.colorScheme.primary),
+          Switch(value: isDark, onChanged: (v) => context.read<SettingsCubit>().setDarkMode(v), activeColor: theme.colorScheme.primary),
         ]),
         const SizedBox(height: 24),
         Divider(color: theme.colorScheme.outlineVariant, height: 1),

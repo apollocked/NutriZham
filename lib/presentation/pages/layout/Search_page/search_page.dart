@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
-import 'package:provider/provider.dart';
-import 'package:nutrizham/presentation/providers/favorites_provider.dart';
-import 'package:nutrizham/presentation/providers/recipe_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
+import 'package:nutrizham/presentation/blocs/recipe_cubit.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/empty_state_widget.dart';
 import 'package:nutrizham/presentation/widgets/custom_app_bar.dart';
 import 'package:nutrizham/presentation/widgets/search_bar_widget.dart';
@@ -31,7 +31,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Future<void> _loadRecipes() async {
-    final recipes = context.read<RecipeProvider>();
+    final recipes = context.read<RecipeCubit>();
     final recipesList = await recipes.getAll();
     if (mounted) setState(() => _allRecipes = recipesList);
   }
@@ -87,7 +87,7 @@ class _SearchPageState extends State<SearchPage> {
                   itemCount: filteredRecipes.length,
                   itemBuilder: (context, index) {
                     final recipe = filteredRecipes[index];
-                    final favorites = context.watch<FavoritesProvider>();
+                    final favorites = context.watch<FavoritesCubit>();
                     return RecipeCard(
                       recipe: recipe,
                       isFavorite: favorites.isFavorite(recipe.id),

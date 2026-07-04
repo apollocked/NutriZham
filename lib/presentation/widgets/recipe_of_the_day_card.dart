@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/core/constants/app_colors.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
-import 'package:nutrizham/presentation/providers/favorites_provider.dart';
+import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RecipeOfTheDayCard extends StatelessWidget {
   final Recipe recipe;
@@ -14,7 +14,7 @@ class RecipeOfTheDayCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final favorites = context.watch<FavoritesProvider>();
+    final favorites = context.watch<FavoritesCubit>();
     final locale = Localizations.localeOf(context).languageCode;
     final title = recipe.title[locale] ?? recipe.title['en'] ?? '';
     final catName = recipe.category.toString().split('.').last;

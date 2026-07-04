@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
-import 'package:nutrizham/presentation/providers/favorites_provider.dart';
+import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/empty_state_widget.dart';
 import 'package:nutrizham/presentation/widgets/recipe_card.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class ProfileFavoritesSection extends StatelessWidget {
   final List<Recipe> favoriteMeals;
-  final FavoritesProvider favoritesProvider;
+  final FavoritesCubit favoritesProvider;
   final ValueChanged<String> onToggleFavorite;
 
   const ProfileFavoritesSection({
