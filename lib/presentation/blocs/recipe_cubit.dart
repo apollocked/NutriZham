@@ -30,7 +30,7 @@ class RecipeError extends RecipeState {
 class RecipeCubit extends Cubit<RecipeState> {
   final _repository = RecipeRepositoryImpl();
   final _cache = RecipeCacheService(CacheService());
-  static const int _pageSize = 25;
+  static const int _pageSize = 15;
 
   RecipeCubit() : super(const RecipeInitial());
 
@@ -49,11 +49,11 @@ class RecipeCubit extends Cubit<RecipeState> {
   }
 
   Future<List<Recipe>> getNextBatch({
-    String? lastRecipeTitle,
-    int limit = 25,
+    String? lastDocId,
+    int limit = 15,
   }) async {
     return await _repository.getRecipes(
-      lastRecipeTitle: lastRecipeTitle,
+      lastDocId: lastDocId,
       limit: limit,
     );
   }
@@ -64,30 +64,23 @@ class RecipeCubit extends Cubit<RecipeState> {
     if (current is RecipeLoaded && !current.hasMore) return;
 
     if (current is RecipeInitial) {
-      final cached = await _cache.getCachedRecipes();
-      if (cached.isNotEmpty) {
-        emit(RecipeLoaded(cached, hasMore: true));
-      } else {
-        emit(const RecipeLoading());
-      }
+      emit(const RecipeLoading());
     } else if (current is RecipeLoaded) {
       emit(RecipeLoadingMore(current.recipes));
     }
 
     try {
-      final currentRecipes = current is RecipeLoaded ? current.recipes : <Recipe>[];
-      final lastTitle = currentRecipes.isNotEmpty
-          ? currentRecipes.last.title['en'] ?? ''
-          : null;
+      final prevRecipes = current is RecipeLoaded ? current.recipes : <Recipe>[];
+      final lastDocId = prevRecipes.isNotEmpty ? prevRecipes.last.id : null;
 
       final newRecipes = await _repository.getRecipes(
-        lastRecipeTitle: lastTitle,
+        lastDocId: lastDocId,
         limit: _pageSize,
       );
 
-      final prevIds = currentRecipes.map((r) => r.id).toSet();
+      final prevIds = prevRecipes.map((r) => r.id).toSet();
       final deduped = newRecipes.where((r) => !prevIds.contains(r.id)).toList();
-      final allRecipes = [...currentRecipes, ...deduped];
+      final allRecipes = [...prevRecipes, ...deduped];
       final more = newRecipes.length == _pageSize;
       emit(RecipeLoaded(allRecipes, hasMore: more));
       _cache.cacheRecipes(allRecipes);

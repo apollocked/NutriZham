@@ -86,22 +86,30 @@ class _ModernFilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChoiceChip(
-      label: Text(label),
-      selected: selected,
-      onSelected: onSelected,
-      backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-      selectedColor: color.withOpacity(0.12),
-      labelStyle: TextStyle(
-        color: selected ? color : Theme.of(context).colorScheme.onSurfaceVariant,
-        fontWeight: FontWeight.w600,
-        fontSize: 13,
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: BorderSide(
-          color: selected ? color : Theme.of(context).colorScheme.outlineVariant,
-          width: selected ? 1.5 : 1,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeInOut,
+      child: ChoiceChip(
+        label: Text(label),
+        selected: selected,
+        onSelected: onSelected,
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+        selectedColor: color.withOpacity(0.12),
+        labelStyle: TextStyle(
+          color: selected
+              ? color
+              : Theme.of(context).colorScheme.onSurfaceVariant,
+          fontWeight: FontWeight.w600,
+          fontSize: 13,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: BorderSide(
+            color: selected
+                ? color
+                : Theme.of(context).colorScheme.outlineVariant,
+            width: selected ? 1.5 : 1,
+          ),
         ),
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
@@ -47,15 +48,15 @@ GoRouter buildRouter() {
     routes: [
       GoRoute(
         path: '/welcome',
-        builder: (context, state) => const WelcomePage(),
+        pageBuilder: (context, state) => _fadePage(const WelcomePage()),
       ),
       GoRoute(
         path: '/login',
-        builder: (context, state) => const LoginPage(),
+        pageBuilder: (context, state) => _fadePage(const LoginPage()),
       ),
       GoRoute(
         path: '/register',
-        builder: (context, state) => const RegisterPage(),
+        pageBuilder: (context, state) => _fadePage(const RegisterPage()),
       ),
       ShellRoute(
         builder: (context, state, child) => MainNavigation(child: child),
@@ -88,27 +89,57 @@ GoRouter buildRouter() {
       ),
       GoRoute(
         path: '/recipe/:id',
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final recipe = state.extra as Recipe;
-          return RecipeDetailScreen(recipe: recipe);
+          return _slideUpPage(RecipeDetailScreen(recipe: recipe));
         },
       ),
       GoRoute(
         path: '/settings',
-        builder: (context, state) => const SettingsPage(),
+        pageBuilder: (context, state) => _slideUpPage(const SettingsPage()),
       ),
       GoRoute(
         path: '/settings/change-password',
-        builder: (context, state) => const ChangePasswordPage(),
+        pageBuilder: (context, state) => _slideUpPage(const ChangePasswordPage()),
       ),
       GoRoute(
         path: '/settings/edit-account',
-        builder: (context, state) => const EditAccountPage(),
+        pageBuilder: (context, state) => _slideUpPage(const EditAccountPage()),
       ),
       GoRoute(
         path: '/features',
-        builder: (context, state) => const AppFeaturesPage(),
+        pageBuilder: (context, state) => _slideUpPage(const AppFeaturesPage()),
       ),
     ],
+  );
+}
+
+Page _fadePage(Widget child) {
+  return CustomTransitionPage(
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return FadeTransition(opacity: animation, child: child);
+    },
+  );
+}
+
+Page _slideUpPage(Widget child) {
+  return CustomTransitionPage(
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(0, 0.06),
+          end: Offset.zero,
+        ).animate(CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
+        )),
+        child: FadeTransition(
+          opacity: animation,
+          child: child,
+        ),
+      );
+    },
   );
 }

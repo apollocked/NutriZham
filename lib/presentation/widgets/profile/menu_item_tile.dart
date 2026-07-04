@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nutrizham/presentation/widgets/common/pressable.dart';
 
 class MenuItemTile extends StatelessWidget {
   final IconData icon;
@@ -26,24 +27,35 @@ class MenuItemTile extends StatelessWidget {
     final c = textColor ?? theme.colorScheme.onSurface;
     final ic = iconColor ?? theme.colorScheme.primary;
 
-    return ListTile(
-      leading: Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [ic.withOpacity(0.15), ic.withOpacity(0.05)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Icon(icon, color: ic, size: 22),
-      ),
-      title: Text(title, style: TextStyle(color: c, fontWeight: FontWeight.w600, fontSize: 15)),
-      subtitle: subtitle != null ? Text(subtitle!, style: theme.textTheme.bodySmall) : null,
-      trailing: showTrailing ? Icon(Icons.chevron_right_rounded, size: 22, color: c.withOpacity(0.4)) : null,
+    return Pressable(
       onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+      child: ListTile(
+        leading: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [ic.withOpacity(0.15), ic.withOpacity(0.05)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(icon, color: ic, size: 22),
+        ),
+        title: Text(title,
+            style: TextStyle(
+                color: c, fontWeight: FontWeight.w600, fontSize: 15)),
+        subtitle: subtitle != null
+            ? Text(subtitle!, style: theme.textTheme.bodySmall)
+            : null,
+        trailing: showTrailing
+            ? Icon(Icons.chevron_right_rounded,
+                size: 22, color: c.withOpacity(0.4))
+            : null,
+        onTap: onTap,
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+      ),
     );
   }
 }

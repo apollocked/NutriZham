@@ -377,7 +377,7 @@ class AppTheme {
   );
 
   static ThemeData dark = _base(Brightness.dark).copyWith(
-    scaffoldBackgroundColor: const Color(0xFF0A1A0A),
+    scaffoldBackgroundColor: AppColors.darkBackground,
     colorScheme: const ColorScheme.dark(
       primary: AppColors.primaryGreen,
       onPrimary: Color(0xFF052E16),
@@ -385,19 +385,19 @@ class AppTheme {
       onPrimaryContainer: AppColors.primaryGreenLight,
       secondary: AppColors.primaryGreen,
       onSecondary: Color(0xFF052E16),
-      surface: Color(0xFF162816),
+      surface: AppColors.darkSurface,
       onSurface: AppColors.darkText,
       onSurfaceVariant: AppColors.darkTextSecondary,
-      outline: Color(0xFF2D4A2D),
-      outlineVariant: Color(0xFF1E3A1E),
+      outline: AppColors.darkDivider,
+      outlineVariant: Color(0xFF334155),
       error: AppColors.error,
       onError: Colors.white,
       errorContainer: Color(0xFF7F1D1D),
       onErrorContainer: Color(0xFFFECACA),
-      surfaceContainerHighest: Color(0xFF1E331E),
-      surfaceContainerLow: Color(0xFF0F1F0F),
-      surfaceContainer: Color(0xFF1E331E),
-      surfaceContainerHigh: Color(0xFF2D4A2D),
+      surfaceContainerHighest: Color(0xFF334155),
+      surfaceContainerLow: Color(0xFF1E293B),
+      surfaceContainer: Color(0xFF334155),
+      surfaceContainerHigh: Color(0xFF475569),
     ),
     textTheme: _textTheme(AppColors.darkText, AppColors.darkTextSecondary),
     appBarTheme: const AppBarTheme(
@@ -418,7 +418,7 @@ class AppTheme {
     ),
     navigationBarTheme: NavigationBarThemeData(
       elevation: 0,
-      backgroundColor: const Color(0xFF162816).withOpacity(0.85),
+      backgroundColor: AppColors.darkSurface.withOpacity(0.85),
       indicatorColor: AppColors.primaryGreen.withOpacity(0.2),
       indicatorShape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -455,20 +455,20 @@ class AppTheme {
     ),
     cardTheme: CardThemeData(
       elevation: 0,
-      color: const Color(0xFF162816).withOpacity(0.85),
+      color: AppColors.darkSurface.withOpacity(0.85),
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       clipBehavior: Clip.antiAlias,
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: const Color(0xFF1E331E),
+      fillColor: const Color(0xFF334155),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
       enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: Color(0xFF2D4A2D))),
+          borderSide: const BorderSide(color: AppColors.darkDivider)),
       focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide:
@@ -497,7 +497,7 @@ class AppTheme {
       suffixIconColor: AppColors.darkTextSecondary,
     ),
     chipTheme: ChipThemeData(
-      backgroundColor: const Color(0xFF1E331E),
+      backgroundColor: const Color(0xFF334155),
       selectedColor: AppColors.primaryGreen.withOpacity(0.2),
       labelStyle: const TextStyle(
           fontFamily: _font,
@@ -517,9 +517,9 @@ class AppTheme {
           borderRadius: BorderRadius.circular(24), side: BorderSide.none),
     ),
     dividerTheme: const DividerThemeData(
-        color: Color(0xFF1E3A1E), thickness: 1, space: 1),
+        color: AppColors.darkDivider, thickness: 1, space: 1),
     dialogTheme: DialogThemeData(
-      backgroundColor: const Color(0xFF162816),
+      backgroundColor: AppColors.darkSurface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       titleTextStyle: const TextStyle(
           fontFamily: _font,

@@ -7,6 +7,7 @@ import 'package:nutrizham/presentation/blocs/recipe_cubit.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/empty_state_widget.dart';
 import 'package:nutrizham/presentation/widgets/common/custom_app_bar.dart';
 import 'package:nutrizham/presentation/widgets/common/shimmer_loading.dart';
+import 'package:nutrizham/presentation/widgets/common/pressable.dart';
 import 'package:nutrizham/presentation/widgets/recipe/recipe_card.dart';
 import 'package:nutrizham/presentation/widgets/home/home_category_chips.dart';
 import 'package:nutrizham/presentation/widgets/recipe/recipe_of_the_day_card.dart';
@@ -183,16 +184,20 @@ class _HomePageState extends State<HomePage> {
                             return const ShimmerRecipeCard();
                           }
                           final recipe = paginatedRecipes[index];
-                          return RecipeCard(
-                              recipe: recipe,
-                              isFavorite: context
-                                  .watch<FavoritesCubit>()
-                                  .isFavorite(recipe.id),
-                              onFavoriteToggle: () => context
-                                  .read<FavoritesCubit>()
-                                  .toggleFavorite(recipe.id),
-                              onTap: () => context.push('/recipe/$recipe.id',
-                                  extra: recipe));
+                          return DelayedReveal(
+                            index: index,
+                            child: RecipeCard(
+                                recipe: recipe,
+                                isFavorite: context
+                                    .watch<FavoritesCubit>()
+                                    .isFavorite(recipe.id),
+                                onFavoriteToggle: () => context
+                                    .read<FavoritesCubit>()
+                                    .toggleFavorite(recipe.id),
+                                onTap: () => context.push(
+                                    '/recipe/$recipe.id',
+                                    extra: recipe)),
+                          );
                         },
                       )),
         ),

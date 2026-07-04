@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/core/constants/app_colors.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
+import 'package:nutrizham/presentation/widgets/common/pressable.dart';
 
 class CompactRecipeCard extends StatelessWidget {
   final Recipe recipe;
@@ -23,20 +24,21 @@ class CompactRecipeCard extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: Material(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
-        elevation: 0,
-        child: InkWell(
-          onTap: onTap,
+      child: Pressable(
+        onTap: onTap,
+        child: Material(
+          color: theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(16),
+          elevation: 0,
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+              border: Border.all(
+                  color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Row(
                 children: [
                   Container(
@@ -45,13 +47,17 @@ class CompactRecipeCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       gradient: LinearGradient(
-                        colors: [catColor.withOpacity(0.15), catColor.withOpacity(0.05)],
+                        colors: [
+                          catColor.withOpacity(0.15),
+                          catColor.withOpacity(0.05)
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                     ),
                     child: Center(
-                      child: Text(recipe.icon, style: TextStyle(fontSize: 20, color: catColor)),
+                      child: Text(recipe.icon,
+                          style: TextStyle(fontSize: 20, color: catColor)),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -61,16 +67,24 @@ class CompactRecipeCard extends StatelessWidget {
                       children: [
                         Text(
                           recipe.title[locale] ?? recipe.title['en'] ?? '',
-                          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                          style: theme.textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w600),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 4),
                         Row(
                           children: [
-                            Icon(Icons.local_fire_department_rounded, size: 12, color: AppColors.caloriesColor.withOpacity(0.6)),
+                            Icon(Icons.local_fire_department_rounded,
+                                size: 12,
+                                color:
+                                    AppColors.caloriesColor.withOpacity(0.6)),
                             const SizedBox(width: 3),
-                            Text('${recipe.nutrition.calories} kcal', style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurfaceVariant)),
+                            Text('${recipe.nutrition.calories} kcal',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: theme.colorScheme
+                                        .onSurfaceVariant)),
                           ],
                         ),
                       ],

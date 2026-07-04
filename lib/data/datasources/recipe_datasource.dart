@@ -3,15 +3,15 @@ import 'package:nutrizham/data/models/meals_data.dart';
 
 class RecipeDatasource {
   static Future<List<Recipe>> getRecipes({
-    String? lastRecipeTitle,
+    String? lastDocId,
     int limit = 25,
   }) async {
     Query query = FirebaseFirestore.instance
         .collection('recipes')
-        .orderBy('title')
+        .orderBy('id')
         .limit(limit);
-    if (lastRecipeTitle != null) {
-      query = query.startAfter([lastRecipeTitle]);
+    if (lastDocId != null) {
+      query = query.startAfter([lastDocId]);
     }
     final snapshot = await query.get();
     return snapshot.docs

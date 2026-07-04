@@ -4,9 +4,8 @@ import 'package:nutrizham/data/datasources/recipe_datasource.dart';
 
 class RecipeRepositoryImpl implements RecipeRepository {
   @override
-  Future<List<Recipe>> getRecipes({String? lastRecipeTitle, int limit = 25}) =>
-      RecipeDatasource.getRecipes(
-          lastRecipeTitle: lastRecipeTitle, limit: limit);
+  Future<List<Recipe>> getRecipes({String? lastDocId, int limit = 15}) =>
+      RecipeDatasource.getRecipes(lastDocId: lastDocId, limit: limit);
 
   @override
   Future<List<Recipe>> getAllRecipes() => RecipeDatasource.getAllRecipes();

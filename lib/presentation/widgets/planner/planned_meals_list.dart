@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/empty_state_widget.dart';
+import 'package:nutrizham/presentation/widgets/common/pressable.dart';
 import 'package:nutrizham/presentation/widgets/recipe/compact_recipe_card.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
@@ -21,18 +22,24 @@ class PlannedMealsList extends StatelessWidget {
     if (plannedMeals.isEmpty) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: EmptyStateWidget(icon: Icons.calendar_today_outlined, title: loc.emptyPlan, subtitle: loc.tapToSave),
+        child: EmptyStateWidget(
+            icon: Icons.calendar_today_outlined,
+            title: loc.emptyPlan,
+            subtitle: loc.tapToSave),
       );
     }
     return Column(
         children: plannedMeals
             .map((recipe) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                   child: CompactRecipeCard(
                     recipe: recipe,
-                    trailing: IconButton(
-                        icon: Icon(Icons.remove_circle_outline, color: Theme.of(context).colorScheme.error),
-                        onPressed: () => onRemoveMeal(recipe.id)),
+                    trailing: BounceIcon(
+                      icon: Icon(Icons.remove_circle_outline,
+                          color: Theme.of(context).colorScheme.error),
+                      onPressed: () => onRemoveMeal(recipe.id),
+                    ),
                   ),
                 ))
             .toList());

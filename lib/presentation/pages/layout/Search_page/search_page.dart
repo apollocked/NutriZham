@@ -9,6 +9,7 @@ import 'package:nutrizham/presentation/widgets/common/custom_app_bar.dart';
 import 'package:nutrizham/presentation/widgets/common/search_bar_widget.dart';
 import 'package:nutrizham/presentation/widgets/common/category_widgets.dart';
 import 'package:nutrizham/presentation/widgets/common/shimmer_loading.dart';
+import 'package:nutrizham/presentation/widgets/common/pressable.dart';
 import 'package:nutrizham/presentation/widgets/recipe/recipe_card.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
@@ -94,11 +95,14 @@ class _SearchPageState extends State<SearchPage> {
                   itemBuilder: (context, index) {
                     final recipe = filteredRecipes[index];
                     final favorites = context.watch<FavoritesCubit>();
-                    return RecipeCard(
-                      recipe: recipe,
-                      isFavorite: favorites.isFavorite(recipe.id),
-                      onFavoriteToggle: () => favorites.toggleFavorite(recipe.id),
-                      onTap: () => context.push('/recipe/${recipe.id}', extra: recipe),
+                    return DelayedReveal(
+                      index: index,
+                      child: RecipeCard(
+                        recipe: recipe,
+                        isFavorite: favorites.isFavorite(recipe.id),
+                        onFavoriteToggle: () => favorites.toggleFavorite(recipe.id),
+                        onTap: () => context.push('/recipe/${recipe.id}', extra: recipe),
+                      ),
                     );
                   },
                 ),

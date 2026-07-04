@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
+import 'package:nutrizham/presentation/widgets/common/pressable.dart';
 import 'package:nutrizham/presentation/widgets/recipe/compact_recipe_card.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
@@ -21,7 +22,9 @@ class RecommendedMealsList extends StatelessWidget {
     if (recommendedMeals.isEmpty) {
       return Padding(
         padding: const EdgeInsets.all(16),
-        child: Text(loc.noRecipesAvailable, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+        child: Text(loc.noRecipesAvailable,
+            style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant)),
       );
     }
 
@@ -35,8 +38,9 @@ class RecommendedMealsList extends StatelessWidget {
         return CompactRecipeCard(
           recipe: recipe,
           onTap: () {},
-          trailing: IconButton(
-            icon: Icon(Icons.add_circle_rounded, color: theme.colorScheme.primary),
+          trailing: BounceIcon(
+            icon: Icon(Icons.add_circle_rounded,
+                color: theme.colorScheme.primary),
             onPressed: () => onAddMeal(recipe.id),
           ),
         );

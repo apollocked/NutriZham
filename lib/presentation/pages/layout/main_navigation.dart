@@ -51,35 +51,68 @@ class MainNavigation extends StatelessWidget {
               surfaceTintColor: Colors.transparent,
               elevation: 0,
               indicatorColor: theme.colorScheme.primary.withOpacity(0.15),
-              indicatorShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+              indicatorShape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)),
+              labelBehavior:
+                  NavigationDestinationLabelBehavior.onlyShowSelected,
               height: 64,
               destinations: [
-                NavigationDestination(
+                _NavDest(
                   icon: const Icon(Icons.home_outlined),
-                  selectedIcon: Icon(Icons.home, color: theme.colorScheme.primary),
+                  selectedIcon:
+                      Icon(Icons.home, color: theme.colorScheme.primary),
                   label: loc.home,
+                  selected: currentIndex == 0,
                 ),
-                NavigationDestination(
+                _NavDest(
                   icon: const Icon(Icons.search_outlined),
-                  selectedIcon: Icon(Icons.search, color: theme.colorScheme.primary),
+                  selectedIcon:
+                      Icon(Icons.search, color: theme.colorScheme.primary),
                   label: loc.search,
+                  selected: currentIndex == 1,
                 ),
-                NavigationDestination(
+                _NavDest(
                   icon: const Icon(Icons.calendar_today_outlined),
-                  selectedIcon: Icon(Icons.calendar_today, color: theme.colorScheme.primary),
+                  selectedIcon: Icon(Icons.calendar_today,
+                      color: theme.colorScheme.primary),
                   label: loc.planner,
+                  selected: currentIndex == 2,
                 ),
-                NavigationDestination(
+                _NavDest(
                   icon: const Icon(Icons.person_outline),
-                  selectedIcon: Icon(Icons.person, color: theme.colorScheme.primary),
+                  selectedIcon:
+                      Icon(Icons.person, color: theme.colorScheme.primary),
                   label: loc.profile,
+                  selected: currentIndex == 3,
                 ),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class _NavDest extends StatelessWidget {
+  final Widget icon;
+  final Widget selectedIcon;
+  final String label;
+  final bool selected;
+
+  const _NavDest({
+    required this.icon,
+    required this.selectedIcon,
+    required this.label,
+    required this.selected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return NavigationDestination(
+      icon: icon,
+      selectedIcon: selectedIcon,
+      label: label,
     );
   }
 }
