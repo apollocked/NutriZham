@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:nutrizham/core/cache/cache_service.dart';
 import 'package:nutrizham/core/themes/app_theme.dart';
 import 'package:nutrizham/core/utils/locale_helpers.dart';
@@ -31,6 +30,7 @@ class NutriZhamApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final router = buildRouter();
     return BlocProvider<SettingsCubit>.value(
       value: settings,
       child: MultiBlocProvider(
@@ -64,10 +64,10 @@ class NutriZhamApp extends StatelessWidget {
                 AppLocalizations.delegate,
                 KurdishSafeMaterialDelegate(),
                 KurdishSafeCupertinoDelegate(),
-                GlobalWidgetsLocalizations.delegate,
+                KurdishRtlWidgetsDelegate(),
               ],
               supportedLocales: AppLocalizations.supportedLocales,
-              routerConfig: buildRouter(),
+              routerConfig: router,
             );
           },
         ),

@@ -94,7 +94,7 @@ class _ModernFilterChip extends StatelessWidget {
         selected: selected,
         onSelected: onSelected,
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-        selectedColor: color.withOpacity(0.12),
+        selectedColor: color.withOpacity(0.25),
         labelStyle: TextStyle(
           color: selected
               ? color
@@ -102,6 +102,7 @@ class _ModernFilterChip extends StatelessWidget {
           fontWeight: FontWeight.w600,
           fontSize: 13,
         ),
+        visualDensity: VisualDensity.compact,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
           side: BorderSide(

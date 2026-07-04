@@ -297,6 +297,7 @@ class AppTheme {
     chipTheme: ChipThemeData(
       backgroundColor: const Color(0xFFEAF3EA),
       selectedColor: AppColors.primaryGreen.withOpacity(0.15),
+      checkmarkColor: AppColors.primaryGreenDark,
       labelStyle: const TextStyle(
           fontFamily: _font,
           inherit: false,
@@ -499,6 +500,7 @@ class AppTheme {
     chipTheme: ChipThemeData(
       backgroundColor: const Color(0xFF334155),
       selectedColor: AppColors.primaryGreen.withOpacity(0.2),
+      checkmarkColor: AppColors.darkText,
       labelStyle: const TextStyle(
           fontFamily: _font,
           inherit: false,

@@ -88,12 +88,13 @@ class _Chip extends StatelessWidget {
       selected: selected,
       onSelected: (_) => onTap(),
       backgroundColor: theme.colorScheme.surfaceContainerHighest,
-      selectedColor: color.withOpacity(0.12),
+      selectedColor: color.withOpacity(0.25),
       labelStyle: TextStyle(
         color: selected ? color : theme.colorScheme.onSurfaceVariant,
         fontWeight: FontWeight.w600,
         fontSize: 13,
       ),
+      visualDensity: VisualDensity.compact,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(

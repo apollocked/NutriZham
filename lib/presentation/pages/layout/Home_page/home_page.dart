@@ -86,10 +86,9 @@ class _HomePageState extends State<HomePage> {
           steps: {},
           category: MealCategory.snack);
     }
-    return all[DateTime.now()
-            .difference(DateTime(DateTime.now().year, 1, 1))
-            .inDays %
-        all.length];
+    return all[
+        DateTime.now().difference(DateTime(DateTime.now().year, 1, 1)).inDays %
+            all.length];
   }
 
   @override
@@ -107,117 +106,128 @@ class _HomePageState extends State<HomePage> {
                 setState(() => _showFavoritesOnly = !_showFavoritesOnly)),
       ]),
       body: SafeArea(
-          child: Column(children: [
-        HomeCategoryChips(
-            selectedCategory: _selectedCategory,
-            onCategorySelected: (v) => setState(() => _selectedCategory = v)),
-        if (_selectedCategory == null && !_showFavoritesOnly)
-          RecipeOfTheDayCard(recipe: _recipeOfTheDay),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-          child: Row(children: [
-            Container(
-              width: 4,
-              height: 22,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Theme.of(context).colorScheme.primary,
-                    Theme.of(context).colorScheme.primary.withOpacity(0.4)
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
+        child: Column(
+          children: [
+            HomeCategoryChips(
+                selectedCategory: _selectedCategory,
+                onCategorySelected: (v) =>
+                    setState(() => _selectedCategory = v)),
+            if (_selectedCategory == null && !_showFavoritesOnly)
+              RecipeOfTheDayCard(recipe: _recipeOfTheDay),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+              child: Row(children: [
+                Container(
+                  width: 4,
+                  height: 22,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Theme.of(context).colorScheme.primary,
+                        Theme.of(context).colorScheme.primary.withOpacity(0.4)
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
-                borderRadius: BorderRadius.circular(2),
-              ),
+                const SizedBox(width: 12),
+                Text(_showFavoritesOnly ? loc.favorites : loc.recipes,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontWeight: FontWeight.w700)),
+                const Spacer(),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                  decoration: BoxDecoration(
+                    color:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text('${paginatedRecipes.length}',
+                      style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.primary)),
+                ),
+              ]),
             ),
-            const SizedBox(width: 12),
-            Text(_showFavoritesOnly ? loc.favorites : loc.recipes,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(fontWeight: FontWeight.w700)),
-            const Spacer(),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text('${paginatedRecipes.length}',
-                  style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).colorScheme.primary)),
+            Expanded(
+              child: cubit.recipes.isEmpty && cubit.isLoading
+                  ? const ShimmerRecipeGrid()
+                  : cubit.isOffline && cubit.recipes.isEmpty
+                      ? const EmptyStateWidget(
+                          icon: Icons.wifi_off_rounded,
+                          title: 'No internet connection',
+                          subtitle: 'Connect to the internet to load recipes')
+                      : paginatedRecipes.isEmpty
+                          ? EmptyStateWidget(
+                              icon: _showFavoritesOnly
+                                  ? Icons.favorite_outline
+                                  : Icons.search_off,
+                              title: _showFavoritesOnly
+                                  ? loc.noFavorites
+                                  : loc.noRecipesFound,
+                              subtitle: _showFavoritesOnly
+                                  ? loc.tapToSave
+                                  : loc.tryDifferentSearch)
+                          : NotificationListener<ScrollNotification>(
+                              onNotification: (scrollInfo) {
+                                if (_selectedCategory == null &&
+                                    !_showFavoritesOnly &&
+                                    !cubit.isLoadingMore &&
+                                    cubit.hasMore &&
+                                    scrollInfo.metrics.pixels >=
+                                        scrollInfo.metrics.maxScrollExtent -
+                                            200) {
+                                  _loadNextBatch();
+                                }
+                                return false;
+                              },
+                              child: GridView.builder(
+                                controller: _scrollController,
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 0.82,
+                                  crossAxisSpacing: 0,
+                                  mainAxisSpacing: 0,
+                                ),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 11),
+                                itemCount: paginatedRecipes.length +
+                                    (cubit.hasMore && cubit.isLoadingMore
+                                        ? 1
+                                        : 0),
+                                itemBuilder: (context, index) {
+                                  if (index == paginatedRecipes.length) {
+                                    return const ShimmerRecipeCard();
+                                  }
+                                  final recipe = paginatedRecipes[index];
+                                  return DelayedReveal(
+                                    index: index,
+                                    child: RecipeCard(
+                                        recipe: recipe,
+                                        isFavorite: context
+                                            .watch<FavoritesCubit>()
+                                            .isFavorite(recipe.id),
+                                        onFavoriteToggle: () => context
+                                            .read<FavoritesCubit>()
+                                            .toggleFavorite(recipe.id),
+                                        onTap: () => context.push(
+                                            '/recipe/$recipe.id',
+                                            extra: recipe)),
+                                  );
+                                },
+                              ),
+                            ),
             ),
-          ]),
+          ],
         ),
-        Expanded(
-          child: cubit.recipes.isEmpty && cubit.isLoading
-              ? const ShimmerRecipeGrid()
-              : cubit.isOffline && cubit.recipes.isEmpty
-                  ? const EmptyStateWidget(
-                      icon: Icons.wifi_off_rounded,
-                      title: 'No internet connection',
-                      subtitle: 'Connect to the internet to load recipes')
-                  : paginatedRecipes.isEmpty
-                  ? EmptyStateWidget(
-                      icon: _showFavoritesOnly
-                          ? Icons.favorite_outline
-                          : Icons.search_off,
-                      title: _showFavoritesOnly
-                          ? loc.noFavorites
-                          : loc.noRecipesFound,
-                      subtitle: _showFavoritesOnly
-                          ? loc.tapToSave
-                          : loc.tryDifferentSearch)
-                  : NotificationListener<ScrollNotification>(
-                      onNotification: (scrollInfo) {
-                        if (_selectedCategory == null &&
-                            !_showFavoritesOnly &&
-                            !cubit.isLoadingMore &&
-                            cubit.hasMore &&
-                            scrollInfo.metrics.pixels >=
-                                scrollInfo.metrics.maxScrollExtent - 200) {
-                          _loadNextBatch();
-                        }
-                        return false;
-                      },
-                      child: GridView.builder(
-                        controller: _scrollController,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.82,
-                          crossAxisSpacing: 0,
-                          mainAxisSpacing: 0,
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 11),
-                        itemCount: paginatedRecipes.length +
-                            (cubit.hasMore && cubit.isLoadingMore ? 1 : 0),
-                        itemBuilder: (context, index) {
-                          if (index == paginatedRecipes.length) {
-                            return const ShimmerRecipeCard();
-                          }
-                          final recipe = paginatedRecipes[index];
-                          return DelayedReveal(
-                            index: index,
-                            child: RecipeCard(
-                                recipe: recipe,
-                                isFavorite: context
-                                    .watch<FavoritesCubit>()
-                                    .isFavorite(recipe.id),
-                                onFavoriteToggle: () => context
-                                    .read<FavoritesCubit>()
-                                    .toggleFavorite(recipe.id),
-                                onTap: () => context.push(
-                                    '/recipe/$recipe.id',
-                                    extra: recipe)),
-                          );
-                        },
-                      )),
-        ),
-      ])),
+      ),
     );
   }
 }

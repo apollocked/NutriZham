@@ -129,14 +129,17 @@ Page _slideUpPage(Widget child) {
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       return SlideTransition(
         position: Tween<Offset>(
-          begin: const Offset(0, 0.06),
+          begin: const Offset(0.25, 0),
           end: Offset.zero,
         ).animate(CurvedAnimation(
           parent: animation,
           curve: Curves.easeOutCubic,
         )),
         child: FadeTransition(
-          opacity: animation,
+          opacity: CurvedAnimation(
+            parent: animation,
+            curve: const Interval(0, 0.4, curve: Curves.easeOut),
+          ),
           child: child,
         ),
       );

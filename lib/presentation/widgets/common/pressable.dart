@@ -122,7 +122,7 @@ class DelayedReveal extends StatefulWidget {
     super.key,
     required this.child,
     this.index = 0,
-    this.baseDelay = const Duration(milliseconds: 50),
+    this.baseDelay = const Duration(milliseconds: 30),
   });
 
   @override
@@ -140,7 +140,7 @@ class _DelayedRevealState extends State<DelayedReveal>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 350),
+      duration: const Duration(milliseconds: 200),
     );
     _opacity = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeOut),
