@@ -87,10 +87,12 @@ class _AnimatedBottomNavState extends State<AnimatedBottomNav>
                         final lerp = _pillAnimation.value;
                         final from = _previousIndex * itemWidth + itemWidth * 0.15;
                         final to = widget.selectedIndex * itemWidth + itemWidth * 0.15;
-                        final pillLeft = from + (to - from) * lerp;
+                        final pillOffset = from + (to - from) * lerp;
                         final pillWidth = itemWidth * 0.7;
+                        final isRtl = Directionality.of(context) == TextDirection.rtl;
                         return Positioned(
-                          left: pillLeft,
+                          left: isRtl ? null : pillOffset,
+                          right: isRtl ? pillOffset : null,
                           top: 8,
                           bottom: 8,
                           width: pillWidth,
