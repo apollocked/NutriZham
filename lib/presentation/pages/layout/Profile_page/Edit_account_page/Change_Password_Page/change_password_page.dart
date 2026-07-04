@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/auth_cubit.dart';
-import 'package:nutrizham/presentation/widgets/custom_app_bar.dart';
-import 'package:nutrizham/presentation/widgets/section_header.dart';
+import 'package:nutrizham/presentation/widgets/common/custom_app_bar.dart';
+import 'package:nutrizham/presentation/widgets/common/section_header.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/custom_text_field.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/custom_buttons.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/secondary_button.dart';
-import 'package:nutrizham/presentation/widgets/password_validation_section.dart';
+import 'package:nutrizham/presentation/widgets/auth/password_validation_section.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class ChangePasswordPage extends StatefulWidget {

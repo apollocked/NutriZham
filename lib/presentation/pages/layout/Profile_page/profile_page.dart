@@ -8,12 +8,12 @@ import 'package:nutrizham/presentation/blocs/meal_planner_cubit.dart';
 import 'package:nutrizham/presentation/blocs/recipe_cubit.dart';
 import 'package:nutrizham/data/models/user_model.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
-import 'package:nutrizham/presentation/widgets/logout_dialog.dart';
-import 'package:nutrizham/presentation/widgets/profile_header.dart';
-import 'package:nutrizham/presentation/widgets/profile_stats_row.dart';
-import 'package:nutrizham/presentation/widgets/profile_menu_card.dart';
-import 'package:nutrizham/presentation/widgets/profile_favorites_section.dart';
-import 'package:nutrizham/l10n/app_localizations.dart';
+import 'package:nutrizham/presentation/widgets/common/shimmer_loading.dart';
+import 'package:nutrizham/presentation/widgets/profile/logout_dialog.dart';
+import 'package:nutrizham/presentation/widgets/profile/profile_header.dart';
+import 'package:nutrizham/presentation/widgets/profile/profile_stats_row.dart';
+import 'package:nutrizham/presentation/widgets/profile/profile_menu_card.dart';
+import 'package:nutrizham/presentation/widgets/profile/profile_favorites_section.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -41,7 +41,9 @@ class _ProfilePageState extends State<ProfilePage> {
     await planner.loadPlannedMeals();
     await _loadRecipesFromFirebase();
     if (mounted) {
-      setState(() { _currentUser = auth.currentUser; });
+      setState(() {
+        _currentUser = auth.currentUser;
+      });
     }
   }
 
@@ -66,21 +68,15 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final loc = AppLocalizations.of(context)!;
     final favorites = context.watch<FavoritesCubit>();
     final planner = context.watch<MealPlannerCubit>();
-    final favoriteMeals = _allRecipes.where((r) => favorites.isFavorite(r.id)).toList();
+    final favoriteMeals =
+        _allRecipes.where((r) => favorites.isFavorite(r.id)).toList();
 
     final authState = context.watch<AuthCubit>().state;
     if (authState is AuthLoading || _currentUser == null) {
-      return Scaffold(
-        body: Center(
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            CircularProgressIndicator(color: Theme.of(context).colorScheme.primary),
-            const SizedBox(height: 16),
-            Text(loc.loading, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
-          ]),
-        ),
+      return const Scaffold(
+        body: SafeArea(child: ShimmerProfilePage()),
       );
     }
 
@@ -89,10 +85,21 @@ class _ProfilePageState extends State<ProfilePage> {
         child: SingleChildScrollView(
           child: Column(children: [
             const SizedBox(height: 8),
-            ProfileHeader(username: _currentUser!.username, email: _currentUser!.email, age: _currentUser!.age),
-            ProfileStatsRow(favoriteCount: favoriteMeals.length, plannedCount: planner.count),
-            ProfileMenuCard(onFeatures: () => context.push('/features'), onSettings: () => context.push('/settings'), onLogout: _logOutAccount),
-            ProfileFavoritesSection(favoriteMeals: favoriteMeals, favoritesProvider: favorites, onToggleFavorite: (id) => favorites.toggleFavorite(id)),
+            ProfileHeader(
+                username: _currentUser!.username,
+                email: _currentUser!.email,
+                age: _currentUser!.age),
+            ProfileStatsRow(
+                favoriteCount: favoriteMeals.length,
+                plannedCount: planner.count),
+            ProfileMenuCard(
+                onFeatures: () => context.push('/features'),
+                onSettings: () => context.push('/settings'),
+                onLogout: _logOutAccount),
+            ProfileFavoritesSection(
+                favoriteMeals: favoriteMeals,
+                favoritesProvider: favorites,
+                onToggleFavorite: (id) => favorites.toggleFavorite(id)),
             const SizedBox(height: 24),
           ]),
         ),

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/settings_cubit.dart';
 import 'package:nutrizham/core/utils/features_helper.dart';
-import 'package:nutrizham/presentation/widgets/custom_app_bar.dart';
+import 'package:nutrizham/presentation/widgets/common/custom_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
-import 'package:nutrizham/presentation/widgets/app_developer_section.dart';
-import 'package:nutrizham/presentation/widgets/app_support_section.dart';
+import 'package:nutrizham/presentation/widgets/profile/app_developer_section.dart';
+import 'package:nutrizham/presentation/widgets/profile/app_support_section.dart';
 
 class AppFeaturesPage extends StatelessWidget {
   const AppFeaturesPage({super.key});

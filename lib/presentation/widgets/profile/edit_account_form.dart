@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/custom_text_field.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/custom_buttons.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/secondary_button.dart';
-import 'package:nutrizham/presentation/widgets/menu_item_tile.dart';
+import 'package:nutrizham/presentation/widgets/profile/menu_item_tile.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class EditAccountForm extends StatelessWidget {

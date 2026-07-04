@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/auth_cubit.dart';
 import 'package:nutrizham/presentation/blocs/settings_cubit.dart';
-import 'package:nutrizham/presentation/widgets/login_form.dart';
-import 'package:nutrizham/presentation/widgets/forgot_password_dialog.dart';
+import 'package:nutrizham/presentation/widgets/auth/login_form.dart';
+import 'package:nutrizham/presentation/widgets/auth/forgot_password_dialog.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/icon_text_button.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 

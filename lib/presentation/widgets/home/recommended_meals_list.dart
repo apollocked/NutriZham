@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
-import 'package:nutrizham/presentation/widgets/compact_recipe_card.dart';
+import 'package:nutrizham/presentation/widgets/recipe/compact_recipe_card.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class RecommendedMealsList extends StatelessWidget {

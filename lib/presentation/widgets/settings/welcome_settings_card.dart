@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/settings_cubit.dart';
-import 'package:nutrizham/presentation/widgets/welcome_language_option.dart';
+import 'package:nutrizham/presentation/widgets/settings/welcome_language_option.dart';
 
 class WelcomeSettingsCard extends StatelessWidget {
   final String selectedLanguage;

@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/auth_cubit.dart';
 import 'package:nutrizham/data/datasources/Auth_Services/firebase_auth_service.dart';
-import 'package:nutrizham/presentation/widgets/custom_app_bar.dart';
-import 'package:nutrizham/presentation/widgets/edit_account_form.dart';
+import 'package:nutrizham/presentation/widgets/common/custom_app_bar.dart';
+import 'package:nutrizham/presentation/widgets/profile/edit_account_form.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class EditAccountPage extends StatefulWidget {

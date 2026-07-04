@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
-import 'package:nutrizham/presentation/widgets/menu_item_tile.dart';
+import 'package:nutrizham/presentation/widgets/profile/menu_item_tile.dart';
 
 class AccountMenuSection extends StatelessWidget {
   final VoidCallback onEditAccount;

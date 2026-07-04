@@ -5,10 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
 import 'package:nutrizham/presentation/blocs/recipe_cubit.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/empty_state_widget.dart';
-import 'package:nutrizham/presentation/widgets/custom_app_bar.dart';
-import 'package:nutrizham/presentation/widgets/search_bar_widget.dart';
-import 'package:nutrizham/presentation/widgets/category_widgets.dart';
-import 'package:nutrizham/presentation/widgets/recipe_card.dart';
+import 'package:nutrizham/presentation/widgets/common/custom_app_bar.dart';
+import 'package:nutrizham/presentation/widgets/common/search_bar_widget.dart';
+import 'package:nutrizham/presentation/widgets/common/category_widgets.dart';
+import 'package:nutrizham/presentation/widgets/common/shimmer_loading.dart';
+import 'package:nutrizham/presentation/widgets/recipe/recipe_card.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class SearchPage extends StatefulWidget {
@@ -23,6 +24,7 @@ class _SearchPageState extends State<SearchPage> {
   String _searchQuery = '';
   MealCategory? _selectedCategory;
   List<Recipe> _allRecipes = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -31,9 +33,11 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Future<void> _loadRecipes() async {
+    _isLoading = true;
+    if (mounted) setState(() {});
     final recipes = context.read<RecipeCubit>();
     final recipesList = await recipes.getAll();
-    if (mounted) setState(() => _allRecipes = recipesList);
+    if (mounted) setState(() { _allRecipes = recipesList; _isLoading = false; });
   }
 
   @override
@@ -74,7 +78,9 @@ class _SearchPageState extends State<SearchPage> {
         CategoryFilterChips(selectedCategory: _selectedCategory, onCategorySelected: (category) => setState(() => _selectedCategory = category)),
         const SizedBox(height: 8),
         Expanded(
-          child: filteredRecipes.isEmpty
+          child: _isLoading
+              ? const ShimmerRecipeGrid()
+              : filteredRecipes.isEmpty
               ? EmptyStateWidget(icon: Icons.search_off, title: loc.noRecipesFound, subtitle: loc.tryDifferentSearch)
               : GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

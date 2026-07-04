@@ -11,14 +11,12 @@ import 'package:nutrizham/presentation/blocs/auth_cubit.dart';
 import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
 import 'package:nutrizham/presentation/blocs/meal_planner_cubit.dart';
 import 'package:nutrizham/presentation/blocs/recipe_cubit.dart';
-import 'package:nutrizham/presentation/router/app_router.dart';
+import 'package:nutrizham/core/router/app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp();
   await CacheService().init();
-
   final settings = SettingsCubit();
   await settings.initialize();
 
@@ -48,9 +46,8 @@ class NutriZhamApp extends StatelessWidget {
               title: 'NutriZham',
               theme: AppTheme.light,
               darkTheme: AppTheme.dark,
-              themeMode: settingsState.isDarkMode
-                  ? ThemeMode.dark
-                  : ThemeMode.light,
+              themeMode:
+                  settingsState.isDarkMode ? ThemeMode.dark : ThemeMode.light,
               locale: Locale(settingsState.languageCode),
               localizationsDelegates: const [
                 AppLocalizations.delegate,

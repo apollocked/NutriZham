@@ -3,13 +3,13 @@ import 'package:nutrizham/core/constants/app_colors.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
-import 'package:nutrizham/presentation/widgets/custom_app_bar.dart';
-import 'package:nutrizham/presentation/widgets/nutrition_info_widget.dart';
-import 'package:nutrizham/presentation/widgets/category_badge.dart';
-import 'package:nutrizham/presentation/widgets/recipe_rating_card.dart';
-import 'package:nutrizham/presentation/widgets/ingredients_list_widget.dart';
-import 'package:nutrizham/presentation/widgets/steps_list_widget.dart';
-import 'package:nutrizham/presentation/widgets/section_header.dart';
+import 'package:nutrizham/presentation/widgets/common/custom_app_bar.dart';
+import 'package:nutrizham/presentation/widgets/recipe/nutrition_info_widget.dart';
+import 'package:nutrizham/presentation/widgets/recipe/category_badge.dart';
+import 'package:nutrizham/presentation/widgets/recipe/recipe_rating_card.dart';
+import 'package:nutrizham/presentation/widgets/recipe/ingredients_list_widget.dart';
+import 'package:nutrizham/presentation/widgets/recipe/steps_list_widget.dart';
+import 'package:nutrizham/presentation/widgets/common/section_header.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class RecipeDetailScreen extends StatefulWidget {

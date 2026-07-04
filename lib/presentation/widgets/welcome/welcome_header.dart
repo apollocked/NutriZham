@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nutrizham/presentation/widgets/welcome_language_option.dart';
+import 'package:nutrizham/presentation/widgets/settings/welcome_language_option.dart';
 
 class WelcomeHeader extends StatelessWidget {
   final String languageCode;

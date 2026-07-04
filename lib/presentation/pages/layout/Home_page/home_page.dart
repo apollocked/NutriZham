@@ -6,11 +6,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
 import 'package:nutrizham/presentation/blocs/recipe_cubit.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/empty_state_widget.dart';
-import 'package:nutrizham/presentation/widgets/custom_app_bar.dart';
-import 'package:nutrizham/presentation/widgets/search_bar_widget.dart';
-import 'package:nutrizham/presentation/widgets/recipe_card.dart';
-import 'package:nutrizham/presentation/widgets/home_category_chips.dart';
-import 'package:nutrizham/presentation/widgets/recipe_of_the_day_card.dart';
+import 'package:nutrizham/presentation/widgets/common/custom_app_bar.dart';
+import 'package:nutrizham/presentation/widgets/common/search_bar_widget.dart';
+import 'package:nutrizham/presentation/widgets/common/shimmer_loading.dart';
+import 'package:nutrizham/presentation/widgets/recipe/recipe_card.dart';
+import 'package:nutrizham/presentation/widgets/home/home_category_chips.dart';
+import 'package:nutrizham/presentation/widgets/recipe/recipe_of_the_day_card.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
@@ -164,9 +165,7 @@ class _HomePageState extends State<HomePage> {
         ),
         Expanded(
           child: context.watch<RecipeCubit>().isLoading
-              ? Center(
-                  child: CircularProgressIndicator(
-                      color: Theme.of(context).colorScheme.primary))
+              ? const ShimmerRecipeGrid()
               : paginatedRecipes.isEmpty
                   ? EmptyStateWidget(
                       icon: _showFavoritesOnly

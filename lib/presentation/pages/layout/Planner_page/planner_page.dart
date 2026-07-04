@@ -3,11 +3,12 @@ import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/meal_planner_cubit.dart';
 import 'package:nutrizham/presentation/blocs/recipe_cubit.dart';
-import 'package:nutrizham/presentation/widgets/custom_app_bar.dart';
-import 'package:nutrizham/presentation/widgets/nutrition_summary_card.dart';
-import 'package:nutrizham/presentation/widgets/section_header.dart';
-import 'package:nutrizham/presentation/widgets/planned_meals_list.dart';
-import 'package:nutrizham/presentation/widgets/recommended_meals_list.dart';
+import 'package:nutrizham/presentation/widgets/common/custom_app_bar.dart';
+import 'package:nutrizham/presentation/widgets/common/shimmer_loading.dart';
+import 'package:nutrizham/presentation/widgets/recipe/nutrition_summary_card.dart';
+import 'package:nutrizham/presentation/widgets/common/section_header.dart';
+import 'package:nutrizham/presentation/widgets/planner/planned_meals_list.dart';
+import 'package:nutrizham/presentation/widgets/home/recommended_meals_list.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class PlannerPage extends StatefulWidget {
@@ -19,6 +20,7 @@ class PlannerPage extends StatefulWidget {
 
 class _PlannerPageState extends State<PlannerPage> {
   List<Recipe> _allRecipes = [];
+  bool _isLoading = true;
   late final MealPlannerCubit _plannerProvider;
 
   @override
@@ -32,7 +34,7 @@ class _PlannerPageState extends State<PlannerPage> {
   Future<void> _loadRecipes() async {
     final recipes = context.read<RecipeCubit>();
     final recipesList = await recipes.getAll();
-    if (mounted) setState(() => _allRecipes = recipesList);
+    if (mounted) setState(() { _allRecipes = recipesList; _isLoading = false; });
   }
 
   Future<void> _toggleMealInPlan(String recipeId) async {
@@ -65,7 +67,9 @@ class _PlannerPageState extends State<PlannerPage> {
 
     return Scaffold(
       appBar: CustomAppBar(title: loc.mealPlanner),
-      body: Column(children: [
+      body: _isLoading
+          ? const ShimmerPlanner()
+          : Column(children: [
         NutritionSummaryCard(
           totalCalories: _totalCalories, totalProtein: _totalProtein, totalCarbs: _totalCarbs, totalFats: _totalFats,
           plannedMealCount: plannedMeals.length, hasPlannedMeals: plannedMeals.isNotEmpty,

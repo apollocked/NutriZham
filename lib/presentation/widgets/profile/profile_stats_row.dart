@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nutrizham/presentation/widgets/stat_card.dart';
+import 'package:nutrizham/presentation/widgets/profile/stat_card.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class ProfileStatsRow extends StatelessWidget {
