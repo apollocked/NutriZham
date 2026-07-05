@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
+import 'package:nutrizham/presentation/widgets/common/nav_item.dart';
 import 'package:nutrizham/presentation/widgets/common/offline_banner.dart';
 import 'package:nutrizham/presentation/widgets/common/animated_bottom_nav.dart';
 
@@ -30,10 +31,14 @@ class MainNavigation extends StatelessWidget {
         selectedIndex: currentIndex,
         onDestinationSelected: (index) {
           switch (index) {
-            case 0: context.go('/home');
-            case 1: context.go('/search');
-            case 2: context.go('/planner');
-            case 3: context.go('/profile');
+            case 0:
+              context.go('/home');
+            case 1:
+              context.go('/search');
+            case 2:
+              context.go('/planner');
+            case 3:
+              context.go('/profile');
           }
         },
         items: [

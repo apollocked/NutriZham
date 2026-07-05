@@ -1,5 +1,5 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:nutrizham/presentation/widgets/common/nav_item.dart';
 
 class AnimatedBottomNav extends StatefulWidget {
   final int selectedIndex;
@@ -59,171 +59,61 @@ class _AnimatedBottomNavState extends State<AnimatedBottomNav>
 
     return Container(
       margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+      height: 64,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
+        color: theme.brightness == Brightness.dark
+            ? const Color(0xFF1E293B)
+            : Colors.white,
+        borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: theme.shadowColor.withOpacity(0.08),
+            color: theme.shadowColor.withOpacity(0.1),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-          child: Container(
-            height: 64,
-            color: theme.colorScheme.surface.withOpacity(0.75),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final itemWidth = constraints.maxWidth / count;
-                return Stack(
-                  children: [
-                    AnimatedBuilder(
-                      animation: _pillAnimation,
-                      builder: (context, _) {
-                        final lerp = _pillAnimation.value;
-                        final from = _previousIndex * itemWidth + itemWidth * 0.15;
-                        final to = widget.selectedIndex * itemWidth + itemWidth * 0.15;
-                        final pillOffset = from + (to - from) * lerp;
-                        final pillWidth = itemWidth * 0.7;
-                        final isRtl = Directionality.of(context) == TextDirection.rtl;
-                        return Positioned(
-                          left: isRtl ? null : pillOffset,
-                          right: isRtl ? pillOffset : null,
-                          top: 8,
-                          bottom: 8,
-                          width: pillWidth,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.primary.withOpacity(0.12),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    Row(
-                      children: List.generate(count, (i) {
-                        final isSelected = widget.selectedIndex == i;
-                        return Expanded(
-                          child: _NavItem(
-                            item: widget.items[i],
-                            isSelected: isSelected,
-                            onTap: () => widget.onDestinationSelected(i),
-                          ),
-                        );
-                      }),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _NavItem extends StatefulWidget {
-  final AnimatedNavItem item;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _NavItem({
-    required this.item,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  State<_NavItem> createState() => _NavItemState();
-}
-
-class _NavItemState extends State<_NavItem>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _bounceController;
-  late Animation<double> _bounceAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _bounceController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
-    );
-    _bounceAnimation = CurvedAnimation(
-      parent: _bounceController,
-      curve: Curves.elasticOut,
-    );
-  }
-
-  @override
-  void dispose() {
-    _bounceController.dispose();
-    super.dispose();
-  }
-
-  void _handleTap() {
-    _bounceController.forward(from: 0);
-    widget.onTap();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isSelected = widget.isSelected;
-
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: _handleTap,
-      child: AnimatedBuilder(
-        animation: _bounceAnimation,
-        builder: (context, _) {
-          final bounce = _bounceAnimation.value;
-          final scale = isSelected ? 1.0 + 0.15 * bounce : 1.0 - 0.05 * bounce;
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final itemWidth = constraints.maxWidth / count;
+          return Stack(
             children: [
-              Transform.scale(
-                scale: scale,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
-                  curve: Curves.easeOut,
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    isSelected ? widget.item.activeIcon : widget.item.icon,
-                    size: isSelected ? 26 : 22,
-                    color: isSelected
-                        ? theme.colorScheme.primary
-                        : theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 16,
-                child: AnimatedSlide(
-                  duration: const Duration(milliseconds: 200),
-                  offset: isSelected ? Offset.zero : const Offset(0, 0.3),
-                  child: AnimatedOpacity(
-                    duration: const Duration(milliseconds: 200),
-                    opacity: isSelected ? 1.0 : 0.0,
-                    child: Text(
-                      widget.item.label,
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.primary,
+              AnimatedBuilder(
+                animation: _pillAnimation,
+                builder: (context, _) {
+                  final lerp = _pillAnimation.value;
+                  final from = _previousIndex * itemWidth + itemWidth * 0.15;
+                  final to =
+                      widget.selectedIndex * itemWidth + itemWidth * 0.15;
+                  final pillOffset = from + (to - from) * lerp;
+                  final pillWidth = itemWidth * 0.7;
+                  final isRtl = Directionality.of(context) == TextDirection.rtl;
+                  return Positioned(
+                    left: isRtl ? null : pillOffset,
+                    right: isRtl ? pillOffset : null,
+                    top: 8,
+                    bottom: 8,
+                    width: pillWidth,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.primary.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                  ),
-                ),
+                  );
+                },
+              ),
+              Row(
+                children: List.generate(count, (i) {
+                  final isSelected = widget.selectedIndex == i;
+                  return Expanded(
+                    child: NavItem(
+                      item: widget.items[i],
+                      isSelected: isSelected,
+                      onTap: () => widget.onDestinationSelected(i),
+                    ),
+                  );
+                }),
               ),
             ],
           );
@@ -231,16 +121,4 @@ class _NavItemState extends State<_NavItem>
       ),
     );
   }
-}
-
-class AnimatedNavItem {
-  final IconData icon;
-  final IconData activeIcon;
-  final String label;
-
-  const AnimatedNavItem({
-    required this.icon,
-    required this.activeIcon,
-    required this.label,
-  });
 }

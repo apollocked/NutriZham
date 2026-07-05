@@ -1,3 +1,5 @@
+import 'package:nutrizham/data/models/meal_plan_entry.dart';
+
 class User {
   final String id;
   final String username;
@@ -8,6 +10,11 @@ class User {
   final List<String> favorites;
   final List<String> plannedMeals;
   final DateTime? updatedAt;
+  final Map<String, List<MealPlanEntry>> mealPlans;
+  final int dailyCalories;
+  final double dailyProtein;
+  final double dailyCarbs;
+  final double dailyFats;
 
   User({
     required this.id,
@@ -19,5 +26,10 @@ class User {
     this.favorites = const [],
     this.plannedMeals = const [],
     this.updatedAt,
+    this.mealPlans = const {},
+    this.dailyCalories = 2000,
+    this.dailyProtein = 150,
+    this.dailyCarbs = 250,
+    this.dailyFats = 65,
   });
 }

@@ -25,7 +25,6 @@ class _HomePageState extends State<HomePage> {
   bool _initialized = false;
   final ScrollController _scrollController = ScrollController();
   late final FavoritesCubit _favoritesProvider;
-
   @override
   void initState() {
     super.initState();
