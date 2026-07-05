@@ -126,5 +126,16 @@
   "signInWithGoogle": "Sign in with Google",
   "signUpWithGoogle": "Sign up with Google",
   "or": "OR",
-  "couldNotLoadProfile": "Could not load profile"
+  "couldNotLoadProfile": "Could not load profile",
+  "groceryList": "Grocery List",
+  "nutritionGoals": "Daily Nutrition Goals",
+  "addMeal": "Add Meal",
+  "noMealsPlanned": "No meals planned yet",
+  "allMealsPlanned": "All meals already planned",
+  "items": "items",
+  "week": "Week",
+  "caloriesGoal": "Calories (kcal)",
+  "proteinGoal": "Protein (g)",
+  "carbsGoal": "Carbs (g)",
+  "fatsGoal": "Fats (g)"
 }

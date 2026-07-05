@@ -861,6 +861,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not load profile'**
   String get couldNotLoadProfile;
+
+  /// No description provided for @groceryList.
+  ///
+  /// In en, this message translates to:
+  /// **'Grocery List'**
+  String get groceryList;
+
+  /// No description provided for @nutritionGoals.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Nutrition Goals'**
+  String get nutritionGoals;
+
+  /// No description provided for @addMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Meal'**
+  String get addMeal;
+
+  /// No description provided for @noMealsPlanned.
+  ///
+  /// In en, this message translates to:
+  /// **'No meals planned yet'**
+  String get noMealsPlanned;
+
+  /// No description provided for @allMealsPlanned.
+  ///
+  /// In en, this message translates to:
+  /// **'All meals already planned'**
+  String get allMealsPlanned;
+
+  /// No description provided for @items.
+  ///
+  /// In en, this message translates to:
+  /// **'items'**
+  String get items;
+
+  /// No description provided for @week.
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get week;
+
+  /// No description provided for @caloriesGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Calories (kcal)'**
+  String get caloriesGoal;
+
+  /// No description provided for @proteinGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Protein (g)'**
+  String get proteinGoal;
+
+  /// No description provided for @carbsGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Carbs (g)'**
+  String get carbsGoal;
+
+  /// No description provided for @fatsGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Fats (g)'**
+  String get fatsGoal;
 }
 
 class _AppLocalizationsDelegate

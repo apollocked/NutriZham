@@ -393,4 +393,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get couldNotLoadProfile => 'Could not load profile';
+
+  @override
+  String get groceryList => 'Grocery List';
+
+  @override
+  String get nutritionGoals => 'Daily Nutrition Goals';
+
+  @override
+  String get addMeal => 'Add Meal';
+
+  @override
+  String get noMealsPlanned => 'No meals planned yet';
+
+  @override
+  String get allMealsPlanned => 'All meals already planned';
+
+  @override
+  String get items => 'items';
+
+  @override
+  String get week => 'Week';
+
+  @override
+  String get caloriesGoal => 'Calories (kcal)';
+
+  @override
+  String get proteinGoal => 'Protein (g)';
+
+  @override
+  String get carbsGoal => 'Carbs (g)';
+
+  @override
+  String get fatsGoal => 'Fats (g)';
 }

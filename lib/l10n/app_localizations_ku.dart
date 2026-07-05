@@ -393,4 +393,37 @@ class AppLocalizationsKu extends AppLocalizations {
 
   @override
   String get couldNotLoadProfile => 'پڕۆفایل بارنەکرا';
+
+  @override
+  String get groceryList => 'لیستی کڕین';
+
+  @override
+  String get nutritionGoals => 'ئامانجەکانی خۆراکی ڕۆژانە';
+
+  @override
+  String get addMeal => 'زیادکردنی خواردن';
+
+  @override
+  String get noMealsPlanned => 'هێشتا هیچ خواردنێک پلان نەکراوە';
+
+  @override
+  String get allMealsPlanned => 'هەموو خواردنەکان پلان کراون';
+
+  @override
+  String get items => 'بڕگە';
+
+  @override
+  String get week => 'هەفتە';
+
+  @override
+  String get caloriesGoal => 'کالۆری (kcal)';
+
+  @override
+  String get proteinGoal => 'پڕۆتین (g)';
+
+  @override
+  String get carbsGoal => 'کاربۆهایدرات (g)';
+
+  @override
+  String get fatsGoal => 'چەوری (g)';
 }

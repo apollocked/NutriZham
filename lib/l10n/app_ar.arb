@@ -126,5 +126,16 @@
   "signInWithGoogle": "تسجيل الدخول بواسطة Google",
   "signUpWithGoogle": "التسجيل بواسطة Google",
   "or": "أو",
-  "couldNotLoadProfile": "تعذر تحميل الملف الشخصي"
+  "couldNotLoadProfile": "تعذر تحميل الملف الشخصي",
+  "groceryList": "قائمة المشتريات",
+  "nutritionGoals": "أهداف التغذية اليومية",
+  "addMeal": "إضافة وجبة",
+  "noMealsPlanned": "لم يتم تخطيط وجبات بعد",
+  "allMealsPlanned": "جميع الوجبات مخططة بالفعل",
+  "items": "عنصر",
+  "week": "أسبوع",
+  "caloriesGoal": "السعرات (kcal)",
+  "proteinGoal": "البروتين (g)",
+  "carbsGoal": "الكربوهيدرات (g)",
+  "fatsGoal": "الدهون (g)"
 }

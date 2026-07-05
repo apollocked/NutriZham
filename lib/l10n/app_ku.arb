@@ -126,5 +126,16 @@
   "signInWithGoogle": "چوونەژوورەوە بە گووگڵ",
   "signUpWithGoogle": "خۆتۆمارکردن بە گووگڵ",
   "or": "یان",
-  "couldNotLoadProfile": "پڕۆفایل بارنەکرا"
+  "couldNotLoadProfile": "پڕۆفایل بارنەکرا",
+  "groceryList": "لیستی کڕین",
+  "nutritionGoals": "ئامانجەکانی خۆراکی ڕۆژانە",
+  "addMeal": "زیادکردنی خواردن",
+  "noMealsPlanned": "هێشتا هیچ خواردنێک پلان نەکراوە",
+  "allMealsPlanned": "هەموو خواردنەکان پلان کراون",
+  "items": "بڕگە",
+  "week": "هەفتە",
+  "caloriesGoal": "کالۆری (kcal)",
+  "proteinGoal": "پڕۆتین (g)",
+  "carbsGoal": "کاربۆهایدرات (g)",
+  "fatsGoal": "چەوری (g)"
 }

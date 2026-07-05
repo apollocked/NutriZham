@@ -391,4 +391,37 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get couldNotLoadProfile => 'تعذر تحميل الملف الشخصي';
+
+  @override
+  String get groceryList => 'قائمة المشتريات';
+
+  @override
+  String get nutritionGoals => 'أهداف التغذية اليومية';
+
+  @override
+  String get addMeal => 'إضافة وجبة';
+
+  @override
+  String get noMealsPlanned => 'لم يتم تخطيط وجبات بعد';
+
+  @override
+  String get allMealsPlanned => 'جميع الوجبات مخططة بالفعل';
+
+  @override
+  String get items => 'عنصر';
+
+  @override
+  String get week => 'أسبوع';
+
+  @override
+  String get caloriesGoal => 'السعرات (kcal)';
+
+  @override
+  String get proteinGoal => 'البروتين (g)';
+
+  @override
+  String get carbsGoal => 'الكربوهيدرات (g)';
+
+  @override
+  String get fatsGoal => 'الدهون (g)';
 }
