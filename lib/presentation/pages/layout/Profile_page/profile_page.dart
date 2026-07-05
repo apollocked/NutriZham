@@ -6,7 +6,6 @@ import 'package:nutrizham/presentation/blocs/settings_cubit.dart';
 import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
 import 'package:nutrizham/presentation/blocs/meal_planner_cubit.dart';
 import 'package:nutrizham/presentation/blocs/recipe_cubit.dart';
-import 'package:nutrizham/data/models/user_model.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:nutrizham/presentation/widgets/common/shimmer_loading.dart';
 import 'package:nutrizham/presentation/widgets/profile/logout_dialog.dart';
@@ -24,7 +23,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  UserModel? _currentUser;
   List<Recipe> _allRecipes = [];
 
   @override
@@ -37,15 +35,12 @@ class _ProfilePageState extends State<ProfilePage> {
     final auth = context.read<AuthCubit>();
     final favorites = context.read<FavoritesCubit>();
     final planner = context.read<MealPlannerCubit>();
-    await auth.loadCurrentUser();
-    await favorites.loadFavorites();
-    await planner.loadPlannedMeals();
-    await _loadRecipesFromFirebase();
-    if (mounted) {
-      setState(() {
-        _currentUser = auth.currentUser;
-      });
-    }
+    await Future.wait([
+      auth.loadCurrentUser(),
+      favorites.loadFavorites(),
+      planner.loadPlannedMeals(),
+      _loadRecipesFromFirebase(),
+    ]);
   }
 
   Future<void> _loadRecipesFromFirebase() async {
@@ -70,40 +65,62 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final favorites = context.watch<FavoritesCubit>();
-    final planner = context.watch<MealPlannerCubit>();
-    final favoriteMeals =
-        _allRecipes.where((r) => favorites.isFavorite(r.id)).toList();
-
     final authState = context.watch<AuthCubit>().state;
-    if (authState is AuthLoading || _currentUser == null) {
+    if (authState is AuthLoading || authState is AuthInitial) {
       return const Scaffold(
         body: SafeArea(child: ShimmerProfilePage()),
       );
     }
 
+    if (authState is AuthAuthenticated) {
+      final user = authState.user;
+      final favorites = context.watch<FavoritesCubit>();
+      final planner = context.watch<MealPlannerCubit>();
+      final favoriteMeals =
+          _allRecipes.where((r) => favorites.isFavorite(r.id)).toList();
+
+      return Scaffold(
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(children: [
+              const SizedBox(height: 8),
+              ProfileHeader(
+                  username: user.username,
+                  email: user.email,
+                  age: user.age),
+              ProfileStatsRow(
+                  favoriteCount: favoriteMeals.length,
+                  plannedCount: planner.count),
+              ProfileMenuCard(
+                  onFeatures: () => context.push('/features'),
+                  onSettings: () => context.push('/settings'),
+                  onLogout: _logOutAccount),
+              ProfileFavoritesSection(
+                  favoriteMeals: favoriteMeals,
+                  favoritesProvider: favorites,
+                  onToggleFavorite: (id) => favorites.toggleFavorite(id)),
+              const SizedBox(height: 24),
+            ]),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(children: [
-            const SizedBox(height: 8),
-            ProfileHeader(
-                username: _currentUser!.username,
-                email: _currentUser!.email,
-                age: _currentUser!.age),
-            ProfileStatsRow(
-                favoriteCount: favoriteMeals.length,
-                plannedCount: planner.count),
-            ProfileMenuCard(
-                onFeatures: () => context.push('/features'),
-                onSettings: () => context.push('/settings'),
-                onLogout: _logOutAccount),
-            ProfileFavoritesSection(
-                favoriteMeals: favoriteMeals,
-                favoritesProvider: favorites,
-                onToggleFavorite: (id) => favorites.toggleFavorite(id)),
-            const SizedBox(height: 24),
-          ]),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.wifi_off_rounded,
+                  size: 48, color: Theme.of(context).colorScheme.onSurfaceVariant),
+              const SizedBox(height: 16),
+              Text(
+                'Could not load profile',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ],
+          ),
         ),
       ),
     );

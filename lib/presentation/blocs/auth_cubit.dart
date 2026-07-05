@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/data/models/user_model.dart';
 import 'package:nutrizham/data/datasources/Auth_Services/auth_service.dart';
+import 'package:nutrizham/core/cache/cache_service.dart';
 
 sealed class AuthState {
   const AuthState();
@@ -97,10 +99,20 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> loadCurrentUser() async {
+    final cache = CacheService();
+    final userJson = await cache.getCurrentUserJson();
+    if (userJson != null) {
+      try {
+        final cachedUser = UserModel.fromJson(
+          Map<String, dynamic>.from(json.decode(userJson)),
+        );
+        emit(AuthAuthenticated(cachedUser));
+      } catch (_) {}
+    }
     final user = await _authService.getCurrentUser();
     if (user != null) {
       emit(AuthAuthenticated(user));
-    } else {
+    } else if (state is! AuthAuthenticated) {
       emit(const AuthUnauthenticated());
     }
   }
