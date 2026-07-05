@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/connectivity_cubit.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 
 class OfflineBanner extends StatelessWidget {
   const OfflineBanner({super.key});
@@ -27,16 +28,16 @@ class OfflineBanner extends StatelessWidget {
             ],
           ),
         ),
-        child: const SafeArea(
+        child: SafeArea(
           top: false,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.wifi_off_rounded, color: Colors.white, size: 18),
-              SizedBox(width: 8),
+              const Icon(Icons.wifi_off_rounded, color: Colors.white, size: 18),
+              const SizedBox(width: 8),
               Text(
-                'You are offline',
-                style: TextStyle(
+                AppLocalizations.of(context)!.youAreOffline,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 13,
                   fontWeight: FontWeight.w600,

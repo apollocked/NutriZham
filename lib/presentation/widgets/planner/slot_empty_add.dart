@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 
 class SlotEmpty extends StatelessWidget {
   final Color slotColor;
@@ -44,7 +45,7 @@ class SlotEmpty extends StatelessWidget {
                 child: Icon(Icons.add_rounded, size: 24, color: slotColor),
               ),
               const SizedBox(height: 10),
-              Text('Add $label',
+              Text('${AppLocalizations.of(context)!.add} $label',
                   style: TextStyle(
                       color: slotColor, fontWeight: FontWeight.w600, fontSize: 14)),
               const SizedBox(height: 4),
@@ -95,7 +96,7 @@ class SlotAddButton extends StatelessWidget {
               child: Icon(Icons.add_rounded, size: 16, color: slotColor),
             ),
             const SizedBox(width: 8),
-            Text('Add $label',
+            Text('${AppLocalizations.of(context)!.add} $label',
                 style: TextStyle(
                     color: slotColor, fontWeight: FontWeight.w600, fontSize: 13)),
           ],

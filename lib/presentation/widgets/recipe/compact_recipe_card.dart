@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/core/constants/app_colors.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 import 'package:nutrizham/presentation/widgets/common/pressable.dart';
 
 class CompactRecipeCard extends StatelessWidget {
@@ -80,7 +81,7 @@ class CompactRecipeCard extends StatelessWidget {
                                 color:
                                     AppColors.caloriesColor.withOpacity(0.6)),
                             const SizedBox(width: 3),
-                            Text('${recipe.nutrition.calories} kcal',
+                            Text('${recipe.nutrition.calories} ${AppLocalizations.of(context)!.kcal}',
                                 style: TextStyle(
                                     fontSize: 12,
                                     color: theme.colorScheme

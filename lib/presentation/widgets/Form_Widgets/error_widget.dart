@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 
 class CustomErrorWidget extends StatelessWidget {
   final String message;
@@ -33,7 +34,7 @@ class CustomErrorWidget extends StatelessWidget {
                 ),
                 icon: const Icon(Icons.refresh_rounded, size: 20),
                 onPressed: onRetry,
-                label: const Text('Retry'),
+                label: Text(AppLocalizations.of(context)!.retry),
               ),
             ],
           ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 
 class WeeklyCalendarBar extends StatelessWidget {
   final DateTime weekStart;
@@ -46,7 +47,7 @@ class WeeklyCalendarBar extends StatelessWidget {
                   final isToday = date.day == today.day &&
                       date.month == today.month &&
                       date.year == today.year;
-                  final dayName = _dayName(date);
+                  final dayName = _dayName(context, date);
                   final dayNum = date.day.toString();
 
                   return GestureDetector(
@@ -108,15 +109,16 @@ class WeeklyCalendarBar extends StatelessWidget {
     );
   }
 
-  String _dayName(DateTime date) {
+  String _dayName(BuildContext context, DateTime date) {
+    final loc = AppLocalizations.of(context)!;
     switch (date.weekday) {
-      case 1: return 'Mon';
-      case 2: return 'Tue';
-      case 3: return 'Wed';
-      case 4: return 'Thu';
-      case 5: return 'Fri';
-      case 6: return 'Sat';
-      case 7: return 'Sun';
+      case 1: return loc.dayMon;
+      case 2: return loc.dayTue;
+      case 3: return loc.dayWed;
+      case 4: return loc.dayThu;
+      case 5: return loc.dayFri;
+      case 6: return loc.daySat;
+      case 7: return loc.daySun;
       default: return '';
     }
   }

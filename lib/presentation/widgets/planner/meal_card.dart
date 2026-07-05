@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/core/constants/app_colors.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 
 class MealCard extends StatelessWidget {
   final Recipe recipe;
@@ -96,7 +97,7 @@ class MealCard extends StatelessWidget {
                               size: 12,
                               color: AppColors.caloriesColor.withOpacity(0.7)),
                           const SizedBox(width: 3),
-                          Text('${recipe.nutrition.calories} kcal',
+                          Text('${recipe.nutrition.calories} ${AppLocalizations.of(context)!.kcal}',
                               style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
@@ -104,19 +105,19 @@ class MealCard extends StatelessWidget {
                                       .withOpacity(0.8))),
                           const SizedBox(width: 10),
                           MiniMacro(
-                              label: 'P',
+                              label: AppLocalizations.of(context)!.proteinAbbr,
                               value:
                                   '${recipe.nutrition.protein.toStringAsFixed(0)}g',
                               color: AppColors.proteinColor),
                           const SizedBox(width: 6),
                           MiniMacro(
-                              label: 'C',
+                              label: AppLocalizations.of(context)!.carbsAbbr,
                               value:
                                   '${recipe.nutrition.carbs.toStringAsFixed(0)}g',
                               color: AppColors.carbsColor),
                           const SizedBox(width: 6),
                           MiniMacro(
-                              label: 'F',
+                              label: AppLocalizations.of(context)!.fatsAbbr,
                               value:
                                   '${recipe.nutrition.fats.toStringAsFixed(0)}g',
                               color: AppColors.fatsColor),

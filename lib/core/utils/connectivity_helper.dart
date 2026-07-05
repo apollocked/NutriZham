@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/connectivity_cubit.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 
 extension ConnectivityGuard on BuildContext {
   bool get isOnline => read<ConnectivityCubit>().isOnline;
@@ -9,7 +10,7 @@ extension ConnectivityGuard on BuildContext {
     if (!isOnline) {
       ScaffoldMessenger.of(this).showSnackBar(
         SnackBar(
-          content: Text(message ?? 'This action requires an internet connection'),
+          content: Text(message ?? AppLocalizations.of(this)!.onlineRequired),
           behavior: SnackBarBehavior.floating,
         ),
       );

@@ -29,7 +29,7 @@ class SettingsPage extends StatelessWidget {
           onDeleteAccount: () => _deleteAccount(context, loc),
         ),
         const SizedBox(height: 24),
-        const SectionHeader(title: 'Appearance', padding: EdgeInsets.fromLTRB(16, 0, 16, 8)),
+        SectionHeader(title: loc.appearance, padding: const EdgeInsets.fromLTRB(16, 0, 16, 8)),
         const AppearanceSection(),
       ]),
     );

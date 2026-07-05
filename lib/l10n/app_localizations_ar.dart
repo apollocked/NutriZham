@@ -436,4 +436,58 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get added => 'تمت الإضافة';
+
+  @override
+  String get youAreOffline => 'أنت غير متصل';
+
+  @override
+  String get retry => 'إعادة المحاولة';
+
+  @override
+  String get noInternet => 'لا يوجد اتصال بالإنترنت';
+
+  @override
+  String get connectToLoad => 'اتصل بالإنترنت لتحميل الوصفات';
+
+  @override
+  String get kcal => 'سعرة';
+
+  @override
+  String get proteinAbbr => 'بروتين';
+
+  @override
+  String get carbsAbbr => 'كرب';
+
+  @override
+  String get fatsAbbr => 'دهون';
+
+  @override
+  String get appearance => 'المظهر';
+
+  @override
+  String get add => 'إضافة';
+
+  @override
+  String get onlineRequired => 'هذا الإجراء يتطلب اتصالاً بالإنترنت';
+
+  @override
+  String get dayMon => 'إثنين';
+
+  @override
+  String get dayTue => 'ثلاثاء';
+
+  @override
+  String get dayWed => 'أربعاء';
+
+  @override
+  String get dayThu => 'خميس';
+
+  @override
+  String get dayFri => 'جمعة';
+
+  @override
+  String get daySat => 'سبت';
+
+  @override
+  String get daySun => 'أحد';
 }

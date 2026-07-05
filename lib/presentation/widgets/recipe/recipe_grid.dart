@@ -65,10 +65,10 @@ class RecipeGrid extends StatelessWidget {
     final loc = AppLocalizations.of(context)!;
 
     if (isOffline && recipes.isEmpty) {
-      return const EmptyStateWidget(
+      return EmptyStateWidget(
         icon: Icons.wifi_off_rounded,
-        title: 'No internet connection',
-        subtitle: 'Connect to the internet to load recipes',
+        title: loc.noInternet,
+        subtitle: loc.connectToLoad,
       );
     }
 

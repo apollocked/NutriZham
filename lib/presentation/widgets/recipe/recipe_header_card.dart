@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/core/constants/app_colors.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 import 'package:nutrizham/presentation/widgets/recipe/category_badge.dart';
 
 class RecipeHeaderCard extends StatelessWidget {
@@ -41,7 +42,7 @@ class RecipeHeaderCard extends StatelessWidget {
                   fontWeight: FontWeight.w700),
               textAlign: TextAlign.center),
           const SizedBox(height: 8),
-          Text('${recipe.nutrition.calories} kcal',
+          Text('${recipe.nutrition.calories} ${AppLocalizations.of(context)!.kcal}',
               style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,

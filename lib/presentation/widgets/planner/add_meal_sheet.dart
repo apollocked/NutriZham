@@ -97,7 +97,7 @@ class AddMealSheet extends StatelessWidget {
                               recipe.title[locale] ?? recipe.title['en'] ?? '',
                               style: const TextStyle(fontWeight: FontWeight.w600),
                             ),
-                            subtitle: Text('${recipe.nutrition.calories} kcal'),
+                            subtitle: Text('${recipe.nutrition.calories} ${AppLocalizations.of(context)!.kcal}'),
                             trailing: const Icon(Icons.add_circle_rounded,
                                 color: AppColors.primaryGreen, size: 28),
                             onTap: () {

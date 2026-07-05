@@ -156,7 +156,7 @@ class RecipeOfTheDayCard extends StatelessWidget {
                                       color: AppColors.caloriesColor
                                           .withOpacity(0.7)),
                                   const SizedBox(width: 4),
-                                  Text('${recipe.nutrition.calories} kcal',
+                                  Text('${recipe.nutrition.calories} ${AppLocalizations.of(context)!.kcal}',
                                       style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600,

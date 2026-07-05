@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
+import 'package:nutrizham/presentation/blocs/meal_planner_cubit.dart';
 import 'package:nutrizham/presentation/blocs/recipe_cubit.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/empty_state_widget.dart';
 import 'package:nutrizham/presentation/widgets/common/custom_app_bar.dart';
@@ -11,6 +12,7 @@ import 'package:nutrizham/presentation/widgets/common/category_widgets.dart';
 import 'package:nutrizham/presentation/widgets/common/shimmer_loading.dart';
 import 'package:nutrizham/presentation/widgets/common/pressable.dart';
 import 'package:nutrizham/presentation/widgets/recipe/recipe_card.dart';
+import 'package:nutrizham/presentation/widgets/planner/choose_slot_dialog.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class SearchPage extends StatefulWidget {
@@ -49,6 +51,32 @@ class _SearchPageState extends State<SearchPage> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  String _dateKey(DateTime date) =>
+      '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+
+  Set<String> _addedSlots(String recipeId) {
+    final ps = context.read<MealPlannerCubit>().state;
+    if (ps is! PlannerLoaded) return {};
+    final entries = ps.mealPlans[_dateKey(ps.selectedDate)] ?? [];
+    return entries.where((e) => e.recipeId == recipeId).map((e) => e.slot).toSet();
+  }
+
+  void _addToPlanner(Recipe recipe) {
+    final addedSlots = _addedSlots(recipe.id);
+    showChooseSlotDialog(context, recipeTitle: recipe.title['en'] ?? '', addedSlots: addedSlots).then((slot) {
+      if (slot == null || !context.mounted) return;
+      context.read<MealPlannerCubit>().addMealToDate(recipe.id, slot);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${recipe.title['en']} added to $slot'),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+          backgroundColor: Theme.of(context).colorScheme.primary,
+        ),
+      );
+    });
   }
 
   List<Recipe> get _filteredRecipes {
@@ -106,6 +134,7 @@ class _SearchPageState extends State<SearchPage> {
                         isFavorite: favorites.isFavorite(recipe.id),
                         onFavoriteToggle: () => favorites.toggleFavorite(recipe.id),
                         onTap: () => context.push('/recipe/${recipe.id}', extra: recipe),
+                        onLongPress: () => _addToPlanner(recipe),
                       ),
                     );
                   },

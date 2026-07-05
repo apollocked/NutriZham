@@ -438,4 +438,58 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get added => 'Added';
+
+  @override
+  String get youAreOffline => 'You are offline';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get noInternet => 'No internet connection';
+
+  @override
+  String get connectToLoad => 'Connect to the internet to load recipes';
+
+  @override
+  String get kcal => 'kcal';
+
+  @override
+  String get proteinAbbr => 'P';
+
+  @override
+  String get carbsAbbr => 'C';
+
+  @override
+  String get fatsAbbr => 'F';
+
+  @override
+  String get appearance => 'Appearance';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get onlineRequired => 'This action requires an internet connection';
+
+  @override
+  String get dayMon => 'Mon';
+
+  @override
+  String get dayTue => 'Tue';
+
+  @override
+  String get dayWed => 'Wed';
+
+  @override
+  String get dayThu => 'Thu';
+
+  @override
+  String get dayFri => 'Fri';
+
+  @override
+  String get daySat => 'Sat';
+
+  @override
+  String get daySun => 'Sun';
 }

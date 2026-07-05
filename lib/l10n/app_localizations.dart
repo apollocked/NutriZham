@@ -951,6 +951,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Added'**
   String get added;
+
+  /// No description provided for @youAreOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'You are offline'**
+  String get youAreOffline;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @noInternet.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection'**
+  String get noInternet;
+
+  /// No description provided for @connectToLoad.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect to the internet to load recipes'**
+  String get connectToLoad;
+
+  /// No description provided for @kcal.
+  ///
+  /// In en, this message translates to:
+  /// **'kcal'**
+  String get kcal;
+
+  /// No description provided for @proteinAbbr.
+  ///
+  /// In en, this message translates to:
+  /// **'P'**
+  String get proteinAbbr;
+
+  /// No description provided for @carbsAbbr.
+  ///
+  /// In en, this message translates to:
+  /// **'C'**
+  String get carbsAbbr;
+
+  /// No description provided for @fatsAbbr.
+  ///
+  /// In en, this message translates to:
+  /// **'F'**
+  String get fatsAbbr;
+
+  /// No description provided for @appearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearance;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// No description provided for @onlineRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'This action requires an internet connection'**
+  String get onlineRequired;
+
+  /// No description provided for @dayMon.
+  ///
+  /// In en, this message translates to:
+  /// **'Mon'**
+  String get dayMon;
+
+  /// No description provided for @dayTue.
+  ///
+  /// In en, this message translates to:
+  /// **'Tue'**
+  String get dayTue;
+
+  /// No description provided for @dayWed.
+  ///
+  /// In en, this message translates to:
+  /// **'Wed'**
+  String get dayWed;
+
+  /// No description provided for @dayThu.
+  ///
+  /// In en, this message translates to:
+  /// **'Thu'**
+  String get dayThu;
+
+  /// No description provided for @dayFri.
+  ///
+  /// In en, this message translates to:
+  /// **'Fri'**
+  String get dayFri;
+
+  /// No description provided for @daySat.
+  ///
+  /// In en, this message translates to:
+  /// **'Sat'**
+  String get daySat;
+
+  /// No description provided for @daySun.
+  ///
+  /// In en, this message translates to:
+  /// **'Sun'**
+  String get daySun;
 }
 
 class _AppLocalizationsDelegate

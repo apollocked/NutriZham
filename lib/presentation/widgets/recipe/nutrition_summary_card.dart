@@ -50,7 +50,7 @@ class NutritionSummaryCard extends StatelessWidget {
           child: Column(children: [
             Text('$totalCalories', style: TextStyle(color: theme.colorScheme.onSurface, fontSize: 44, fontWeight: FontWeight.w700)),
             const SizedBox(height: 2),
-            Text('kcal', style: TextStyle(color: theme.colorScheme.primary, fontSize: 18, fontWeight: FontWeight.w600)),
+            Text(loc.kcal, style: TextStyle(color: theme.colorScheme.primary, fontSize: 18, fontWeight: FontWeight.w600)),
             const SizedBox(height: 6),
             Text('$plannedMealCount ${plannedMealCount == 1 ? loc.recipeFound : loc.recipesFound}', style: theme.textTheme.bodySmall),
           ]),
@@ -67,9 +67,9 @@ class NutritionSummaryCard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _MacroPill(label: 'Protein', value: '${totalProtein.toStringAsFixed(0)}g', color: AppColors.proteinColor),
-                _MacroPill(label: 'Carbs', value: '${totalCarbs.toStringAsFixed(0)}g', color: AppColors.carbsColor),
-                _MacroPill(label: 'Fats', value: '${totalFats.toStringAsFixed(0)}g', color: AppColors.fatsColor),
+                _MacroPill(label: loc.protein, value: '${totalProtein.toStringAsFixed(0)}g', color: AppColors.proteinColor),
+                _MacroPill(label: loc.carbs, value: '${totalCarbs.toStringAsFixed(0)}g', color: AppColors.carbsColor),
+                _MacroPill(label: loc.fats, value: '${totalFats.toStringAsFixed(0)}g', color: AppColors.fatsColor),
               ],
             ),
           ),

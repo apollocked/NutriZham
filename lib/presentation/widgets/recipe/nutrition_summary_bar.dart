@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/core/constants/app_colors.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 
 class NutritionSummaryBar extends StatelessWidget {
   final NutritionalInfo nutrition;
@@ -22,23 +23,23 @@ class NutritionSummaryBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildMiniNutrient(
-              '${nutrition.calories}', 'kcal', AppColors.caloriesColor),
+              '${nutrition.calories}', AppLocalizations.of(context)!.kcal, AppColors.caloriesColor),
           Container(
               height: 30,
               width: 1,
               color: theme.colorScheme.outline.withOpacity(0.3)),
           _buildMiniNutrient(
-              '${nutrition.protein}g', 'P', AppColors.proteinColor),
+              '${nutrition.protein}g', AppLocalizations.of(context)!.proteinAbbr, AppColors.proteinColor),
           Container(
               height: 30,
               width: 1,
               color: theme.colorScheme.outline.withOpacity(0.3)),
-          _buildMiniNutrient('${nutrition.carbs}g', 'C', AppColors.carbsColor),
+          _buildMiniNutrient('${nutrition.carbs}g', AppLocalizations.of(context)!.carbsAbbr, AppColors.carbsColor),
           Container(
               height: 30,
               width: 1,
               color: theme.colorScheme.outline.withOpacity(0.3)),
-          _buildMiniNutrient('${nutrition.fats}g', 'F', AppColors.fatsColor),
+          _buildMiniNutrient('${nutrition.fats}g', AppLocalizations.of(context)!.fatsAbbr, AppColors.fatsColor),
         ],
       ),
     );

@@ -99,7 +99,7 @@ class NutritionGoalsCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'kcal / $dailyCaloriesGoal kcal',
+                  '${loc.kcal} / $dailyCaloriesGoal ${loc.kcal}',
                   style: TextStyle(
                     color: theme.colorScheme.primary,
                     fontSize: 13,

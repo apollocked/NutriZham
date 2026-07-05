@@ -438,4 +438,58 @@ class AppLocalizationsKu extends AppLocalizations {
 
   @override
   String get added => 'زیادکرا';
+
+  @override
+  String get youAreOffline => 'تۆ ئۆفلاینیت';
+
+  @override
+  String get retry => 'هەوڵی دووبارە';
+
+  @override
+  String get noInternet => 'پەیوەندی بە ئینتەرنێت نییە';
+
+  @override
+  String get connectToLoad => 'پەیوەندی بکە بە ئینتەرنێت بۆ بارکردنی ڕێچەتەکان';
+
+  @override
+  String get kcal => 'کالۆری';
+
+  @override
+  String get proteinAbbr => 'P';
+
+  @override
+  String get carbsAbbr => 'C';
+
+  @override
+  String get fatsAbbr => 'F';
+
+  @override
+  String get appearance => 'دەرکەوتن';
+
+  @override
+  String get add => 'زیادکردن';
+
+  @override
+  String get onlineRequired => 'ئەم کردارە پێویستی بە پەیوەندی ئینتەرنێت هەیە';
+
+  @override
+  String get dayMon => 'دوو';
+
+  @override
+  String get dayTue => 'سێ';
+
+  @override
+  String get dayWed => 'چوار';
+
+  @override
+  String get dayThu => 'پێنج';
+
+  @override
+  String get dayFri => 'هەینی';
+
+  @override
+  String get daySat => 'شەممە';
+
+  @override
+  String get daySun => 'یەک';
 }
