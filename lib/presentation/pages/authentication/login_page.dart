@@ -6,6 +6,7 @@ import 'package:nutrizham/presentation/blocs/settings_cubit.dart';
 import 'package:nutrizham/presentation/widgets/auth/login_form.dart';
 import 'package:nutrizham/presentation/widgets/auth/forgot_password_dialog.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/icon_text_button.dart';
+import 'package:nutrizham/presentation/widgets/Form_Widgets/secondary_button.dart';
 import 'package:nutrizham/core/utils/connectivity_helper.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
@@ -56,6 +57,20 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  Future<void> _signInWithGoogle() async {
+    if (!context.guardOnline()) return;
+    final result = await context.read<AuthCubit>().signInWithGoogle();
+    if (!mounted) return;
+    if (result['success']) {
+      context.read<SettingsCubit>().setLoggedIn(true);
+      context.go('/home');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result['message']), backgroundColor: Theme.of(context).colorScheme.error),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
@@ -90,6 +105,23 @@ class _LoginPageState extends State<LoginPage> {
                   Text(loc.login, style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
                   const SizedBox(height: 40),
                   LoginForm(formKey: _formKey, emailController: _emailController, passwordController: _passwordController, isLoading: context.watch<AuthCubit>().state is AuthLoading, onLogin: _login, onForgotPassword: _forgotPassword),
+                  const SizedBox(height: 24),
+                  Row(
+                    children: [
+                      const Expanded(child: Divider()),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text('OR', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+                      ),
+                      const Expanded(child: Divider()),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  SecondaryButton(
+                    text: 'Sign in with Google',
+                    icon: Icons.g_mobiledata_rounded,
+                    onPressed: context.watch<AuthCubit>().state is AuthLoading ? null : _signInWithGoogle,
+                  ),
                   const SizedBox(height: 40),
                   Text(loc.dontHaveAccount, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
                   const SizedBox(height: 12),

@@ -206,11 +206,12 @@ class FirebaseAuthService {
 
   // Google Sign-In - UPDATED with favorites and planned meals
   Future<Map<String, dynamic>> signInWithGoogle() async {
+    GoogleSignInAccount? googleUser;
     try {
       print('Starting Google Sign-In');
 
       // 1. Trigger Google Sign-In
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         print('Google sign-in cancelled by user');
         return {
@@ -279,6 +280,19 @@ class FirebaseAuthService {
         'success': true,
         'message': 'Google sign-in successful',
         'user': userModel,
+      };
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'account-exists-with-different-credential') {
+        final email = e.email ?? googleUser?.email ?? '';
+        return {
+          'success': false,
+          'message': 'An account already exists with $email. Please sign in with email and password instead.',
+        };
+      }
+      print('Google sign-in FirebaseAuthException: ${e.code} - ${e.message}');
+      return {
+        'success': false,
+        'message': 'Google sign-in failed. Please try again.',
       };
     } catch (e) {
       print('Google sign-in error: $e');

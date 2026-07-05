@@ -57,9 +57,9 @@ class _ProfilePageState extends State<ProfilePage> {
     final settings = context.read<SettingsCubit>();
     final confirmed = await showLogoutDialog(context);
     if (confirmed == true) {
-      await auth.logout();
       settings.setLoggedIn(false);
       if (mounted) context.go('/login');
+      auth.logout();
     }
   }
 

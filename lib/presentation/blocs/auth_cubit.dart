@@ -98,6 +98,17 @@ class AuthCubit extends Cubit<AuthState> {
     return result;
   }
 
+  Future<Map<String, dynamic>> signInWithGoogle() async {
+    emit(const AuthLoading());
+    final result = await _authService.signInWithGoogle();
+    if (result['success']) {
+      emit(AuthAuthenticated(result['user'] as UserModel));
+    } else {
+      emit(AuthError(result['message'] as String? ?? 'Google sign-in failed'));
+    }
+    return result;
+  }
+
   Future<void> loadCurrentUser() async {
     final cache = CacheService();
     final userJson = await cache.getCurrentUserJson();
