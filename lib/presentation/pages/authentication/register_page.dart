@@ -3,9 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/auth_cubit.dart';
+import 'package:nutrizham/presentation/blocs/settings_cubit.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/custom_text_field.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/custom_buttons.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/icon_text_button.dart';
+import 'package:nutrizham/presentation/widgets/Form_Widgets/secondary_button.dart';
 import 'package:nutrizham/core/utils/connectivity_helper.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
@@ -57,6 +59,20 @@ class _RegisterPageState extends State<RegisterPage> {
         SnackBar(content: Text(result['message']), backgroundColor: Theme.of(context).colorScheme.primary),
       );
       context.go('/login');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result['message']), backgroundColor: Theme.of(context).colorScheme.error),
+      );
+    }
+  }
+
+  Future<void> _signInWithGoogle() async {
+    if (!context.guardOnline()) return;
+    final result = await context.read<AuthCubit>().signInWithGoogle();
+    if (!mounted) return;
+    if (result['success']) {
+      context.read<SettingsCubit>().setLoggedIn(true);
+      context.go('/home');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(result['message']), backgroundColor: Theme.of(context).colorScheme.error),
@@ -117,6 +133,23 @@ class _RegisterPageState extends State<RegisterPage> {
                       validator: (v) => v?.isEmpty == true ? 'Please confirm your password' : (v != _passwordController.text ? 'Passwords do not match' : null)),
                     const SizedBox(height: 28),
                     PrimaryButton(text: loc.register, onPressed: _register, isLoading: context.watch<AuthCubit>().state is AuthLoading),
+                    const SizedBox(height: 24),
+                    Row(
+                      children: [
+                        const Expanded(child: Divider()),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text('OR', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+                        ),
+                        const Expanded(child: Divider()),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    SecondaryButton(
+                      text: 'Sign up with Google',
+                      icon: Icons.g_mobiledata_rounded,
+                      onPressed: _signInWithGoogle,
+                    ),
                     const SizedBox(height: 20),
                     IconTextButton(text: loc.login, onPressed: () => context.go('/login'), icon: Icons.arrow_back_rounded),
                   ]),

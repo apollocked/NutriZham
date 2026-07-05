@@ -12,7 +12,20 @@
           "package_name": "com.example.nutrizham"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "456258435671-h92mje4n53hg7gfk6akjrm0277m4ahv2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.nutrizham",
+            "certificate_hash": "12b0437c2545a73636014704ab767b09f7402a68"
+          }
+        },
+        {
+          "client_id": "456258435671-970sh6u39g0gve74rmrf4rsaf242gmb7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDBVR9rKCHlIZeGTnr9UbxeUj_X32zUEFY"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "456258435671-970sh6u39g0gve74rmrf4rsaf242gmb7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

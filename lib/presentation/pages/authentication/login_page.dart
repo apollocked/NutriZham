@@ -120,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                   SecondaryButton(
                     text: 'Sign in with Google',
                     icon: Icons.g_mobiledata_rounded,
-                    onPressed: context.watch<AuthCubit>().state is AuthLoading ? null : _signInWithGoogle,
+                    onPressed: _signInWithGoogle,
                   ),
                   const SizedBox(height: 40),
                   Text(loc.dontHaveAccount, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),

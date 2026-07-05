@@ -47,12 +47,12 @@ class SettingsCubit extends Cubit<SettingsState> {
   }
 
   Future<void> setLoggedIn(bool value) async {
-    await CacheService().setIsLoggedIn(value);
     emit(SettingsState(
       isDarkMode: state.isDarkMode,
       languageCode: state.languageCode,
       isLoggedIn: value,
     ));
+    CacheService().setIsLoggedIn(value);
   }
 
   Future<void> setWelcomeShown() async {
