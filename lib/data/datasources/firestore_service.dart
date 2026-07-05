@@ -140,67 +140,63 @@ class FirestoreService {
     }
   }
 
-  // ============ PLANNED MEALS OPERATIONS ============
+  // ============ MEAL PLANS OPERATIONS ============
 
-  // Add meal to plan
-  Future<void> addMealToPlan(String recipeId) async {
+  // Get full mealPlans map from user doc
+  Future<Map<String, dynamic>> getMealPlans() async {
     final userDoc = _currentUserDoc;
-    if (userDoc == null) return;
-
-    try {
-      await userDoc.update({
-        'plannedMeals': FieldValue.arrayUnion([recipeId]),
-        'updatedAt': DateTime.now().toIso8601String(),
-      });
-      print('Added recipe $recipeId to planned meals');
-    } catch (e) {
-      print('Error adding to planned meals: $e');
-      rethrow;
-    }
-  }
-
-  // Remove meal from plan
-  Future<void> removeMealFromPlan(String recipeId) async {
-    final userDoc = _currentUserDoc;
-    if (userDoc == null) return;
-
-    try {
-      await userDoc.update({
-        'plannedMeals': FieldValue.arrayRemove([recipeId]),
-        'updatedAt': DateTime.now().toIso8601String(),
-      });
-      print('Removed recipe $recipeId from planned meals');
-    } catch (e) {
-      print('Error removing from planned meals: $e');
-      rethrow;
-    }
-  }
-
-  // Get user planned meals
-  Future<List<String>> getUserPlannedMeals() async {
-    final userDoc = _currentUserDoc;
-    if (userDoc == null) return [];
+    if (userDoc == null) return {};
 
     try {
       final doc = await userDoc.get();
       if (doc.exists) {
         final data = doc.data()!;
-        return List<String>.from(data['plannedMeals'] ?? []);
+        return Map<String, dynamic>.from(data['mealPlans'] ?? {});
       }
-      return [];
+      return {};
     } catch (e) {
-      print('Error getting planned meals: $e');
-      return [];
+      print('Error getting meal plans: $e');
+      return {};
     }
   }
 
-  // Toggle planned meal
-  Future<void> togglePlannedMeal(String recipeId) async {
-    final plannedMeals = await getUserPlannedMeals();
-    if (plannedMeals.contains(recipeId)) {
-      await removeMealFromPlan(recipeId);
-    } else {
-      await addMealToPlan(recipeId);
+  // Set entire mealPlans map on user doc
+  Future<void> setMealPlans(Map<String, dynamic> mealPlans) async {
+    final userDoc = _currentUserDoc;
+    if (userDoc == null) return;
+
+    try {
+      await userDoc.update({
+        'mealPlans': mealPlans,
+        'updatedAt': DateTime.now().toIso8601String(),
+      });
+    } catch (e) {
+      print('Error setting meal plans: $e');
+      rethrow;
+    }
+  }
+
+  // Update nutrition goals
+  Future<void> updateNutritionGoals({
+    required int calories,
+    required double protein,
+    required double carbs,
+    required double fats,
+  }) async {
+    final userDoc = _currentUserDoc;
+    if (userDoc == null) return;
+
+    try {
+      await userDoc.update({
+        'dailyCalories': calories,
+        'dailyProtein': protein,
+        'dailyCarbs': carbs,
+        'dailyFats': fats,
+        'updatedAt': DateTime.now().toIso8601String(),
+      });
+    } catch (e) {
+      print('Error updating nutrition goals: $e');
+      rethrow;
     }
   }
 
@@ -230,29 +226,26 @@ class FirestoreService {
     }
   }
 
-  // Sync local planned meals with Firestore
-  Future<void> syncPlannedMealsWithFirestore(
-      List<String> localPlannedMeals) async {
+  // Sync local meal plans with Firestore
+  Future<void> syncMealPlansWithFirestore(
+      Map<String, dynamic> localMealPlans) async {
     final userDoc = _currentUserDoc;
     if (userDoc == null) return;
 
     try {
-      // Get current planned meals from Firestore
-      final firestorePlannedMeals = await getUserPlannedMeals();
-      final firestoreSet = firestorePlannedMeals.toSet();
-      final localSet = localPlannedMeals.toSet();
-
-      // Merge: add any local planned meals not in Firestore
-      final toAdd = localSet.difference(firestoreSet);
-      if (toAdd.isNotEmpty) {
-        await userDoc.update({
-          'plannedMeals': FieldValue.arrayUnion(toAdd.toList()),
-          'updatedAt': DateTime.now().toIso8601String(),
-        });
-        print('Synced ${toAdd.length} planned meals to Firestore');
-      }
+      final firestorePlans = await getMealPlans();
+      final merged = Map<String, dynamic>.from(firestorePlans);
+      localMealPlans.forEach((date, entries) {
+        if (!merged.containsKey(date)) {
+          merged[date] = entries;
+        }
+      });
+      await userDoc.update({
+        'mealPlans': merged,
+        'updatedAt': DateTime.now().toIso8601String(),
+      });
     } catch (e) {
-      print('Error syncing planned meals: $e');
+      print('Error syncing meal plans: $e');
     }
   }
 

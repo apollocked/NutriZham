@@ -123,6 +123,11 @@ class CacheService {
       setStringList(_plannedMeals, v);
   Future<void> removePlannedMeals() async => remove(_plannedMeals);
 
+  static const _mealPlansKey = 'meal_plans';
+  Future<String> getMealPlansJson() async => getString(_mealPlansKey);
+  Future<void> setMealPlansJson(String v) async => setString(_mealPlansKey, v);
+  Future<void> removeMealPlans() async => remove(_mealPlansKey);
+
   // Convenience: Sync flags
   static const _needsSync = 'needs_sync';
   Future<bool> needsSync() async => getBool(_needsSync);
@@ -132,6 +137,20 @@ class CacheService {
   Future<bool> plannedMealsNeedsSync() async => getBool(_plannedSync);
   Future<void> setPlannedMealsNeedsSync(bool v) async =>
       setBool(_plannedSync, v);
+
+  // Nutrition goals
+  static const _dailyCalories = 'daily_calories';
+  static const _dailyProtein = 'daily_protein';
+  static const _dailyCarbs = 'daily_carbs';
+  static const _dailyFats = 'daily_fats';
+  Future<int> getDailyCalories() async => (await getString(_dailyCalories)).isEmpty ? 2000 : int.parse(await getString(_dailyCalories));
+  Future<void> setDailyCalories(int v) async => setString(_dailyCalories, v.toString());
+  Future<double> getDailyProtein() async => (await getString(_dailyProtein)).isEmpty ? 150.0 : double.parse(await getString(_dailyProtein));
+  Future<void> setDailyProtein(double v) async => setString(_dailyProtein, v.toString());
+  Future<double> getDailyCarbs() async => (await getString(_dailyCarbs)).isEmpty ? 250.0 : double.parse(await getString(_dailyCarbs));
+  Future<void> setDailyCarbs(double v) async => setString(_dailyCarbs, v.toString());
+  Future<double> getDailyFats() async => (await getString(_dailyFats)).isEmpty ? 65.0 : double.parse(await getString(_dailyFats));
+  Future<void> setDailyFats(double v) async => setString(_dailyFats, v.toString());
 
   // Auth session (secure storage — sensitive)
   static const _isLoggedIn = 'is_logged_in';

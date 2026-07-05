@@ -1,123 +1,240 @@
+import 'dart:convert';
 import 'dart:async';
 import 'package:nutrizham/core/cache/cache_service.dart';
 import 'package:nutrizham/data/datasources/firestore_service.dart';
+import 'package:nutrizham/data/models/meal_plan_entry.dart';
 
 class MealPlannerService {
   static final _cache = CacheService();
-  static final StreamController<List<String>> _plannedMealsStreamController =
-      StreamController<List<String>>.broadcast();
+  static final StreamController<Map<String, List<MealPlanEntry>>>
+      _mealPlansStreamController =
+      StreamController<Map<String, List<MealPlanEntry>>>.broadcast();
   static final FirestoreService _firestoreService = FirestoreService();
 
-  static Stream<List<String>> get plannedMealsStream =>
-      _plannedMealsStreamController.stream;
+  static Stream<Map<String, List<MealPlanEntry>>> get mealPlansStream =>
+      _mealPlansStreamController.stream;
 
-  static Future<List<String>> loadPlannedMeals() async {
-    final plannedMeals = await _cache.getPlannedMeals();
+  static String _dateKey(DateTime date) =>
+      '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
 
+  static Map<String, List<MealPlanEntry>> _decodeMealPlans(String json) {
+    if (json.isEmpty) return {};
     try {
-      final firestoreMeals = await _firestoreService.getUserPlannedMeals();
-
-      if (firestoreMeals.isNotEmpty) {
-        await _cache.setPlannedMeals(firestoreMeals);
-        _plannedMealsStreamController.add(firestoreMeals);
-        return firestoreMeals;
-      } else if (plannedMeals.isNotEmpty) {
-        await _firestoreService.syncPlannedMealsWithFirestore(plannedMeals);
-      }
-    } catch (_) {}
-
-    _plannedMealsStreamController.add(plannedMeals);
-    return plannedMeals;
-  }
-
-  static Future<void> toggleMealInPlan(String recipeId) async {
-    final plannedMeals = await _cache.getPlannedMeals();
-
-    if (plannedMeals.contains(recipeId)) {
-      plannedMeals.remove(recipeId);
-    } else {
-      plannedMeals.add(recipeId);
-    }
-
-    await _cache.setPlannedMeals(plannedMeals);
-    _plannedMealsStreamController.add(plannedMeals);
-
-    try {
-      await _firestoreService.togglePlannedMeal(recipeId);
+      final map = jsonDecode(json) as Map<String, dynamic>;
+      return map.map((date, value) => MapEntry(
+            date,
+            (value as List)
+                .map((e) =>
+                    MealPlanEntry.fromJson(e as Map<String, dynamic>))
+                .toList(),
+          ));
     } catch (_) {
-      await _cache.setPlannedMealsNeedsSync(true);
+      return {};
     }
   }
 
-  static Future<void> addMealToPlan(String recipeId) async {
-    final plannedMeals = await _cache.getPlannedMeals();
-
-    if (!plannedMeals.contains(recipeId)) {
-      plannedMeals.add(recipeId);
-      await _cache.setPlannedMeals(plannedMeals);
-      _plannedMealsStreamController.add(plannedMeals);
-
-      try {
-        await _firestoreService.addMealToPlan(recipeId);
-      } catch (_) {
-        await _cache.setPlannedMealsNeedsSync(true);
-      }
-    }
+  static String _encodeMealPlans(Map<String, List<MealPlanEntry>> plans) {
+    return jsonEncode(plans.map((date, entries) =>
+        MapEntry(date, entries.map((e) => e.toJson()).toList())));
   }
 
-  static Future<void> removeMealFromPlan(String recipeId) async {
-    final plannedMeals = await _cache.getPlannedMeals();
-
-    if (plannedMeals.contains(recipeId)) {
-      plannedMeals.remove(recipeId);
-      await _cache.setPlannedMeals(plannedMeals);
-      _plannedMealsStreamController.add(plannedMeals);
-
-      try {
-        await _firestoreService.removeMealFromPlan(recipeId);
-      } catch (_) {
-        await _cache.setPlannedMealsNeedsSync(true);
-      }
-    }
-  }
-
-  static Future<void> clearAllPlannedMeals() async {
-    await _cache.removePlannedMeals();
-    _plannedMealsStreamController.add([]);
+  static Future<Map<String, List<MealPlanEntry>>> loadMealPlans() async {
+    final cachedJson = await _cache.getMealPlansJson();
+    final cached = _decodeMealPlans(cachedJson);
 
     try {
-      final plannedMeals = await _firestoreService.getUserPlannedMeals();
-      for (final id in plannedMeals) {
-        await _firestoreService.removeMealFromPlan(id);
+      final firestoreMap = await _firestoreService.getMealPlans();
+      if (firestoreMap.isNotEmpty) {
+        final firestore = firestoreMap.map((date, value) => MapEntry(
+              date,
+              (value as List)
+                  .map((e) =>
+                      MealPlanEntry.fromJson(e as Map<String, dynamic>))
+                  .toList(),
+            ));
+        final merged = Map<String, List<MealPlanEntry>>.from(firestore);
+        cached.forEach((date, entries) {
+          merged.putIfAbsent(date, () => entries);
+        });
+        await _cache.setMealPlansJson(_encodeMealPlans(merged));
+        _mealPlansStreamController.add(merged);
+        return merged;
+      } else if (cached.isNotEmpty) {
+        await _firestoreService
+            .syncMealPlansWithFirestore(_encodeMealPlans(cached) as Map<String, dynamic>);
+      }
+    } catch (_) {}
+
+    _mealPlansStreamController.add(cached);
+    return cached;
+  }
+
+  static Future<void> addMealToDate(
+      String recipeId, DateTime date, String slot) async {
+    final cachedJson = await _cache.getMealPlansJson();
+    final plans = _decodeMealPlans(cachedJson);
+    final key = _dateKey(date);
+    final entries = List<MealPlanEntry>.from(plans[key] ?? []);
+    entries.add(MealPlanEntry(
+      recipeId: recipeId,
+      slot: slot,
+      order: entries.length,
+    ));
+    plans[key] = entries;
+
+    await _cache.setMealPlansJson(_encodeMealPlans(plans));
+    _mealPlansStreamController.add(plans);
+
+    try {
+      final firestoreMap =
+          (await _firestoreService.getMealPlans());
+      final updatedMap = Map<String, dynamic>.from(firestoreMap);
+      updatedMap[key] = plans[key]!.map((e) => e.toJson()).toList();
+      await _firestoreService.setMealPlans(updatedMap);
+    } catch (_) {}
+  }
+
+  static Future<void> removeMealFromDate(
+      String recipeId, DateTime date) async {
+    final cachedJson = await _cache.getMealPlansJson();
+    final plans = _decodeMealPlans(cachedJson);
+    final key = _dateKey(date);
+    final entries = List<MealPlanEntry>.from(plans[key] ?? []);
+    entries.removeWhere((e) => e.recipeId == recipeId);
+    if (entries.isEmpty) {
+      plans.remove(key);
+    } else {
+      plans[key] = entries;
+    }
+
+    await _cache.setMealPlansJson(_encodeMealPlans(plans));
+    _mealPlansStreamController.add(plans);
+
+    try {
+      final firestoreMap = await _firestoreService.getMealPlans();
+      final updatedMap = Map<String, dynamic>.from(firestoreMap);
+      if (entries.isEmpty) {
+        updatedMap.remove(key);
+      } else {
+        updatedMap[key] = entries.map((e) => e.toJson()).toList();
+      }
+      await _firestoreService.setMealPlans(updatedMap);
+    } catch (_) {}
+  }
+
+  static Future<void> reorderMealInSlot(
+      DateTime date, String slot, int oldIndex, int newIndex) async {
+    final cachedJson = await _cache.getMealPlansJson();
+    final plans = _decodeMealPlans(cachedJson);
+    final key = _dateKey(date);
+    final entries = List<MealPlanEntry>.from(plans[key] ?? []);
+    final slotEntries =
+        entries.where((e) => e.slot == slot).toList();
+    final otherEntries =
+        entries.where((e) => e.slot != slot).toList();
+
+    if (oldIndex < 0 || oldIndex >= slotEntries.length) return;
+    final moved = slotEntries.removeAt(oldIndex);
+    slotEntries.insert(newIndex.clamp(0, slotEntries.length), moved);
+
+    final reindexed = slotEntries.asMap().entries.map((e) =>
+        MealPlanEntry(recipeId: e.value.recipeId, slot: slot, order: e.key));
+    plans[key] = [...otherEntries, ...reindexed];
+
+    await _cache.setMealPlansJson(_encodeMealPlans(plans));
+    _mealPlansStreamController.add(plans);
+
+    try {
+      final firestoreMap = await _firestoreService.getMealPlans();
+      final updatedMap = Map<String, dynamic>.from(firestoreMap);
+      updatedMap[key] = plans[key]!.map((e) => e.toJson()).toList();
+      await _firestoreService.setMealPlans(updatedMap);
+    } catch (_) {}
+  }
+
+  static Future<List<MealPlanEntry>> getMealsForDate(DateTime date) async {
+    final cachedJson = await _cache.getMealPlansJson();
+    final plans = _decodeMealPlans(cachedJson);
+    return plans[_dateKey(date)] ?? [];
+  }
+
+  static Future<bool> isMealPlannedOnDate(
+      String recipeId, DateTime date) async {
+    final meals = await getMealsForDate(date);
+    return meals.any((e) => e.recipeId == recipeId);
+  }
+
+  static Future<List<String>> getAllPlannedRecipeIds() async {
+    final cachedJson = await _cache.getMealPlansJson();
+    final plans = _decodeMealPlans(cachedJson);
+    return plans.values
+        .expand((entries) => entries)
+        .map((e) => e.recipeId)
+        .toSet()
+        .toList();
+  }
+
+  static Future<Map<String, List<MealPlanEntry>>> getAllMealPlans() async {
+    final cachedJson = await _cache.getMealPlansJson();
+    return _decodeMealPlans(cachedJson);
+  }
+
+  static Future<void> clearAllPlans() async {
+    await _cache.removeMealPlans();
+    _mealPlansStreamController.add({});
+
+    try {
+      await _firestoreService.setMealPlans({});
+    } catch (_) {}
+  }
+
+  static Future<void> loadNutritionGoals() async {
+    try {
+      final user = await _firestoreService.getCurrentUserFromFirestore();
+      if (user != null) {
+        await _cache.setDailyCalories(user.dailyCalories);
+        await _cache.setDailyProtein(user.dailyProtein);
+        await _cache.setDailyCarbs(user.dailyCarbs);
+        await _cache.setDailyFats(user.dailyFats);
       }
     } catch (_) {}
   }
 
-  static Future<int> getPlannedMealsCount() async {
-    final plannedMeals = await _cache.getPlannedMeals();
-    return plannedMeals.length;
+  static Future<Map<String, num>> getNutritionGoals() async {
+    final calories = await _cache.getDailyCalories();
+    final protein = await _cache.getDailyProtein();
+    final carbs = await _cache.getDailyCarbs();
+    final fats = await _cache.getDailyFats();
+    return {
+      'calories': calories,
+      'protein': protein,
+      'carbs': carbs,
+      'fats': fats,
+    };
   }
 
-  static Future<bool> isMealInPlan(String recipeId) async {
-    final plannedMeals = await _cache.getPlannedMeals();
-    return plannedMeals.contains(recipeId);
-  }
+  static Future<void> updateNutritionGoals({
+    required int calories,
+    required double protein,
+    required double carbs,
+    required double fats,
+  }) async {
+    await _cache.setDailyCalories(calories);
+    await _cache.setDailyProtein(protein);
+    await _cache.setDailyCarbs(carbs);
+    await _cache.setDailyFats(fats);
 
-  static Future<bool> hasPlannedMeals() async {
-    final plannedMeals = await _cache.getPlannedMeals();
-    return plannedMeals.isNotEmpty;
-  }
-
-  static Future<void> checkAndSync() async {
-    if (!await _cache.plannedMealsNeedsSync()) return;
     try {
-      final plannedMeals = await _cache.getPlannedMeals();
-      await _firestoreService.syncPlannedMealsWithFirestore(plannedMeals);
-      await _cache.setPlannedMealsNeedsSync(false);
+      await _firestoreService.updateNutritionGoals(
+        calories: calories,
+        protein: protein,
+        carbs: carbs,
+        fats: fats,
+      );
     } catch (_) {}
   }
 
   static void dispose() {
-    _plannedMealsStreamController.close();
+    _mealPlansStreamController.close();
   }
 }

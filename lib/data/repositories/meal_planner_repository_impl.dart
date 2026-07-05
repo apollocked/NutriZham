@@ -1,28 +1,46 @@
+import 'package:nutrizham/data/models/meal_plan_entry.dart';
 import 'package:nutrizham/domain/repositories/meal_planner_repository.dart';
 import 'package:nutrizham/data/datasources/meal_planner_service.dart';
 
 class MealPlannerRepositoryImpl implements MealPlannerRepository {
   @override
-  Future<List<String>> loadPlannedMeals() =>
-      MealPlannerService.loadPlannedMeals();
+  Future<Map<String, List<MealPlanEntry>>> loadMealPlans() =>
+      MealPlannerService.loadMealPlans();
 
   @override
-  Future<void> toggleMealInPlan(String recipeId) =>
-      MealPlannerService.toggleMealInPlan(recipeId);
+  Future<void> addMealToDate(String recipeId, DateTime date, String slot) =>
+      MealPlannerService.addMealToDate(recipeId, date, slot);
 
   @override
-  Future<void> addMealToPlan(String recipeId) =>
-      MealPlannerService.addMealToPlan(recipeId);
+  Future<void> removeMealFromDate(String recipeId, DateTime date) =>
+      MealPlannerService.removeMealFromDate(recipeId, date);
 
   @override
-  Future<void> removeMealFromPlan(String recipeId) =>
-      MealPlannerService.removeMealFromPlan(recipeId);
+  Future<void> reorderMealInSlot(
+          DateTime date, String slot, int oldIndex, int newIndex) =>
+      MealPlannerService.reorderMealInSlot(date, slot, oldIndex, newIndex);
 
   @override
-  Future<void> clearAllPlannedMeals() =>
-      MealPlannerService.clearAllPlannedMeals();
+  Future<List<String>> getAllPlannedRecipeIds() =>
+      MealPlannerService.getAllPlannedRecipeIds();
 
   @override
-  Future<bool> isMealInPlan(String recipeId) =>
-      MealPlannerService.isMealInPlan(recipeId);
+  Future<void> clearAllPlans() => MealPlannerService.clearAllPlans();
+
+  @override
+  Future<Map<String, num>> getNutritionGoals() =>
+      MealPlannerService.getNutritionGoals();
+
+  @override
+  Future<void> updateNutritionGoals({
+    required int calories,
+    required double protein,
+    required double carbs,
+    required double fats,
+  }) =>
+      MealPlannerService.updateNutritionGoals(
+          calories: calories,
+          protein: protein,
+          carbs: carbs,
+          fats: fats);
 }

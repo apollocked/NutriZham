@@ -1,8 +1,18 @@
+import 'package:nutrizham/data/models/meal_plan_entry.dart';
+
 abstract class MealPlannerRepository {
-  Future<List<String>> loadPlannedMeals();
-  Future<void> toggleMealInPlan(String recipeId);
-  Future<void> addMealToPlan(String recipeId);
-  Future<void> removeMealFromPlan(String recipeId);
-  Future<void> clearAllPlannedMeals();
-  Future<bool> isMealInPlan(String recipeId);
+  Future<Map<String, List<MealPlanEntry>>> loadMealPlans();
+  Future<void> addMealToDate(String recipeId, DateTime date, String slot);
+  Future<void> removeMealFromDate(String recipeId, DateTime date);
+  Future<void> reorderMealInSlot(
+      DateTime date, String slot, int oldIndex, int newIndex);
+  Future<List<String>> getAllPlannedRecipeIds();
+  Future<void> clearAllPlans();
+  Future<Map<String, num>> getNutritionGoals();
+  Future<void> updateNutritionGoals({
+    required int calories,
+    required double protein,
+    required double carbs,
+    required double fats,
+  });
 }
