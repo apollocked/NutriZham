@@ -9,10 +9,11 @@ import 'package:nutrizham/presentation/blocs/recipe_cubit.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:nutrizham/presentation/widgets/common/shimmer_loading.dart';
 import 'package:nutrizham/presentation/widgets/profile/logout_dialog.dart';
+import 'package:nutrizham/data/models/meal_plan_entry.dart';
 import 'package:nutrizham/presentation/widgets/profile/profile_header.dart';
 import 'package:nutrizham/presentation/widgets/profile/profile_stats_row.dart';
 import 'package:nutrizham/presentation/widgets/profile/profile_menu_card.dart';
-import 'package:nutrizham/presentation/widgets/profile/profile_favorites_section.dart';
+import 'package:nutrizham/presentation/widgets/profile/profile_meal_plan_section.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 import 'package:nutrizham/core/utils/connectivity_helper.dart';
 
@@ -75,10 +76,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if (authState is AuthAuthenticated) {
       final user = authState.user;
-      final favorites = context.watch<FavoritesCubit>();
       final planner = context.watch<MealPlannerCubit>();
-      final favoriteMeals =
-          _allRecipes.where((r) => favorites.isFavorite(r.id)).toList();
+      final plannerState = planner.state;
+      final mealPlans = plannerState is PlannerLoaded ? plannerState.mealPlans : <String, List<MealPlanEntry>>{};
 
       return Scaffold(
         body: SafeArea(
@@ -86,20 +86,15 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Column(children: [
               const SizedBox(height: 8),
               ProfileHeader(
-                  username: user.username,
-                  email: user.email,
-                  age: user.age),
+                  username: user.username, email: user.email, age: user.age),
               ProfileStatsRow(
-                  favoriteCount: favoriteMeals.length,
+                  favoriteCount: _allRecipes.where((r) => context.read<FavoritesCubit>().isFavorite(r.id)).length,
                   plannedCount: planner.count),
               ProfileMenuCard(
                   onFeatures: () => context.push('/features'),
                   onSettings: () => context.push('/settings'),
                   onLogout: _logOutAccount),
-              ProfileFavoritesSection(
-                  favoriteMeals: favoriteMeals,
-                  favoritesProvider: favorites,
-                  onToggleFavorite: (id) => favorites.toggleFavorite(id)),
+              ProfileMealPlanSection(mealPlans: mealPlans, allRecipes: _allRecipes),
               const SizedBox(height: 24),
             ]),
           ),
@@ -114,7 +109,8 @@ class _ProfilePageState extends State<ProfilePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.wifi_off_rounded,
-                  size: 48, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  size: 48,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant),
               const SizedBox(height: 16),
               Text(
                 AppLocalizations.of(context)!.couldNotLoadProfile,

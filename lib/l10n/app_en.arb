@@ -138,5 +138,7 @@
   "proteinGoal": "Protein (g)",
   "carbsGoal": "Carbs (g)",
   "fatsGoal": "Fats (g)",
-  "tapToBrowse": "Tap to browse recipes"
+  "tapToBrowse": "Tap to browse recipes",
+  "planThisMeal": "Plan This Meal",
+  "addToMeal": "Add to meal"
 }

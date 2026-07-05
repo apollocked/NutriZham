@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/core/constants/app_colors.dart';
+import 'package:nutrizham/core/utils/category_label.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:nutrizham/presentation/widgets/common/pressable.dart';
-import 'package:nutrizham/l10n/app_localizations.dart';
 
 class RecipeCard extends StatelessWidget {
   final Recipe recipe;
   final bool isFavorite;
   final VoidCallback onFavoriteToggle;
   final VoidCallback onTap;
+  final VoidCallback? onLongPress;
 
   const RecipeCard({
     super.key,
@@ -16,6 +17,7 @@ class RecipeCard extends StatelessWidget {
     required this.isFavorite,
     required this.onFavoriteToggle,
     required this.onTap,
+    this.onLongPress,
   });
 
   @override
@@ -28,6 +30,7 @@ class RecipeCard extends StatelessWidget {
 
     return Pressable(
       onTap: onTap,
+      onLongPress: onLongPress,
       child: Padding(
         padding: const EdgeInsets.all(5),
         child: Material(
@@ -105,7 +108,7 @@ class RecipeCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
-                              _getCategoryName(recipe.category, context),
+                              categoryLabel(recipe.category, context),
                               style: TextStyle(
                                   fontSize: 10,
                                   color: catColor,
@@ -133,23 +136,5 @@ class RecipeCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _getCategoryName(MealCategory category, BuildContext context) {
-    final loc = AppLocalizations.of(context)!;
-    switch (category) {
-      case MealCategory.breakfast:
-        return loc.breakfast;
-      case MealCategory.lunch:
-        return loc.lunch;
-      case MealCategory.dinner:
-        return loc.dinner;
-      case MealCategory.snack:
-        return loc.snack;
-      case MealCategory.bulking:
-        return loc.bulking;
-      case MealCategory.cutting:
-        return loc.cutting;
-    }
   }
 }

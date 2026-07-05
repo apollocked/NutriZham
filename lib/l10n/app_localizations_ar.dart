@@ -427,4 +427,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get tapToBrowse => 'انقر لتصفح الوصفات';
+
+  @override
+  String get planThisMeal => 'Plan This Meal';
+
+  @override
+  String get addToMeal => 'Add to meal';
 }

@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
+import 'package:nutrizham/presentation/blocs/meal_planner_cubit.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/empty_state_widget.dart';
 import 'package:nutrizham/presentation/widgets/common/shimmer_loading.dart';
+import 'package:nutrizham/presentation/widgets/planner/choose_slot_dialog.dart';
 import 'package:nutrizham/presentation/widgets/recipe/recipe_card.dart';
 
 class RecipeGrid extends StatelessWidget {
@@ -29,6 +31,21 @@ class RecipeGrid extends StatelessWidget {
     this.scrollController,
     this.onLoadMore,
   });
+
+  void _addToPlanner(BuildContext context, Recipe recipe) {
+    showChooseSlotDialog(context).then((slot) {
+      if (slot == null || !context.mounted) return;
+      context.read<MealPlannerCubit>().addMealToDate(recipe.id, slot);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${recipe.title['en']} added to $slot'),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+          backgroundColor: Theme.of(context).colorScheme.primary,
+        ),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +99,7 @@ class RecipeGrid extends StatelessWidget {
             onFavoriteToggle: () =>
                 context.read<FavoritesCubit>().toggleFavorite(recipe.id),
             onTap: () => context.push('/recipe/$recipe.id', extra: recipe),
+            onLongPress: () => _addToPlanner(context, recipe),
           );
         },
       ),

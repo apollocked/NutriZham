@@ -429,4 +429,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tapToBrowse => 'Tap to browse recipes';
+
+  @override
+  String get planThisMeal => 'Plan This Meal';
+
+  @override
+  String get addToMeal => 'Add to meal';
 }

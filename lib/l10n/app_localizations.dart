@@ -933,6 +933,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tap to browse recipes'**
   String get tapToBrowse;
+
+  /// No description provided for @planThisMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan This Meal'**
+  String get planThisMeal;
+
+  /// No description provided for @addToMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to meal'**
+  String get addToMeal;
 }
 
 class _AppLocalizationsDelegate
