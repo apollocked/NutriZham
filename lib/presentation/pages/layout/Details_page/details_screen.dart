@@ -7,10 +7,11 @@ import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
 import 'package:nutrizham/presentation/blocs/meal_planner_cubit.dart';
 import 'package:nutrizham/presentation/widgets/common/custom_app_bar.dart';
 import 'package:nutrizham/presentation/widgets/recipe/nutrition_info_widget.dart';
-import 'package:nutrizham/presentation/widgets/recipe/category_badge.dart';
 import 'package:nutrizham/presentation/widgets/recipe/recipe_rating_card.dart';
 import 'package:nutrizham/presentation/widgets/recipe/ingredients_list_widget.dart';
 import 'package:nutrizham/presentation/widgets/recipe/steps_list_widget.dart';
+import 'package:nutrizham/presentation/widgets/recipe/recipe_header_card.dart';
+import 'package:nutrizham/presentation/widgets/recipe/slot_button.dart';
 import 'package:nutrizham/presentation/widgets/common/section_header.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
@@ -97,38 +98,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
       ),
       body: SingleChildScrollView(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Container(
-            width: double.infinity,
-            margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-            padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [catColor.withOpacity(0.12), catColor.withOpacity(0.03)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: catColor.withOpacity(0.1)),
-            ),
-            child: Column(
-              children: [
-                Text(widget.recipe.icon, style: const TextStyle(fontSize: 52)),
-                const SizedBox(height: 16),
-                CategoryBadge(category: widget.recipe.category),
-                const SizedBox(height: 16),
-                Text(recipeTitle,
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w700),
-                    textAlign: TextAlign.center),
-                const SizedBox(height: 8),
-                Text('${widget.recipe.nutrition.calories} kcal',
-                    style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.caloriesColor)),
-              ],
-            ),
-          ),
+          RecipeHeaderCard(recipe: widget.recipe, categoryColor: catColor, title: recipeTitle),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -154,7 +124,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               const SizedBox(height: 12),
               Row(
                 children: [
-                  _SlotButton(
+                  SlotButton(
                     icon: Icons.wb_sunny_rounded,
                     label: loc.breakfast,
                     color: AppColors.getCategoryColor('breakfast'),
@@ -162,7 +132,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     onTap: () => _addToSlot('breakfast'),
                   ),
                   const SizedBox(width: 8),
-                  _SlotButton(
+                  SlotButton(
                     icon: Icons.light_mode_rounded,
                     label: loc.lunch,
                     color: AppColors.getCategoryColor('lunch'),
@@ -170,7 +140,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     onTap: () => _addToSlot('lunch'),
                   ),
                   const SizedBox(width: 8),
-                  _SlotButton(
+                  SlotButton(
                     icon: Icons.nightlight_round,
                     label: loc.dinner,
                     color: AppColors.getCategoryColor('dinner'),
@@ -178,7 +148,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     onTap: () => _addToSlot('dinner'),
                   ),
                   const SizedBox(width: 8),
-                  _SlotButton(
+                  SlotButton(
                     icon: Icons.cookie_rounded,
                     label: loc.snack,
                     color: AppColors.getCategoryColor('snack'),
@@ -199,86 +169,6 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             ]),
           ),
         ]),
-      ),
-    );
-  }
-}
-
-class _SlotButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color color;
-  final bool isAdded;
-  final VoidCallback onTap;
-
-  const _SlotButton({
-    required this.icon,
-    required this.label,
-    required this.color,
-    required this.isAdded,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(16),
-          onTap: onTap,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 350),
-            curve: Curves.easeOut,
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 4),
-            decoration: BoxDecoration(
-              gradient: isAdded
-                  ? LinearGradient(
-                      colors: [
-                        color.withOpacity(0.2),
-                        color.withOpacity(0.08),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    )
-                  : LinearGradient(
-                      colors: [
-                        color.withOpacity(0.06),
-                        color.withOpacity(0.02),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: isAdded ? color.withOpacity(0.4) : color.withOpacity(0.12),
-                width: isAdded ? 1.5 : 1,
-              ),
-              boxShadow: isAdded
-                  ? [BoxShadow(color: color.withOpacity(0.1), blurRadius: 6, offset: const Offset(0, 2))]
-                  : null,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  child: isAdded
-                      ? Icon(Icons.check_circle_rounded, key: const ValueKey('added'),
-                          color: color, size: 24)
-                      : Icon(icon, key: const ValueKey('normal'),
-                          color: color.withOpacity(0.7), size: 22),
-                ),
-                const SizedBox(height: 6),
-                Text(label,
-                    style: TextStyle(
-                        color: isAdded ? color : color.withOpacity(0.7),
-                        fontSize: 11,
-                        fontWeight: isAdded ? FontWeight.w700 : FontWeight.w500)),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }

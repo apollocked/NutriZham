@@ -94,7 +94,17 @@ class _ProfilePageState extends State<ProfilePage> {
                   onFeatures: () => context.push('/features'),
                   onSettings: () => context.push('/settings'),
                   onLogout: _logOutAccount),
-              ProfileMealPlanSection(mealPlans: mealPlans, allRecipes: _allRecipes),
+              ProfileMealPlanSection(
+                mealPlans: mealPlans,
+                allRecipes: _allRecipes,
+                dateKey: plannerState is PlannerLoaded
+                    ? '${plannerState.selectedDate.year}-${plannerState.selectedDate.month.toString().padLeft(2, '0')}-${plannerState.selectedDate.day.toString().padLeft(2, '0')}'
+                    : '',
+                dailyCaloriesGoal: plannerState is PlannerLoaded ? plannerState.dailyCaloriesGoal : 2000,
+                dailyProteinGoal: plannerState is PlannerLoaded ? plannerState.dailyProteinGoal : 150,
+                dailyCarbsGoal: plannerState is PlannerLoaded ? plannerState.dailyCarbsGoal : 250,
+                dailyFatsGoal: plannerState is PlannerLoaded ? plannerState.dailyFatsGoal : 65,
+              ),
               const SizedBox(height: 24),
             ]),
           ),
