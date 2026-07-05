@@ -381,4 +381,16 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get appDescription =>
       'A comprehensive fitness nutrition app with meal planning';
+
+  @override
+  String get signInWithGoogle => 'Sign in with Google';
+
+  @override
+  String get signUpWithGoogle => 'Sign up with Google';
+
+  @override
+  String get or => 'OR';
+
+  @override
+  String get couldNotLoadProfile => 'Could not load profile';
 }

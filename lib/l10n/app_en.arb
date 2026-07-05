@@ -122,5 +122,9 @@
   "recipesApp": "Recipes & Meal Planning App",
   "descriptionFlutterFirebase": "This app was developed for Flutter and Firebase learning purposes. The code is open source.",
   "emailSupport": "hamabarznji1990@gmail.com",
-  "appDescription": "A comprehensive fitness nutrition app with meal planning"
+  "appDescription": "A comprehensive fitness nutrition app with meal planning",
+  "signInWithGoogle": "Sign in with Google",
+  "signUpWithGoogle": "Sign up with Google",
+  "or": "OR",
+  "couldNotLoadProfile": "Could not load profile"
 }

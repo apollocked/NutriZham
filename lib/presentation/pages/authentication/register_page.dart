@@ -139,14 +139,14 @@ class _RegisterPageState extends State<RegisterPage> {
                         const Expanded(child: Divider()),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Text('OR', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+                          child: Text(loc.or, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
                         ),
                         const Expanded(child: Divider()),
                       ],
                     ),
                     const SizedBox(height: 24),
                     SecondaryButton(
-                      text: 'Sign up with Google',
+                      text: loc.signUpWithGoogle,
                       icon: Icons.g_mobiledata_rounded,
                       onPressed: _signInWithGoogle,
                     ),

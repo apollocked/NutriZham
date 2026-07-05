@@ -379,4 +379,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get appDescription => 'تطبيق تغذية ولياقة شامل مع تخطيط الوجبات';
+
+  @override
+  String get signInWithGoogle => 'تسجيل الدخول بواسطة Google';
+
+  @override
+  String get signUpWithGoogle => 'التسجيل بواسطة Google';
+
+  @override
+  String get or => 'أو';
+
+  @override
+  String get couldNotLoadProfile => 'تعذر تحميل الملف الشخصي';
 }

@@ -122,5 +122,9 @@
   "recipesApp": "ئەپلیکەیشنی ڕێچەتە و پلانی ژەم",
   "descriptionFlutterFirebase": "ئەم ئەپە بۆ فێربوونی Flutter و Firebase دروست کراوە. کۆدەکە کراوەیە.",
   "emailSupport": "hamabarznji1990@gmail.com",
-  "appDescription": "ئەپێکی تەندروستی و خۆراکی پڕ لە تایبەتمەندی"
+  "appDescription": "ئەپێکی تەندروستی و خۆراکی پڕ لە تایبەتمەندی",
+  "signInWithGoogle": "چوونەژوورەوە بە گووگڵ",
+  "signUpWithGoogle": "خۆتۆمارکردن بە گووگڵ",
+  "or": "یان",
+  "couldNotLoadProfile": "پڕۆفایل بارنەکرا"
 }

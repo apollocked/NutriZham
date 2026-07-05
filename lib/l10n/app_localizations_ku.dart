@@ -381,4 +381,16 @@ class AppLocalizationsKu extends AppLocalizations {
 
   @override
   String get appDescription => 'ئەپێکی تەندروستی و خۆراکی پڕ لە تایبەتمەندی';
+
+  @override
+  String get signInWithGoogle => 'چوونەژوورەوە بە گووگڵ';
+
+  @override
+  String get signUpWithGoogle => 'خۆتۆمارکردن بە گووگڵ';
+
+  @override
+  String get or => 'یان';
+
+  @override
+  String get couldNotLoadProfile => 'پڕۆفایل بارنەکرا';
 }

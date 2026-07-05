@@ -13,6 +13,7 @@ import 'package:nutrizham/presentation/widgets/profile/profile_header.dart';
 import 'package:nutrizham/presentation/widgets/profile/profile_stats_row.dart';
 import 'package:nutrizham/presentation/widgets/profile/profile_menu_card.dart';
 import 'package:nutrizham/presentation/widgets/profile/profile_favorites_section.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 import 'package:nutrizham/core/utils/connectivity_helper.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -116,7 +117,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   size: 48, color: Theme.of(context).colorScheme.onSurfaceVariant),
               const SizedBox(height: 16),
               Text(
-                'Could not load profile',
+                AppLocalizations.of(context)!.couldNotLoadProfile,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],

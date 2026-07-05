@@ -122,5 +122,9 @@
   "recipesApp": "تطبيق الوصفات وتخطيط الوجبات",
   "descriptionFlutterFirebase": "تم تطوير هذا التطبيق لأغراض تعلم Flutter و Firebase. الكود مفتوح المصدر.",
   "emailSupport": "hamabarznji1990@gmail.com",
-  "appDescription": "تطبيق تغذية ولياقة شامل مع تخطيط الوجبات"
+  "appDescription": "تطبيق تغذية ولياقة شامل مع تخطيط الوجبات",
+  "signInWithGoogle": "تسجيل الدخول بواسطة Google",
+  "signUpWithGoogle": "التسجيل بواسطة Google",
+  "or": "أو",
+  "couldNotLoadProfile": "تعذر تحميل الملف الشخصي"
 }
