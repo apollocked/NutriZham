@@ -492,4 +492,9 @@ class AppLocalizationsKu extends AppLocalizations {
 
   @override
   String get daySun => 'یەک';
+
+  @override
+  String addedToSlot(Object recipe, Object slot) {
+    return '$recipe زیادکرا بۆ $slot';
+  }
 }

@@ -1059,6 +1059,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sun'**
   String get daySun;
+
+  /// No description provided for @addedToSlot.
+  ///
+  /// In en, this message translates to:
+  /// **'{recipe} added to {slot}'**
+  String addedToSlot(Object recipe, Object slot);
 }
 
 class _AppLocalizationsDelegate

@@ -159,5 +159,12 @@
   "dayThu": "Thu",
   "dayFri": "Fri",
   "daySat": "Sat",
-  "daySun": "Sun"
+  "daySun": "Sun",
+  "addedToSlot": "{recipe} added to {slot}",
+  "@addedToSlot": {
+    "placeholders": {
+      "recipe": {},
+      "slot": {}
+    }
+  }
 }

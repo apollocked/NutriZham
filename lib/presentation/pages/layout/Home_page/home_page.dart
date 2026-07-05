@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(loc.noInternet),
+          content: Text(AppLocalizations.of(context)!.noInternet),
           behavior: SnackBarBehavior.floating,
           backgroundColor: Theme.of(context).colorScheme.error,
         ),

@@ -492,4 +492,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get daySun => 'Sun';
+
+  @override
+  String addedToSlot(Object recipe, Object slot) {
+    return '$recipe added to $slot';
+  }
 }

@@ -4,6 +4,7 @@ import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
 import 'package:nutrizham/presentation/blocs/meal_planner_cubit.dart';
+import 'package:nutrizham/core/utils/category_label.dart';
 import 'package:nutrizham/presentation/blocs/recipe_cubit.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/empty_state_widget.dart';
 import 'package:nutrizham/presentation/widgets/common/custom_app_bar.dart';
@@ -63,20 +64,24 @@ class _SearchPageState extends State<SearchPage> {
     return entries.where((e) => e.recipeId == recipeId).map((e) => e.slot).toSet();
   }
 
-  void _addToPlanner(Recipe recipe) {
+  Future<void> _addToPlanner(Recipe recipe) async {
+    final loc = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).languageCode;
+    final recipeTitle = recipe.title[locale] ?? recipe.title['en'] ?? '';
     final addedSlots = _addedSlots(recipe.id);
-    showChooseSlotDialog(context, recipeTitle: recipe.title['en'] ?? '', addedSlots: addedSlots).then((slot) {
-      if (slot == null || !context.mounted) return;
-      context.read<MealPlannerCubit>().addMealToDate(recipe.id, slot);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${recipe.title['en']} added to $slot'),
-          behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 2),
-          backgroundColor: Theme.of(context).colorScheme.primary,
-        ),
-      );
-    });
+    final slot = await showChooseSlotDialog(context, recipeTitle: recipeTitle, addedSlots: addedSlots);
+    if (slot == null || !mounted) return;
+    context.read<MealPlannerCubit>().addMealToDate(recipe.id, slot);
+    if (!mounted) return;
+    final slotLabel = categoryLabelFromName(slot, loc);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(loc.addedToSlot(recipeTitle, slotLabel)),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+      ),
+    );
   }
 
   List<Recipe> get _filteredRecipes {

@@ -79,8 +79,9 @@ class _EditAccountPageState extends State<EditAccountPage> {
       if (result['success']) context.go('/home');
     } catch (e) {
       if (mounted) {
+        final loc = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Error: ${e.toString()}'),
+            content: Text('${loc.error}: ${e.toString()}'),
             backgroundColor: Theme.of(context).colorScheme.error));
       }
     } finally {

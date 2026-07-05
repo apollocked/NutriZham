@@ -11,6 +11,7 @@ import 'package:nutrizham/presentation/widgets/recipe/recipe_rating_card.dart';
 import 'package:nutrizham/presentation/widgets/recipe/ingredients_list_widget.dart';
 import 'package:nutrizham/presentation/widgets/recipe/steps_list_widget.dart';
 import 'package:nutrizham/presentation/widgets/recipe/recipe_header_card.dart';
+import 'package:nutrizham/core/utils/category_label.dart';
 import 'package:nutrizham/presentation/widgets/recipe/slot_button.dart';
 import 'package:nutrizham/presentation/widgets/common/section_header.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
@@ -43,12 +44,15 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   Future<void> _addToSlot(String slot) async {
     await context.read<MealPlannerCubit>().addMealToDate(widget.recipe.id, slot);
     if (!mounted) return;
+    final loc = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).languageCode;
     final messenger = ScaffoldMessenger.of(context);
     final theme = Theme.of(context);
-    final title = widget.recipe.title['en'] ?? '';
+    final title = widget.recipe.title[locale] ?? widget.recipe.title['en'] ?? '';
+    final slotLabel = categoryLabelFromName(slot, loc);
     messenger.showSnackBar(
       SnackBar(
-        content: Text('$title $slot'),
+        content: Text(loc.addedToSlot(title, slotLabel)),
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 2),
         backgroundColor: theme.colorScheme.primary,
