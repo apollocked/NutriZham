@@ -19,15 +19,12 @@ void main() async {
   await CacheService().init();
   final settings = SettingsCubit();
   await settings.initialize();
-
   runApp(NutriZhamApp(settings: settings));
 }
 
 class NutriZhamApp extends StatelessWidget {
   final SettingsCubit settings;
-
   const NutriZhamApp({super.key, required this.settings});
-
   @override
   Widget build(BuildContext context) {
     final router = buildRouter();

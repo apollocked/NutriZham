@@ -22,6 +22,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   MealCategory? _selectedCategory;
   bool _showFavoritesOnly = false;
+  bool _initialized = false;
   final ScrollController _scrollController = ScrollController();
   late final FavoritesCubit _favoritesProvider;
 
@@ -93,6 +94,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_initialized) {
+      _initialized = true;
+      final extra = GoRouterState.of(context).extra;
+      if (extra is Map && extra['showFavorites'] == true) {
+        _showFavoritesOnly = true;
+      }
+    }
     final cubit = context.watch<RecipeCubit>();
     final paginatedRecipes = _paginatedRecipes;
     final loc = AppLocalizations.of(context)!;
