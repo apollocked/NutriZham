@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:nutrizham/core/cache/cache_service.dart';
-import 'package:nutrizham/data/datasources/firestore_service.dart';
+import 'package:nutrizham/data/datasources/firestore_helpers.dart';
 
 class FavoritesHelper {
   static final _cache = CacheService();
   static final StreamController<Set<String>> _favoritesStreamController =
       StreamController<Set<String>>.broadcast();
-  static final FirestoreService _firestoreService = FirestoreService();
+  static final _firestoreHelpers = FirestoreHelpers();
 
   static Stream<Set<String>> get favoritesStream =>
       _favoritesStreamController.stream;
@@ -16,7 +16,7 @@ class FavoritesHelper {
     final favoritesSet = favorites.toSet();
 
     try {
-      final firestoreFavorites = await _firestoreService.getUserFavorites();
+      final firestoreFavorites = await _firestoreHelpers.getUserFavorites();
       final firestoreSet = firestoreFavorites.toSet();
 
       if (firestoreSet.isNotEmpty) {
@@ -24,7 +24,7 @@ class FavoritesHelper {
         _favoritesStreamController.add(firestoreSet);
         return firestoreSet;
       } else if (favoritesSet.isNotEmpty) {
-        await _firestoreService.syncFavoritesWithFirestore(favoritesSet);
+        await _firestoreHelpers.syncFavoritesWithFirestore(favoritesSet);
       }
     } catch (_) {}
 
@@ -46,7 +46,7 @@ class FavoritesHelper {
     _favoritesStreamController.add(favoritesSet);
 
     try {
-      await _firestoreService.toggleFavorite(recipeId);
+      await _firestoreHelpers.toggleFavorite(recipeId);
     } catch (_) {
       await _cache.setNeedsSync(true);
     }
@@ -62,9 +62,9 @@ class FavoritesHelper {
     _favoritesStreamController.add(<String>{});
 
     try {
-      final favorites = await _firestoreService.getUserFavorites();
+      final favorites = await _firestoreHelpers.getUserFavorites();
       for (final id in favorites) {
-        await _firestoreService.removeFromFavorites(id);
+        await _firestoreHelpers.removeFromFavorites(id);
       }
     } catch (_) {}
   }
@@ -83,7 +83,7 @@ class FavoritesHelper {
     if (!await _cache.needsSync()) return;
     try {
       final favorites = await _cache.getFavorites();
-      await _firestoreService.syncFavoritesWithFirestore(favorites.toSet());
+      await _firestoreHelpers.syncFavoritesWithFirestore(favorites.toSet());
       await _cache.setNeedsSync(false);
     } catch (_) {}
   }

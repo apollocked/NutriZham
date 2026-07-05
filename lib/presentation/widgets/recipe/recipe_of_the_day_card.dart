@@ -4,6 +4,7 @@ import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
 import 'package:nutrizham/presentation/widgets/common/pressable.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
+import 'package:nutrizham/core/utils/category_label.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RecipeOfTheDayCard extends StatelessWidget {
@@ -134,7 +135,7 @@ class RecipeOfTheDayCard extends StatelessWidget {
                                             BorderRadius.circular(8),
                                       ),
                                       child: Text(
-                                          _getCategoryName(
+                                          categoryLabel(
                                               recipe.category,
                                               context),
                                           style: TextStyle(
@@ -191,21 +192,4 @@ class RecipeOfTheDayCard extends StatelessWidget {
     );
   }
 
-  String _getCategoryName(MealCategory category, BuildContext context) {
-    final loc = AppLocalizations.of(context)!;
-    switch (category) {
-      case MealCategory.breakfast:
-        return loc.breakfast;
-      case MealCategory.lunch:
-        return loc.lunch;
-      case MealCategory.dinner:
-        return loc.dinner;
-      case MealCategory.snack:
-        return loc.snack;
-      case MealCategory.bulking:
-        return loc.bulking;
-      case MealCategory.cutting:
-        return loc.cutting;
-    }
-  }
 }

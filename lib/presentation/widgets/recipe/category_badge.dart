@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/core/constants/app_colors.dart';
+import 'package:nutrizham/core/utils/category_label.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
-import 'package:nutrizham/l10n/app_localizations.dart';
+
 
 class CategoryBadge extends StatelessWidget {
   final MealCategory category;
@@ -10,7 +11,6 @@ class CategoryBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loc = AppLocalizations.of(context)!;
     final catName = category.toString().split('.').last;
     final color = AppColors.getCategoryColor(catName);
 
@@ -30,20 +30,9 @@ class CategoryBadge extends StatelessWidget {
         children: [
           Container(width: 7, height: 7, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
           const SizedBox(width: 7),
-          Text(_getCategoryName(category, loc), style: TextStyle(color: color, fontWeight: FontWeight.w600, fontSize: 12)),
+          Text(categoryLabel(category, context), style: TextStyle(color: color, fontWeight: FontWeight.w600, fontSize: 12)),
         ],
       ),
     );
-  }
-
-  String _getCategoryName(MealCategory category, AppLocalizations loc) {
-    switch (category) {
-      case MealCategory.breakfast: return loc.breakfast;
-      case MealCategory.lunch: return loc.lunch;
-      case MealCategory.dinner: return loc.dinner;
-      case MealCategory.snack: return loc.snack;
-      case MealCategory.bulking: return loc.bulking;
-      case MealCategory.cutting: return loc.cutting;
-    }
   }
 }

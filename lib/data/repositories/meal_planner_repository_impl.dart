@@ -1,6 +1,7 @@
 import 'package:nutrizham/data/models/meal_plan_entry.dart';
 import 'package:nutrizham/domain/repositories/meal_planner_repository.dart';
 import 'package:nutrizham/data/datasources/meal_planner_service.dart';
+import 'package:nutrizham/data/datasources/nutrition_goals_service.dart';
 
 class MealPlannerRepositoryImpl implements MealPlannerRepository {
   @override
@@ -29,7 +30,7 @@ class MealPlannerRepositoryImpl implements MealPlannerRepository {
 
   @override
   Future<Map<String, num>> getNutritionGoals() =>
-      MealPlannerService.getNutritionGoals();
+      NutritionGoalsService.getNutritionGoals();
 
   @override
   Future<void> updateNutritionGoals({
@@ -38,7 +39,7 @@ class MealPlannerRepositoryImpl implements MealPlannerRepository {
     required double carbs,
     required double fats,
   }) =>
-      MealPlannerService.updateNutritionGoals(
+      NutritionGoalsService.updateNutritionGoals(
           calories: calories,
           protein: protein,
           carbs: carbs,

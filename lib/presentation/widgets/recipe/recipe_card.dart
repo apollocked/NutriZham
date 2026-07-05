@@ -60,8 +60,7 @@ class RecipeCard extends StatelessWidget {
                       children: [
                         Center(
                           child: Text(recipe.icon,
-                              style:
-                                  TextStyle(fontSize: 38, color: catColor)),
+                              style: TextStyle(fontSize: 38, color: catColor)),
                         ),
                         Positioned(
                           top: 4,
@@ -90,8 +89,8 @@ class RecipeCard extends StatelessWidget {
                     children: [
                       Text(
                         title,
-                        style: theme.textTheme.titleSmall
-                            ?.copyWith(fontWeight: FontWeight.w700, height: 1.3),
+                        style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w700, height: 1.3),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),

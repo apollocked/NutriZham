@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 import 'package:nutrizham/presentation/blocs/meal_planner_cubit.dart';
 
 class EditGoalsDialog extends StatelessWidget {
@@ -36,6 +37,7 @@ class EditGoalsDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final loc = AppLocalizations.of(context)!;
     final calCtrl = TextEditingController(text: dailyCaloriesGoal.toString());
     final proteinCtrl = TextEditingController(text: dailyProteinGoal.toStringAsFixed(0));
     final carbsCtrl = TextEditingController(text: dailyCarbsGoal.toStringAsFixed(0));
@@ -44,25 +46,25 @@ class EditGoalsDialog extends StatelessWidget {
     return AlertDialog(
       backgroundColor: theme.colorScheme.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      title: Text('Daily Nutrition Goals', style: theme.textTheme.titleMedium),
+      title: Text(loc.nutritionGoals, style: theme.textTheme.titleMedium),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _GoalField(controller: calCtrl, label: 'Calories (kcal)', suffix: ''),
+            _GoalField(controller: calCtrl, label: loc.caloriesGoal, suffix: ''),
             const SizedBox(height: 12),
-            _GoalField(controller: proteinCtrl, label: 'Protein (g)', suffix: 'g'),
+            _GoalField(controller: proteinCtrl, label: loc.proteinGoal, suffix: 'g'),
             const SizedBox(height: 12),
-            _GoalField(controller: carbsCtrl, label: 'Carbs (g)', suffix: 'g'),
+            _GoalField(controller: carbsCtrl, label: loc.carbsGoal, suffix: 'g'),
             const SizedBox(height: 12),
-            _GoalField(controller: fatsCtrl, label: 'Fats (g)', suffix: 'g'),
+            _GoalField(controller: fatsCtrl, label: loc.fatsGoal, suffix: 'g'),
           ],
         ),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: Text(loc.cancel),
         ),
         FilledButton(
           onPressed: () {
@@ -74,7 +76,7 @@ class EditGoalsDialog extends StatelessWidget {
                 );
             Navigator.pop(context);
           },
-          child: const Text('Save'),
+          child: Text(loc.save),
         ),
       ],
     );

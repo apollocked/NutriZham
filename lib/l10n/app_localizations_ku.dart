@@ -426,4 +426,7 @@ class AppLocalizationsKu extends AppLocalizations {
 
   @override
   String get fatsGoal => 'چەوری (g)';
+
+  @override
+  String get tapToBrowse => 'بۆ دۆزینەوەی ڕێچەتە کرتە بکە';
 }

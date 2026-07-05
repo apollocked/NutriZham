@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/data/datasources/meal_planner_service.dart';
+import 'package:nutrizham/data/datasources/nutrition_goals_service.dart';
 import 'package:nutrizham/data/models/meal_plan_entry.dart';
 
 sealed class MealPlannerState {
@@ -85,8 +86,8 @@ class MealPlannerCubit extends Cubit<MealPlannerState> {
     emit(const PlannerLoading());
     try {
       final plans = await MealPlannerService.loadMealPlans();
-      await MealPlannerService.loadNutritionGoals();
-      final goals = await MealPlannerService.getNutritionGoals();
+      await NutritionGoalsService.loadNutritionGoals();
+      final goals = await NutritionGoalsService.getNutritionGoals();
       final today = DateTime.now();
       emit(PlannerLoaded(
         mealPlans: plans,
@@ -156,7 +157,7 @@ class MealPlannerCubit extends Cubit<MealPlannerState> {
   }) async {
     final s = state;
     if (s is! PlannerLoaded) return;
-    await MealPlannerService.updateNutritionGoals(
+    await NutritionGoalsService.updateNutritionGoals(
       calories: calories,
       protein: protein,
       carbs: carbs,

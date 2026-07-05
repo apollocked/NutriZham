@@ -426,4 +426,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fatsGoal => 'Fats (g)';
+
+  @override
+  String get tapToBrowse => 'Tap to browse recipes';
 }

@@ -28,7 +28,6 @@ class AddMealSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
-    final label = '${slot[0].toUpperCase()}${slot.substring(1)}';
 
     return DraggableScrollableSheet(
       initialChildSize: 0.6,
@@ -53,7 +52,7 @@ class AddMealSheet extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                'Add to $label',
+                loc.addMeal,
                 style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
               ),
             ),
@@ -67,7 +66,7 @@ class AddMealSheet extends StatelessWidget {
             Expanded(
               child: availableRecipes.isEmpty
                   ? Center(
-                      child: Text('All meals already planned',
+                      child: Text(loc.allMealsPlanned,
                           style: TextStyle(color: theme.colorScheme.onSurfaceVariant)))
                   : ListView.builder(
                       controller: scrollController,

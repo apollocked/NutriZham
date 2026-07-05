@@ -33,15 +33,33 @@ class MealPlannerService {
     }
   }
 
-  static String _encodeMealPlans(Map<String, List<MealPlanEntry>> plans) {
-    return jsonEncode(plans.map((date, entries) =>
-        MapEntry(date, entries.map((e) => e.toJson()).toList())));
+  static String _encodeMealPlans(Map<String, List<MealPlanEntry>> plans) =>
+      jsonEncode(plans.map((date, entries) =>
+          MapEntry(date, entries.map((e) => e.toJson()).toList())));
+
+  static Future<void> _updateLocalAndNotify(
+      Map<String, List<MealPlanEntry>> plans) async {
+    await _cache.setMealPlansJson(_encodeMealPlans(plans));
+    _mealPlansStreamController.add(plans);
+  }
+
+  static Future<void> _syncPlanToFirestore(
+      String key, List<MealPlanEntry>? entries) async {
+    try {
+      final firestoreMap = await _firestoreService.getMealPlans();
+      final updatedMap = Map<String, dynamic>.from(firestoreMap);
+      if (entries == null) {
+        updatedMap.remove(key);
+      } else {
+        updatedMap[key] = entries.map((e) => e.toJson()).toList();
+      }
+      await _firestoreService.setMealPlans(updatedMap);
+    } catch (_) {}
   }
 
   static Future<Map<String, List<MealPlanEntry>>> loadMealPlans() async {
     final cachedJson = await _cache.getMealPlansJson();
     final cached = _decodeMealPlans(cachedJson);
-
     try {
       final firestoreMap = await _firestoreService.getMealPlans();
       if (firestoreMap.isNotEmpty) {
@@ -64,7 +82,6 @@ class MealPlannerService {
             .syncMealPlansWithFirestore(_encodeMealPlans(cached) as Map<String, dynamic>);
       }
     } catch (_) {}
-
     _mealPlansStreamController.add(cached);
     return cached;
   }
@@ -82,16 +99,8 @@ class MealPlannerService {
     ));
     plans[key] = entries;
 
-    await _cache.setMealPlansJson(_encodeMealPlans(plans));
-    _mealPlansStreamController.add(plans);
-
-    try {
-      final firestoreMap =
-          (await _firestoreService.getMealPlans());
-      final updatedMap = Map<String, dynamic>.from(firestoreMap);
-      updatedMap[key] = plans[key]!.map((e) => e.toJson()).toList();
-      await _firestoreService.setMealPlans(updatedMap);
-    } catch (_) {}
+    await _updateLocalAndNotify(plans);
+    await _syncPlanToFirestore(key, entries);
   }
 
   static Future<void> removeMealFromDate(
@@ -103,23 +112,13 @@ class MealPlannerService {
     entries.removeWhere((e) => e.recipeId == recipeId);
     if (entries.isEmpty) {
       plans.remove(key);
+      await _updateLocalAndNotify(plans);
+      await _syncPlanToFirestore(key, null);
     } else {
       plans[key] = entries;
+      await _updateLocalAndNotify(plans);
+      await _syncPlanToFirestore(key, entries);
     }
-
-    await _cache.setMealPlansJson(_encodeMealPlans(plans));
-    _mealPlansStreamController.add(plans);
-
-    try {
-      final firestoreMap = await _firestoreService.getMealPlans();
-      final updatedMap = Map<String, dynamic>.from(firestoreMap);
-      if (entries.isEmpty) {
-        updatedMap.remove(key);
-      } else {
-        updatedMap[key] = entries.map((e) => e.toJson()).toList();
-      }
-      await _firestoreService.setMealPlans(updatedMap);
-    } catch (_) {}
   }
 
   static Future<void> reorderMealInSlot(
@@ -128,10 +127,8 @@ class MealPlannerService {
     final plans = _decodeMealPlans(cachedJson);
     final key = _dateKey(date);
     final entries = List<MealPlanEntry>.from(plans[key] ?? []);
-    final slotEntries =
-        entries.where((e) => e.slot == slot).toList();
-    final otherEntries =
-        entries.where((e) => e.slot != slot).toList();
+    final slotEntries = entries.where((e) => e.slot == slot).toList();
+    final otherEntries = entries.where((e) => e.slot != slot).toList();
 
     if (oldIndex < 0 || oldIndex >= slotEntries.length) return;
     final moved = slotEntries.removeAt(oldIndex);
@@ -141,21 +138,13 @@ class MealPlannerService {
         MealPlanEntry(recipeId: e.value.recipeId, slot: slot, order: e.key));
     plans[key] = [...otherEntries, ...reindexed];
 
-    await _cache.setMealPlansJson(_encodeMealPlans(plans));
-    _mealPlansStreamController.add(plans);
-
-    try {
-      final firestoreMap = await _firestoreService.getMealPlans();
-      final updatedMap = Map<String, dynamic>.from(firestoreMap);
-      updatedMap[key] = plans[key]!.map((e) => e.toJson()).toList();
-      await _firestoreService.setMealPlans(updatedMap);
-    } catch (_) {}
+    await _updateLocalAndNotify(plans);
+    await _syncPlanToFirestore(key, plans[key]);
   }
 
   static Future<List<MealPlanEntry>> getMealsForDate(DateTime date) async {
     final cachedJson = await _cache.getMealPlansJson();
-    final plans = _decodeMealPlans(cachedJson);
-    return plans[_dateKey(date)] ?? [];
+    return _decodeMealPlans(cachedJson)[_dateKey(date)] ?? [];
   }
 
   static Future<bool> isMealPlannedOnDate(
@@ -182,55 +171,8 @@ class MealPlannerService {
   static Future<void> clearAllPlans() async {
     await _cache.removeMealPlans();
     _mealPlansStreamController.add({});
-
     try {
       await _firestoreService.setMealPlans({});
-    } catch (_) {}
-  }
-
-  static Future<void> loadNutritionGoals() async {
-    try {
-      final user = await _firestoreService.getCurrentUserFromFirestore();
-      if (user != null) {
-        await _cache.setDailyCalories(user.dailyCalories);
-        await _cache.setDailyProtein(user.dailyProtein);
-        await _cache.setDailyCarbs(user.dailyCarbs);
-        await _cache.setDailyFats(user.dailyFats);
-      }
-    } catch (_) {}
-  }
-
-  static Future<Map<String, num>> getNutritionGoals() async {
-    final calories = await _cache.getDailyCalories();
-    final protein = await _cache.getDailyProtein();
-    final carbs = await _cache.getDailyCarbs();
-    final fats = await _cache.getDailyFats();
-    return {
-      'calories': calories,
-      'protein': protein,
-      'carbs': carbs,
-      'fats': fats,
-    };
-  }
-
-  static Future<void> updateNutritionGoals({
-    required int calories,
-    required double protein,
-    required double carbs,
-    required double fats,
-  }) async {
-    await _cache.setDailyCalories(calories);
-    await _cache.setDailyProtein(protein);
-    await _cache.setDailyCarbs(carbs);
-    await _cache.setDailyFats(fats);
-
-    try {
-      await _firestoreService.updateNutritionGoals(
-        calories: calories,
-        protein: protein,
-        carbs: carbs,
-        fats: fats,
-      );
     } catch (_) {}
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 import 'package:nutrizham/core/constants/app_colors.dart';
+import 'package:nutrizham/core/utils/category_label.dart';
 
 class HomeCategoryChips extends StatelessWidget {
   final MealCategory? selectedCategory;
@@ -12,24 +13,6 @@ class HomeCategoryChips extends StatelessWidget {
     required this.selectedCategory,
     required this.onCategorySelected,
   });
-
-  String _getCategoryName(MealCategory category, BuildContext context) {
-    final loc = AppLocalizations.of(context)!;
-    switch (category) {
-      case MealCategory.breakfast:
-        return loc.breakfast;
-      case MealCategory.lunch:
-        return loc.lunch;
-      case MealCategory.dinner:
-        return loc.dinner;
-      case MealCategory.snack:
-        return loc.snack;
-      case MealCategory.bulking:
-        return loc.bulking;
-      case MealCategory.cutting:
-        return loc.cutting;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +36,7 @@ class HomeCategoryChips extends StatelessWidget {
           ...MealCategory.values.map((category) => Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: _Chip(
-                  label: _getCategoryName(category, context),
+                  label: categoryLabel(category, context),
                   selected: selectedCategory == category,
                   color: AppColors.getCategoryColor(
                       category.toString().split('.').last),

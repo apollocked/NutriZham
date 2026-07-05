@@ -927,6 +927,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Fats (g)'**
   String get fatsGoal;
+
+  /// No description provided for @tapToBrowse.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to browse recipes'**
+  String get tapToBrowse;
 }
 
 class _AppLocalizationsDelegate

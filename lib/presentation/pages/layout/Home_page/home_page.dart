@@ -4,13 +4,12 @@ import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
 import 'package:nutrizham/presentation/blocs/recipe_cubit.dart';
-import 'package:nutrizham/presentation/widgets/Form_Widgets/empty_state_widget.dart';
 import 'package:nutrizham/presentation/widgets/common/custom_app_bar.dart';
 import 'package:nutrizham/presentation/widgets/common/shimmer_loading.dart';
-import 'package:nutrizham/presentation/widgets/common/pressable.dart';
-import 'package:nutrizham/presentation/widgets/recipe/recipe_card.dart';
 import 'package:nutrizham/presentation/widgets/home/home_category_chips.dart';
 import 'package:nutrizham/presentation/widgets/recipe/recipe_of_the_day_card.dart';
+import 'package:nutrizham/presentation/widgets/recipe/recipe_section_header.dart';
+import 'package:nutrizham/presentation/widgets/recipe/recipe_grid.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
@@ -25,26 +24,30 @@ class _HomePageState extends State<HomePage> {
   bool _initialized = false;
   final ScrollController _scrollController = ScrollController();
   late final FavoritesCubit _favoritesProvider;
+
   @override
   void initState() {
     super.initState();
     _favoritesProvider = context.read<FavoritesCubit>();
     _favoritesProvider.loadFavorites();
     _loadNextBatch();
-    _scrollController.addListener(() {
-      if (_selectedCategory == null &&
-          !_showFavoritesOnly &&
-          _scrollController.position.pixels >=
-              _scrollController.position.maxScrollExtent - 200) {
-        _loadNextBatch();
-      }
-    });
+    _scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
+    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _onScroll() {
+    if (_selectedCategory == null &&
+        !_showFavoritesOnly &&
+        _scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 200) {
+      _loadNextBatch();
+    }
   }
 
   Future<void> _loadNextBatch() async {
@@ -80,8 +83,7 @@ class _HomePageState extends State<HomePage> {
           id: '0',
           title: {},
           icon: '',
-          nutrition:
-              NutritionalInfo(calories: 0, protein: 0, carbs: 0, fats: 0),
+          nutrition: NutritionalInfo(calories: 0, protein: 0, carbs: 0, fats: 0),
           ingredients: {},
           steps: {},
           category: MealCategory.snack);
@@ -103,6 +105,7 @@ class _HomePageState extends State<HomePage> {
     final cubit = context.watch<RecipeCubit>();
     final paginatedRecipes = _paginatedRecipes;
     final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: CustomAppBar(title: loc.appTitle, actions: [
         IconButton(
@@ -121,116 +124,25 @@ class _HomePageState extends State<HomePage> {
                     setState(() => _selectedCategory = v)),
             if (_selectedCategory == null && !_showFavoritesOnly)
               RecipeOfTheDayCard(recipe: _recipeOfTheDay),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-              child: Row(children: [
-                Container(
-                  width: 4,
-                  height: 22,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Theme.of(context).colorScheme.primary,
-                        Theme.of(context).colorScheme.primary.withOpacity(0.4)
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Text(_showFavoritesOnly ? loc.favorites : loc.recipes,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(fontWeight: FontWeight.w700)),
-                const Spacer(),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                  decoration: BoxDecoration(
-                    color:
-                        Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text('${paginatedRecipes.length}',
-                      style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).colorScheme.primary)),
-                ),
-              ]),
+            RecipeSectionHeader(
+              showFavoritesOnly: _showFavoritesOnly,
+              count: paginatedRecipes.length,
             ),
             Expanded(
               child: cubit.recipes.isEmpty && cubit.isLoading
                   ? const ShimmerRecipeGrid()
-                  : cubit.isOffline && cubit.recipes.isEmpty
-                      ? const EmptyStateWidget(
-                          icon: Icons.wifi_off_rounded,
-                          title: 'No internet connection',
-                          subtitle: 'Connect to the internet to load recipes')
-                      : paginatedRecipes.isEmpty
-                          ? EmptyStateWidget(
-                              icon: _showFavoritesOnly
-                                  ? Icons.favorite_outline
-                                  : Icons.search_off,
-                              title: _showFavoritesOnly
-                                  ? loc.noFavorites
-                                  : loc.noRecipesFound,
-                              subtitle: _showFavoritesOnly
-                                  ? loc.tapToSave
-                                  : loc.tryDifferentSearch)
-                          : NotificationListener<ScrollNotification>(
-                              onNotification: (scrollInfo) {
-                                if (_selectedCategory == null &&
-                                    !_showFavoritesOnly &&
-                                    !cubit.isLoadingMore &&
-                                    cubit.hasMore &&
-                                    scrollInfo.metrics.pixels >=
-                                        scrollInfo.metrics.maxScrollExtent -
-                                            200) {
-                                  _loadNextBatch();
-                                }
-                                return false;
-                              },
-                              child: GridView.builder(
-                                controller: _scrollController,
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 0.82,
-                                  crossAxisSpacing: 0,
-                                  mainAxisSpacing: 0,
-                                ),
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 11),
-                                itemCount: paginatedRecipes.length +
-                                    (cubit.hasMore && cubit.isLoadingMore
-                                        ? 1
-                                        : 0),
-                                itemBuilder: (context, index) {
-                                  if (index == paginatedRecipes.length) {
-                                    return const ShimmerRecipeCard();
-                                  }
-                                  final recipe = paginatedRecipes[index];
-                                  return DelayedReveal(
-                                    index: index,
-                                    child: RecipeCard(
-                                        recipe: recipe,
-                                        isFavorite: context
-                                            .watch<FavoritesCubit>()
-                                            .isFavorite(recipe.id),
-                                        onFavoriteToggle: () => context
-                                            .read<FavoritesCubit>()
-                                            .toggleFavorite(recipe.id),
-                                        onTap: () => context.push(
-                                            '/recipe/$recipe.id',
-                                            extra: recipe)),
-                                  );
-                                },
-                              ),
-                            ),
+                  : RecipeGrid(
+                      recipes: paginatedRecipes,
+                      hasMore: cubit.hasMore,
+                      isLoadingMore: cubit.isLoadingMore,
+                      isLoading: cubit.isLoading,
+                      isOffline: cubit.isOffline,
+                      showFavoritesOnly: _showFavoritesOnly,
+                      scrollController: _scrollController,
+                      onLoadMore: _selectedCategory == null && !_showFavoritesOnly
+                          ? _loadNextBatch
+                          : null,
+                    ),
             ),
           ],
         ),

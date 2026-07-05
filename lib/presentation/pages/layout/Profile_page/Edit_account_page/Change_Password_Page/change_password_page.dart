@@ -4,16 +4,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/auth_cubit.dart';
 import 'package:nutrizham/presentation/widgets/common/custom_app_bar.dart';
 import 'package:nutrizham/presentation/widgets/common/section_header.dart';
-import 'package:nutrizham/presentation/widgets/Form_Widgets/custom_text_field.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/custom_buttons.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/secondary_button.dart';
 import 'package:nutrizham/presentation/widgets/auth/password_validation_section.dart';
+import 'package:nutrizham/presentation/widgets/auth/password_info_banner.dart';
+import 'package:nutrizham/presentation/widgets/auth/password_field.dart';
 import 'package:nutrizham/core/utils/connectivity_helper.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({super.key});
-
   @override
   State<ChangePasswordPage> createState() => _ChangePasswordPageState();
 }
@@ -25,9 +25,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   final _confirmPasswordController = TextEditingController();
 
   bool _isLoading = false;
-  bool _showCurrentPassword = false,
-      _showNewPassword = false,
-      _showConfirmPassword = false;
+  bool _showCurrentPassword = false;
+  bool _showNewPassword = false;
+  bool _showConfirmPassword = false;
   bool _isCurrentPasswordValid = false;
   String? _currentPasswordError;
   bool _showValidateButton = false;
@@ -37,8 +37,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     super.initState();
     _currentPasswordController.addListener(() {
       setState(() => _showValidateButton =
-          _currentPasswordController.text.isNotEmpty &&
-              !_isCurrentPasswordValid);
+          _currentPasswordController.text.isNotEmpty && !_isCurrentPasswordValid);
     });
   }
 
@@ -53,10 +52,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   Future<void> _validateCurrentPassword() async {
     final password = _currentPasswordController.text.trim();
     if (password.isEmpty) {
-      setState(() {
-        _isCurrentPasswordValid = false;
-        _currentPasswordError = null;
-      });
+      setState(() { _isCurrentPasswordValid = false; _currentPasswordError = null; });
       return;
     }
     setState(() => _isLoading = true);
@@ -127,7 +123,6 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: CustomAppBar(title: loc.changePassword),
@@ -135,52 +130,18 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         padding: const EdgeInsets.all(24),
         child: Form(
           key: _formKey,
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                  color: theme.colorScheme.primaryContainer.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(
-                      color: theme.colorScheme.primary.withOpacity(0.3))),
-              child:
-                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(8)),
-                    child: Icon(Icons.info_outline_rounded,
-                        color: theme.colorScheme.primary, size: 18)),
-                const SizedBox(width: 12),
-                Expanded(
-                    child: Text(loc.passwordInfoMessage,
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: theme.colorScheme.onSurface,
-                            height: 1.5))),
-              ]),
-            ),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            PasswordInfoBanner(message: loc.passwordInfoMessage),
             const SizedBox(height: 32),
             SectionHeader(title: loc.currentPassword, padding: EdgeInsets.zero),
             const SizedBox(height: 8),
-            CustomTextField(
-                controller: _currentPasswordController,
-                labelText: loc.enterCurrentPassword,
-                prefixIcon: Icons.lock_outline,
-                obscureText: !_showCurrentPassword,
-                textInputAction: TextInputAction.next,
-                suffixIcon: GestureDetector(
-                    onTap: () => setState(
-                        () => _showCurrentPassword = !_showCurrentPassword),
-                    child: Icon(
-                        _showCurrentPassword
-                            ? Icons.visibility_outlined
-                            : Icons.visibility_off_outlined,
-                        color: theme.colorScheme.primary)),
-                validator: (v) =>
-                    v?.isEmpty == true ? loc.currentPasswordRequired : null),
+            PasswordField(
+              controller: _currentPasswordController,
+              labelText: loc.enterCurrentPassword,
+              obscureText: !_showCurrentPassword,
+              onToggleVisibility: () => setState(() => _showCurrentPassword = !_showCurrentPassword),
+              validator: (v) => v?.isEmpty == true ? loc.currentPasswordRequired : null,
+            ),
             const SizedBox(height: 8),
             PasswordValidationSection(
               isVisible: _currentPasswordController.text.isNotEmpty,
@@ -193,49 +154,32 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             const SizedBox(height: 24),
             SectionHeader(title: loc.newPassword, padding: EdgeInsets.zero),
             const SizedBox(height: 8),
-            CustomTextField(
-                controller: _newPasswordController,
-                labelText: loc.enterNewPassword,
-                prefixIcon: Icons.lock_outline,
-                obscureText: !_showNewPassword,
-                textInputAction: TextInputAction.next,
-                suffixIcon: GestureDetector(
-                    onTap: () =>
-                        setState(() => _showNewPassword = !_showNewPassword),
-                    child: Icon(
-                        _showNewPassword
-                            ? Icons.visibility_outlined
-                            : Icons.visibility_off_outlined,
-                        color: theme.colorScheme.primary)),
-                validator: (v) {
-                  if (v?.isEmpty == true) return loc.newPasswordRequired;
-                  if (v!.length < 6) return loc.passwordTooShort;
-                  return null;
-                }),
+            PasswordField(
+              controller: _newPasswordController,
+              labelText: loc.enterNewPassword,
+              obscureText: !_showNewPassword,
+              onToggleVisibility: () => setState(() => _showNewPassword = !_showNewPassword),
+              validator: (v) {
+                if (v?.isEmpty == true) return loc.newPasswordRequired;
+                if (v!.length < 6) return loc.passwordTooShort;
+                return null;
+              },
+            ),
             const SizedBox(height: 24),
             SectionHeader(title: loc.confirmPassword, padding: EdgeInsets.zero),
             const SizedBox(height: 8),
-            CustomTextField(
-                controller: _confirmPasswordController,
-                labelText: loc.confirmNewPassword,
-                prefixIcon: Icons.lock_outline,
-                obscureText: !_showConfirmPassword,
-                textInputAction: TextInputAction.done,
-                suffixIcon: GestureDetector(
-                    onTap: () => setState(
-                        () => _showConfirmPassword = !_showConfirmPassword),
-                    child: Icon(
-                        _showConfirmPassword
-                            ? Icons.visibility_outlined
-                            : Icons.visibility_off_outlined,
-                        color: theme.colorScheme.primary)),
-                validator: (v) {
-                  if (v?.isEmpty == true) return loc.confirmPasswordRequired;
-                  if (v != _newPasswordController.text) {
-                    return loc.passwordsDoNotMatch;
-                  }
-                  return null;
-                }),
+            PasswordField(
+              controller: _confirmPasswordController,
+              labelText: loc.confirmNewPassword,
+              obscureText: !_showConfirmPassword,
+              textInputAction: TextInputAction.done,
+              onToggleVisibility: () => setState(() => _showConfirmPassword = !_showConfirmPassword),
+              validator: (v) {
+                if (v?.isEmpty == true) return loc.confirmPasswordRequired;
+                if (v != _newPasswordController.text) return loc.passwordsDoNotMatch;
+                return null;
+              },
+            ),
             const SizedBox(height: 40),
             Row(children: [
               Expanded(

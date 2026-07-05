@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/core/constants/app_colors.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 
 class GroceryListSheet extends StatelessWidget {
   final List<Recipe> recipes;
@@ -19,12 +20,14 @@ class GroceryListSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final loc = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context).languageCode;
 
     final allIngredients = <String>{};
     for (final recipe in recipes) {
-      final ings =
-          recipe.ingredients[locale] ?? recipe.ingredients['en'] ?? <String>[];
+      final ings = recipe.ingredients[locale] ??
+          recipe.ingredients['en'] ??
+          <String>[];
       allIngredients.addAll(ings);
     }
 
@@ -43,8 +46,7 @@ class GroceryListSheet extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              width: 36,
-              height: 4,
+              width: 36, height: 4,
               margin: const EdgeInsets.only(bottom: 16),
               decoration: BoxDecoration(
                 color: theme.colorScheme.onSurfaceVariant.withOpacity(0.3),
@@ -66,25 +68,20 @@ class GroceryListSheet extends StatelessWidget {
                   ),
                   const SizedBox(width: 12),
                   Text(
-                    'Grocery List',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
+                    loc.groceryList,
+                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
                   ),
                   const Spacer(),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceContainerHighest
-                          .withOpacity(0.5),
+                      color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      '${sorted.length} items',
+                      '${sorted.length} ${loc.items}',
                       style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 13, fontWeight: FontWeight.w600,
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
                     ),
@@ -101,22 +98,16 @@ class GroceryListSheet extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.receipt_long_rounded,
-                              size: 48,
-                              color: theme.colorScheme.onSurfaceVariant
-                                  .withOpacity(0.3)),
+                              size: 48, color: theme.colorScheme.onSurfaceVariant.withOpacity(0.3)),
                           const SizedBox(height: 12),
-                          Text(
-                            'No meals planned yet',
-                            style: TextStyle(
-                                color: theme.colorScheme.onSurfaceVariant),
-                          ),
+                          Text(loc.noMealsPlanned,
+                              style: TextStyle(color: theme.colorScheme.onSurfaceVariant)),
                         ],
                       ),
                     )
                   : ListView.builder(
                       controller: scrollController,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                       itemCount: sorted.length,
                       itemBuilder: (context, index) {
                         return Padding(
@@ -124,11 +115,9 @@ class GroceryListSheet extends StatelessWidget {
                           child: Row(
                             children: [
                               Container(
-                                width: 24,
-                                height: 24,
+                                width: 24, height: 24,
                                 decoration: BoxDecoration(
-                                  color:
-                                      AppColors.primaryGreen.withOpacity(0.08),
+                                  color: AppColors.primaryGreen.withOpacity(0.08),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: const Icon(Icons.check_rounded,
@@ -136,10 +125,7 @@ class GroceryListSheet extends StatelessWidget {
                               ),
                               const SizedBox(width: 12),
                               Expanded(
-                                child: Text(
-                                  sorted[index],
-                                  style: theme.textTheme.bodyMedium,
-                                ),
+                                child: Text(sorted[index], style: theme.textTheme.bodyMedium),
                               ),
                             ],
                           ),

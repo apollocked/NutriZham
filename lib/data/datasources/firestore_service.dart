@@ -8,43 +8,33 @@ class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // Users Collection
   static const String usersCollection = 'users';
 
-  // Get current user ID
   String? get currentUserId => _auth.currentUser?.uid;
 
-  // ============ USER OPERATIONS ============
+  DocumentReference<Map<String, dynamic>> _getUserDoc(String userId) =>
+      _firestore.collection(usersCollection).doc(userId);
 
-  // Get user document reference
-  DocumentReference<Map<String, dynamic>> _getUserDoc(String userId) {
-    return _firestore.collection(usersCollection).doc(userId);
-  }
-
-  // Get current user document reference
   DocumentReference<Map<String, dynamic>>? get _currentUserDoc {
     final userId = currentUserId;
     return userId != null ? _getUserDoc(userId) : null;
   }
 
-  // Save/update user data
+  // ============ USER OPERATIONS ============
+
   Future<void> saveUserData(UserModel user) async {
     try {
       await _getUserDoc(user.id).set(user.toJson(), SetOptions(merge: true));
-      print('User data saved successfully for ${user.email}');
     } catch (e) {
       print('Error saving user data: $e');
       rethrow;
     }
   }
 
-  // Get user by ID
   Future<UserModel?> getUserById(String userId) async {
     try {
       final doc = await _getUserDoc(userId).get();
-      if (doc.exists) {
-        return UserModel.fromJson(doc.data()!);
-      }
+      if (doc.exists) return UserModel.fromJson(doc.data()!);
       return null;
     } catch (e) {
       print('Error getting user: $e');
@@ -52,14 +42,12 @@ class FirestoreService {
     }
   }
 
-  // Get current user from Firestore
   Future<UserModel?> getCurrentUserFromFirestore() async {
     final userId = currentUserId;
     if (userId == null) return null;
     return await getUserById(userId);
   }
 
-  // Update user profile
   Future<void> updateUserProfile(UserModel user) async {
     try {
       await _getUserDoc(user.id).update({
@@ -69,89 +57,21 @@ class FirestoreService {
         'profileImage': user.profileImage,
         'updatedAt': DateTime.now().toIso8601String(),
       });
-      print('User profile updated successfully');
     } catch (e) {
       print('Error updating user profile: $e');
       rethrow;
     }
   }
 
-  // ============ FAVORITES OPERATIONS ============
+  // ============ MEAL PLANS ============
 
-  // Add recipe to favorites
-  Future<void> addToFavorites(String recipeId) async {
-    final userDoc = _currentUserDoc;
-    if (userDoc == null) return;
-
-    try {
-      await userDoc.update({
-        'favorites': FieldValue.arrayUnion([recipeId]),
-        'updatedAt': DateTime.now().toIso8601String(),
-      });
-      print('Added recipe $recipeId to favorites');
-    } catch (e) {
-      print('Error adding to favorites: $e');
-      rethrow;
-    }
-  }
-
-  // Remove recipe from favorites
-  Future<void> removeFromFavorites(String recipeId) async {
-    final userDoc = _currentUserDoc;
-    if (userDoc == null) return;
-
-    try {
-      await userDoc.update({
-        'favorites': FieldValue.arrayRemove([recipeId]),
-        'updatedAt': DateTime.now().toIso8601String(),
-      });
-      print('Removed recipe $recipeId from favorites');
-    } catch (e) {
-      print('Error removing from favorites: $e');
-      rethrow;
-    }
-  }
-
-  // Get user favorites
-  Future<List<String>> getUserFavorites() async {
-    final userDoc = _currentUserDoc;
-    if (userDoc == null) return [];
-
-    try {
-      final doc = await userDoc.get();
-      if (doc.exists) {
-        final data = doc.data()!;
-        return List<String>.from(data['favorites'] ?? []);
-      }
-      return [];
-    } catch (e) {
-      print('Error getting favorites: $e');
-      return [];
-    }
-  }
-
-  // Toggle favorite status
-  Future<void> toggleFavorite(String recipeId) async {
-    final favorites = await getUserFavorites();
-    if (favorites.contains(recipeId)) {
-      await removeFromFavorites(recipeId);
-    } else {
-      await addToFavorites(recipeId);
-    }
-  }
-
-  // ============ MEAL PLANS OPERATIONS ============
-
-  // Get full mealPlans map from user doc
   Future<Map<String, dynamic>> getMealPlans() async {
     final userDoc = _currentUserDoc;
     if (userDoc == null) return {};
-
     try {
       final doc = await userDoc.get();
       if (doc.exists) {
-        final data = doc.data()!;
-        return Map<String, dynamic>.from(data['mealPlans'] ?? {});
+        return Map<String, dynamic>.from(doc.data()!['mealPlans'] ?? {});
       }
       return {};
     } catch (e) {
@@ -160,11 +80,9 @@ class FirestoreService {
     }
   }
 
-  // Set entire mealPlans map on user doc
   Future<void> setMealPlans(Map<String, dynamic> mealPlans) async {
     final userDoc = _currentUserDoc;
     if (userDoc == null) return;
-
     try {
       await userDoc.update({
         'mealPlans': mealPlans,
@@ -176,7 +94,6 @@ class FirestoreService {
     }
   }
 
-  // Update nutrition goals
   Future<void> updateNutritionGoals({
     required int calories,
     required double protein,
@@ -185,7 +102,6 @@ class FirestoreService {
   }) async {
     final userDoc = _currentUserDoc;
     if (userDoc == null) return;
-
     try {
       await userDoc.update({
         'dailyCalories': calories,
@@ -200,45 +116,19 @@ class FirestoreService {
     }
   }
 
-  // ============ SYNC LOCAL DATA WITH FIRESTORE ============
+  // ============ SYNC ============
 
-  // Sync local favorites with Firestore
-  Future<void> syncFavoritesWithFirestore(Set<String> localFavorites) async {
-    final userDoc = _currentUserDoc;
-    if (userDoc == null) return;
-
-    try {
-      // Get current favorites from Firestore
-      final firestoreFavorites = await getUserFavorites();
-      final firestoreSet = firestoreFavorites.toSet();
-
-      // Merge: add any local favorites not in Firestore
-      final toAdd = localFavorites.difference(firestoreSet);
-      if (toAdd.isNotEmpty) {
-        await userDoc.update({
-          'favorites': FieldValue.arrayUnion(toAdd.toList()),
-          'updatedAt': DateTime.now().toIso8601String(),
-        });
-        print('Synced ${toAdd.length} favorites to Firestore');
-      }
-    } catch (e) {
-      print('Error syncing favorites: $e');
-    }
-  }
-
-  // Sync local meal plans with Firestore
   Future<void> syncMealPlansWithFirestore(
       Map<String, dynamic> localMealPlans) async {
     final userDoc = _currentUserDoc;
     if (userDoc == null) return;
-
     try {
-      final firestorePlans = await getMealPlans();
+      final doc = await userDoc.get();
+      final firestorePlans =
+          Map<String, dynamic>.from(doc.data()?['mealPlans'] ?? {});
       final merged = Map<String, dynamic>.from(firestorePlans);
       localMealPlans.forEach((date, entries) {
-        if (!merged.containsKey(date)) {
-          merged[date] = entries;
-        }
+        if (!merged.containsKey(date)) merged[date] = entries;
       });
       await userDoc.update({
         'mealPlans': merged,
@@ -249,18 +139,17 @@ class FirestoreService {
     }
   }
 
-  // Delete user account data
+  // ============ ACCOUNT ============
+
   Future<void> deleteUserData(String userId) async {
     try {
       await _getUserDoc(userId).delete();
-      print('User data deleted successfully');
     } catch (e) {
       print('Error deleting user data: $e');
       rethrow;
     }
   }
 
-  // Stream user data changes
   Stream<UserModel?> streamUserData(String userId) {
     return _getUserDoc(userId).snapshots().map((snapshot) {
       if (snapshot.exists && snapshot.data() != null) {

@@ -4,32 +4,7 @@ import 'package:nutrizham/core/cache/recipe_cache_service.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:nutrizham/data/repositories/recipe_repository_impl.dart';
 import 'package:nutrizham/presentation/blocs/connectivity_cubit.dart';
-
-sealed class RecipeState {
-  const RecipeState();
-}
-class RecipeInitial extends RecipeState {
-  const RecipeInitial();
-}
-class RecipeLoading extends RecipeState {
-  const RecipeLoading();
-}
-class RecipeLoaded extends RecipeState {
-  final List<Recipe> recipes;
-  final bool hasMore;
-  final bool isOffline;
-  const RecipeLoaded(this.recipes, {this.hasMore = true, this.isOffline = false});
-}
-class RecipeLoadingMore extends RecipeState {
-  final List<Recipe> recipes;
-  const RecipeLoadingMore(this.recipes);
-}
-class RecipeError extends RecipeState {
-  final String message;
-  final bool isOffline;
-  final List<Recipe>? cachedRecipes;
-  const RecipeError(this.message, {this.isOffline = false, this.cachedRecipes});
-}
+import 'package:nutrizham/presentation/blocs/recipe_state.dart';
 
 class RecipeCubit extends Cubit<RecipeState> {
   final _repository = RecipeRepositoryImpl();
@@ -120,12 +95,12 @@ class RecipeCubit extends Cubit<RecipeState> {
         emit(RecipeLoaded(allRecipes, hasMore: more));
         _cache.cacheRecipes(allRecipes);
       }
-      } catch (e) {
-        final s = state;
-        if (s is RecipeLoaded) {
-          emit(RecipeLoaded(s.recipes, hasMore: s.hasMore, isOffline: !_isOnline));
-        } else if (s is RecipeLoadingMore) {
-          emit(RecipeLoaded(s.recipes, hasMore: true, isOffline: !_isOnline));
+    } catch (e) {
+      final s = state;
+      if (s is RecipeLoaded) {
+        emit(RecipeLoaded(s.recipes, hasMore: s.hasMore, isOffline: !_isOnline));
+      } else if (s is RecipeLoadingMore) {
+        emit(RecipeLoaded(s.recipes, hasMore: true, isOffline: !_isOnline));
       } else {
         emit(RecipeError(e.toString(), isOffline: !_isOnline));
       }

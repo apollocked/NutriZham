@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/core/constants/app_colors.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
+import 'package:nutrizham/presentation/widgets/planner/macro_progress.dart';
 
 class NutritionGoalsCard extends StatelessWidget {
   final int totalCalories;
@@ -139,8 +140,8 @@ class NutritionGoalsCard extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  _MacroProgress(
-                    label: 'Protein',
+                  MacroProgress(
+                    label: loc.protein,
                     current: totalProtein,
                     goal: dailyProteinGoal,
                     color: AppColors.proteinColor,
@@ -148,8 +149,8 @@ class NutritionGoalsCard extends StatelessWidget {
                     percent: proteinPercent,
                   ),
                   const SizedBox(height: 12),
-                  _MacroProgress(
-                    label: 'Carbs',
+                  MacroProgress(
+                    label: loc.carbs,
                     current: totalCarbs,
                     goal: dailyCarbsGoal,
                     color: AppColors.carbsColor,
@@ -157,8 +158,8 @@ class NutritionGoalsCard extends StatelessWidget {
                     percent: carbsPercent,
                   ),
                   const SizedBox(height: 12),
-                  _MacroProgress(
-                    label: 'Fats',
+                  MacroProgress(
+                    label: loc.fats,
                     current: totalFats,
                     goal: dailyFatsGoal,
                     color: AppColors.fatsColor,
@@ -170,65 +171,6 @@ class NutritionGoalsCard extends StatelessWidget {
             ),
         ],
       ),
-    );
-  }
-}
-
-class _MacroProgress extends StatelessWidget {
-  final String label;
-  final double current;
-  final double goal;
-  final Color color;
-  final String unit;
-  final double percent;
-
-  const _MacroProgress({
-    required this.label,
-    required this.current,
-    required this.goal,
-    required this.color,
-    required this.unit,
-    required this.percent,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                color: theme.colorScheme.onSurfaceVariant,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            Text(
-              '${current.toStringAsFixed(0)}$unit / ${goal.toStringAsFixed(0)}$unit',
-              style: TextStyle(
-                color: color,
-                fontSize: 13,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 6),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(6),
-          child: LinearProgressIndicator(
-            value: percent,
-            minHeight: 6,
-            backgroundColor: color.withOpacity(0.12),
-            valueColor: AlwaysStoppedAnimation<Color>(color),
-          ),
-        ),
-      ],
     );
   }
 }

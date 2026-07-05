@@ -424,4 +424,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get fatsGoal => 'الدهون (g)';
+
+  @override
+  String get tapToBrowse => 'انقر لتصفح الوصفات';
 }

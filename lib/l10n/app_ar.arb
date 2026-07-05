@@ -137,5 +137,6 @@
   "caloriesGoal": "السعرات (kcal)",
   "proteinGoal": "البروتين (g)",
   "carbsGoal": "الكربوهيدرات (g)",
-  "fatsGoal": "الدهون (g)"
+  "fatsGoal": "الدهون (g)",
+  "tapToBrowse": "انقر لتصفح الوصفات"
 }
