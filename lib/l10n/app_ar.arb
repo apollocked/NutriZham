@@ -138,5 +138,8 @@
   "proteinGoal": "البروتين (g)",
   "carbsGoal": "الكربوهيدرات (g)",
   "fatsGoal": "الدهون (g)",
-  "tapToBrowse": "انقر لتصفح الوصفات"
+  "tapToBrowse": "انقر لتصفح الوصفات",
+  "planThisMeal": "خطط لهذه الوجبة",
+  "addToMeal": "أضف إلى الوجبة",
+  "added": "تمت الإضافة"
 }

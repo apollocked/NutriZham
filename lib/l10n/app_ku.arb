@@ -138,5 +138,8 @@
   "proteinGoal": "پڕۆتین (g)",
   "carbsGoal": "کاربۆهایدرات (g)",
   "fatsGoal": "چەوری (g)",
-  "tapToBrowse": "بۆ دۆزینەوەی ڕێچەتە کرتە بکە"
+  "tapToBrowse": "بۆ دۆزینەوەی ڕێچەتە کرتە بکە",
+  "planThisMeal": "پلانی ئەم خواردنە",
+  "addToMeal": "زیادکردن بۆ خواردن",
+  "added": "زیادکرا"
 }

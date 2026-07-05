@@ -104,12 +104,12 @@ class MealPlannerService {
   }
 
   static Future<void> removeMealFromDate(
-      String recipeId, DateTime date) async {
+      String recipeId, DateTime date, String slot) async {
     final cachedJson = await _cache.getMealPlansJson();
     final plans = _decodeMealPlans(cachedJson);
     final key = _dateKey(date);
     final entries = List<MealPlanEntry>.from(plans[key] ?? []);
-    entries.removeWhere((e) => e.recipeId == recipeId);
+    entries.removeWhere((e) => e.recipeId == recipeId && e.slot == slot);
     if (entries.isEmpty) {
       plans.remove(key);
       await _updateLocalAndNotify(plans);

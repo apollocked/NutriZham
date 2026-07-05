@@ -140,5 +140,6 @@
   "fatsGoal": "Fats (g)",
   "tapToBrowse": "Tap to browse recipes",
   "planThisMeal": "Plan This Meal",
-  "addToMeal": "Add to meal"
+  "addToMeal": "Add to meal",
+  "added": "Added"
 }

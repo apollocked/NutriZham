@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/core/constants/app_colors.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
+import 'package:nutrizham/data/models/meal_plan_entry.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
 import 'package:nutrizham/presentation/blocs/meal_planner_cubit.dart';
@@ -31,14 +32,25 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     context.read<FavoritesCubit>().loadFavorites();
   }
 
-  void _addToSlot(String slot) {
-    context.read<MealPlannerCubit>().addMealToDate(widget.recipe.id, slot);
-    ScaffoldMessenger.of(context).showSnackBar(
+  String _dateKey(DateTime date) =>
+      '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+
+  Set<String> _slotsWithRecipe(List<MealPlanEntry> entries, String recipeId) {
+    return entries.where((e) => e.recipeId == recipeId).map((e) => e.slot).toSet();
+  }
+
+  Future<void> _addToSlot(String slot) async {
+    await context.read<MealPlannerCubit>().addMealToDate(widget.recipe.id, slot);
+    if (!mounted) return;
+    final messenger = ScaffoldMessenger.of(context);
+    final theme = Theme.of(context);
+    final title = widget.recipe.title['en'] ?? '';
+    messenger.showSnackBar(
       SnackBar(
-        content: Text('${widget.recipe.title['en']} added to $slot'),
+        content: Text('$title $slot'),
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 2),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: theme.colorScheme.primary,
       ),
     );
   }
@@ -48,6 +60,16 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     final loc = AppLocalizations.of(context)!;
     final favorites = context.watch<FavoritesCubit>();
     final isFavorite = favorites.isFavorite(widget.recipe.id);
+
+    final planner = context.watch<MealPlannerCubit>();
+    final ps = planner.state;
+    final Set<String> addedSlots;
+    if (ps is PlannerLoaded) {
+      final entries = ps.mealPlans[_dateKey(ps.selectedDate)] ?? [];
+      addedSlots = _slotsWithRecipe(entries, widget.recipe.id);
+    } else {
+      addedSlots = {};
+    }
 
     final recipeTitle =
         widget.recipe.title[Localizations.localeOf(context).languageCode] ??
@@ -136,6 +158,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     icon: Icons.wb_sunny_rounded,
                     label: loc.breakfast,
                     color: AppColors.getCategoryColor('breakfast'),
+                    isAdded: addedSlots.contains('breakfast'),
                     onTap: () => _addToSlot('breakfast'),
                   ),
                   const SizedBox(width: 8),
@@ -143,6 +166,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     icon: Icons.light_mode_rounded,
                     label: loc.lunch,
                     color: AppColors.getCategoryColor('lunch'),
+                    isAdded: addedSlots.contains('lunch'),
                     onTap: () => _addToSlot('lunch'),
                   ),
                   const SizedBox(width: 8),
@@ -150,6 +174,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     icon: Icons.nightlight_round,
                     label: loc.dinner,
                     color: AppColors.getCategoryColor('dinner'),
+                    isAdded: addedSlots.contains('dinner'),
                     onTap: () => _addToSlot('dinner'),
                   ),
                   const SizedBox(width: 8),
@@ -157,6 +182,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     icon: Icons.cookie_rounded,
                     label: loc.snack,
                     color: AppColors.getCategoryColor('snack'),
+                    isAdded: addedSlots.contains('snack'),
                     onTap: () => _addToSlot('snack'),
                   ),
                 ],
@@ -182,35 +208,75 @@ class _SlotButton extends StatelessWidget {
   final IconData icon;
   final String label;
   final Color color;
+  final bool isAdded;
   final VoidCallback onTap;
 
   const _SlotButton({
     required this.icon,
     required this.label,
     required this.color,
+    required this.isAdded,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.08),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: color.withOpacity(0.2)),
-          ),
-          child: Column(
-            children: [
-              Icon(icon, color: color, size: 22),
-              const SizedBox(height: 4),
-              Text(label,
-                  style: TextStyle(
-                      color: color, fontSize: 11, fontWeight: FontWeight.w600)),
-            ],
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: onTap,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 350),
+            curve: Curves.easeOut,
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 4),
+            decoration: BoxDecoration(
+              gradient: isAdded
+                  ? LinearGradient(
+                      colors: [
+                        color.withOpacity(0.2),
+                        color.withOpacity(0.08),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    )
+                  : LinearGradient(
+                      colors: [
+                        color.withOpacity(0.06),
+                        color.withOpacity(0.02),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: isAdded ? color.withOpacity(0.4) : color.withOpacity(0.12),
+                width: isAdded ? 1.5 : 1,
+              ),
+              boxShadow: isAdded
+                  ? [BoxShadow(color: color.withOpacity(0.1), blurRadius: 6, offset: const Offset(0, 2))]
+                  : null,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  child: isAdded
+                      ? Icon(Icons.check_circle_rounded, key: const ValueKey('added'),
+                          color: color, size: 24)
+                      : Icon(icon, key: const ValueKey('normal'),
+                          color: color.withOpacity(0.7), size: 22),
+                ),
+                const SizedBox(height: 6),
+                Text(label,
+                    style: TextStyle(
+                        color: isAdded ? color : color.withOpacity(0.7),
+                        fontSize: 11,
+                        fontWeight: isAdded ? FontWeight.w700 : FontWeight.w500)),
+              ],
+            ),
           ),
         ),
       ),

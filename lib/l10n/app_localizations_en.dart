@@ -435,4 +435,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addToMeal => 'Add to meal';
+
+  @override
+  String get added => 'Added';
 }

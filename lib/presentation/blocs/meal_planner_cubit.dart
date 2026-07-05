@@ -124,17 +124,20 @@ class MealPlannerCubit extends Cubit<MealPlannerState> {
   }
 
   Future<void> addMealToDate(String recipeId, String slot) async {
-    final s = state;
-    if (s is! PlannerLoaded) return;
-    await MealPlannerService.addMealToDate(recipeId, s.selectedDate, slot);
+    if (state is! PlannerLoaded) {
+      await loadPlannedMeals();
+      if (state is! PlannerLoaded) return;
+    }
+    final loaded = state as PlannerLoaded;
+    await MealPlannerService.addMealToDate(recipeId, loaded.selectedDate, slot);
     final plans = await MealPlannerService.getAllMealPlans();
-    emit(s.copyWith(mealPlans: plans));
+    emit(loaded.copyWith(mealPlans: plans));
   }
 
-  Future<void> removeMealFromDate(String recipeId) async {
+  Future<void> removeMealFromDate(String recipeId, String slot) async {
     final s = state;
     if (s is! PlannerLoaded) return;
-    await MealPlannerService.removeMealFromDate(recipeId, s.selectedDate);
+    await MealPlannerService.removeMealFromDate(recipeId, s.selectedDate, slot);
     final plans = await MealPlannerService.getAllMealPlans();
     emit(s.copyWith(mealPlans: plans));
   }

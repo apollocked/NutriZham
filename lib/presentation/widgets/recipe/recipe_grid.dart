@@ -32,8 +32,21 @@ class RecipeGrid extends StatelessWidget {
     this.onLoadMore,
   });
 
+  String _dateKey(DateTime date) =>
+      '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+
+  Set<String> _addedSlots(BuildContext context, String recipeId) {
+    final ps = context.read<MealPlannerCubit>().state;
+    if (ps is! PlannerLoaded) return {};
+    final entries = ps.mealPlans[_dateKey(ps.selectedDate)] ?? [];
+    return entries.where((e) => e.recipeId == recipeId).map((e) => e.slot).toSet();
+  }
+
   void _addToPlanner(BuildContext context, Recipe recipe) {
-    showChooseSlotDialog(context).then((slot) {
+    final addedSlots = _addedSlots(context, recipe.id);
+    showChooseSlotDialog(context,
+        recipeTitle: recipe.title['en'] ?? '',
+        addedSlots: addedSlots).then((slot) {
       if (slot == null || !context.mounted) return;
       context.read<MealPlannerCubit>().addMealToDate(recipe.id, slot);
       ScaffoldMessenger.of(context).showSnackBar(

@@ -13,8 +13,8 @@ class MealPlannerRepositoryImpl implements MealPlannerRepository {
       MealPlannerService.addMealToDate(recipeId, date, slot);
 
   @override
-  Future<void> removeMealFromDate(String recipeId, DateTime date) =>
-      MealPlannerService.removeMealFromDate(recipeId, date);
+  Future<void> removeMealFromDate(String recipeId, DateTime date, String slot) =>
+      MealPlannerService.removeMealFromDate(recipeId, date, slot);
 
   @override
   Future<void> reorderMealInSlot(

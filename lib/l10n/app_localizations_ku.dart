@@ -431,8 +431,11 @@ class AppLocalizationsKu extends AppLocalizations {
   String get tapToBrowse => 'بۆ دۆزینەوەی ڕێچەتە کرتە بکە';
 
   @override
-  String get planThisMeal => 'Plan This Meal';
+  String get planThisMeal => 'پلانی ئەم خواردنە';
 
   @override
-  String get addToMeal => 'Add to meal';
+  String get addToMeal => 'زیادکردن بۆ خواردن';
+
+  @override
+  String get added => 'زیادکرا';
 }

@@ -11,7 +11,7 @@ class MealSlotSection extends StatelessWidget {
   final List<Recipe> meals;
   final bool isCollapsed;
   final VoidCallback onToggleCollapse;
-  final ValueChanged<String> onRemoveMeal;
+  final void Function(String recipeId, String slot) onRemoveMeal;
   final void Function(int oldIndex, int newIndex) onReorder;
   final VoidCallback onAddMeal;
 
@@ -72,7 +72,7 @@ class MealSlotSection extends StatelessWidget {
                           return MealCard(
                             key: ValueKey(recipe.id),
                             recipe: recipe, index: index,
-                            onRemove: () => onRemoveMeal(recipe.id),
+                            onRemove: () => onRemoveMeal(recipe.id, slot.name),
                           );
                         },
                       ),

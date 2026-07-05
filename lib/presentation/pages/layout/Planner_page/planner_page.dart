@@ -155,7 +155,7 @@ class _PlannerPageState extends State<PlannerPage> {
                       if (_collapsedSlots.contains(slot)) { _collapsedSlots.remove(slot); }
                       else { _collapsedSlots.add(slot); }
                     }),
-                    onRemoveMeal: (id) => planner.removeMealFromDate(id),
+                    onRemoveMeal: (id, slot) => planner.removeMealFromDate(id, slot),
                     onReorder: (oldIndex, newIndex) => planner.reorderMealInSlot(slot, oldIndex, newIndex),
                     onAddMeal: () => AddMealSheet.show(context, _available(), slot),
                   )),
