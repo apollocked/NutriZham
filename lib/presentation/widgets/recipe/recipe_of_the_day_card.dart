@@ -70,7 +70,7 @@ class RecipeOfTheDayCard extends StatelessWidget {
                         ),
                         child: const Icon(
                             Icons.auto_awesome_rounded,
-                            color: AppColors.primaryGreen,
+                            color: AppColors.primary,
                             size: 20),
                       ),
                       const SizedBox(width: 10),

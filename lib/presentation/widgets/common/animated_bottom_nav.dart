@@ -61,13 +61,11 @@ class _AnimatedBottomNavState extends State<AnimatedBottomNav>
       margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
       height: 64,
       decoration: BoxDecoration(
-        color: theme.brightness == Brightness.dark
-            ? const Color(0xFF1E293B)
-            : Colors.white,
+        color: theme.colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: theme.shadowColor.withOpacity(0.1),
+            color: Colors.black.withOpacity(theme.brightness == Brightness.dark ? 0.3 : 0.06),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),

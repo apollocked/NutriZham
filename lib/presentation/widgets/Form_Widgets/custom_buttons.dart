@@ -29,9 +29,9 @@ class PrimaryButton extends StatelessWidget {
       child: FilledButton(
         onPressed: isLoading ? null : onPressed,
         style: FilledButton.styleFrom(
-          backgroundColor: backgroundColor ?? AppColors.primaryGreen,
+          backgroundColor: backgroundColor ?? AppColors.primary,
           disabledBackgroundColor:
-              (backgroundColor ?? AppColors.primaryGreen).withOpacity(0.6),
+              (backgroundColor ?? AppColors.primary).withOpacity(0.6),
         ),
         child: isLoading
             ? const SizedBox(

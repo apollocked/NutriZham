@@ -32,7 +32,7 @@ class AppDeveloperSection extends StatelessWidget {
                 style: theme.textTheme.bodySmall
                     ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
             const SizedBox(height: 2),
-            Text('Hama Barzanji',
+            Text('Muhammed Jameel - Apollo',
                 style: theme.textTheme.titleSmall
                     ?.copyWith(fontWeight: FontWeight.w700)),
           ]),

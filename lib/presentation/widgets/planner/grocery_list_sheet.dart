@@ -60,11 +60,11 @@ class GroceryListSheet extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryGreen.withOpacity(0.1),
+                      color: AppColors.primary.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(Icons.shopping_cart_rounded,
-                        color: AppColors.primaryGreen, size: 20),
+                        color: AppColors.primary, size: 20),
                   ),
                   const SizedBox(width: 12),
                   Text(
@@ -117,11 +117,11 @@ class GroceryListSheet extends StatelessWidget {
                               Container(
                                 width: 24, height: 24,
                                 decoration: BoxDecoration(
-                                  color: AppColors.primaryGreen.withOpacity(0.08),
+                                  color: AppColors.primary.withOpacity(0.08),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: const Icon(Icons.check_rounded,
-                                    size: 14, color: AppColors.primaryGreen),
+                                    size: 14, color: AppColors.primary),
                               ),
                               const SizedBox(width: 12),
                               Expanded(

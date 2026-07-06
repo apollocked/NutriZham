@@ -99,7 +99,7 @@ class AddMealSheet extends StatelessWidget {
                             ),
                             subtitle: Text('${recipe.nutrition.calories} ${AppLocalizations.of(context)!.kcal}'),
                             trailing: const Icon(Icons.add_circle_rounded,
-                                color: AppColors.primaryGreen, size: 28),
+                                color: AppColors.primary, size: 28),
                             onTap: () {
                               context.read<MealPlannerCubit>().addMealToDate(recipe.id, slot);
                               Navigator.pop(context);
