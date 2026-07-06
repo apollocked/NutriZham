@@ -22,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   MealCategory? _selectedCategory;
   bool _showFavoritesOnly = false;
   bool _initialized = false;
+  Recipe? _cachedRecipeOfTheDay;
   final ScrollController _scrollController = ScrollController();
   late final FavoritesCubit _favoritesProvider;
 
@@ -76,6 +77,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Recipe get _recipeOfTheDay {
+    if (_cachedRecipeOfTheDay != null) return _cachedRecipeOfTheDay!;
     final cubit = context.read<RecipeCubit>();
     final all = cubit.recipes;
     if (all.isEmpty) {
@@ -88,9 +90,10 @@ class _HomePageState extends State<HomePage> {
           steps: {},
           category: MealCategory.snack);
     }
-    return all[
-        DateTime.now().difference(DateTime(DateTime.now().year, 1, 1)).inDays %
-            all.length];
+    final index = DateTime.now().difference(DateTime(DateTime.now().year, 1, 1)).inDays %
+        all.length;
+    _cachedRecipeOfTheDay = all[index];
+    return _cachedRecipeOfTheDay!;
   }
 
   @override
@@ -123,7 +126,10 @@ class _HomePageState extends State<HomePage> {
                 onCategorySelected: (v) =>
                     setState(() => _selectedCategory = v)),
             if (_selectedCategory == null && !_showFavoritesOnly)
-              RecipeOfTheDayCard(recipe: _recipeOfTheDay),
+              RecipeOfTheDayCard(
+                recipe: _recipeOfTheDay,
+                onTap: () => context.push('/recipe/${_recipeOfTheDay.id}', extra: _recipeOfTheDay),
+              ),
             RecipeSectionHeader(
               showFavoritesOnly: _showFavoritesOnly,
               count: paginatedRecipes.length,

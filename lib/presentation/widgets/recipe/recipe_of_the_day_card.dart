@@ -9,8 +9,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RecipeOfTheDayCard extends StatelessWidget {
   final Recipe recipe;
+  final VoidCallback? onTap;
 
-  const RecipeOfTheDayCard({super.key, required this.recipe});
+  const RecipeOfTheDayCard({super.key, required this.recipe, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +24,7 @@ class RecipeOfTheDayCard extends StatelessWidget {
     final catColor = AppColors.getCategoryColor(catName);
 
     return Pressable(
+      onTap: onTap,
       child: Container(
         margin: const EdgeInsets.fromLTRB(16, 8, 16, 16),
         decoration: BoxDecoration(
