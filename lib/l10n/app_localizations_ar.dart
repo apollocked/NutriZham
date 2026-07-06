@@ -495,4 +495,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String addedToSlot(Object recipe, Object slot) {
     return 'تمت إضافة $recipe إلى $slot';
   }
+
+  @override
+  String get searchByIngredients => 'ابحث بالمكونات';
+
+  @override
+  String get searchIngredients => 'ابحث عن مكونات...';
+
+  @override
+  String get pickIngredients => 'اختر ما لديك';
+
+  @override
+  String get recipesYouCanMake => 'وصفات يمكنك تحضيرها';
+
+  @override
+  String get selectIngredientsHint => 'اختر المكونات للعثور على وصفات مطابقة';
+
+  @override
+  String get noMatchingRecipes => 'لا توجد وصفات تطابق مكوناتك';
 }

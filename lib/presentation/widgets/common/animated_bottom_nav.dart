@@ -61,12 +61,13 @@ class _AnimatedBottomNavState extends State<AnimatedBottomNav>
       margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
       height: 64,
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHigh,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(theme.brightness == Brightness.dark ? 0.3 : 0.06),
-            blurRadius: 16,
+            color: Colors.black
+                .withOpacity(theme.brightness == Brightness.dark ? 0.4 : 0.06),
+            blurRadius: 20,
             offset: const Offset(0, 4),
           ),
         ],
@@ -80,7 +81,7 @@ class _AnimatedBottomNavState extends State<AnimatedBottomNav>
                 animation: _pillAnimation,
                 builder: (context, _) {
                   final lerp = _pillAnimation.value;
-                  final from = _previousIndex * itemWidth + itemWidth * 0.15;
+                  final from = _previousIndex * itemWidth + itemWidth * 0.025;
                   final to =
                       widget.selectedIndex * itemWidth + itemWidth * 0.15;
                   final pillOffset = from + (to - from) * lerp;

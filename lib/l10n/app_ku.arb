@@ -166,5 +166,11 @@
       "recipe": {},
       "slot": {}
     }
-  }
+  },
+  "searchByIngredients": "بەپێی پێکهاتەکان بگەڕێ",
+  "searchIngredients": "گەڕان بەدوای پێکهاتەکان...",
+  "pickIngredients": "ئەو پێکهاتانە هەڵبژێرە کە هەتە",
+  "recipesYouCanMake": "ئەو ڕەیسێپتانەی دەتوانی دروستی بکەیت",
+  "selectIngredientsHint": "پێکهاتەکان هەڵبژێرە بۆ دۆزینەوەی ڕەیسێپتی گونجاو",
+  "noMatchingRecipes": "هیچ ڕەیسێپتێک پێکهاتەکانت پڕ ناکاتەوە"
 }

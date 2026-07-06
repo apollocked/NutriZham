@@ -497,4 +497,23 @@ class AppLocalizationsKu extends AppLocalizations {
   String addedToSlot(Object recipe, Object slot) {
     return '$recipe زیادکرا بۆ $slot';
   }
+
+  @override
+  String get searchByIngredients => 'بەپێی پێکهاتەکان بگەڕێ';
+
+  @override
+  String get searchIngredients => 'گەڕان بەدوای پێکهاتەکان...';
+
+  @override
+  String get pickIngredients => 'ئەو پێکهاتانە هەڵبژێرە کە هەتە';
+
+  @override
+  String get recipesYouCanMake => 'ئەو ڕەیسێپتانەی دەتوانی دروستی بکەیت';
+
+  @override
+  String get selectIngredientsHint =>
+      'پێکهاتەکان هەڵبژێرە بۆ دۆزینەوەی ڕەیسێپتی گونجاو';
+
+  @override
+  String get noMatchingRecipes => 'هیچ ڕەیسێپتێک پێکهاتەکانت پڕ ناکاتەوە';
 }

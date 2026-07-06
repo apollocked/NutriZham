@@ -5,7 +5,8 @@ class NavItem extends StatefulWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  const NavItem({super.key, 
+  const NavItem({
+    super.key,
     required this.item,
     required this.isSelected,
     required this.onTap,
@@ -64,13 +65,13 @@ class NavItemState extends State<NavItem> with SingleTickerProviderStateMixin {
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 250),
                   curve: Curves.easeOut,
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
                     isSelected ? widget.item.activeIcon : widget.item.icon,
-                    size: isSelected ? 26 : 22,
+                    size: isSelected ? 24 : 21,
                     color: isSelected
                         ? theme.colorScheme.primary
                         : theme.colorScheme.onSurfaceVariant,

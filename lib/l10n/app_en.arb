@@ -166,5 +166,11 @@
       "recipe": {},
       "slot": {}
     }
-  }
+  },
+  "searchByIngredients": "Search by Ingredients",
+  "searchIngredients": "Search ingredients...",
+  "pickIngredients": "Pick what you have",
+  "recipesYouCanMake": "Recipes you can make",
+  "selectIngredientsHint": "Select ingredients to find matching recipes",
+  "noMatchingRecipes": "No recipes match your ingredients"
 }

@@ -166,5 +166,11 @@
       "recipe": {},
       "slot": {}
     }
-  }
+  },
+  "searchByIngredients": "ابحث بالمكونات",
+  "searchIngredients": "ابحث عن مكونات...",
+  "pickIngredients": "اختر ما لديك",
+  "recipesYouCanMake": "وصفات يمكنك تحضيرها",
+  "selectIngredientsHint": "اختر المكونات للعثور على وصفات مطابقة",
+  "noMatchingRecipes": "لا توجد وصفات تطابق مكوناتك"
 }

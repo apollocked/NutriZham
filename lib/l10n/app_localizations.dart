@@ -1065,6 +1065,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{recipe} added to {slot}'**
   String addedToSlot(Object recipe, Object slot);
+
+  /// No description provided for @searchByIngredients.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by Ingredients'**
+  String get searchByIngredients;
+
+  /// No description provided for @searchIngredients.
+  ///
+  /// In en, this message translates to:
+  /// **'Search ingredients...'**
+  String get searchIngredients;
+
+  /// No description provided for @pickIngredients.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick what you have'**
+  String get pickIngredients;
+
+  /// No description provided for @recipesYouCanMake.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipes you can make'**
+  String get recipesYouCanMake;
+
+  /// No description provided for @selectIngredientsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select ingredients to find matching recipes'**
+  String get selectIngredientsHint;
+
+  /// No description provided for @noMatchingRecipes.
+  ///
+  /// In en, this message translates to:
+  /// **'No recipes match your ingredients'**
+  String get noMatchingRecipes;
 }
 
 class _AppLocalizationsDelegate
