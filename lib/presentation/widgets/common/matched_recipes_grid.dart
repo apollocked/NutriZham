@@ -39,20 +39,38 @@ class MatchedRecipesGrid extends StatelessWidget {
       ),
       padding: const EdgeInsets.symmetric(horizontal: 11),
       itemCount: recipes.length,
-      itemBuilder: (_, i) {
-        final r = recipes[i];
-        final favorites = context.watch<FavoritesCubit>();
-        return DelayedReveal(
-          index: i,
-          child: RecipeCard(
-            recipe: r,
-            isFavorite: favorites.isFavorite(r.id),
-            onFavoriteToggle: () => favorites.toggleFavorite(r.id),
-            onTap: () => context.push('/recipe/${r.id}', extra: r),
-            onLongPress: () => onLongPress(r),
-          ),
-        );
-      },
+      itemBuilder: (_, i) => _RecipeGridItem(
+        recipe: recipes[i],
+        index: i,
+        onLongPress: onLongPress,
+      ),
+    );
+  }
+}
+
+class _RecipeGridItem extends StatelessWidget {
+  final Recipe recipe;
+  final int index;
+  final void Function(Recipe) onLongPress;
+
+  const _RecipeGridItem({
+    required this.recipe,
+    required this.index,
+    required this.onLongPress,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final favorites = context.watch<FavoritesCubit>();
+    return DelayedReveal(
+      index: index,
+      child: RecipeCard(
+        recipe: recipe,
+        isFavorite: favorites.isFavorite(recipe.id),
+        onFavoriteToggle: () => favorites.toggleFavorite(recipe.id),
+        onTap: () => context.push('/recipe/${recipe.id}', extra: recipe),
+        onLongPress: () => onLongPress(recipe),
+      ),
     );
   }
 }

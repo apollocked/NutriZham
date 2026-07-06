@@ -18,19 +18,48 @@ class IngredientChipsList extends StatelessWidget {
     if (ingredients.isEmpty) {
       return Center(child: Text(AppLocalizations.of(context)!.noRecipesFound));
     }
-    return SingleChildScrollView(
+    return ListView.builder(
+      itemCount: ingredients.length,
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 6,
-        children: ingredients.map((ing) => FilterChip(
-          label: Text(_capitalize(ing), style: const TextStyle(fontSize: 13)),
-          selected: selected.contains(ing),
-          onSelected: (_) => onToggle(ing),
-        )).toList(),
-      ),
+      itemBuilder: (context, i) {
+        final ing = ingredients[i];
+        final isSel = selected.contains(ing);
+        return InkWell(
+          onTap: () => onToggle(ing),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+            child: Row(
+              children: [
+                Icon(
+                  isSel ? Icons.check_circle : Icons.circle_outlined,
+                  size: 22,
+                  color: isSel ? Theme.of(context).colorScheme.primary : null,
+                ),
+                const SizedBox(width: 12),
+                Flexible(
+                  child: Text(
+                    _titleCase(ing),
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: isSel ? FontWeight.w600 : null,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
-  String _capitalize(String s) => s.isEmpty ? s : '${s[0].toUpperCase()}${s.substring(1)}';
+  String _titleCase(String s) {
+    if (s.isEmpty) return s;
+    return s.split(' ').map((w) {
+      if (w.isEmpty) return w;
+      return '${w[0].toUpperCase()}${w.substring(1)}';
+    }).join(' ');
+  }
 }
