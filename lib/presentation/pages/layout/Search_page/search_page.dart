@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
 import 'package:nutrizham/presentation/blocs/meal_planner_cubit.dart';
 import 'package:nutrizham/core/utils/category_label.dart';
+import 'package:nutrizham/core/utils/ingredient_index.dart';
 import 'package:nutrizham/presentation/blocs/recipe_cubit.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/empty_state_widget.dart';
 import 'package:nutrizham/presentation/widgets/common/custom_app_bar.dart';
@@ -42,6 +43,7 @@ class _SearchPageState extends State<SearchPage> {
     final recipes = context.read<RecipeCubit>();
     try {
       final recipesList = await recipes.getAllFresh();
+      IngredientIndex.instance.build(recipesList);
       if (mounted) setState(() { _allRecipes = recipesList; _isLoading = false; });
     } catch (_) {
       if (mounted) setState(() => _isLoading = false);
@@ -103,17 +105,36 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: CustomAppBar(title: loc.search),
       body: Column(children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
-          child: CustomSearchBar(
-            hintText: loc.searchPlaceholder,
-            searchQuery: _searchQuery,
-            onChanged: (v) => setState(() => _searchQuery = v),
-            onClear: () { setState(() { _searchQuery = ''; _searchController.clear(); }); },
-            controller: _searchController,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+            child: Column(
+              children: [
+                CustomSearchBar(
+                  hintText: loc.searchPlaceholder,
+                  searchQuery: _searchQuery,
+                  onChanged: (v) => setState(() => _searchQuery = v),
+                  onClear: () { setState(() { _searchQuery = ''; _searchController.clear(); }); },
+                  controller: _searchController,
+                ),
+                const SizedBox(height: 8),
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Pressable(
+                    onTap: () => context.push('/search/by-ingredients', extra: _allRecipes),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.shopping_basket_outlined, size: 18, color: Theme.of(context).colorScheme.primary),
+                        const SizedBox(width: 6),
+                        Text(loc.searchByIngredients, style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w500)),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        CategoryFilterChips(selectedCategory: _selectedCategory, onCategorySelected: (category) => setState(() => _selectedCategory = category)),
+          CategoryFilterChips(selectedCategory: _selectedCategory, onCategorySelected: (category) => setState(() => _selectedCategory = category)),
         const SizedBox(height: 8),
         Expanded(
           child: _isLoading

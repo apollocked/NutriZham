@@ -17,6 +17,7 @@ import 'package:nutrizham/presentation/pages/layout/Profile_page/settings_page/s
 import 'package:nutrizham/presentation/pages/layout/Profile_page/features_page/app_features_page.dart';
 import 'package:nutrizham/presentation/pages/layout/Profile_page/Edit_account_page/edit_account_page.dart';
 import 'package:nutrizham/presentation/pages/layout/Profile_page/Edit_account_page/Change_Password_Page/change_password_page.dart';
+import 'package:nutrizham/presentation/pages/layout/Search_page/Ingredient_search_page/ingredient_search_page.dart';
 
 GoRouter buildRouter() {
   return GoRouter(
@@ -86,6 +87,13 @@ GoRouter buildRouter() {
             ),
           ),
         ],
+      ),
+      GoRoute(
+        path: '/search/by-ingredients',
+        pageBuilder: (context, state) {
+          final recipes = state.extra as List<Recipe>;
+          return _slideUpPage(IngredientSearchPage(allRecipes: recipes));
+        },
       ),
       GoRoute(
         path: '/recipe/:id',
