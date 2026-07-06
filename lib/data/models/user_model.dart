@@ -17,6 +17,7 @@ class UserModel extends User {
     super.dailyProtein = 150,
     super.dailyCarbs = 250,
     super.dailyFats = 65,
+    super.ratings = const {},
   });
 
   Map<String, dynamic> toJson() {
@@ -30,6 +31,7 @@ class UserModel extends User {
       'favorites': favorites,
       'plannedMeals': plannedMeals,
       'updatedAt': updatedAt?.toIso8601String(),
+      'ratings': ratings,
       'mealPlans': mealPlans.map((date, entries) =>
           MapEntry(date, entries.map((e) => e.toJson()).toList())),
       'dailyCalories': dailyCalories,
@@ -48,6 +50,9 @@ class UserModel extends User {
       profileImage: json['profileImage'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String),
       favorites: List<String>.from(json['favorites'] ?? []),
+      ratings: (json['ratings'] as Map<String, dynamic>?)
+              ?.map((k, v) => MapEntry(k, (v as num).toInt())) ??
+          {},
       plannedMeals: List<String>.from(json['plannedMeals'] ?? []),
       updatedAt: json['updatedAt'] != null
           ? DateTime.parse(json['updatedAt'] as String)
@@ -83,6 +88,7 @@ class UserModel extends User {
     double? dailyProtein,
     double? dailyCarbs,
     double? dailyFats,
+    Map<String, int>? ratings,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -99,6 +105,7 @@ class UserModel extends User {
       dailyProtein: dailyProtein ?? this.dailyProtein,
       dailyCarbs: dailyCarbs ?? this.dailyCarbs,
       dailyFats: dailyFats ?? this.dailyFats,
+      ratings: ratings ?? this.ratings,
     );
   }
 }

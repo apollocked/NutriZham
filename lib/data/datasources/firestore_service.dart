@@ -139,6 +139,72 @@ class FirestoreService {
     }
   }
 
+  // ============ RATINGS ============
+
+  Future<int> getUserRating(String recipeId) async {
+    final userDoc = _currentUserDoc;
+    if (userDoc == null) return 0;
+    try {
+      final doc = await userDoc.get();
+      if (!doc.exists) return 0;
+      final ratings = doc.data()!['ratings'] as Map<String, dynamic>? ?? {};
+      return (ratings[recipeId] as num?)?.toInt() ?? 0;
+    } catch (e) {
+      print('Error getting user rating: $e');
+      return 0;
+    }
+  }
+
+  Future<void> saveRating(String recipeId, int newRating) async {
+    final userId = currentUserId;
+    if (userId == null) return;
+    try {
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        final userRef = _getUserDoc(userId);
+        final recipeRef = FirebaseFirestore.instance.collection('recipes').doc(recipeId);
+
+        final userSnapshot = await transaction.get(userRef);
+        final recipeSnapshot = await transaction.get(recipeRef);
+
+        final currentRatings = Map<String, dynamic>.from(
+            (userSnapshot.data()?['ratings'] as Map<String, dynamic>?) ?? {});
+        final oldRating = (currentRatings[recipeId] as num?)?.toInt() ?? 0;
+
+        final currentAvg = (recipeSnapshot.data()?['rating'] as num?)?.toDouble() ?? 0.0;
+        final currentCount = (recipeSnapshot.data()?['ratingCount'] as int?) ?? 0;
+
+        double newAvg;
+        int newCount;
+
+        if (oldRating == 0 && newRating > 0) {
+          newCount = currentCount + 1;
+          newAvg = ((currentAvg * currentCount) + newRating) / newCount;
+        } else if (oldRating > 0 && newRating > 0) {
+          newCount = currentCount;
+          newAvg = ((currentAvg * currentCount) - oldRating + newRating) / newCount;
+        } else {
+          newCount = currentCount > 0 ? currentCount - 1 : 0;
+          newAvg = newCount > 0
+              ? ((currentAvg * (currentCount + 1)) - oldRating) / newCount
+              : 0.0;
+        }
+
+        currentRatings[recipeId] = newRating;
+        transaction.update(userRef, {
+          'ratings': currentRatings,
+          'updatedAt': DateTime.now().toIso8601String(),
+        });
+        transaction.update(recipeRef, {
+          'rating': newAvg,
+          'ratingCount': newCount,
+        });
+      });
+    } catch (e) {
+      print('Error saving rating: $e');
+      rethrow;
+    }
+  }
+
   // ============ ACCOUNT ============
 
   Future<void> deleteUserData(String userId) async {

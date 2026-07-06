@@ -15,6 +15,7 @@ class User {
   final double dailyProtein;
   final double dailyCarbs;
   final double dailyFats;
+  final Map<String, int> ratings;
 
   User({
     required this.id,
@@ -31,5 +32,6 @@ class User {
     this.dailyProtein = 150,
     this.dailyCarbs = 250,
     this.dailyFats = 65,
+    this.ratings = const {},
   });
 }

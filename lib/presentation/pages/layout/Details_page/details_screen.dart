@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/core/constants/app_colors.dart';
+import 'package:nutrizham/data/datasources/firestore_service.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:nutrizham/data/models/meal_plan_entry.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,11 +28,21 @@ class RecipeDetailScreen extends StatefulWidget {
 
 class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   int _userRating = 0;
+  double _displayRating = 0.0;
+  final FirestoreService _firestoreService = FirestoreService();
 
   @override
   void initState() {
     super.initState();
     context.read<FavoritesCubit>().loadFavorites();
+    _displayRating = widget.recipe.rating;
+    _loadUserRating();
+  }
+
+  Future<void> _loadUserRating() async {
+    final rating = await _firestoreService.getUserRating(widget.recipe.id);
+    if (!mounted) return;
+    setState(() => _userRating = rating);
   }
 
   String _dateKey(DateTime date) =>
@@ -107,10 +118,11 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               RecipeRatingCard(
-                rating: widget.recipe.rating,
+                rating: _displayRating,
                 ratingCount: widget.recipe.ratingCount,
                 userRating: _userRating,
-                onRatingChanged: (rating) {
+                onRatingChanged: (rating) async {
+                  setState(() => _userRating = rating);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                         duration: const Duration(milliseconds: 775),
@@ -118,7 +130,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                         content: Text('${loc.rating}: $rating/5'),
                         backgroundColor: Theme.of(context).colorScheme.primary),
                   );
-                  setState(() => _userRating = rating);
+                  await _firestoreService.saveRating(widget.recipe.id, rating);
                 },
               ),
               const SizedBox(height: 16),
