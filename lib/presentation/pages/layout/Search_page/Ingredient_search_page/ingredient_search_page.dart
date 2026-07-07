@@ -6,6 +6,7 @@ import 'package:nutrizham/presentation/widgets/common/custom_app_bar.dart';
 import 'package:nutrizham/presentation/widgets/common/search_bar_widget.dart';
 import 'package:nutrizham/presentation/widgets/common/ingredient_chips_list.dart';
 import 'package:nutrizham/presentation/widgets/common/matched_recipes_grid.dart';
+import 'package:nutrizham/presentation/widgets/common/mode_chip.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class IngredientSearchPage extends StatefulWidget {
@@ -89,56 +90,85 @@ class _IngredientSearchPageState extends State<IngredientSearchPage>
     return Scaffold(
       appBar: CustomAppBar(title: loc.searchByIngredients),
       body: Column(children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-          child: CustomSearchBar(
-            hintText: loc.searchIngredients,
-            searchQuery: _ingredientQuery,
-            onChanged: (v) => setState(() => _ingredientQuery = v),
-            onClear: () { setState(() => _ingredientQuery = ''); _searchCtrl.clear(); },
-            controller: _searchCtrl,
+        _buildSearchHeader(loc, theme),
+        if (_selected.isNotEmpty) _buildSelectedBar(),
+        Expanded(child: _buildContent(loc, theme, filteredIngs)),
+      ]),
+    );
+  }
+
+  Widget _buildSearchHeader(AppLocalizations loc, ThemeData theme) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: theme.colorScheme.outlineVariant.withOpacity(0.3))),
+      ),
+      child: Column(children: [
+        CustomSearchBar(
+          hintText: loc.searchIngredients,
+          searchQuery: _ingredientQuery,
+          onChanged: (v) => setState(() => _ingredientQuery = v),
+          onClear: () { setState(() => _ingredientQuery = ''); _searchCtrl.clear(); },
+          controller: _searchCtrl,
+        ),
+        const SizedBox(height: 6),
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: Text(
+            _selected.isEmpty
+                ? loc.pickIngredients
+                : '${_selected.length} ${loc.pickIngredients.toLowerCase()}',
+            style: theme.textTheme.labelLarge?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
-        if (_selected.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(children: [
-              Text('${_selected.length} ${loc.pickIngredients.toLowerCase()}',
-                  style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.primary)),
-              const Spacer(),
-              TextButton(
-                onPressed: _clearSelected,
-                child: const Text('Clear'),
-              ),
-            ]),
-          ),
-        Expanded(child: _buildContent(loc, theme, filteredIngs)),
+      ]),
+    );
+  }
+
+  Widget _buildSelectedBar() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+      child: Row(children: [
+        const SizedBox(width: 12),
+        ModeChip(
+          icon: Icons.restaurant,
+          label: '${_selected.length} selected',
+          active: true,
+          onTap: _clearSelected,
+        ),
+        const Spacer(),
+        TextButton.icon(
+          onPressed: _clearSelected,
+          icon: const Icon(Icons.close, size: 18),
+          label: const Text('Clear', style: TextStyle(fontWeight: FontWeight.w600)),
+        ),
       ]),
     );
   }
 
   Widget _buildContent(AppLocalizations loc, ThemeData theme, List<String> filteredIngs) {
     if (_selected.isEmpty) {
-      return Column(children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: _sectionLabel(loc.pickIngredients, theme),
-        ),
-        Expanded(child: IngredientChipsList(
-          ingredients: filteredIngs,
-          selected: _selected,
-          onToggle: _toggleIngredient,
-        )),
-      ]);
+      if (filteredIngs.isEmpty) return _emptyState(theme, loc.selectIngredientsHint);
+      return IngredientChipsList(ingredients: filteredIngs, selected: _selected, onToggle: _toggleIngredient);
     }
     if (_matchedDirty) {
       _cachedMatched = _computeMatches();
       _matchedDirty = false;
     }
+    if (_cachedMatched.isEmpty) return _emptyState(theme, loc.noMatchingRecipes);
     return Column(children: [
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        child: _sectionLabel(loc.recipesYouCanMake, theme),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+        child: Row(children: [
+          Icon(Icons.auto_awesome, size: 18, color: theme.colorScheme.primary),
+          const SizedBox(width: 8),
+          Text(loc.recipesYouCanMake, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
+          const Spacer(),
+          Text('${_cachedMatched.length} recipes', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+        ]),
       ),
       Expanded(child: MatchedRecipesGrid(
         recipes: _cachedMatched,
@@ -147,10 +177,16 @@ class _IngredientSearchPageState extends State<IngredientSearchPage>
     ]);
   }
 
-  Widget _sectionLabel(String label, ThemeData theme) {
-    return Align(
-      alignment: AlignmentDirectional.centerStart,
-      child: Text(label, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+  Widget _emptyState(ThemeData theme, String message) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.search_off, size: 48, color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5)),
+          const SizedBox(height: 12),
+          Text(message, style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+        ],
+      ),
     );
   }
 }

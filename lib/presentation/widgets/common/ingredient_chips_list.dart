@@ -16,38 +16,52 @@ class IngredientChipsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (ingredients.isEmpty) {
-      return Center(child: Text(AppLocalizations.of(context)!.noRecipesFound));
+      return Center(child: Text(AppLocalizations.of(context)!.selectIngredientsHint));
     }
+    final theme = Theme.of(context);
     return ListView.builder(
       itemCount: ingredients.length,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       itemBuilder: (context, i) {
         final ing = ingredients[i];
         final isSel = selected.contains(ing);
-        return InkWell(
-          onTap: () => onToggle(ing),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
-            child: Row(
-              children: [
-                Icon(
-                  isSel ? Icons.check_circle : Icons.circle_outlined,
-                  size: 22,
-                  color: isSel ? Theme.of(context).colorScheme.primary : null,
-                ),
-                const SizedBox(width: 12),
-                Flexible(
-                  child: Text(
-                    _titleCase(ing),
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: isSel ? FontWeight.w600 : null,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Material(
+            color: isSel ? theme.colorScheme.primary.withOpacity(0.08) : theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(12),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () => onToggle(ing),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: isSel ? theme.colorScheme.primary.withOpacity(0.4) : theme.colorScheme.outlineVariant,
                   ),
                 ),
-              ],
+                child: Row(children: [
+                  Icon(
+                    isSel ? Icons.check_circle : Icons.radio_button_unchecked,
+                    size: 22,
+                    color: isSel ? theme.colorScheme.primary : theme.colorScheme.outlineVariant,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      _titleCase(ing),
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: isSel ? FontWeight.w600 : FontWeight.w400,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ),
+                ]),
+              ),
             ),
           ),
         );

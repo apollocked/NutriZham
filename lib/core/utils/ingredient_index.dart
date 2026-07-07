@@ -23,7 +23,10 @@ class IngredientIndex {
       for (final list in lists) {
         for (final ing in list) {
           final cleaned = stripPortion(ing);
-          if (cleaned.isNotEmpty) {
+          if (cleaned.isNotEmpty &&
+              cleaned.length < 40 &&
+              !cleaned.contains(',') &&
+              !cleaned.contains(':')) {
             seen.add(cleaned);
             ings.add(cleaned);
             _reverseIndex.putIfAbsent(cleaned, () => {}).add(r.id);
