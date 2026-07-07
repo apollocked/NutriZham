@@ -142,6 +142,16 @@ class MealPlannerCubit extends Cubit<MealPlannerState> {
     emit(s.copyWith(mealPlans: plans));
   }
 
+  Future<void> moveMealToSlot(
+      String recipeId, String fromSlot, String toSlot) async {
+    final s = state;
+    if (s is! PlannerLoaded) return;
+    await MealPlannerService.moveMealToSlot(
+        recipeId, s.selectedDate, fromSlot, toSlot);
+    final plans = await MealPlannerService.getAllMealPlans();
+    emit(s.copyWith(mealPlans: plans));
+  }
+
   Future<void> reorderMealInSlot(
       String slot, int oldIndex, int newIndex) async {
     final s = state;

@@ -157,6 +157,7 @@ class _PlannerPageState extends State<PlannerPage> {
                     }),
                     onRemoveMeal: (id, slot) => planner.removeMealFromDate(id, slot),
                     onReorder: (oldIndex, newIndex) => planner.reorderMealInSlot(slot, oldIndex, newIndex),
+                    onMoveMeal: (recipeId, fromSlot) => planner.moveMealToSlot(recipeId, fromSlot, slot),
                     onAddMeal: () => AddMealSheet.show(context, _available(), slot),
                   )),
                   const SizedBox(height: 24),

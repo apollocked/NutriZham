@@ -13,6 +13,7 @@ class MealSlotSection extends StatelessWidget {
   final VoidCallback onToggleCollapse;
   final void Function(String recipeId, String slot) onRemoveMeal;
   final void Function(int oldIndex, int newIndex) onReorder;
+  final void Function(String recipeId, String fromSlot) onMoveMeal;
   final VoidCallback onAddMeal;
 
   const MealSlotSection({
@@ -23,6 +24,7 @@ class MealSlotSection extends StatelessWidget {
     required this.onToggleCollapse,
     required this.onRemoveMeal,
     required this.onReorder,
+    required this.onMoveMeal,
     required this.onAddMeal,
   });
 
@@ -32,6 +34,48 @@ class MealSlotSection extends StatelessWidget {
     final loc = AppLocalizations.of(context)!;
     final slotColor = AppColors.getCategoryColor(slot.name);
     final slotLabel = SlotHeader.label(slot, loc);
+
+    final body = AnimatedCrossFade(
+      duration: const Duration(milliseconds: 250),
+      crossFadeState: isCollapsed ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+      firstChild: meals.isEmpty
+          ? SlotEmpty(slotColor: slotColor, label: slotLabel, onAdd: onAddMeal, tapToBrowse: loc.tapToBrowse)
+          : Column(
+              children: [
+                ReorderableListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  buildDefaultDragHandles: false,
+                  itemCount: meals.length,
+                  onReorder: onReorder,
+                  proxyDecorator: (child, index, animation) => AnimatedBuilder(
+                    animation: animation,
+                    builder: (context, child) => Material(
+                      color: Colors.transparent, elevation: 8,
+                      shadowColor: theme.shadowColor.withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(16),
+                      child: Transform.scale(scale: 1.02, child: child),
+                    ),
+                    child: child,
+                  ),
+                  itemBuilder: (context, index) {
+                    final recipe = meals[index];
+                    return MealCard(
+                      key: ValueKey(recipe.id),
+                      recipe: recipe, index: index,
+                      slot: slot.name,
+                      onRemove: () => onRemoveMeal(recipe.id, slot.name),
+                    );
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 14),
+                  child: SlotAddButton(slotColor: slotColor, label: slotLabel, onTap: onAddMeal),
+                ),
+              ],
+            ),
+      secondChild: const SizedBox.shrink(),
+    );
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
@@ -44,45 +88,22 @@ class MealSlotSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SlotHeader(slot: slot, mealCount: meals.length, isCollapsed: isCollapsed, onTap: onToggleCollapse),
-          AnimatedCrossFade(
-            duration: const Duration(milliseconds: 250),
-            crossFadeState: isCollapsed ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-            firstChild: meals.isEmpty
-                ? SlotEmpty(slotColor: slotColor, label: slotLabel, onAdd: onAddMeal, tapToBrowse: loc.tapToBrowse)
-                : Column(
-                    children: [
-                      ReorderableListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        buildDefaultDragHandles: false,
-                        itemCount: meals.length,
-                        onReorder: onReorder,
-                        proxyDecorator: (child, index, animation) => AnimatedBuilder(
-                          animation: animation,
-                          builder: (context, child) => Material(
-                            color: Colors.transparent, elevation: 8,
-                            shadowColor: theme.shadowColor.withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(16),
-                            child: Transform.scale(scale: 1.02, child: child),
-                          ),
-                          child: child,
-                        ),
-                        itemBuilder: (context, index) {
-                          final recipe = meals[index];
-                          return MealCard(
-                            key: ValueKey(recipe.id),
-                            recipe: recipe, index: index,
-                            onRemove: () => onRemoveMeal(recipe.id, slot.name),
-                          );
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 4, 16, 14),
-                        child: SlotAddButton(slotColor: slotColor, label: slotLabel, onTap: onAddMeal),
-                      ),
-                    ],
-                  ),
-            secondChild: const SizedBox.shrink(),
+          DragTarget<Map<String, String>>(
+            onAcceptWithDetails: (details) {
+              final data = details.data;
+              onMoveMeal(data['recipeId']!, data['fromSlot']!);
+            },
+            builder: (context, candidateData, rejectedData) {
+              final isHovering = candidateData.isNotEmpty;
+              return AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: isHovering ? slotColor.withOpacity(0.05) : Colors.transparent,
+                ),
+                child: body,
+              );
+            },
           ),
         ],
       ),

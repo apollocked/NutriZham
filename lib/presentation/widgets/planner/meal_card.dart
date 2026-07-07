@@ -6,12 +6,14 @@ import 'package:nutrizham/l10n/app_localizations.dart';
 class MealCard extends StatelessWidget {
   final Recipe recipe;
   final int index;
+  final String slot;
   final VoidCallback onRemove;
 
   const MealCard({
     super.key,
     required this.recipe,
     required this.index,
+    required this.slot,
     required this.onRemove,
   });
 
@@ -22,7 +24,7 @@ class MealCard extends StatelessWidget {
     final catName = recipe.category.toString().split('.').last;
     final catColor = AppColors.getCategoryColor(catName);
 
-    return Padding(
+    final cardBody = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
       child: Container(
         decoration: BoxDecoration(
@@ -145,6 +147,19 @@ class MealCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+
+    return LongPressDraggable<Map<String, String>>(
+      data: {'recipeId': recipe.id, 'fromSlot': slot},
+      feedback: Material(
+        color: Colors.transparent,
+        elevation: 8,
+        shadowColor: theme.shadowColor.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(16),
+        child: Opacity(opacity: 0.85, child: SizedBox(width: 320, child: cardBody)),
+      ),
+      childWhenDragging: Opacity(opacity: 0.3, child: cardBody),
+      child: cardBody,
     );
   }
 }

@@ -121,6 +121,33 @@ class MealPlannerService {
     }
   }
 
+  static Future<void> moveMealToSlot(
+      String recipeId, DateTime date, String fromSlot, String toSlot) async {
+    if (fromSlot == toSlot) return;
+    final cachedJson = await _cache.getMealPlansJson();
+    final plans = _decodeMealPlans(cachedJson);
+    final key = _dateKey(date);
+    final entries = List<MealPlanEntry>.from(plans[key] ?? []);
+
+    final sourceIndex =
+        entries.indexWhere((e) => e.recipeId == recipeId && e.slot == fromSlot);
+    if (sourceIndex == -1) return;
+    final moved = entries.removeAt(sourceIndex);
+
+    final targetSlotEntries =
+        entries.where((e) => e.slot == toSlot).toList(growable: false);
+    final newEntry = MealPlanEntry(
+      recipeId: moved.recipeId,
+      slot: toSlot,
+      order: targetSlotEntries.length,
+    );
+    entries.add(newEntry);
+
+    plans[key] = entries;
+    await _updateLocalAndNotify(plans);
+    await _syncPlanToFirestore(key, entries);
+  }
+
   static Future<void> reorderMealInSlot(
       DateTime date, String slot, int oldIndex, int newIndex) async {
     final cachedJson = await _cache.getMealPlansJson();
