@@ -203,5 +203,9 @@
     "placeholders": {
       "count": {}
     }
-  }
+  },
+  "viewAll": "عرض الكل",
+  "more": "المزيد",
+  "meals": "وجبات",
+  "days": "أيام"
 }

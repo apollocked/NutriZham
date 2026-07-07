@@ -203,5 +203,9 @@
     "placeholders": {
       "count": {}
     }
-  }
+  },
+  "viewAll": "View all",
+  "more": "more",
+  "meals": "Meals",
+  "days": "Days"
 }

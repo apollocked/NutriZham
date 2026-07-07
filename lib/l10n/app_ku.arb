@@ -203,5 +203,9 @@
     "placeholders": {
       "count": {}
     }
-  }
+  },
+  "viewAll": "بینینی هەموو",
+  "more": "زیاتر",
+  "meals": "خواردن",
+  "days": "ڕۆژ"
 }

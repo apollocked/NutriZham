@@ -564,4 +564,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String recipeCount(Object count) {
     return '$count وصفة';
   }
+
+  @override
+  String get viewAll => 'عرض الكل';
+
+  @override
+  String get more => 'المزيد';
+
+  @override
+  String get meals => 'وجبات';
+
+  @override
+  String get days => 'أيام';
 }

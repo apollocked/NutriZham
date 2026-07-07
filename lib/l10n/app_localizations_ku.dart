@@ -567,4 +567,16 @@ class AppLocalizationsKu extends AppLocalizations {
   String recipeCount(Object count) {
     return '$count ڕێچەتە';
   }
+
+  @override
+  String get viewAll => 'بینینی هەموو';
+
+  @override
+  String get more => 'زیاتر';
+
+  @override
+  String get meals => 'خواردن';
+
+  @override
+  String get days => 'ڕۆژ';
 }

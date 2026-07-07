@@ -567,4 +567,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String recipeCount(Object count) {
     return '$count recipes';
   }
+
+  @override
+  String get viewAll => 'View all';
+
+  @override
+  String get more => 'more';
+
+  @override
+  String get meals => 'Meals';
+
+  @override
+  String get days => 'Days';
 }

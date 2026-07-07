@@ -6,12 +6,12 @@ import 'package:nutrizham/l10n/app_localizations.dart';
 
 class ProfileStatsRow extends StatelessWidget {
   final int favoriteCount;
-  final int plannedCount;
+  final int totalRecipeCount;
 
   const ProfileStatsRow({
     super.key,
     required this.favoriteCount,
-    required this.plannedCount,
+    required this.totalRecipeCount,
   });
 
   @override
@@ -41,12 +41,12 @@ class ProfileStatsRow extends StatelessWidget {
             color: Colors.transparent,
             child: InkWell(
               borderRadius: BorderRadius.circular(20),
-              onTap: () => context.go('/planner'),
+              onTap: () => context.go('/home'),
               child: StatCard(
-                  icon: Icons.calendar_today_outlined,
-                  label: loc.mealPlanner,
-                  value: '$plannedCount',
-                  color: Theme.of(context).colorScheme.primary),
+                  icon: Icons.menu_book_rounded,
+                  label: loc.recipes,
+                  value: '$totalRecipeCount',
+                  color: AppColors.accentTeal),
             ),
           ),
         ),

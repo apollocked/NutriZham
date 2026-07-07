@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nutrizham/data/models/meal_plan_entry.dart';
 import 'package:nutrizham/presentation/blocs/auth_cubit.dart';
 import 'package:nutrizham/presentation/blocs/settings_cubit.dart';
 import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
@@ -9,11 +10,10 @@ import 'package:nutrizham/presentation/blocs/recipe_cubit.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:nutrizham/presentation/widgets/common/shimmer_loading.dart';
 import 'package:nutrizham/presentation/widgets/profile/logout_dialog.dart';
-import 'package:nutrizham/data/models/meal_plan_entry.dart';
 import 'package:nutrizham/presentation/widgets/profile/profile_header.dart';
 import 'package:nutrizham/presentation/widgets/profile/profile_stats_row.dart';
 import 'package:nutrizham/presentation/widgets/profile/profile_menu_card.dart';
-import 'package:nutrizham/presentation/widgets/profile/profile_meal_plan_section.dart';
+import 'package:nutrizham/presentation/widgets/profile/profile_weekly_summary.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 import 'package:nutrizham/core/utils/connectivity_helper.dart';
 
@@ -26,11 +26,18 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   List<Recipe> _allRecipes = [];
+  final _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _loadData();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadData() async {
@@ -52,6 +59,10 @@ class _ProfilePageState extends State<ProfilePage> {
       if (mounted) setState(() => _allRecipes = allRecipes);
     } catch (_) {}
   }
+
+  List<Recipe> get _favoriteRecipes => _allRecipes
+      .where((r) => context.read<FavoritesCubit>().isFavorite(r.id))
+      .toList();
 
   Future<void> _logOutAccount() async {
     if (!context.guardOnline()) return;
@@ -78,35 +89,43 @@ class _ProfilePageState extends State<ProfilePage> {
       final user = authState.user;
       final planner = context.watch<MealPlannerCubit>();
       final plannerState = planner.state;
-      final mealPlans = plannerState is PlannerLoaded ? plannerState.mealPlans : <String, List<MealPlanEntry>>{};
+      final mealPlans = plannerState is PlannerLoaded
+          ? plannerState.mealPlans
+          : <String, List<MealPlanEntry>>{};
+      final weekStart = plannerState is PlannerLoaded
+          ? plannerState.weekStart
+          : DateTime.now();
+      final favRecipes = _favoriteRecipes;
 
       return Scaffold(
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(children: [
-              const SizedBox(height: 8),
-              ProfileHeader(
-                  username: user.username, email: user.email, age: user.age),
-              ProfileStatsRow(
-                  favoriteCount: _allRecipes.where((r) => context.read<FavoritesCubit>().isFavorite(r.id)).length,
-                  plannedCount: planner.count),
-              ProfileMenuCard(
-                  onFeatures: () => context.push('/features'),
-                  onSettings: () => context.push('/settings'),
-                  onLogout: _logOutAccount),
-              ProfileMealPlanSection(
-                mealPlans: mealPlans,
-                allRecipes: _allRecipes,
-                dateKey: plannerState is PlannerLoaded
-                    ? '${plannerState.selectedDate.year}-${plannerState.selectedDate.month.toString().padLeft(2, '0')}-${plannerState.selectedDate.day.toString().padLeft(2, '0')}'
-                    : '',
-                dailyCaloriesGoal: plannerState is PlannerLoaded ? plannerState.dailyCaloriesGoal : 2000,
-                dailyProteinGoal: plannerState is PlannerLoaded ? plannerState.dailyProteinGoal : 150,
-                dailyCarbsGoal: plannerState is PlannerLoaded ? plannerState.dailyCarbsGoal : 250,
-                dailyFatsGoal: plannerState is PlannerLoaded ? plannerState.dailyFatsGoal : 65,
-              ),
-              const SizedBox(height: 24),
-            ]),
+          child: RefreshIndicator(
+            onRefresh: _loadData,
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              controller: _scrollController,
+              child: Column(children: [
+                const SizedBox(height: 8),
+                ProfileHeader(
+                    username: user.username,
+                    email: user.email,
+                    age: user.age,
+                    createdAt: user.createdAt),
+                ProfileStatsRow(
+                    favoriteCount: favRecipes.length,
+                    totalRecipeCount: _allRecipes.length),
+                ProfileWeeklySummary(
+                  mealPlans: mealPlans,
+                  weekStart: weekStart,
+                  allRecipes: _allRecipes,
+                ),
+                ProfileMenuCard(
+                    onFeatures: () => context.push('/features'),
+                    onSettings: () => context.push('/settings'),
+                    onLogout: _logOutAccount),
+                const SizedBox(height: 24),
+              ]),
+            ),
           ),
         ),
       );

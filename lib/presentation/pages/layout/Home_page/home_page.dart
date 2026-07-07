@@ -109,6 +109,8 @@ class _HomePageState extends State<HomePage> {
       }
     }
     final cubit = context.watch<RecipeCubit>();
+    final favState = context.watch<FavoritesCubit>().state;
+    final isFavLoading = favState is FavoritesInitial || favState is FavoritesLoading;
     final paginatedRecipes = _paginatedRecipes;
     final loc = AppLocalizations.of(context)!;
 
@@ -141,19 +143,21 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               child: cubit.recipes.isEmpty && cubit.isLoading
                   ? const ShimmerRecipeGrid()
-                  : RecipeGrid(
-                      recipes: paginatedRecipes,
-                      hasMore: cubit.hasMore,
-                      isLoadingMore: cubit.isLoadingMore,
-                      isLoading: cubit.isLoading,
-                      isOffline: cubit.isOffline,
-                      showFavoritesOnly: _showFavoritesOnly,
-                      scrollController: _scrollController,
-                      onLoadMore:
-                          _selectedCategory == null && !_showFavoritesOnly
-                              ? _loadNextBatch
-                              : null,
-                    ),
+                  : _showFavoritesOnly && isFavLoading
+                      ? const ShimmerRecipeGrid()
+                      : RecipeGrid(
+                          recipes: paginatedRecipes,
+                          hasMore: cubit.hasMore,
+                          isLoadingMore: cubit.isLoadingMore,
+                          isLoading: cubit.isLoading,
+                          isOffline: cubit.isOffline,
+                          showFavoritesOnly: _showFavoritesOnly,
+                          scrollController: _scrollController,
+                          onLoadMore:
+                              _selectedCategory == null && !_showFavoritesOnly
+                                  ? _loadNextBatch
+                                  : null,
+                        ),
             ),
           ],
         ),
