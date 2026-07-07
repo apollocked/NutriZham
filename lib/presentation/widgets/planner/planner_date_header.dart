@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
-import 'package:nutrizham/presentation/widgets/planner/grocery_list_sheet.dart';
 
 class PlannerDateHeader extends StatelessWidget {
   final DateTime selectedDate;
-  final List<Recipe> allWeekRecipes;
+  final bool hasMeals;
+  final VoidCallback onGroceryList;
 
   const PlannerDateHeader({
     super.key,
     required this.selectedDate,
-    required this.allWeekRecipes,
+    required this.hasMeals,
+    required this.onGroceryList,
   });
 
   @override
@@ -27,9 +27,9 @@ class PlannerDateHeader extends StatelessWidget {
             style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
           ),
           const Spacer(),
-          if (allWeekRecipes.isNotEmpty)
+          if (hasMeals)
             FilledButton.tonalIcon(
-              onPressed: () => GroceryListSheet.show(context, allWeekRecipes),
+              onPressed: onGroceryList,
               icon: const Icon(Icons.shopping_cart_rounded, size: 16),
               label: Text(loc.groceryList),
               style: FilledButton.styleFrom(

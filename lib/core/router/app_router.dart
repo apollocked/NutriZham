@@ -11,6 +11,7 @@ import 'package:nutrizham/presentation/pages/layout/main_navigation.dart';
 import 'package:nutrizham/presentation/pages/layout/Home_page/home_page.dart';
 import 'package:nutrizham/presentation/pages/layout/Search_page/search_page.dart';
 import 'package:nutrizham/presentation/pages/layout/Planner_page/planner_page.dart';
+import 'package:nutrizham/presentation/pages/layout/Planner_page/grocery_list_page.dart';
 import 'package:nutrizham/presentation/pages/layout/Profile_page/profile_page.dart';
 import 'package:nutrizham/presentation/pages/layout/Details_page/details_screen.dart';
 import 'package:nutrizham/presentation/pages/layout/Profile_page/settings_page/settings_page.dart';
@@ -100,6 +101,13 @@ GoRouter buildRouter() {
         pageBuilder: (context, state) {
           final recipe = state.extra as Recipe;
           return _slideUpPage(RecipeDetailScreen(recipe: recipe));
+        },
+      ),
+      GoRoute(
+        path: '/planner/grocery-list',
+        pageBuilder: (context, state) {
+          final recipes = state.extra as List<Recipe>;
+          return _slideUpPage(GroceryListPage(allRecipes: recipes));
         },
       ),
       GoRoute(

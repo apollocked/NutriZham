@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutrizham/data/models/meal_plan_entry.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 import 'package:nutrizham/presentation/blocs/meal_planner_cubit.dart';
@@ -65,19 +65,6 @@ class _PlannerPageState extends State<PlannerPage> {
     });
   }
 
-  List<Recipe> _allWeekRecipes(Map<String, List<MealPlanEntry>> mealPlans, DateTime weekStart) {
-    final result = <Recipe>[];
-    for (int i = 0; i < 7; i++) {
-      final day = weekStart.add(Duration(days: i));
-      final key = '${day.year}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}';
-      for (final entry in (mealPlans[key] ?? [])) {
-        final r = _allRecipes.where((x) => x.id == entry.recipeId);
-        if (r.isNotEmpty && !result.contains(r.first)) result.add(r.first);
-      }
-    }
-    return result;
-  }
-
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
@@ -103,7 +90,6 @@ class _PlannerPageState extends State<PlannerPage> {
     final totalCarbs = _total('carbs');
     final totalFats = _total('fats');
     final hasMeals = planner.mealsForSelectedDate.isNotEmpty;
-    final weekRecipes = _allWeekRecipes(loaded.mealPlans, weekStart);
 
     final slots = ['breakfast', 'lunch', 'dinner', 'snack'];
     final slotCategories = {
@@ -144,7 +130,11 @@ class _PlannerPageState extends State<PlannerPage> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  PlannerDateHeader(selectedDate: selectedDate, allWeekRecipes: weekRecipes),
+                  PlannerDateHeader(
+                    selectedDate: selectedDate,
+                    hasMeals: hasMeals,
+                    onGroceryList: () => context.push('/planner/grocery-list', extra: _allRecipes),
+                  ),
                   const SizedBox(height: 8),
                   ...slots.map((slot) => MealSlotSection(
                     key: ValueKey('${selectedDate.millisecondsSinceEpoch}_$slot'),
