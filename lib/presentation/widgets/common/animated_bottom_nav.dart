@@ -81,7 +81,7 @@ class _AnimatedBottomNavState extends State<AnimatedBottomNav>
                 animation: _pillAnimation,
                 builder: (context, _) {
                   final lerp = _pillAnimation.value;
-                  final from = _previousIndex * itemWidth + itemWidth * 0.025;
+                  final from = _previousIndex * itemWidth + itemWidth * 0.15;
                   final to =
                       widget.selectedIndex * itemWidth + itemWidth * 0.15;
                   final pillOffset = from + (to - from) * lerp;
