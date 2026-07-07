@@ -25,33 +25,74 @@ class AppTheme {
   static TextTheme _textTheme(Color primary, Color secondary) {
     return TextTheme(
       displayLarge: _style(
-          fontSize: 36, fontWeight: FontWeight.w700, letterSpacing: -1.0, color: primary),
+          fontSize: 36,
+          fontWeight: FontWeight.w700,
+          letterSpacing: -1.0,
+          color: primary),
       displayMedium: _style(
-          fontSize: 30, fontWeight: FontWeight.w700, letterSpacing: -0.5, color: primary),
+          fontSize: 30,
+          fontWeight: FontWeight.w700,
+          letterSpacing: -0.5,
+          color: primary),
       displaySmall: _style(
-          fontSize: 26, fontWeight: FontWeight.w600, letterSpacing: -0.25, color: primary),
+          fontSize: 26,
+          fontWeight: FontWeight.w600,
+          letterSpacing: -0.25,
+          color: primary),
       headlineLarge: _style(
-          fontSize: 24, fontWeight: FontWeight.w600, letterSpacing: -0.25, color: primary),
-      headlineMedium: _style(fontSize: 20, fontWeight: FontWeight.w600, color: primary),
-      headlineSmall: _style(fontSize: 18, fontWeight: FontWeight.w600, color: primary),
+          fontSize: 24,
+          fontWeight: FontWeight.w600,
+          letterSpacing: -0.25,
+          color: primary),
+      headlineMedium:
+          _style(fontSize: 20, fontWeight: FontWeight.w600, color: primary),
+      headlineSmall:
+          _style(fontSize: 18, fontWeight: FontWeight.w600, color: primary),
       titleLarge: _style(
-          fontSize: 17, fontWeight: FontWeight.w600, letterSpacing: 0.15, color: primary),
-      titleMedium:
-          _style(fontSize: 15, fontWeight: FontWeight.w500, letterSpacing: 0.1, color: primary),
-      titleSmall:
-          _style(fontSize: 13, fontWeight: FontWeight.w500, letterSpacing: 0.1, color: primary),
-      bodyLarge:
-          _style(fontSize: 16, fontWeight: FontWeight.w400, letterSpacing: 0.15, color: primary),
-      bodyMedium:
-          _style(fontSize: 14, fontWeight: FontWeight.w400, letterSpacing: 0.25, color: primary),
-      bodySmall:
-          _style(fontSize: 12, fontWeight: FontWeight.w400, letterSpacing: 0.4, color: secondary),
-      labelLarge:
-          _style(fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 0.1, color: primary),
-      labelMedium:
-          _style(fontSize: 12, fontWeight: FontWeight.w500, letterSpacing: 0.5, color: secondary),
-      labelSmall:
-          _style(fontSize: 11, fontWeight: FontWeight.w500, letterSpacing: 0.5, color: secondary),
+          fontSize: 17,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.15,
+          color: primary),
+      titleMedium: _style(
+          fontSize: 15,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.1,
+          color: primary),
+      titleSmall: _style(
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.1,
+          color: primary),
+      bodyLarge: _style(
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          letterSpacing: 0.15,
+          color: primary),
+      bodyMedium: _style(
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          letterSpacing: 0.25,
+          color: primary),
+      bodySmall: _style(
+          fontSize: 12,
+          fontWeight: FontWeight.w400,
+          letterSpacing: 0.4,
+          color: secondary),
+      labelLarge: _style(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.1,
+          color: primary),
+      labelMedium: _style(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.5,
+          color: secondary),
+      labelSmall: _style(
+          fontSize: 11,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.5,
+          color: secondary),
     );
   }
 
@@ -79,8 +120,8 @@ class AppTheme {
       onPrimaryContainer: AppColors.primaryDark,
       secondary: AppColors.accentTeal,
       onSecondary: Colors.white,
-      secondaryContainer: Color(0xFFCCFBF1),
-      onSecondaryContainer: Color(0xFF134E4A),
+      secondaryContainer: Color(0xFFE8F5F1),
+      onSecondaryContainer: Color(0xFF214C43),
       tertiary: AppColors.accentOrange,
       onTertiary: Colors.white,
       surface: AppColors.lightSurface,
@@ -118,7 +159,8 @@ class AppTheme {
       elevation: 0,
       backgroundColor: AppColors.lightSurface.withOpacity(0.75),
       indicatorColor: AppColors.primary.withOpacity(0.12),
-      indicatorShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      indicatorShape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
       surfaceTintColor: Colors.transparent,
       height: 68,
@@ -146,7 +188,8 @@ class AppTheme {
         if (s.contains(WidgetState.selected)) {
           return const IconThemeData(color: AppColors.primary, size: 24);
         }
-        return const IconThemeData(color: AppColors.lightTextSecondary, size: 22);
+        return const IconThemeData(
+            color: AppColors.lightTextSecondary, size: 22);
       }),
     ),
     cardTheme: CardThemeData(
@@ -273,8 +316,8 @@ class AppTheme {
           borderRadius: BorderRadius.circular(24), side: BorderSide.none),
       padding: const EdgeInsets.symmetric(horizontal: 6),
     ),
-    dividerTheme:
-        const DividerThemeData(color: AppColors.lightOutline, thickness: 1, space: 1),
+    dividerTheme: const DividerThemeData(
+        color: AppColors.lightOutline, thickness: 1, space: 1),
     dialogTheme: DialogThemeData(
       backgroundColor: AppColors.lightSurface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
@@ -378,7 +421,8 @@ class AppTheme {
       elevation: 0,
       backgroundColor: AppColors.darkSurface.withOpacity(0.85),
       indicatorColor: AppColors.primary.withOpacity(0.2),
-      indicatorShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      indicatorShape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
       surfaceTintColor: Colors.transparent,
       height: 68,
@@ -406,7 +450,8 @@ class AppTheme {
         if (s.contains(WidgetState.selected)) {
           return const IconThemeData(color: AppColors.primary, size: 24);
         }
-        return const IconThemeData(color: AppColors.darkTextSecondary, size: 22);
+        return const IconThemeData(
+            color: AppColors.darkTextSecondary, size: 22);
       }),
     ),
     cardTheme: CardThemeData(
@@ -473,8 +518,8 @@ class AppTheme {
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24), side: BorderSide.none),
     ),
-    dividerTheme:
-        const DividerThemeData(color: AppColors.darkOutline, thickness: 1, space: 1),
+    dividerTheme: const DividerThemeData(
+        color: AppColors.darkOutline, thickness: 1, space: 1),
     dialogTheme: DialogThemeData(
       backgroundColor: AppColors.darkSurface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),

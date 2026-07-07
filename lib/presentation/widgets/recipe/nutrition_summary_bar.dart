@@ -22,37 +22,38 @@ class NutritionSummaryBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildMiniNutrient(
+          _buildMiniNutrient(context,
               '${nutrition.calories}', AppLocalizations.of(context)!.kcal, AppColors.caloriesColor),
           Container(
               height: 30,
               width: 1,
               color: theme.colorScheme.outline.withOpacity(0.3)),
-          _buildMiniNutrient(
+          _buildMiniNutrient(context,
               '${nutrition.protein}g', AppLocalizations.of(context)!.proteinAbbr, AppColors.proteinColor),
           Container(
               height: 30,
               width: 1,
               color: theme.colorScheme.outline.withOpacity(0.3)),
-          _buildMiniNutrient('${nutrition.carbs}g', AppLocalizations.of(context)!.carbsAbbr, AppColors.carbsColor),
+          _buildMiniNutrient(context, '${nutrition.carbs}g', AppLocalizations.of(context)!.carbsAbbr, AppColors.carbsColor),
           Container(
               height: 30,
               width: 1,
               color: theme.colorScheme.outline.withOpacity(0.3)),
-          _buildMiniNutrient('${nutrition.fats}g', AppLocalizations.of(context)!.fatsAbbr, AppColors.fatsColor),
+          _buildMiniNutrient(context, '${nutrition.fats}g', AppLocalizations.of(context)!.fatsAbbr, AppColors.fatsColor),
         ],
       ),
     );
   }
 
-  Widget _buildMiniNutrient(String value, String label, Color color) {
+  Widget _buildMiniNutrient(BuildContext context, String value, String label, Color color) {
+    final muted = Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.7);
     return Column(
       children: [
         Text(value,
             style: TextStyle(
                 fontWeight: FontWeight.w700, fontSize: 14, color: color)),
         const SizedBox(height: 2),
-        Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+        Text(label, style: TextStyle(fontSize: 10, color: muted)),
       ],
     );
   }

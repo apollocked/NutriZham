@@ -65,7 +65,7 @@ class _AnimatedBottomNavState extends State<AnimatedBottomNav>
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: Colors.black
+            color: theme.shadowColor
                 .withOpacity(theme.brightness == Brightness.dark ? 0.4 : 0.06),
             blurRadius: 20,
             offset: const Offset(0, 4),

@@ -34,11 +34,11 @@ class PrimaryButton extends StatelessWidget {
               (backgroundColor ?? AppColors.primary).withOpacity(0.6),
         ),
         child: isLoading
-            ? const SizedBox(
+            ? SizedBox(
                 width: 22,
                 height: 22,
                 child: CircularProgressIndicator(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.onPrimary,
                   strokeWidth: 2.5,
                 ),
               )

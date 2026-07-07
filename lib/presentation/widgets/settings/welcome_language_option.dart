@@ -65,8 +65,8 @@ class WelcomeLanguageOption extends StatelessWidget {
                 decoration: BoxDecoration(
                     color: theme.colorScheme.primary,
                     borderRadius: BorderRadius.circular(20)),
-                child: const Icon(Icons.check_rounded,
-                    color: Colors.white, size: 16)),
+                child: Icon(Icons.check_rounded,
+                    color: theme.colorScheme.onPrimary, size: 16)),
         ]),
       ),
     );

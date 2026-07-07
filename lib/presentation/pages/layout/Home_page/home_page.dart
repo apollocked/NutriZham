@@ -11,6 +11,7 @@ import 'package:nutrizham/presentation/widgets/recipe/recipe_of_the_day_card.dar
 import 'package:nutrizham/presentation/widgets/recipe/recipe_section_header.dart';
 import 'package:nutrizham/presentation/widgets/recipe/recipe_grid.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
+import 'package:nutrizham/core/constants/app_colors.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -85,13 +86,15 @@ class _HomePageState extends State<HomePage> {
           id: '0',
           title: {},
           icon: '',
-          nutrition: NutritionalInfo(calories: 0, protein: 0, carbs: 0, fats: 0),
+          nutrition:
+              NutritionalInfo(calories: 0, protein: 0, carbs: 0, fats: 0),
           ingredients: {},
           steps: {},
           category: MealCategory.snack);
     }
-    final index = DateTime.now().difference(DateTime(DateTime.now().year, 1, 1)).inDays %
-        all.length;
+    final index =
+        DateTime.now().difference(DateTime(DateTime.now().year, 1, 1)).inDays %
+            all.length;
     _cachedRecipeOfTheDay = all[index];
     return _cachedRecipeOfTheDay!;
   }
@@ -114,7 +117,7 @@ class _HomePageState extends State<HomePage> {
         IconButton(
             icon: Icon(
                 _showFavoritesOnly ? Icons.favorite : Icons.favorite_outline,
-                color: _showFavoritesOnly ? Colors.red.shade400 : null),
+                color: _showFavoritesOnly ? AppColors.accentRed : null),
             onPressed: () =>
                 setState(() => _showFavoritesOnly = !_showFavoritesOnly)),
       ]),
@@ -128,7 +131,8 @@ class _HomePageState extends State<HomePage> {
             if (_selectedCategory == null && !_showFavoritesOnly)
               RecipeOfTheDayCard(
                 recipe: _recipeOfTheDay,
-                onTap: () => context.push('/recipe/${_recipeOfTheDay.id}', extra: _recipeOfTheDay),
+                onTap: () => context.push('/recipe/${_recipeOfTheDay.id}',
+                    extra: _recipeOfTheDay),
               ),
             RecipeSectionHeader(
               showFavoritesOnly: _showFavoritesOnly,
@@ -145,9 +149,10 @@ class _HomePageState extends State<HomePage> {
                       isOffline: cubit.isOffline,
                       showFavoritesOnly: _showFavoritesOnly,
                       scrollController: _scrollController,
-                      onLoadMore: _selectedCategory == null && !_showFavoritesOnly
-                          ? _loadNextBatch
-                          : null,
+                      onLoadMore:
+                          _selectedCategory == null && !_showFavoritesOnly
+                              ? _loadNextBatch
+                              : null,
                     ),
             ),
           ],

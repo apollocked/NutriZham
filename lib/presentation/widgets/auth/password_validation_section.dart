@@ -62,14 +62,14 @@ class PasswordValidationSection extends StatelessWidget {
               child: ElevatedButton.icon(
                 onPressed: isLoading ? null : onValidate,
                 icon: isLoading
-                    ? const SizedBox(width: 16, height: 16,
+                    ? SizedBox(width: 16, height: 16,
                         child: CircularProgressIndicator(strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white)))
+                            valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.onPrimary)))
                     : const Icon(Icons.check),
                 label: Text(isLoading ? loc.validating : loc.verifyPassword),
                 style: ElevatedButton.styleFrom(
                     backgroundColor: theme.colorScheme.primary,
-                    foregroundColor: Colors.white,
+                    foregroundColor: theme.colorScheme.onPrimary,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12))),
