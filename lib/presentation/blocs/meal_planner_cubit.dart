@@ -2,63 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/data/datasources/meal_planner_service.dart';
 import 'package:nutrizham/data/datasources/nutrition_goals_service.dart';
 import 'package:nutrizham/data/models/meal_plan_entry.dart';
-
-sealed class MealPlannerState {
-  const MealPlannerState();
-}
-
-class PlannerInitial extends MealPlannerState {
-  const PlannerInitial();
-}
-
-class PlannerLoading extends MealPlannerState {
-  const PlannerLoading();
-}
-
-class PlannerLoaded extends MealPlannerState {
-  final Map<String, List<MealPlanEntry>> mealPlans;
-  final DateTime selectedDate;
-  final DateTime weekStart;
-  final int dailyCaloriesGoal;
-  final double dailyProteinGoal;
-  final double dailyCarbsGoal;
-  final double dailyFatsGoal;
-
-  const PlannerLoaded({
-    required this.mealPlans,
-    required this.selectedDate,
-    required this.weekStart,
-    this.dailyCaloriesGoal = 2000,
-    this.dailyProteinGoal = 150,
-    this.dailyCarbsGoal = 250,
-    this.dailyFatsGoal = 65,
-  });
-
-  PlannerLoaded copyWith({
-    Map<String, List<MealPlanEntry>>? mealPlans,
-    DateTime? selectedDate,
-    DateTime? weekStart,
-    int? dailyCaloriesGoal,
-    double? dailyProteinGoal,
-    double? dailyCarbsGoal,
-    double? dailyFatsGoal,
-  }) {
-    return PlannerLoaded(
-      mealPlans: mealPlans ?? this.mealPlans,
-      selectedDate: selectedDate ?? this.selectedDate,
-      weekStart: weekStart ?? this.weekStart,
-      dailyCaloriesGoal: dailyCaloriesGoal ?? this.dailyCaloriesGoal,
-      dailyProteinGoal: dailyProteinGoal ?? this.dailyProteinGoal,
-      dailyCarbsGoal: dailyCarbsGoal ?? this.dailyCarbsGoal,
-      dailyFatsGoal: dailyFatsGoal ?? this.dailyFatsGoal,
-    );
-  }
-}
-
-class PlannerError extends MealPlannerState {
-  final String message;
-  const PlannerError(this.message);
-}
+import 'package:nutrizham/presentation/blocs/planner_state.dart';
+export 'package:nutrizham/presentation/blocs/planner_state.dart';
 
 class MealPlannerCubit extends Cubit<MealPlannerState> {
   MealPlannerCubit() : super(const PlannerInitial());
@@ -74,8 +19,7 @@ class MealPlannerCubit extends Cubit<MealPlannerState> {
   List<MealPlanEntry> get mealsForSelectedDate {
     final s = state;
     if (s is! PlannerLoaded) return [];
-    final key = _dateKey(s.selectedDate);
-    return s.mealPlans[key] ?? [];
+    return s.mealPlans[_dateKey(s.selectedDate)] ?? [];
   }
 
   List<MealPlanEntry> getMealsBySlot(String slot) {
@@ -90,9 +34,7 @@ class MealPlannerCubit extends Cubit<MealPlannerState> {
       final goals = await NutritionGoalsService.getNutritionGoals();
       final today = DateTime.now();
       emit(PlannerLoaded(
-        mealPlans: plans,
-        selectedDate: today,
-        weekStart: _weekStart(today),
+        mealPlans: plans, selectedDate: today, weekStart: _weekStart(today),
         dailyCaloriesGoal: goals['calories'] as int,
         dailyProteinGoal: (goals['protein'] as num).toDouble(),
         dailyCarbsGoal: (goals['carbs'] as num).toDouble(),
@@ -142,61 +84,40 @@ class MealPlannerCubit extends Cubit<MealPlannerState> {
     emit(s.copyWith(mealPlans: plans));
   }
 
-  Future<void> moveMealToSlot(
-      String recipeId, String fromSlot, String toSlot) async {
+  Future<void> moveMealToSlot(String recipeId, String fromSlot, String toSlot) async {
     final s = state;
     if (s is! PlannerLoaded) return;
-    await MealPlannerService.moveMealToSlot(
-        recipeId, s.selectedDate, fromSlot, toSlot);
+    await MealPlannerService.moveMealToSlot(recipeId, s.selectedDate, fromSlot, toSlot);
     final plans = await MealPlannerService.getAllMealPlans();
     emit(s.copyWith(mealPlans: plans));
   }
 
-  Future<void> reorderMealInSlot(
-      String slot, int oldIndex, int newIndex) async {
+  Future<void> reorderMealInSlot(String slot, int oldIndex, int newIndex) async {
     final s = state;
     if (s is! PlannerLoaded) return;
-    await MealPlannerService.reorderMealInSlot(
-        s.selectedDate, slot, oldIndex, newIndex);
+    await MealPlannerService.reorderMealInSlot(s.selectedDate, slot, oldIndex, newIndex);
     final plans = await MealPlannerService.getAllMealPlans();
     emit(s.copyWith(mealPlans: plans));
   }
 
   Future<void> updateNutritionGoals({
-    required int calories,
-    required double protein,
-    required double carbs,
-    required double fats,
+    required int calories, required double protein, required double carbs, required double fats,
   }) async {
     final s = state;
     if (s is! PlannerLoaded) return;
-    await NutritionGoalsService.updateNutritionGoals(
-      calories: calories,
-      protein: protein,
-      carbs: carbs,
-      fats: fats,
-    );
-    emit(s.copyWith(
-      dailyCaloriesGoal: calories,
-      dailyProteinGoal: protein,
-      dailyCarbsGoal: carbs,
-      dailyFatsGoal: fats,
-    ));
+    await NutritionGoalsService.updateNutritionGoals(calories: calories, protein: protein, carbs: carbs, fats: fats);
+    emit(s.copyWith(dailyCaloriesGoal: calories, dailyProteinGoal: protein, dailyCarbsGoal: carbs, dailyFatsGoal: fats));
   }
 
   bool isInPlan(String recipeId) {
     final s = state;
     if (s is! PlannerLoaded) return false;
-    return s.mealPlans.values
-        .expand((entries) => entries)
-        .any((e) => e.recipeId == recipeId);
+    return s.mealPlans.values.expand((entries) => entries).any((e) => e.recipeId == recipeId);
   }
 
   int get count {
     final s = state;
     if (s is! PlannerLoaded) return 0;
-    return s.mealPlans.values
-        .expand((entries) => entries)
-        .length;
+    return s.mealPlans.values.expand((entries) => entries).length;
   }
 }

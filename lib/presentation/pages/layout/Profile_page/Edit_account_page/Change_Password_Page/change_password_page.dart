@@ -23,7 +23,6 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   final _currentPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-
   bool _isLoading = false;
   bool _showCurrentPassword = false;
   bool _showNewPassword = false;
@@ -123,7 +122,6 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-
     return Scaffold(
       appBar: CustomAppBar(title: loc.changePassword),
       body: SingleChildScrollView(
@@ -140,17 +138,13 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               labelText: loc.enterCurrentPassword,
               obscureText: !_showCurrentPassword,
               onToggleVisibility: () => setState(() => _showCurrentPassword = !_showCurrentPassword),
-              validator: (v) => v?.isEmpty == true ? loc.currentPasswordRequired : null,
-            ),
+              validator: (v) => v?.isEmpty == true ? loc.currentPasswordRequired : null),
             const SizedBox(height: 8),
             PasswordValidationSection(
               isVisible: _currentPasswordController.text.isNotEmpty,
-              isLoading: _isLoading,
-              isValid: _isCurrentPasswordValid,
-              errorMessage: _currentPasswordError,
-              showValidateButton: _showValidateButton,
-              onValidate: _validateCurrentPassword,
-            ),
+              isLoading: _isLoading, isValid: _isCurrentPasswordValid,
+              errorMessage: _currentPasswordError, showValidateButton: _showValidateButton,
+              onValidate: _validateCurrentPassword),
             const SizedBox(height: 24),
             SectionHeader(title: loc.newPassword, padding: EdgeInsets.zero),
             const SizedBox(height: 8),
@@ -163,37 +157,28 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 if (v?.isEmpty == true) return loc.newPasswordRequired;
                 if (v!.length < 6) return loc.passwordTooShort;
                 return null;
-              },
-            ),
+              }),
             const SizedBox(height: 24),
             SectionHeader(title: loc.confirmPassword, padding: EdgeInsets.zero),
             const SizedBox(height: 8),
             PasswordField(
               controller: _confirmPasswordController,
               labelText: loc.confirmNewPassword,
-              obscureText: !_showConfirmPassword,
-              textInputAction: TextInputAction.done,
+              obscureText: !_showConfirmPassword, textInputAction: TextInputAction.done,
               onToggleVisibility: () => setState(() => _showConfirmPassword = !_showConfirmPassword),
               validator: (v) {
                 if (v?.isEmpty == true) return loc.confirmPasswordRequired;
                 if (v != _newPasswordController.text) return loc.passwordsDoNotMatch;
                 return null;
-              },
-            ),
+              }),
             const SizedBox(height: 40),
             Row(children: [
-              Expanded(
-                  child: SecondaryButton(
-                      text: loc.cancel,
-                      onPressed: () => Navigator.pop(context))),
+              Expanded(child: SecondaryButton(text: loc.cancel, onPressed: () => Navigator.pop(context))),
               const SizedBox(width: 10),
-              Expanded(
-                  child: PrimaryButton(
-                      text: loc.updatePassword,
-                      onPressed: (_isLoading || !_isCurrentPasswordValid)
-                          ? null
-                          : _changePassword,
-                      isLoading: _isLoading)),
+              Expanded(child: PrimaryButton(
+                  text: loc.updatePassword,
+                  onPressed: (_isLoading || !_isCurrentPasswordValid) ? null : _changePassword,
+                  isLoading: _isLoading)),
             ]),
           ]),
         ),

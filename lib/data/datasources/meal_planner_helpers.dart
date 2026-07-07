@@ -7,7 +7,7 @@ final _cache = CacheService();
 final _mealPlansStreamController =
     StreamController<Map<String, List<MealPlanEntry>>>.broadcast();
 
-Stream<Map<String, List<MealPlanEntry>>> get mealPlansStream =>
+Stream<Map<String, List<MealPlanEntry>>> get mealPlansStreamTop =>
     _mealPlansStreamController.stream;
 
 String dateKey(DateTime date) =>
