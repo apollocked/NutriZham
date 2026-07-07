@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/core/constants/app_colors.dart';
-import 'package:nutrizham/data/datasources/firestore_service.dart';
+import 'package:nutrizham/data/datasources/ratings_service.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:nutrizham/data/models/meal_plan_entry.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,7 +29,7 @@ class RecipeDetailScreen extends StatefulWidget {
 class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   int _userRating = 0;
   double _displayRating = 0.0;
-  final FirestoreService _firestoreService = FirestoreService();
+  final RatingsService _ratingsService = RatingsService();
 
   @override
   void initState() {
@@ -40,7 +40,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   }
 
   Future<void> _loadUserRating() async {
-    final rating = await _firestoreService.getUserRating(widget.recipe.id);
+    final rating = await _ratingsService.getUserRating(widget.recipe.id);
     if (!mounted) return;
     setState(() => _userRating = rating);
   }
@@ -130,7 +130,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                         content: Text('${loc.rating}: $rating/5'),
                         backgroundColor: Theme.of(context).colorScheme.primary),
                   );
-                  await _firestoreService.saveRating(widget.recipe.id, rating);
+                  await _ratingsService.saveRating(widget.recipe.id, rating);
                 },
               ),
               const SizedBox(height: 16),

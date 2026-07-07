@@ -79,7 +79,7 @@ class MealPlannerService {
         return merged;
       } else if (cached.isNotEmpty) {
         await _firestoreService
-            .syncMealPlansWithFirestore(_encodeMealPlans(cached) as Map<String, dynamic>);
+            .syncMealPlansWithFirestore(cached.map((date, entries) => MapEntry(date, entries.map((e) => e.toJson()).toList())));
       }
     } catch (_) {}
     _mealPlansStreamController.add(cached);

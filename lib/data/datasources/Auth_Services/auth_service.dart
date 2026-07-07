@@ -1,151 +1,59 @@
-// ignore_for_file: avoid_print
-
-import 'package:nutrizham/data/datasources/Auth_Services/firebase_auth_service.dart';
-import 'package:nutrizham/data/models/user_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nutrizham/core/cache/cache_service.dart';
+import 'package:nutrizham/data/datasources/Auth_Services/firebase_auth_service.dart';
+import 'package:nutrizham/data/datasources/Auth_Services/google_auth_service.dart';
+import 'package:nutrizham/data/datasources/Auth_Services/account_service.dart';
+import 'package:nutrizham/data/datasources/Auth_Services/password_service.dart';
+import 'package:nutrizham/data/models/user_model.dart';
 
 class AuthService {
-  final FirebaseAuthService _firebaseAuth = FirebaseAuthService();
-// In AuthService class
-  Future<void> testLoginFlow(String testEmail, String testPassword) async {
-    print('=== TESTING LOGIN FLOW ===');
+  final FirebaseAuthService _emailAuth = FirebaseAuthService();
+  final GoogleAuthService _googleAuth = GoogleAuthService(
+    auth: FirebaseAuth.instance,
+    firestore: FirebaseFirestore.instance,
+    cache: CacheService(),
+  );
+  final AccountService _account = AccountService(
+    auth: FirebaseAuth.instance,
+    firestore: FirebaseFirestore.instance,
+    cache: CacheService(),
+  );
+  final PasswordService _password = PasswordService(auth: FirebaseAuth.instance);
 
-    // 1. Try to register
-    print('1. Attempting registration...');
-    final regResult = await register(
-      username: 'testuser',
-      email: testEmail,
-      password: testPassword,
-      age: 25,
-    );
-    print('Registration result: ${regResult['success']}');
-    print('Registration message: ${regResult['message']}');
+  Future<bool> isLoggedIn() => _account.isLoggedIn();
+  Future<UserModel?> getCurrentUser() => _account.getCurrentUser();
 
-    if (regResult['success']) {
-      // 2. Try to login immediately
-      print('\n2. Attempting login...');
-      final loginResult = await login(
-        email: testEmail,
-        password: testPassword,
-      );
-      print('Login result: ${loginResult['success']}');
-      print('Login message: ${loginResult['message']}');
-
-      // 3. Check login status
-      print('\n3. Checking isLoggedIn...');
-      final loggedIn = await isLoggedIn();
-      print('isLoggedIn: $loggedIn');
-
-      // 4. Get current user
-      print('\n4. Getting current user...');
-      final currentUser = await getCurrentUser();
-      print('Current user: ${currentUser?.email}');
-    }
-
-    print('=== END TEST ===');
-  }
-
-  // Check if user is logged in
-  Future<bool> isLoggedIn() async {
-    return await _firebaseAuth.isLoggedIn();
-  }
-
-  // Get current user
-  Future<UserModel?> getCurrentUser() async {
-    return await _firebaseAuth.getCurrentUser();
-  }
-
-  // Register new user
   Future<Map<String, dynamic>> register({
     required String username,
     required String email,
     required String password,
     required int age,
-  }) async {
-    return await _firebaseAuth.registerWithEmail(
-      email: email,
-      password: password,
-      username: username,
-      age: age,
-    );
-  }
+  }) => _emailAuth.registerWithEmail(username: username, email: email, password: password, age: age);
 
-  // Login user
   Future<Map<String, dynamic>> login({
     required String email,
     required String password,
-  }) async {
-    return await _firebaseAuth.loginWithEmail(
-      email: email,
-      password: password,
-    );
-  }
+  }) => _emailAuth.loginWithEmail(email: email, password: password);
 
-  // Logout user
-  Future<void> logout() async {
-    await _firebaseAuth.logout();
-  }
+  Future<void> logout() => _emailAuth.logout();
+  Future<Map<String, dynamic>> updateUser(UserModel updatedUser) => _account.updateUserProfile(updatedUser);
+  Future<Map<String, dynamic>> deleteAccount(String userId) => _account.deleteAccount();
+  Future<Map<String, dynamic>> signInWithGoogle() => _googleAuth.signInWithGoogle();
+  Future<Map<String, dynamic>> resetPassword(String email) => _password.resetPassword(email);
 
-  // Update user profile
-  Future<Map<String, dynamic>> updateUser(UserModel updatedUser) async {
-    return await _firebaseAuth.updateUserProfile(updatedUser);
-  }
-
-  // Delete account
-  Future<Map<String, dynamic>> deleteAccount(String userId) async {
-    return await _firebaseAuth.deleteAccount();
-  }
-
-  // NEW: Google Sign-In
-  Future<Map<String, dynamic>> signInWithGoogle() async {
-    return await _firebaseAuth.signInWithGoogle();
-  }
-
-  // NEW: Reset password
-  Future<Map<String, dynamic>> resetPassword(String email) async {
-    return await _firebaseAuth.resetPassword(email);
-  }
-
-  // NEW: Change password
   Future<Map<String, dynamic>> changePassword({
     required String currentPassword,
     required String newPassword,
-  }) async {
-    return await _firebaseAuth.changePassword(
-      currentPassword: currentPassword,
-      newPassword: newPassword,
-    );
-  }
+  }) => _password.changePassword(currentPassword: currentPassword, newPassword: newPassword);
 
-  // NEW: Get auth state stream
-  Stream<UserModel?> get authStateChanges {
-    return _firebaseAuth.authStateChanges;
-  }
+  Stream<UserModel?> get authStateChanges => _emailAuth.authStateChanges;
 
-  // NEW: Check if email exists (optional - needs Firestore query)
-  Future<bool> emailExists(String email) async {
-    try {
-      // You need to implement this by querying Firestore
-      // This is just a placeholder
-      return false;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  // NEW: Check if username exists (optional - needs Firestore query)
-  Future<bool> usernameExists(String username) async {
-    try {
-      // You need to implement this by querying Firestore
-      // This is just a placeholder
-      return false;
-    } catch (e) {
-      return false;
-    }
-  }
+  Future<bool> emailExists(String email) async => false;
+  Future<bool> usernameExists(String username) async => false;
 
   Future<void> clearAllUserData() async {
     await CacheService().clearAuth();
-    await _firebaseAuth.logout();
+    await _emailAuth.logout();
   }
 }

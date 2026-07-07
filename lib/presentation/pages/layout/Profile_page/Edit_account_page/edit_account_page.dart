@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/auth_cubit.dart';
-import 'package:nutrizham/data/datasources/Auth_Services/firebase_auth_service.dart';
+import 'package:nutrizham/data/datasources/Auth_Services/auth_service.dart';
 import 'package:nutrizham/presentation/widgets/common/custom_app_bar.dart';
 import 'package:nutrizham/presentation/widgets/profile/edit_account_form.dart';
 import 'package:nutrizham/core/utils/connectivity_helper.dart';
@@ -22,7 +22,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _ageController = TextEditingController();
-  final _authService = FirebaseAuthService();
+  final _authService = AuthService();
   bool _isLoading = true;
 
   @override

@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:nutrizham/data/models/user_model.dart';
@@ -20,13 +18,10 @@ class FirestoreService {
     return userId != null ? _getUserDoc(userId) : null;
   }
 
-  // ============ USER OPERATIONS ============
-
   Future<void> saveUserData(UserModel user) async {
     try {
       await _getUserDoc(user.id).set(user.toJson(), SetOptions(merge: true));
     } catch (e) {
-      print('Error saving user data: $e');
       rethrow;
     }
   }
@@ -36,8 +31,7 @@ class FirestoreService {
       final doc = await _getUserDoc(userId).get();
       if (doc.exists) return UserModel.fromJson(doc.data()!);
       return null;
-    } catch (e) {
-      print('Error getting user: $e');
+    } catch (_) {
       return null;
     }
   }
@@ -58,12 +52,9 @@ class FirestoreService {
         'updatedAt': DateTime.now().toIso8601String(),
       });
     } catch (e) {
-      print('Error updating user profile: $e');
       rethrow;
     }
   }
-
-  // ============ MEAL PLANS ============
 
   Future<Map<String, dynamic>> getMealPlans() async {
     final userDoc = _currentUserDoc;
@@ -74,8 +65,7 @@ class FirestoreService {
         return Map<String, dynamic>.from(doc.data()!['mealPlans'] ?? {});
       }
       return {};
-    } catch (e) {
-      print('Error getting meal plans: $e');
+    } catch (_) {
       return {};
     }
   }
@@ -89,9 +79,25 @@ class FirestoreService {
         'updatedAt': DateTime.now().toIso8601String(),
       });
     } catch (e) {
-      print('Error setting meal plans: $e');
       rethrow;
     }
+  }
+
+  Future<void> syncMealPlansWithFirestore(Map<String, dynamic> localMealPlans) async {
+    final userDoc = _currentUserDoc;
+    if (userDoc == null) return;
+    try {
+      final doc = await userDoc.get();
+      final firestorePlans = Map<String, dynamic>.from(doc.data()?['mealPlans'] ?? {});
+      final merged = Map<String, dynamic>.from(firestorePlans);
+      localMealPlans.forEach((date, entries) {
+        if (!merged.containsKey(date)) merged[date] = entries;
+      });
+      await userDoc.update({
+        'mealPlans': merged,
+        'updatedAt': DateTime.now().toIso8601String(),
+      });
+    } catch (_) {}
   }
 
   Future<void> updateNutritionGoals({
@@ -111,107 +117,14 @@ class FirestoreService {
         'updatedAt': DateTime.now().toIso8601String(),
       });
     } catch (e) {
-      print('Error updating nutrition goals: $e');
       rethrow;
     }
   }
-
-  // ============ SYNC ============
-
-  Future<void> syncMealPlansWithFirestore(
-      Map<String, dynamic> localMealPlans) async {
-    final userDoc = _currentUserDoc;
-    if (userDoc == null) return;
-    try {
-      final doc = await userDoc.get();
-      final firestorePlans =
-          Map<String, dynamic>.from(doc.data()?['mealPlans'] ?? {});
-      final merged = Map<String, dynamic>.from(firestorePlans);
-      localMealPlans.forEach((date, entries) {
-        if (!merged.containsKey(date)) merged[date] = entries;
-      });
-      await userDoc.update({
-        'mealPlans': merged,
-        'updatedAt': DateTime.now().toIso8601String(),
-      });
-    } catch (e) {
-      print('Error syncing meal plans: $e');
-    }
-  }
-
-  // ============ RATINGS ============
-
-  Future<int> getUserRating(String recipeId) async {
-    final userDoc = _currentUserDoc;
-    if (userDoc == null) return 0;
-    try {
-      final doc = await userDoc.get();
-      if (!doc.exists) return 0;
-      final ratings = doc.data()!['ratings'] as Map<String, dynamic>? ?? {};
-      return (ratings[recipeId] as num?)?.toInt() ?? 0;
-    } catch (e) {
-      print('Error getting user rating: $e');
-      return 0;
-    }
-  }
-
-  Future<void> saveRating(String recipeId, int newRating) async {
-    final userId = currentUserId;
-    if (userId == null) return;
-    try {
-      await FirebaseFirestore.instance.runTransaction((transaction) async {
-        final userRef = _getUserDoc(userId);
-        final recipeRef = FirebaseFirestore.instance.collection('recipes').doc(recipeId);
-
-        final userSnapshot = await transaction.get(userRef);
-        final recipeSnapshot = await transaction.get(recipeRef);
-
-        final currentRatings = Map<String, dynamic>.from(
-            (userSnapshot.data()?['ratings'] as Map<String, dynamic>?) ?? {});
-        final oldRating = (currentRatings[recipeId] as num?)?.toInt() ?? 0;
-
-        final currentAvg = (recipeSnapshot.data()?['rating'] as num?)?.toDouble() ?? 0.0;
-        final currentCount = (recipeSnapshot.data()?['ratingCount'] as int?) ?? 0;
-
-        double newAvg;
-        int newCount;
-
-        if (oldRating == 0 && newRating > 0) {
-          newCount = currentCount + 1;
-          newAvg = ((currentAvg * currentCount) + newRating) / newCount;
-        } else if (oldRating > 0 && newRating > 0) {
-          newCount = currentCount;
-          newAvg = ((currentAvg * currentCount) - oldRating + newRating) / newCount;
-        } else {
-          newCount = currentCount > 0 ? currentCount - 1 : 0;
-          newAvg = newCount > 0
-              ? ((currentAvg * (currentCount + 1)) - oldRating) / newCount
-              : 0.0;
-        }
-
-        currentRatings[recipeId] = newRating;
-        transaction.update(userRef, {
-          'ratings': currentRatings,
-          'updatedAt': DateTime.now().toIso8601String(),
-        });
-        transaction.update(recipeRef, {
-          'rating': newAvg,
-          'ratingCount': newCount,
-        });
-      });
-    } catch (e) {
-      print('Error saving rating: $e');
-      rethrow;
-    }
-  }
-
-  // ============ ACCOUNT ============
 
   Future<void> deleteUserData(String userId) async {
     try {
       await _getUserDoc(userId).delete();
     } catch (e) {
-      print('Error deleting user data: $e');
       rethrow;
     }
   }
