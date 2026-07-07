@@ -25,7 +25,6 @@
 ## 📋 Table of Contents
 
 - [Features](#-features)
-- [Screenshots](#-screenshots)
 - [Tech Stack](#-tech-stack)
 - [Architecture](#-architecture)
 - [Getting Started](#-getting-started)
@@ -97,16 +96,6 @@
     </td>
   </tr>
 </table>
-
----
-
-## 📸 Screenshots
-
-> _Add screenshots here — `assets/screenshots/`_
-
-| Home | Planner | Profile | Grocery List |
-| ---- | ------- | ------- | ------------ |
-|      |         |         |              |
 
 ---
 

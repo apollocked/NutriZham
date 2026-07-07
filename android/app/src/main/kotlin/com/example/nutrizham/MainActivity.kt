@@ -1,4 +1,4 @@
-package com.example.nutrizham
+package com.apollo.nutrizham
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1171,7 +1171,7 @@ abstract class AppLocalizations {
   /// No description provided for @appVersion.
   ///
   /// In en, this message translates to:
-  /// **'v2.0.0'**
+  /// **'v1.0.0'**
   String get appVersion;
 
   /// No description provided for @groceryListInfo.

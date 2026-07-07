@@ -184,7 +184,7 @@
   "invalidAge": "Invalid age",
   "noPlanLoaded": "No plan loaded",
   "clear": "Clear",
-  "appVersion": "v2.0.0",
+  "appVersion": "v1.0.0",
   "groceryListInfo": "You selected {mealCount} meals across {dayCount} days. Items used in multiple meals show a multiplier so you buy enough.",
   "@groceryListInfo": {
     "placeholders": {

@@ -32,3 +32,11 @@ app.*.map.json
 # Ignore Windows build artifacts
 **/windows/flutter/ephemeral/
 TO-DO.md
+
+
+ *.jks
+*.keystore
+/upload-keystore.jks
+/key.properties
+/upload-keystore.jks
+/android/key.properties

@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:456258435671:android:28a30e7c2e5cef5f414112",
         "android_client_info": {
-          "package_name": "com.example.nutrizham"
+          "package_name": "com.apollo.nutrizham"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "456258435671-h92mje4n53hg7gfk6akjrm0277m4ahv2.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.nutrizham",
+            "package_name": "com.apollo.nutrizham",
             "certificate_hash": "12b0437c2545a73636014704ab767b09f7402a68"
           }
         },
