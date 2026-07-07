@@ -516,4 +516,55 @@ class AppLocalizationsKu extends AppLocalizations {
 
   @override
   String get noMatchingRecipes => 'هیچ ڕەیسێپتێک پێکهاتەکانت پڕ ناکاتەوە';
+
+  @override
+  String get emailRequired => 'تکایە ئیمەیڵەکەت بنووسە';
+
+  @override
+  String get invalidEmail => 'تکایە ئیمەیڵێکی ڕاست بنووسە';
+
+  @override
+  String get passwordRequired => 'تکایە وشەی نهێنییەکەت بنووسە';
+
+  @override
+  String get usernameRequired => 'تکایە ناوی بەکارهێنەر بنووسە';
+
+  @override
+  String get usernameTooShort => 'ناوی بەکارهێنەر دەبێت کەمتر ٣ پیت نەبێت';
+
+  @override
+  String get invalidAgeRange => 'تکایە تەمەنێکی ڕاست بنووسە (١٠-١٠٠)';
+
+  @override
+  String get ageRequired => 'تەمەن پێویستە';
+
+  @override
+  String get minAgeError => 'دەبێت بەلایەنی کەم ١٣ ساڵ بێت';
+
+  @override
+  String get invalidAge => 'تەمەنی ڕێگەپێدراو نیە';
+
+  @override
+  String get noPlanLoaded => 'هیچ پلانێک بارنەکراوە';
+
+  @override
+  String get clear => 'ڕوونکردنەوە';
+
+  @override
+  String get appVersion => 'v2.0.0';
+
+  @override
+  String groceryListInfo(Object mealCount, Object dayCount) {
+    return 'تۆ $mealCount خواردنت هەڵبژاردووە بەدرێژایی $dayCount ڕۆژ. ئەو بڕگانەی لە چەند خواردنێکدا بەکاردێن ژمارەیەکی لێکدراویان پیشان دەدرێت بۆ ئەوەی بەشی تۆ بکات.';
+  }
+
+  @override
+  String selectedCount(Object count) {
+    return '$count هەڵبژێردراو';
+  }
+
+  @override
+  String recipeCount(Object count) {
+    return '$count ڕێچەتە';
+  }
 }

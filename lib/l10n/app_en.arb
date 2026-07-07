@@ -172,5 +172,36 @@
   "pickIngredients": "Pick what you have",
   "recipesYouCanMake": "Recipes you can make",
   "selectIngredientsHint": "Select ingredients to find matching recipes",
-  "noMatchingRecipes": "No recipes match your ingredients"
+  "noMatchingRecipes": "No recipes match your ingredients",
+  "emailRequired": "Please enter your email",
+  "invalidEmail": "Please enter a valid email",
+  "passwordRequired": "Please enter your password",
+  "usernameRequired": "Please enter a username",
+  "usernameTooShort": "Username must be at least 3 characters",
+  "invalidAgeRange": "Please enter a valid age (10-100)",
+  "ageRequired": "Age is required",
+  "minAgeError": "Must be at least 13 years old",
+  "invalidAge": "Invalid age",
+  "noPlanLoaded": "No plan loaded",
+  "clear": "Clear",
+  "appVersion": "v2.0.0",
+  "groceryListInfo": "You selected {mealCount} meals across {dayCount} days. Items used in multiple meals show a multiplier so you buy enough.",
+  "@groceryListInfo": {
+    "placeholders": {
+      "mealCount": {},
+      "dayCount": {}
+    }
+  },
+  "selectedCount": "{count} selected",
+  "@selectedCount": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "recipeCount": "{count} recipes",
+  "@recipeCount": {
+    "placeholders": {
+      "count": {}
+    }
+  }
 }

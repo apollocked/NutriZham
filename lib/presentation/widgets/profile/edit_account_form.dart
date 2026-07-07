@@ -41,7 +41,7 @@ class EditAccountForm extends StatelessWidget {
             prefixIcon: Icons.person_outline,
             textInputAction: TextInputAction.next,
             validator: (v) =>
-                v?.isEmpty == true ? 'Username is required' : null),
+                v?.isEmpty == true ? loc.usernameRequired : null),
         const SizedBox(height: 16),
         CustomTextField(
             controller: emailController,
@@ -50,8 +50,8 @@ class EditAccountForm extends StatelessWidget {
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
             validator: (v) => v?.isEmpty == true
-                ? 'Email is required'
-                : (!v!.contains('@') ? 'Invalid email' : null)),
+                ? loc.emailRequired
+                : (!v!.contains('@') ? loc.invalidEmail : null)),
         const SizedBox(height: 16),
         Container(
           decoration: BoxDecoration(
@@ -73,9 +73,9 @@ class EditAccountForm extends StatelessWidget {
             textInputAction: TextInputAction.done,
             validator: (v) {
               final age = int.tryParse(v ?? '');
-              if (age == null) return 'Age is required';
-              if (age < 13) return 'Must be at least 13 years old';
-              if (age > 150) return 'Invalid age';
+              if (age == null) return loc.ageRequired;
+              if (age < 13) return loc.minAgeError;
+              if (age > 150) return loc.invalidAge;
               return null;
             }),
         const SizedBox(height: 32),

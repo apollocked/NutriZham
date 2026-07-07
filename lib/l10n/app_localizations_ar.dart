@@ -513,4 +513,55 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noMatchingRecipes => 'لا توجد وصفات تطابق مكوناتك';
+
+  @override
+  String get emailRequired => 'يرجى إدخال بريدك الإلكتروني';
+
+  @override
+  String get invalidEmail => 'يرجى إدخال بريد إلكتروني صحيح';
+
+  @override
+  String get passwordRequired => 'يرجى إدخال كلمة المرور';
+
+  @override
+  String get usernameRequired => 'يرجى إدخال اسم المستخدم';
+
+  @override
+  String get usernameTooShort => 'يجب أن يكون اسم المستخدم 3 أحرف على الأقل';
+
+  @override
+  String get invalidAgeRange => 'يرجى إدخال عمر صحيح (10-100)';
+
+  @override
+  String get ageRequired => 'العمر مطلوب';
+
+  @override
+  String get minAgeError => 'يجب أن يكون عمرك 13 سنة على الأقل';
+
+  @override
+  String get invalidAge => 'عمر غير صحيح';
+
+  @override
+  String get noPlanLoaded => 'لم يتم تحميل خطة';
+
+  @override
+  String get clear => 'مسح';
+
+  @override
+  String get appVersion => 'v2.0.0';
+
+  @override
+  String groceryListInfo(Object mealCount, Object dayCount) {
+    return 'لقد اخترت $mealCount وجبة عبر $dayCount أيام. العناصر المستخدمة في عدة وجبات تظهر مضاعفة لتشتري كمية كافية.';
+  }
+
+  @override
+  String selectedCount(Object count) {
+    return '$count مختار';
+  }
+
+  @override
+  String recipeCount(Object count) {
+    return '$count وصفة';
+  }
 }

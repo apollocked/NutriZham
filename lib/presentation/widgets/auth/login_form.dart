@@ -43,8 +43,8 @@ class _LoginFormState extends State<LoginForm> {
           keyboardType: TextInputType.emailAddress,
           textInputAction: TextInputAction.next,
           validator: (value) {
-            if (value == null || value.isEmpty) return 'Please enter your email';
-            if (!value.contains('@')) return 'Please enter a valid email';
+            if (value == null || value.isEmpty) return loc.emailRequired;
+            if (!value.contains('@')) return loc.invalidEmail;
             return null;
           },
         ),
@@ -60,8 +60,8 @@ class _LoginFormState extends State<LoginForm> {
             onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
           ),
           validator: (value) {
-            if (value == null || value.isEmpty) return 'Please enter your password';
-            if (value.length < 6) return 'Password must be at least 6 characters';
+            if (value == null || value.isEmpty) return loc.passwordRequired;
+            if (value.length < 6) return loc.passwordTooShort;
             return null;
           },
         ),

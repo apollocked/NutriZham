@@ -91,7 +91,7 @@ class _IngredientSearchPageState extends State<IngredientSearchPage>
       appBar: CustomAppBar(title: loc.searchByIngredients),
       body: Column(children: [
         _buildSearchHeader(loc, theme),
-        if (_selected.isNotEmpty) _buildSelectedBar(),
+        if (_selected.isNotEmpty) _buildSelectedBar(loc),
         Expanded(child: _buildContent(loc, theme, filteredIngs)),
       ]),
     );
@@ -128,14 +128,14 @@ class _IngredientSearchPageState extends State<IngredientSearchPage>
     );
   }
 
-  Widget _buildSelectedBar() {
+  Widget _buildSelectedBar(AppLocalizations loc) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
       child: Row(children: [
         const SizedBox(width: 12),
         ModeChip(
           icon: Icons.restaurant,
-          label: '${_selected.length} selected',
+          label: loc.selectedCount('${_selected.length}'),
           active: true,
           onTap: _clearSelected,
         ),
@@ -143,7 +143,7 @@ class _IngredientSearchPageState extends State<IngredientSearchPage>
         TextButton.icon(
           onPressed: _clearSelected,
           icon: const Icon(Icons.close, size: 18),
-          label: const Text('Clear', style: TextStyle(fontWeight: FontWeight.w600)),
+          label: Text(loc.clear, style: const TextStyle(fontWeight: FontWeight.w600)),
         ),
       ]),
     );
@@ -167,7 +167,7 @@ class _IngredientSearchPageState extends State<IngredientSearchPage>
           const SizedBox(width: 8),
           Text(loc.recipesYouCanMake, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
           const Spacer(),
-          Text('${_cachedMatched.length} recipes', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+          Text(loc.recipeCount('${_cachedMatched.length}'), style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
         ]),
       ),
       Expanded(child: MatchedRecipesGrid(

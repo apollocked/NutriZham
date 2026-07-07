@@ -516,4 +516,55 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noMatchingRecipes => 'No recipes match your ingredients';
+
+  @override
+  String get emailRequired => 'Please enter your email';
+
+  @override
+  String get invalidEmail => 'Please enter a valid email';
+
+  @override
+  String get passwordRequired => 'Please enter your password';
+
+  @override
+  String get usernameRequired => 'Please enter a username';
+
+  @override
+  String get usernameTooShort => 'Username must be at least 3 characters';
+
+  @override
+  String get invalidAgeRange => 'Please enter a valid age (10-100)';
+
+  @override
+  String get ageRequired => 'Age is required';
+
+  @override
+  String get minAgeError => 'Must be at least 13 years old';
+
+  @override
+  String get invalidAge => 'Invalid age';
+
+  @override
+  String get noPlanLoaded => 'No plan loaded';
+
+  @override
+  String get clear => 'Clear';
+
+  @override
+  String get appVersion => 'v2.0.0';
+
+  @override
+  String groceryListInfo(Object mealCount, Object dayCount) {
+    return 'You selected $mealCount meals across $dayCount days. Items used in multiple meals show a multiplier so you buy enough.';
+  }
+
+  @override
+  String selectedCount(Object count) {
+    return '$count selected';
+  }
+
+  @override
+  String recipeCount(Object count) {
+    return '$count recipes';
+  }
 }

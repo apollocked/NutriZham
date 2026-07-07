@@ -1101,6 +1101,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No recipes match your ingredients'**
   String get noMatchingRecipes;
+
+  /// No description provided for @emailRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your email'**
+  String get emailRequired;
+
+  /// No description provided for @invalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email'**
+  String get invalidEmail;
+
+  /// No description provided for @passwordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your password'**
+  String get passwordRequired;
+
+  /// No description provided for @usernameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a username'**
+  String get usernameRequired;
+
+  /// No description provided for @usernameTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Username must be at least 3 characters'**
+  String get usernameTooShort;
+
+  /// No description provided for @invalidAgeRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid age (10-100)'**
+  String get invalidAgeRange;
+
+  /// No description provided for @ageRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Age is required'**
+  String get ageRequired;
+
+  /// No description provided for @minAgeError.
+  ///
+  /// In en, this message translates to:
+  /// **'Must be at least 13 years old'**
+  String get minAgeError;
+
+  /// No description provided for @invalidAge.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid age'**
+  String get invalidAge;
+
+  /// No description provided for @noPlanLoaded.
+  ///
+  /// In en, this message translates to:
+  /// **'No plan loaded'**
+  String get noPlanLoaded;
+
+  /// No description provided for @clear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear;
+
+  /// No description provided for @appVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'v2.0.0'**
+  String get appVersion;
+
+  /// No description provided for @groceryListInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'You selected {mealCount} meals across {dayCount} days. Items used in multiple meals show a multiplier so you buy enough.'**
+  String groceryListInfo(Object mealCount, Object dayCount);
+
+  /// No description provided for @selectedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} selected'**
+  String selectedCount(Object count);
+
+  /// No description provided for @recipeCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} recipes'**
+  String recipeCount(Object count);
 }
 
 class _AppLocalizationsDelegate

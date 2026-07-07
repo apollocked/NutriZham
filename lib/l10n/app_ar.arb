@@ -172,5 +172,36 @@
   "pickIngredients": "اختر ما لديك",
   "recipesYouCanMake": "وصفات يمكنك تحضيرها",
   "selectIngredientsHint": "اختر المكونات للعثور على وصفات مطابقة",
-  "noMatchingRecipes": "لا توجد وصفات تطابق مكوناتك"
+  "noMatchingRecipes": "لا توجد وصفات تطابق مكوناتك",
+  "emailRequired": "يرجى إدخال بريدك الإلكتروني",
+  "invalidEmail": "يرجى إدخال بريد إلكتروني صحيح",
+  "passwordRequired": "يرجى إدخال كلمة المرور",
+  "usernameRequired": "يرجى إدخال اسم المستخدم",
+  "usernameTooShort": "يجب أن يكون اسم المستخدم 3 أحرف على الأقل",
+  "invalidAgeRange": "يرجى إدخال عمر صحيح (10-100)",
+  "ageRequired": "العمر مطلوب",
+  "minAgeError": "يجب أن يكون عمرك 13 سنة على الأقل",
+  "invalidAge": "عمر غير صحيح",
+  "noPlanLoaded": "لم يتم تحميل خطة",
+  "clear": "مسح",
+  "appVersion": "v2.0.0",
+  "groceryListInfo": "لقد اخترت {mealCount} وجبة عبر {dayCount} أيام. العناصر المستخدمة في عدة وجبات تظهر مضاعفة لتشتري كمية كافية.",
+  "@groceryListInfo": {
+    "placeholders": {
+      "mealCount": {},
+      "dayCount": {}
+    }
+  },
+  "selectedCount": "{count} مختار",
+  "@selectedCount": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "recipeCount": "{count} وصفة",
+  "@recipeCount": {
+    "placeholders": {
+      "count": {}
+    }
+  }
 }

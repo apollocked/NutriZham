@@ -172,5 +172,36 @@
   "pickIngredients": "ئەو پێکهاتانە هەڵبژێرە کە هەتە",
   "recipesYouCanMake": "ئەو ڕەیسێپتانەی دەتوانی دروستی بکەیت",
   "selectIngredientsHint": "پێکهاتەکان هەڵبژێرە بۆ دۆزینەوەی ڕەیسێپتی گونجاو",
-  "noMatchingRecipes": "هیچ ڕەیسێپتێک پێکهاتەکانت پڕ ناکاتەوە"
+  "noMatchingRecipes": "هیچ ڕەیسێپتێک پێکهاتەکانت پڕ ناکاتەوە",
+  "emailRequired": "تکایە ئیمەیڵەکەت بنووسە",
+  "invalidEmail": "تکایە ئیمەیڵێکی ڕاست بنووسە",
+  "passwordRequired": "تکایە وشەی نهێنییەکەت بنووسە",
+  "usernameRequired": "تکایە ناوی بەکارهێنەر بنووسە",
+  "usernameTooShort": "ناوی بەکارهێنەر دەبێت کەمتر ٣ پیت نەبێت",
+  "invalidAgeRange": "تکایە تەمەنێکی ڕاست بنووسە (١٠-١٠٠)",
+  "ageRequired": "تەمەن پێویستە",
+  "minAgeError": "دەبێت بەلایەنی کەم ١٣ ساڵ بێت",
+  "invalidAge": "تەمەنی ڕێگەپێدراو نیە",
+  "noPlanLoaded": "هیچ پلانێک بارنەکراوە",
+  "clear": "ڕوونکردنەوە",
+  "appVersion": "v2.0.0",
+  "groceryListInfo": "تۆ {mealCount} خواردنت هەڵبژاردووە بەدرێژایی {dayCount} ڕۆژ. ئەو بڕگانەی لە چەند خواردنێکدا بەکاردێن ژمارەیەکی لێکدراویان پیشان دەدرێت بۆ ئەوەی بەشی تۆ بکات.",
+  "@groceryListInfo": {
+    "placeholders": {
+      "mealCount": {},
+      "dayCount": {}
+    }
+  },
+  "selectedCount": "{count} هەڵبژێردراو",
+  "@selectedCount": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "recipeCount": "{count} ڕێچەتە",
+  "@recipeCount": {
+    "placeholders": {
+      "count": {}
+    }
+  }
 }

@@ -17,7 +17,7 @@ Future<String?> showForgotPasswordDialog(BuildContext context) async {
           keyboardType: TextInputType.emailAddress,
           validator: (value) {
             if (value == null || value.isEmpty || !value.contains('@')) {
-              return 'Please enter a valid email';
+              return loc.invalidEmail;
             }
             return null;
           },
