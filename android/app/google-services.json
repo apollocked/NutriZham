@@ -7,18 +7,26 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:456258435671:android:28a30e7c2e5cef5f414112",
+        "mobilesdk_app_id": "1:456258435671:android:a012cc363bdd43ff414112",
         "android_client_info": {
           "package_name": "com.apollo.nutrizham"
         }
       },
       "oauth_client": [
         {
-          "client_id": "456258435671-h92mje4n53hg7gfk6akjrm0277m4ahv2.apps.googleusercontent.com",
+          "client_id": "456258435671-0npp15tolsrevjbvhqkvijqqhchl11t2.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.apollo.nutrizham",
-            "certificate_hash": "12b0437c2545a73636014704ab767b09f7402a68"
+            "certificate_hash": "dae80dde78378415bfbaaedf6b145858b01a1671"
+          }
+        },
+        {
+          "client_id": "456258435671-mo5gofak9ugcbctiotcdgk588bvvnaq1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.apollo.nutrizham",
+            "certificate_hash": "286f81ca5989429890f6c634b2a9f96c4b015e3c"
           }
         },
         {

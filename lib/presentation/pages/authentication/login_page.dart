@@ -37,7 +37,11 @@ class _LoginPageState extends State<LoginPage> {
     if (mounted) {
       final theme = Theme.of(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result['message']), backgroundColor: result['success'] ? theme.colorScheme.primary : theme.colorScheme.error),
+        SnackBar(
+            content: Text(result['message']),
+            backgroundColor: result['success']
+                ? theme.colorScheme.primary
+                : theme.colorScheme.error),
       );
     }
   }
@@ -45,14 +49,18 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _login() async {
     if (!context.guardOnline()) return;
     if (!_formKey.currentState!.validate()) return;
-    final result = await context.read<AuthCubit>().login(email: _emailController.text.trim(), password: _passwordController.text);
+    final result = await context.read<AuthCubit>().login(
+        email: _emailController.text.trim(),
+        password: _passwordController.text);
     if (!mounted) return;
     if (result['success']) {
       context.read<SettingsCubit>().setLoggedIn(true);
       context.go('/home');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result['message']), backgroundColor: Theme.of(context).colorScheme.error),
+        SnackBar(
+            content: Text(result['message']),
+            backgroundColor: Theme.of(context).colorScheme.error),
       );
     }
   }
@@ -66,7 +74,9 @@ class _LoginPageState extends State<LoginPage> {
       context.go('/home');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result['message']), backgroundColor: Theme.of(context).colorScheme.error),
+        SnackBar(
+            content: Text(result['message']),
+            backgroundColor: Theme.of(context).colorScheme.error),
       );
     }
   }
@@ -90,28 +100,46 @@ class _LoginPageState extends State<LoginPage> {
                     height: 96,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [theme.colorScheme.primary.withOpacity(0.12), theme.colorScheme.primary.withOpacity(0.04)],
+                        colors: [
+                          theme.colorScheme.primary.withOpacity(0.12),
+                          theme.colorScheme.primary.withOpacity(0.04)
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       borderRadius: BorderRadius.circular(28),
-                      border: Border.all(color: theme.colorScheme.primary.withOpacity(0.15), width: 1.5),
+                      border: Border.all(
+                          color: theme.colorScheme.primary.withOpacity(0.15),
+                          width: 1.5),
                     ),
-                    child: Center(child: Image.asset('assets/logo/app_logo.png', width: 48, height: 48)),
+                    child: Center(
+                        child: Image.asset('assets/logo/app_logo.png',
+                            width: 72, height: 72)),
                   ),
                   const SizedBox(height: 28),
                   Text(loc.appTitle, style: theme.textTheme.displaySmall),
                   const SizedBox(height: 8),
-                  Text(loc.login, style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+                  Text(loc.login,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant)),
                   const SizedBox(height: 40),
-                  LoginForm(formKey: _formKey, emailController: _emailController, passwordController: _passwordController, isLoading: context.watch<AuthCubit>().state is AuthLoading, onLogin: _login, onForgotPassword: _forgotPassword),
+                  LoginForm(
+                      formKey: _formKey,
+                      emailController: _emailController,
+                      passwordController: _passwordController,
+                      isLoading:
+                          context.watch<AuthCubit>().state is AuthLoading,
+                      onLogin: _login,
+                      onForgotPassword: _forgotPassword),
                   const SizedBox(height: 24),
                   Row(
                     children: [
                       const Expanded(child: Divider()),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Text(loc.or, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+                        child: Text(loc.or,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant)),
                       ),
                       const Expanded(child: Divider()),
                     ],
@@ -123,9 +151,13 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: _signInWithGoogle,
                   ),
                   const SizedBox(height: 40),
-                  Text(loc.dontHaveAccount, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+                  Text(loc.dontHaveAccount,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant)),
                   const SizedBox(height: 12),
-                  IconTextButton(text: loc.register, onPressed: () => context.push('/register')),
+                  IconTextButton(
+                      text: loc.register,
+                      onPressed: () => context.push('/register')),
                 ],
               ),
             ),

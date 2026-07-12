@@ -68,7 +68,9 @@ class AddMealSheet extends StatelessWidget {
                   ? Center(
                       child: Text(loc.allMealsPlanned,
                           style: TextStyle(color: theme.colorScheme.onSurfaceVariant)))
-                  : ListView.builder(
+                  : Material(
+                      color: Colors.transparent,
+                      child: ListView.builder(
                       controller: scrollController,
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       itemCount: availableRecipes.length,
@@ -107,6 +109,7 @@ class AddMealSheet extends StatelessWidget {
                           ),
                         );
                       },
+                    ),
                     ),
             ),
           ],

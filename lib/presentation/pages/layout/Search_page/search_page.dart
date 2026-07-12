@@ -118,7 +118,7 @@ class _SearchPageState extends State<SearchPage> with AddToPlannerMixin {
                     crossAxisSpacing: 0,
                     mainAxisSpacing: 0,
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 11),
+                  padding: const EdgeInsets.fromLTRB(11, 0, 11, 96),
                   itemCount: filteredRecipes.length,
                   itemBuilder: (context, index) {
                     final recipe = filteredRecipes[index];

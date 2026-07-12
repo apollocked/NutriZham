@@ -36,7 +36,12 @@ class AuthService {
     required String password,
   }) => _emailAuth.loginWithEmail(email: email, password: password);
 
-  Future<void> logout() => _emailAuth.logout();
+  Future<void> logout() async {
+    await Future.wait([
+      _emailAuth.logout(),
+      _googleAuth.signOut(),
+    ]);
+  }
   Future<Map<String, dynamic>> updateUser(UserModel updatedUser) => _account.updateUserProfile(updatedUser);
   Future<Map<String, dynamic>> deleteAccount(String userId) => _account.deleteAccount();
   Future<Map<String, dynamic>> signInWithGoogle() => _googleAuth.signInWithGoogle();

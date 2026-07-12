@@ -21,13 +21,16 @@ class MainNavigation extends StatelessWidget {
     if (currentLocation.startsWith('/profile')) currentIndex = 3;
 
     return Scaffold(
+      extendBody: true,
       body: Column(
         children: [
           const OfflineBanner(),
           Expanded(child: child),
         ],
       ),
-      bottomNavigationBar: AnimatedBottomNav(
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: AnimatedBottomNav(
         selectedIndex: currentIndex,
         onDestinationSelected: (index) {
           switch (index) {
@@ -63,6 +66,7 @@ class MainNavigation extends StatelessWidget {
             label: loc.profile,
           ),
         ],
+      ),
       ),
     );
   }

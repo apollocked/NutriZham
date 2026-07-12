@@ -150,7 +150,7 @@ class _PlannerPageState extends State<PlannerPage> {
                     onMoveMeal: (recipeId, fromSlot) => planner.moveMealToSlot(recipeId, fromSlot, slot),
                     onAddMeal: () => AddMealSheet.show(context, _available(), slot),
                   )),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 96),
                 ],
               ),
             ),

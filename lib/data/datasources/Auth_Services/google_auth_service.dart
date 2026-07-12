@@ -8,31 +8,32 @@ import 'package:nutrizham/data/models/user_model.dart';
 class GoogleAuthService {
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
-  final GoogleSignIn _googleSignIn;
   final CacheService _cache;
+  bool _initialized = false;
 
   GoogleAuthService({
     required FirebaseAuth auth,
     required FirebaseFirestore firestore,
-    GoogleSignIn? googleSignIn,
     required CacheService cache,
   })  : _auth = auth,
         _firestore = firestore,
-        _googleSignIn = googleSignIn ?? GoogleSignIn(),
         _cache = cache;
 
-  Future<Map<String, dynamic>> signInWithGoogle() async {
-    GoogleSignInAccount? googleUser;
-    try {
-      googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        return {'success': false, 'message': 'Google sign-in cancelled'};
-      }
+  Future<void> _ensureInitialized() async {
+    if (!_initialized) {
+      await GoogleSignIn.instance.initialize();
+      _initialized = true;
+    }
+  }
 
-      final googleAuth = await googleUser.authentication;
+  Future<Map<String, dynamic>> signInWithGoogle() async {
+    try {
+      await _ensureInitialized();
+      final googleUser = await GoogleSignIn.instance.authenticate();
+      final authData = googleUser.authentication;
+
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
+        idToken: authData.idToken,
       );
 
       final userCredential = await _auth.signInWithCredential(credential);
@@ -64,11 +65,17 @@ class GoogleAuthService {
       await _cache.setPlannedMeals(userModel.plannedMeals);
 
       return {'success': true, 'message': 'Google sign-in successful', 'user': userModel};
+    } on GoogleSignInException catch (e) {
+      if (e.code == GoogleSignInExceptionCode.canceled ||
+          e.code == GoogleSignInExceptionCode.interrupted) {
+        return {'success': false, 'message': 'Google sign-in cancelled'};
+      }
+      return {'success': false, 'message': 'Google sign-in failed. Please try again.'};
     } on FirebaseAuthException catch (e) {
       if (e.code == 'account-exists-with-different-credential') {
         return {
           'success': false,
-          'message': 'An account already exists with ${e.email ?? googleUser?.email ?? ''}. Please sign in with email and password instead.',
+          'message': 'An account already exists with this email. Please sign in with email and password instead.',
         };
       }
       return {'success': false, 'message': 'Google sign-in failed. Please try again.'};
@@ -76,4 +83,8 @@ class GoogleAuthService {
       return {'success': false, 'message': 'Google sign-in failed. Please try again.'};
     }
   }
+
+  Future<void> signOut() => GoogleSignIn.instance.signOut();
+
+  Future<void> disconnect() => GoogleSignIn.instance.disconnect();
 }

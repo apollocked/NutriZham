@@ -61,7 +61,7 @@ class _AnimatedBottomNavState extends State<AnimatedBottomNav>
       margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
       height: 64,
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: theme.colorScheme.surface.withOpacity(theme.brightness == Brightness.dark ? 0.85 : 0.92),
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(

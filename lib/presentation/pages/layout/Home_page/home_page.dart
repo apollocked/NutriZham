@@ -110,7 +110,8 @@ class _HomePageState extends State<HomePage> {
     }
     final cubit = context.watch<RecipeCubit>();
     final favState = context.watch<FavoritesCubit>().state;
-    final isFavLoading = favState is FavoritesInitial || favState is FavoritesLoading;
+    final isFavLoading =
+        favState is FavoritesInitial || favState is FavoritesLoading;
     final paginatedRecipes = _paginatedRecipes;
     final loc = AppLocalizations.of(context)!;
 
@@ -123,44 +124,41 @@ class _HomePageState extends State<HomePage> {
             onPressed: () =>
                 setState(() => _showFavoritesOnly = !_showFavoritesOnly)),
       ]),
-      body: SafeArea(
-        child: Column(
-          children: [
-            HomeCategoryChips(
-                selectedCategory: _selectedCategory,
-                onCategorySelected: (v) =>
-                    setState(() => _selectedCategory = v)),
-            if (_selectedCategory == null && !_showFavoritesOnly)
-              RecipeOfTheDayCard(
-                recipe: _recipeOfTheDay,
-                onTap: () => context.push('/recipe/${_recipeOfTheDay.id}',
-                    extra: _recipeOfTheDay),
-              ),
-            RecipeSectionHeader(
-              showFavoritesOnly: _showFavoritesOnly,
-              count: paginatedRecipes.length,
+      body: Column(
+        children: [
+          HomeCategoryChips(
+              selectedCategory: _selectedCategory,
+              onCategorySelected: (v) => setState(() => _selectedCategory = v)),
+          if (_selectedCategory == null && !_showFavoritesOnly)
+            RecipeOfTheDayCard(
+              recipe: _recipeOfTheDay,
+              onTap: () => context.push('/recipe/${_recipeOfTheDay.id}',
+                  extra: _recipeOfTheDay),
             ),
-            Expanded(
-              child: cubit.recipes.isEmpty && cubit.isLoading
-                  ? const ShimmerRecipeGrid()
-                  : _showFavoritesOnly && isFavLoading
-                      ? const ShimmerRecipeGrid()
-                      : RecipeGrid(
-                          recipes: paginatedRecipes,
-                          hasMore: cubit.hasMore,
-                          isLoadingMore: cubit.isLoadingMore,
-                          isLoading: cubit.isLoading,
-                          isOffline: cubit.isOffline,
-                          showFavoritesOnly: _showFavoritesOnly,
-                          scrollController: _scrollController,
-                          onLoadMore:
-                              _selectedCategory == null && !_showFavoritesOnly
-                                  ? _loadNextBatch
-                                  : null,
-                        ),
-            ),
-          ],
-        ),
+          RecipeSectionHeader(
+            showFavoritesOnly: _showFavoritesOnly,
+            count: paginatedRecipes.length,
+          ),
+          Expanded(
+            child: cubit.recipes.isEmpty && cubit.isLoading
+                ? const ShimmerRecipeGrid()
+                : _showFavoritesOnly && isFavLoading
+                    ? const ShimmerRecipeGrid()
+                    : RecipeGrid(
+                        recipes: paginatedRecipes,
+                        hasMore: cubit.hasMore,
+                        isLoadingMore: cubit.isLoadingMore,
+                        isLoading: cubit.isLoading,
+                        isOffline: cubit.isOffline,
+                        showFavoritesOnly: _showFavoritesOnly,
+                        scrollController: _scrollController,
+                        onLoadMore:
+                            _selectedCategory == null && !_showFavoritesOnly
+                                ? _loadNextBatch
+                                : null,
+                      ),
+          ),
+        ],
       ),
     );
   }

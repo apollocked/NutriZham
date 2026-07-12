@@ -105,7 +105,7 @@ class RecipeGrid extends StatelessWidget {
           crossAxisSpacing: 0,
           mainAxisSpacing: 0,
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 11),
+        padding: const EdgeInsets.fromLTRB(11, 0, 11, 96),
         itemCount: recipes.length + (hasMore && isLoadingMore ? 1 : 0),
         itemBuilder: (context, index) {
           if (index == recipes.length) {

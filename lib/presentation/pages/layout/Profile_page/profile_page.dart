@@ -98,55 +98,51 @@ class _ProfilePageState extends State<ProfilePage> {
       final favRecipes = _favoriteRecipes;
 
       return Scaffold(
-        body: SafeArea(
-          child: RefreshIndicator(
-            onRefresh: _loadData,
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              controller: _scrollController,
-              child: Column(children: [
-                const SizedBox(height: 8),
-                ProfileHeader(
-                    username: user.username,
-                    email: user.email,
-                    age: user.age,
-                    createdAt: user.createdAt),
-                ProfileStatsRow(
-                    favoriteCount: favRecipes.length,
-                    totalRecipeCount: _allRecipes.length),
-                ProfileWeeklySummary(
-                  mealPlans: mealPlans,
-                  weekStart: weekStart,
-                  allRecipes: _allRecipes,
-                ),
-                ProfileMenuCard(
-                    onFeatures: () => context.push('/features'),
-                    onSettings: () => context.push('/settings'),
-                    onLogout: _logOutAccount),
-                const SizedBox(height: 24),
-              ]),
-            ),
+        body: RefreshIndicator(
+          onRefresh: _loadData,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            controller: _scrollController,
+            child: Column(children: [
+              const SizedBox(height: 8),
+              ProfileHeader(
+                  username: user.username,
+                  email: user.email,
+                  age: user.age,
+                  createdAt: user.createdAt),
+              ProfileStatsRow(
+                  favoriteCount: favRecipes.length,
+                  totalRecipeCount: _allRecipes.length),
+              ProfileWeeklySummary(
+                mealPlans: mealPlans,
+                weekStart: weekStart,
+                allRecipes: _allRecipes,
+              ),
+              ProfileMenuCard(
+                  onFeatures: () => context.push('/features'),
+                  onSettings: () => context.push('/settings'),
+                  onLogout: _logOutAccount),
+              const SizedBox(height: 96),
+            ]),
           ),
         ),
       );
     }
 
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.wifi_off_rounded,
-                  size: 48,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
-              const SizedBox(height: 16),
-              Text(
-                AppLocalizations.of(context)!.couldNotLoadProfile,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ],
-          ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.wifi_off_rounded,
+                size: 48,
+                color: Theme.of(context).colorScheme.onSurfaceVariant),
+            const SizedBox(height: 16),
+            Text(
+              AppLocalizations.of(context)!.couldNotLoadProfile,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ],
         ),
       ),
     );

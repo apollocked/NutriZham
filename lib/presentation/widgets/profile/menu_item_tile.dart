@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nutrizham/presentation/widgets/common/pressable.dart';
 
 class MenuItemTile extends StatelessWidget {
   final IconData icon;
@@ -27,8 +26,8 @@ class MenuItemTile extends StatelessWidget {
     final c = textColor ?? theme.colorScheme.onSurface;
     final ic = iconColor ?? theme.colorScheme.primary;
 
-    return Pressable(
-      onTap: onTap,
+    return Material(
+      color: Colors.transparent,
       child: ListTile(
         leading: Container(
           padding: const EdgeInsets.all(10),
