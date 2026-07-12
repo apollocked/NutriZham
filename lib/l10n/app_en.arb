@@ -207,5 +207,8 @@
   "viewAll": "View all",
   "more": "more",
   "meals": "Meals",
-  "days": "Days"
+  "days": "Days",
+  "exitAppTitle": "Exit NutriZham?",
+  "exitApp": "Are you sure you want to exit?",
+  "exit": "Exit"
 }

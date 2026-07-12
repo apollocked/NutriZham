@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/auth_cubit.dart';
@@ -85,80 +86,106 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 96,
-                    height: 96,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          theme.colorScheme.primary.withOpacity(0.12),
-                          theme.colorScheme.primary.withOpacity(0.04)
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) return;
+        final confirmed = await showDialog<bool>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text(loc.exitAppTitle),
+            content: Text(loc.exitApp),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: Text(loc.cancel),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                child: Text(loc.exit),
+              ),
+            ],
+          ),
+        );
+        if (confirmed == true && context.mounted) {
+          SystemNavigator.pop();
+        }
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 96,
+                      height: 96,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            theme.colorScheme.primary.withOpacity(0.12),
+                            theme.colorScheme.primary.withOpacity(0.04)
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(28),
+                        border: Border.all(
+                            color: theme.colorScheme.primary.withOpacity(0.15),
+                            width: 1.5),
                       ),
-                      borderRadius: BorderRadius.circular(28),
-                      border: Border.all(
-                          color: theme.colorScheme.primary.withOpacity(0.15),
-                          width: 1.5),
+                      child: Center(
+                          child: Image.asset('assets/logo/app_logo.png',
+                              width: 72, height: 72)),
                     ),
-                    child: Center(
-                        child: Image.asset('assets/logo/app_logo.png',
-                            width: 72, height: 72)),
-                  ),
-                  const SizedBox(height: 28),
-                  Text(loc.appTitle, style: theme.textTheme.displaySmall),
-                  const SizedBox(height: 8),
-                  Text(loc.login,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant)),
-                  const SizedBox(height: 40),
-                  LoginForm(
-                      formKey: _formKey,
-                      emailController: _emailController,
-                      passwordController: _passwordController,
-                      isLoading:
-                          context.watch<AuthCubit>().state is AuthLoading,
-                      onLogin: _login,
-                      onForgotPassword: _forgotPassword),
-                  const SizedBox(height: 24),
-                  Row(
-                    children: [
-                      const Expanded(child: Divider()),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(loc.or,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant)),
-                      ),
-                      const Expanded(child: Divider()),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  SecondaryButton(
-                    text: loc.signInWithGoogle,
-                    icon: Icons.g_mobiledata_rounded,
-                    onPressed: _signInWithGoogle,
-                  ),
-                  const SizedBox(height: 40),
-                  Text(loc.dontHaveAccount,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant)),
-                  const SizedBox(height: 12),
-                  IconTextButton(
-                      text: loc.register,
-                      onPressed: () => context.push('/register')),
-                ],
+                    const SizedBox(height: 28),
+                    Text(loc.appTitle, style: theme.textTheme.displaySmall),
+                    const SizedBox(height: 8),
+                    Text(loc.login,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant)),
+                    const SizedBox(height: 40),
+                    LoginForm(
+                        formKey: _formKey,
+                        emailController: _emailController,
+                        passwordController: _passwordController,
+                        isLoading:
+                            context.watch<AuthCubit>().state is AuthLoading,
+                        onLogin: _login,
+                        onForgotPassword: _forgotPassword),
+                    const SizedBox(height: 24),
+                    Row(
+                      children: [
+                        const Expanded(child: Divider()),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(loc.or,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant)),
+                        ),
+                        const Expanded(child: Divider()),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    SecondaryButton(
+                      text: loc.signInWithGoogle,
+                      icon: Icons.g_mobiledata_rounded,
+                      onPressed: _signInWithGoogle,
+                    ),
+                    const SizedBox(height: 40),
+                    Text(loc.dontHaveAccount,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant)),
+                    const SizedBox(height: 12),
+                    IconTextButton(
+                        text: loc.register,
+                        onPressed: () => context.push('/register')),
+                  ],
+                ),
               ),
             ),
           ),

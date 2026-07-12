@@ -576,4 +576,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get days => 'أيام';
+
+  @override
+  String get exitAppTitle => 'الخروج من NutriZham؟';
+
+  @override
+  String get exitApp => 'هل أنت متأكد أنك تريد الخروج؟';
+
+  @override
+  String get exit => 'خروج';
 }

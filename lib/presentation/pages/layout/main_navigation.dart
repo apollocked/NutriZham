@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 import 'package:nutrizham/presentation/widgets/common/nav_item.dart';
@@ -20,53 +21,79 @@ class MainNavigation extends StatelessWidget {
     if (currentLocation.startsWith('/planner')) currentIndex = 2;
     if (currentLocation.startsWith('/profile')) currentIndex = 3;
 
-    return Scaffold(
-      extendBody: true,
-      body: Column(
-        children: [
-          const OfflineBanner(),
-          Expanded(child: child),
-        ],
-      ),
-      bottomNavigationBar: SafeArea(
-        top: false,
-        child: AnimatedBottomNav(
-        selectedIndex: currentIndex,
-        onDestinationSelected: (index) {
-          switch (index) {
-            case 0:
-              context.go('/home');
-            case 1:
-              context.go('/search');
-            case 2:
-              context.go('/planner');
-            case 3:
-              context.go('/profile');
-          }
-        },
-        items: [
-          AnimatedNavItem(
-            icon: Icons.home_outlined,
-            activeIcon: Icons.home_rounded,
-            label: loc.home,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) return;
+        final confirmed = await showDialog<bool>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text(loc.exitAppTitle),
+            content: Text(loc.exitApp),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: Text(loc.cancel),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                child: Text(loc.exit),
+              ),
+            ],
           ),
-          AnimatedNavItem(
-            icon: Icons.search_outlined,
-            activeIcon: Icons.search_rounded,
-            label: loc.search,
+        );
+        if (confirmed == true && context.mounted) {
+          SystemNavigator.pop();
+        }
+      },
+      child: Scaffold(
+        extendBody: true,
+        body: Column(
+          children: [
+            const OfflineBanner(),
+            Expanded(child: child),
+          ],
+        ),
+        bottomNavigationBar: SafeArea(
+          top: false,
+          child: AnimatedBottomNav(
+            selectedIndex: currentIndex,
+            onDestinationSelected: (index) {
+              switch (index) {
+                case 0:
+                  context.go('/home');
+                case 1:
+                  context.go('/search');
+                case 2:
+                  context.go('/planner');
+                case 3:
+                  context.go('/profile');
+              }
+            },
+            items: [
+              AnimatedNavItem(
+                icon: Icons.home_outlined,
+                activeIcon: Icons.home_rounded,
+                label: loc.home,
+              ),
+              AnimatedNavItem(
+                icon: Icons.search_outlined,
+                activeIcon: Icons.search_rounded,
+                label: loc.search,
+              ),
+              AnimatedNavItem(
+                icon: Icons.calendar_today_outlined,
+                activeIcon: Icons.calendar_month_rounded,
+                label: loc.planner,
+              ),
+              AnimatedNavItem(
+                icon: Icons.person_outline,
+                activeIcon: Icons.person_rounded,
+                label: loc.profile,
+              ),
+            ],
           ),
-          AnimatedNavItem(
-            icon: Icons.calendar_today_outlined,
-            activeIcon: Icons.calendar_month_rounded,
-            label: loc.planner,
-          ),
-          AnimatedNavItem(
-            icon: Icons.person_outline,
-            activeIcon: Icons.person_rounded,
-            label: loc.profile,
-          ),
-        ],
-      ),
+        ),
       ),
     );
   }

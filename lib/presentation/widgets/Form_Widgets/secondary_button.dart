@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/core/constants/app_colors.dart';
+import 'package:nutrizham/presentation/widgets/common/scale_tap.dart';
 
 class SecondaryButton extends StatelessWidget {
   final String text;
@@ -21,7 +22,9 @@ class SecondaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    final bool isDisabled = onPressed == null;
+
+    Widget button = SizedBox(
       width: double.infinity,
       height: height,
       child: OutlinedButton(
@@ -54,5 +57,11 @@ class SecondaryButton extends StatelessWidget {
         ),
       ),
     );
+
+    if (!isDisabled) {
+      button = ScaleTap(child: button);
+    }
+
+    return button;
   }
 }

@@ -579,4 +579,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get days => 'Days';
+
+  @override
+  String get exitAppTitle => 'Exit NutriZham?';
+
+  @override
+  String get exitApp => 'Are you sure you want to exit?';
+
+  @override
+  String get exit => 'Exit';
 }

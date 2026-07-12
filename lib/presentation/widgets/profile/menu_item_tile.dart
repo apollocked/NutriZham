@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nutrizham/presentation/widgets/common/scale_tap.dart';
 
 class MenuItemTile extends StatelessWidget {
   final IconData icon;
@@ -26,9 +27,10 @@ class MenuItemTile extends StatelessWidget {
     final c = textColor ?? theme.colorScheme.onSurface;
     final ic = iconColor ?? theme.colorScheme.primary;
 
-    return Material(
-      color: Colors.transparent,
-      child: ListTile(
+    return ScaleTap(
+      child: Material(
+        color: Colors.transparent,
+        child: ListTile(
         leading: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
@@ -54,6 +56,7 @@ class MenuItemTile extends StatelessWidget {
         onTap: onTap,
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+      ),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/core/constants/app_colors.dart';
+import 'package:nutrizham/presentation/widgets/common/scale_tap.dart';
 
 class IconTextButton extends StatelessWidget {
   final String text;
@@ -19,17 +20,19 @@ class IconTextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: onPressed,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(text,
-              style:
-                  TextStyle(fontSize: fontSize, fontWeight: FontWeight.w600)),
-          const SizedBox(width: 6),
-          Icon(icon, size: 18),
-        ],
+    return ScaleTap(
+      child: TextButton(
+        onPressed: onPressed,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(text,
+                style:
+                    TextStyle(fontSize: fontSize, fontWeight: FontWeight.w600)),
+            const SizedBox(width: 6),
+            Icon(icon, size: 18),
+          ],
+        ),
       ),
     );
   }

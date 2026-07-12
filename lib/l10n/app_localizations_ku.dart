@@ -579,4 +579,13 @@ class AppLocalizationsKu extends AppLocalizations {
 
   @override
   String get days => 'ڕۆژ';
+
+  @override
+  String get exitAppTitle => 'دەرچوون لە نەوتیژام؟';
+
+  @override
+  String get exitApp => 'دڵنیایت دەتەوێت دەرچیت؟';
+
+  @override
+  String get exit => 'دەرچوون';
 }
