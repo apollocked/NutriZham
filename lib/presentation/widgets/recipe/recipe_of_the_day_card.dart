@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nutrizham/core/constants/app_colors.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
+import 'package:nutrizham/presentation/widgets/common/gradient_icon.dart';
 import 'package:nutrizham/presentation/widgets/common/pressable.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 import 'package:nutrizham/core/utils/category_label.dart';
@@ -61,18 +62,11 @@ class RecipeOfTheDayCard extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color:
-                              theme.colorScheme.primary.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Icon(
-                            Icons.auto_awesome_rounded,
-                            color: AppColors.primary,
-                            size: 20),
-                      ),
+                      const GradientIcon(
+                          icon: Icons.auto_awesome_rounded,
+                          color: AppColors.primary,
+                          size: 20,
+                          padding: 8),
                       const SizedBox(width: 10),
                       Text(loc.recipeOfTheDay,
                           style: theme.textTheme.titleLarge
@@ -91,26 +85,7 @@ class RecipeOfTheDayCard extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        Container(
-                          width: 72,
-                          height: 72,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            gradient: LinearGradient(
-                              colors: [
-                                catColor.withValues(alpha: 0.2),
-                                catColor.withValues(alpha: 0.05)
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                          ),
-                          child: Center(
-                            child: Text(recipe.icon,
-                                style: TextStyle(
-                                    fontSize: 34, color: catColor)),
-                          ),
-                        ),
+                        GradientIcon(emoji: recipe.icon, color: catColor, size: 34, padding: 20, borderRadius: 20),
                         const SizedBox(width: 16),
                         Expanded(
                           child: Column(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
+import 'package:nutrizham/presentation/widgets/common/menu_divider.dart';
 import 'package:nutrizham/presentation/widgets/profile/menu_item_tile.dart';
 
 class AccountMenuSection extends StatelessWidget {
@@ -27,10 +28,7 @@ class AccountMenuSection extends StatelessWidget {
         ),
         child: Column(children: [
           MenuItemTile(icon: Icons.edit_outlined, title: loc.editAccount, onTap: onEditAccount),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 60),
-            child: Divider(color: theme.colorScheme.outlineVariant, height: 1),
-          ),
+          const MenuDivider(),
           MenuItemTile(icon: Icons.delete_outline, title: loc.deleteAccount, onTap: onDeleteAccount, iconColor: theme.colorScheme.error, textColor: theme.colorScheme.error, showTrailing: false),
         ]),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nutrizham/presentation/widgets/common/gradient_icon.dart';
 import 'package:nutrizham/presentation/widgets/common/scale_tap.dart';
 
 class MenuItemTile extends StatelessWidget {
@@ -31,18 +32,7 @@ class MenuItemTile extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: ListTile(
-        leading: Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [ic.withValues(alpha: 0.15), ic.withValues(alpha: 0.05)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(icon, color: ic, size: 22),
-        ),
+        leading: GradientIcon(icon: icon, color: ic),
         title: Text(title,
             style: TextStyle(
                 color: c, fontWeight: FontWeight.w600, fontSize: 15)),

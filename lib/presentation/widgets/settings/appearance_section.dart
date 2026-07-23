@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/settings_cubit.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
+import 'package:nutrizham/presentation/widgets/common/menu_divider.dart';
+import 'package:nutrizham/presentation/widgets/common/gradient_icon.dart';
 
 class AppearanceSection extends StatelessWidget {
   const AppearanceSection({super.key});
@@ -22,39 +24,20 @@ class AppearanceSection extends StatelessWidget {
         ),
         child: Column(children: [
           SwitchListTile(
-            secondary: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [theme.colorScheme.primary.withValues(alpha: 0.15), theme.colorScheme.primary.withValues(alpha: 0.05)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(settingsState.isDarkMode ? Icons.dark_mode_outlined : Icons.light_mode_outlined, color: theme.colorScheme.primary, size: 22),
+            secondary: GradientIcon(
+              icon: settingsState.isDarkMode ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
+              color: theme.colorScheme.primary,
             ),
             title: Text(loc.darkMode, style: TextStyle(color: theme.colorScheme.onSurface, fontWeight: FontWeight.w600)),
             value: settingsState.isDarkMode,
             activeThumbColor: theme.colorScheme.primary,
             onChanged: (value) => context.read<SettingsCubit>().setDarkMode(value),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 60),
-            child: Divider(color: theme.colorScheme.outlineVariant, height: 1),
-          ),
+          const MenuDivider(),
           ListTile(
-            leading: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [theme.colorScheme.primary.withValues(alpha: 0.15), theme.colorScheme.primary.withValues(alpha: 0.05)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(Icons.language_outlined, color: theme.colorScheme.primary, size: 22),
+            leading: GradientIcon(
+              icon: Icons.language_outlined,
+              color: theme.colorScheme.primary,
             ),
             title: Text(loc.language, style: TextStyle(color: theme.colorScheme.onSurface, fontWeight: FontWeight.w600)),
             trailing: DropdownButton<String>(

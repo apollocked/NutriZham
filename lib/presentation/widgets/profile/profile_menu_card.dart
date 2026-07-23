@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nutrizham/presentation/widgets/common/menu_divider.dart';
 import 'package:nutrizham/presentation/widgets/profile/menu_item_tile.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
@@ -29,15 +30,9 @@ class ProfileMenuCard extends StatelessWidget {
         ),
         child: Column(children: [
           MenuItemTile(icon: Icons.favorite_rounded, title: loc.appFeature, onTap: onFeatures),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 60),
-            child: Divider(color: theme.colorScheme.outlineVariant, height: 1),
-          ),
+          const MenuDivider(),
           MenuItemTile(icon: Icons.settings_outlined, title: loc.settings, onTap: onSettings),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 60),
-            child: Divider(color: theme.colorScheme.outlineVariant, height: 1),
-          ),
+          const MenuDivider(),
           MenuItemTile(icon: Icons.logout_rounded, title: loc.logout, onTap: onLogout, iconColor: theme.colorScheme.error, textColor: theme.colorScheme.error),
         ]),
       ),

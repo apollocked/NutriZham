@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nutrizham/presentation/widgets/common/gradient_icon.dart';
 
 class PasswordInfoBanner extends StatelessWidget {
   final String message;
@@ -17,13 +18,12 @@ class PasswordInfoBanner extends StatelessWidget {
         border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.3)),
       ),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Container(
-            padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(8)),
-            child: Icon(Icons.info_outline_rounded,
-                color: theme.colorScheme.primary, size: 18)),
+        GradientIcon(
+            icon: Icons.info_outline_rounded,
+            color: theme.colorScheme.primary,
+            size: 18,
+            padding: 6,
+            borderRadius: 8),
         const SizedBox(width: 12),
         Expanded(
             child: Text(message,

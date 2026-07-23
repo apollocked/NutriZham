@@ -10,6 +10,8 @@ import 'package:nutrizham/presentation/widgets/Form_Widgets/icon_text_button.dar
 import 'package:nutrizham/presentation/widgets/Form_Widgets/secondary_button.dart';
 import 'package:nutrizham/core/utils/connectivity_helper.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
+import 'package:nutrizham/presentation/widgets/common/auth_logo.dart';
+import 'package:nutrizham/presentation/widgets/common/or_divider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -121,27 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      width: 96,
-                      height: 96,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            theme.colorScheme.primary.withValues(alpha: 0.12),
-                            theme.colorScheme.primary.withValues(alpha: 0.04)
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(28),
-                        border: Border.all(
-                            color: theme.colorScheme.primary.withValues(alpha: 0.15),
-                            width: 1.5),
-                      ),
-                      child: Center(
-                          child: Image.asset('assets/logo/app_logo.png',
-                              width: 72, height: 72)),
-                    ),
+                    const AuthLogo(),
                     const SizedBox(height: 28),
                     Text(loc.appTitle, style: theme.textTheme.displaySmall),
                     const SizedBox(height: 8),
@@ -158,18 +140,7 @@ class _LoginPageState extends State<LoginPage> {
                         onLogin: _login,
                         onForgotPassword: _forgotPassword),
                     const SizedBox(height: 24),
-                    Row(
-                      children: [
-                        const Expanded(child: Divider()),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Text(loc.or,
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant)),
-                        ),
-                        const Expanded(child: Divider()),
-                      ],
-                    ),
+                    const OrDivider(),
                     const SizedBox(height: 24),
                     SecondaryButton(
                       text: loc.signInWithGoogle,

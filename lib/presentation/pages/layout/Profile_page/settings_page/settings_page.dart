@@ -9,6 +9,7 @@ import 'package:nutrizham/presentation/widgets/settings/appearance_section.dart'
 import 'package:nutrizham/presentation/widgets/profile/account_menu_section.dart';
 import 'package:nutrizham/core/utils/connectivity_helper.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
+import 'package:nutrizham/presentation/widgets/common/confirm_dialog.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -35,24 +36,14 @@ class SettingsPage extends StatelessWidget {
 
   void _deleteAccount(BuildContext context, AppLocalizations loc) async {
     if (!context.guardOnline()) return;
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(loc.deleteAccount),
-        content: Text(loc.areYouSure),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: Text(loc.cancel)),
-          TextButton(
-              onPressed: () => Navigator.pop(context, true),
-              style: TextButton.styleFrom(
-                  foregroundColor: Theme.of(context).colorScheme.error),
-              child: Text(loc.delete)),
-        ],
-      ),
+    final confirmed = await showConfirmDialog(
+      context,
+      title: loc.deleteAccount,
+      content: loc.areYouSure,
+      confirmText: loc.delete,
+      isDestructive: true,
     );
-    if (confirmed == true) {
+    if (confirmed) {
       if (!context.mounted) return;
       final result = await context.read<AuthCubit>().deleteAccount();
       if (context.mounted) {

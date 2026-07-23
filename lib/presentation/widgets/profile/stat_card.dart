@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nutrizham/presentation/widgets/common/gradient_icon.dart';
 
 class StatCard extends StatelessWidget {
   final IconData icon;
@@ -27,18 +28,7 @@ class StatCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [color.withValues(alpha: 0.15), color.withValues(alpha: 0.05)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Icon(icon, color: color, size: 24),
-          ),
+          GradientIcon(icon: icon, color: color, size: 24, padding: 12, borderRadius: 14),
           const SizedBox(height: 10),
           Text(value, style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: color)),
           const SizedBox(height: 4),

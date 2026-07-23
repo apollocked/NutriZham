@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 import 'package:nutrizham/presentation/blocs/settings_cubit.dart';
+import 'package:nutrizham/presentation/widgets/common/gradient_icon.dart';
 import 'package:nutrizham/presentation/widgets/settings/welcome_language_option.dart';
 
 class WelcomeSettingsCard extends StatelessWidget {
@@ -29,17 +30,12 @@ class WelcomeSettingsCard extends StatelessWidget {
       ),
       child: Column(children: [
         Row(children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [theme.colorScheme.primary.withValues(alpha: 0.15), theme.colorScheme.primary.withValues(alpha: 0.05)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Icon(isDark ? Icons.dark_mode_rounded : Icons.light_mode_rounded, color: theme.colorScheme.primary, size: 24),
+          GradientIcon(
+            icon: isDark ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
+            color: theme.colorScheme.primary,
+            size: 24,
+            padding: 12,
+            borderRadius: 14,
           ),
           const SizedBox(width: 16),
           Expanded(child: Text(AppLocalizations.of(context)!.darkMode, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface))),
@@ -49,17 +45,12 @@ class WelcomeSettingsCard extends StatelessWidget {
         Divider(color: theme.colorScheme.outlineVariant, height: 1),
         const SizedBox(height: 24),
         Row(children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [theme.colorScheme.primary.withValues(alpha: 0.15), theme.colorScheme.primary.withValues(alpha: 0.05)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Icon(Icons.language_rounded, color: theme.colorScheme.primary, size: 24),
+          GradientIcon(
+            icon: Icons.language_rounded,
+            color: theme.colorScheme.primary,
+            size: 24,
+            padding: 12,
+            borderRadius: 14,
           ),
           const SizedBox(width: 16),
           Expanded(child: Text(AppLocalizations.of(context)!.language, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface))),
