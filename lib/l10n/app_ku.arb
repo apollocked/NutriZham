@@ -184,7 +184,7 @@
   "invalidAge": "تەمەنی ڕێگەپێدراو نیە",
   "noPlanLoaded": "هیچ پلانێک بارنەکراوە",
   "clear": "ڕوونکردنەوە",
-  "appVersion": "v1.1.0",
+  "appVersion": "v1.1.1",
   "groceryListInfo": "تۆ {mealCount} خواردنت هەڵبژاردووە بەدرێژایی {dayCount} ڕۆژ. ئەو بڕگانەی لە چەند خواردنێکدا بەکاردێن ژمارەیەکی لێکدراویان پیشان دەدرێت بۆ ئەوەی بەشی تۆ بکات.",
   "@groceryListInfo": {
     "placeholders": {

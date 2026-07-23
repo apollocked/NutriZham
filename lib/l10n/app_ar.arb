@@ -184,7 +184,7 @@
   "invalidAge": "عمر غير صحيح",
   "noPlanLoaded": "لم يتم تحميل خطة",
   "clear": "مسح",
-  "appVersion": "v1.1.0",
+  "appVersion": "v1.1.1",
   "groceryListInfo": "لقد اخترت {mealCount} وجبة عبر {dayCount} أيام. العناصر المستخدمة في عدة وجبات تظهر مضاعفة لتشتري كمية كافية.",
   "@groceryListInfo": {
     "placeholders": {

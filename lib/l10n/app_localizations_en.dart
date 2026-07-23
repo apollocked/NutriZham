@@ -551,7 +551,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get clear => 'Clear';
 
   @override
-  String get appVersion => 'v1.1.0';
+  String get appVersion => 'v1.1.1';
 
   @override
   String groceryListInfo(Object mealCount, Object dayCount) {
