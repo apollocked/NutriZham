@@ -28,7 +28,7 @@ class IngredientChipsList extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 8),
           child: Material(
-            color: isSel ? theme.colorScheme.primary.withOpacity(0.08) : theme.colorScheme.surface,
+            color: isSel ? theme.colorScheme.primary.withValues(alpha: 0.08) : theme.colorScheme.surface,
             borderRadius: BorderRadius.circular(12),
             child: InkWell(
               borderRadius: BorderRadius.circular(12),
@@ -38,7 +38,7 @@ class IngredientChipsList extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: isSel ? theme.colorScheme.primary.withOpacity(0.4) : theme.colorScheme.outlineVariant,
+                    color: isSel ? theme.colorScheme.primary.withValues(alpha: 0.4) : theme.colorScheme.outlineVariant,
                   ),
                 ),
                 child: Row(children: [

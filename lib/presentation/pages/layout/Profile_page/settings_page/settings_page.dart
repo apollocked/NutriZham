@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -55,6 +53,7 @@ class SettingsPage extends StatelessWidget {
       ),
     );
     if (confirmed == true) {
+      if (!context.mounted) return;
       final result = await context.read<AuthCubit>().deleteAccount();
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

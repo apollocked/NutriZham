@@ -32,7 +32,7 @@ class WeeklyCalendarBar extends StatelessWidget {
             icon: const Icon(Icons.chevron_left_rounded),
             onPressed: onPreviousWeek,
             style: IconButton.styleFrom(
-              backgroundColor: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+              backgroundColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
             ),
           ),
           Expanded(
@@ -61,7 +61,7 @@ class WeeklyCalendarBar extends StatelessWidget {
                         color: isSelected
                             ? theme.colorScheme.primary
                             : isToday
-                                ? theme.colorScheme.primary.withOpacity(0.1)
+                                ? theme.colorScheme.primary.withValues(alpha: 0.1)
                                 : Colors.transparent,
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -101,7 +101,7 @@ class WeeklyCalendarBar extends StatelessWidget {
             icon: const Icon(Icons.chevron_right_rounded),
             onPressed: onNextWeek,
             style: IconButton.styleFrom(
-              backgroundColor: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+              backgroundColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
             ),
           ),
         ],

@@ -31,22 +31,22 @@ class SlotButton extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: isAdded
                   ? LinearGradient(
-                      colors: [color.withOpacity(0.2), color.withOpacity(0.08)],
+                      colors: [color.withValues(alpha: 0.2), color.withValues(alpha: 0.08)],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                     )
                   : LinearGradient(
-                      colors: [color.withOpacity(0.06), color.withOpacity(0.02)],
+                      colors: [color.withValues(alpha: 0.06), color.withValues(alpha: 0.02)],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                     ),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isAdded ? color.withOpacity(0.4) : color.withOpacity(0.12),
+                color: isAdded ? color.withValues(alpha: 0.4) : color.withValues(alpha: 0.12),
                 width: isAdded ? 1.5 : 1,
               ),
               boxShadow: isAdded
-                  ? [BoxShadow(color: color.withOpacity(0.1), blurRadius: 6, offset: const Offset(0, 2))]
+                  ? [BoxShadow(color: color.withValues(alpha: 0.1), blurRadius: 6, offset: const Offset(0, 2))]
                   : null,
             ),
             child: Column(
@@ -58,12 +58,12 @@ class SlotButton extends StatelessWidget {
                       ? Icon(Icons.check_circle_rounded, key: const ValueKey('added'),
                           color: color, size: 24)
                       : Icon(icon, key: const ValueKey('normal'),
-                          color: color.withOpacity(0.7), size: 22),
+                          color: color.withValues(alpha: 0.7), size: 22),
                 ),
                 const SizedBox(height: 6),
                 Text(label,
                     style: TextStyle(
-                        color: isAdded ? color : color.withOpacity(0.7),
+                        color: isAdded ? color : color.withValues(alpha: 0.7),
                         fontSize: 11,
                         fontWeight: isAdded ? FontWeight.w700 : FontWeight.w500)),
               ],

@@ -46,7 +46,7 @@ class AppSupportSection extends StatelessWidget {
           const SizedBox(width: 12),
           InkWell(
             onTap: onSendEmail,
-            child: Text('hamabarznji1990@gmail.com',
+            child: Text(loc.emailSupport,
                 style: TextStyle(
                     color: theme.colorScheme.primary,
                     fontSize: 14,

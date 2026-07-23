@@ -12,7 +12,7 @@ class MealSlotSection extends StatelessWidget {
   final bool isCollapsed;
   final VoidCallback onToggleCollapse;
   final void Function(String recipeId, String slot) onRemoveMeal;
-  final void Function(int oldIndex, int newIndex) onReorder;
+  final void Function(int oldIndex, int newIndex) onReorderItem;
   final void Function(String recipeId, String fromSlot) onMoveMeal;
   final VoidCallback onAddMeal;
 
@@ -23,7 +23,7 @@ class MealSlotSection extends StatelessWidget {
     required this.isCollapsed,
     required this.onToggleCollapse,
     required this.onRemoveMeal,
-    required this.onReorder,
+    required this.onReorderItem,
     required this.onMoveMeal,
     required this.onAddMeal,
   });
@@ -47,12 +47,12 @@ class MealSlotSection extends StatelessWidget {
                   physics: const NeverScrollableScrollPhysics(),
                   buildDefaultDragHandles: false,
                   itemCount: meals.length,
-                  onReorder: onReorder,
+                  onReorderItem: onReorderItem,
                   proxyDecorator: (child, index, animation) => AnimatedBuilder(
                     animation: animation,
                     builder: (context, child) => Material(
                       color: Colors.transparent, elevation: 8,
-                      shadowColor: theme.shadowColor.withOpacity(0.3),
+                      shadowColor: theme.shadowColor.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(16),
                       child: Transform.scale(scale: 1.02, child: child),
                     ),
@@ -82,7 +82,7 @@ class MealSlotSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+        border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,7 +99,7 @@ class MealSlotSection extends StatelessWidget {
                 duration: const Duration(milliseconds: 200),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: isHovering ? slotColor.withOpacity(0.05) : Colors.transparent,
+                  color: isHovering ? slotColor.withValues(alpha: 0.05) : Colors.transparent,
                 ),
                 child: body,
               );

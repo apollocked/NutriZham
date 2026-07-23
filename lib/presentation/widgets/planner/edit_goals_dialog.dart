@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 import 'package:nutrizham/presentation/blocs/meal_planner_cubit.dart';
 
-class EditGoalsDialog extends StatelessWidget {
+class EditGoalsDialog extends StatefulWidget {
   final int dailyCaloriesGoal;
   final double dailyProteinGoal;
   final double dailyCarbsGoal;
@@ -35,13 +35,37 @@ class EditGoalsDialog extends StatelessWidget {
   }
 
   @override
+  State<EditGoalsDialog> createState() => _EditGoalsDialogState();
+}
+
+class _EditGoalsDialogState extends State<EditGoalsDialog> {
+  late final TextEditingController calCtrl;
+  late final TextEditingController proteinCtrl;
+  late final TextEditingController carbsCtrl;
+  late final TextEditingController fatsCtrl;
+
+  @override
+  void initState() {
+    super.initState();
+    calCtrl = TextEditingController(text: widget.dailyCaloriesGoal.toString());
+    proteinCtrl = TextEditingController(text: widget.dailyProteinGoal.toStringAsFixed(0));
+    carbsCtrl = TextEditingController(text: widget.dailyCarbsGoal.toStringAsFixed(0));
+    fatsCtrl = TextEditingController(text: widget.dailyFatsGoal.toStringAsFixed(0));
+  }
+
+  @override
+  void dispose() {
+    calCtrl.dispose();
+    proteinCtrl.dispose();
+    carbsCtrl.dispose();
+    fatsCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
-    final calCtrl = TextEditingController(text: dailyCaloriesGoal.toString());
-    final proteinCtrl = TextEditingController(text: dailyProteinGoal.toStringAsFixed(0));
-    final carbsCtrl = TextEditingController(text: dailyCarbsGoal.toStringAsFixed(0));
-    final fatsCtrl = TextEditingController(text: dailyFatsGoal.toStringAsFixed(0));
 
     return AlertDialog(
       backgroundColor: theme.colorScheme.surface,
@@ -69,10 +93,10 @@ class EditGoalsDialog extends StatelessWidget {
         FilledButton(
           onPressed: () {
             context.read<MealPlannerCubit>().updateNutritionGoals(
-                  calories: int.tryParse(calCtrl.text) ?? dailyCaloriesGoal,
-                  protein: double.tryParse(proteinCtrl.text) ?? dailyProteinGoal,
-                  carbs: double.tryParse(carbsCtrl.text) ?? dailyCarbsGoal,
-                  fats: double.tryParse(fatsCtrl.text) ?? dailyFatsGoal,
+                  calories: int.tryParse(calCtrl.text) ?? widget.dailyCaloriesGoal,
+                  protein: double.tryParse(proteinCtrl.text) ?? widget.dailyProteinGoal,
+                  carbs: double.tryParse(carbsCtrl.text) ?? widget.dailyCarbsGoal,
+                  fats: double.tryParse(fatsCtrl.text) ?? widget.dailyFatsGoal,
                 );
             Navigator.pop(context);
           },

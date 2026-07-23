@@ -22,9 +22,9 @@ class WelcomeSettingsCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface.withOpacity(0.7),
+        color: theme.colorScheme.surface.withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+        border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
       ),
       child: Column(children: [
         Row(children: [
@@ -32,7 +32,7 @@ class WelcomeSettingsCard extends StatelessWidget {
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [theme.colorScheme.primary.withOpacity(0.15), theme.colorScheme.primary.withOpacity(0.05)],
+                colors: [theme.colorScheme.primary.withValues(alpha: 0.15), theme.colorScheme.primary.withValues(alpha: 0.05)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -42,7 +42,7 @@ class WelcomeSettingsCard extends StatelessWidget {
           ),
           const SizedBox(width: 16),
           Expanded(child: Text(WelcomeLanguageTexts.darkModeText(selectedLanguage), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface))),
-          Switch(value: isDark, onChanged: (v) => context.read<SettingsCubit>().setDarkMode(v), activeColor: theme.colorScheme.primary),
+          Switch(value: isDark, onChanged: (v) => context.read<SettingsCubit>().setDarkMode(v), activeThumbColor: theme.colorScheme.primary),
         ]),
         const SizedBox(height: 24),
         Divider(color: theme.colorScheme.outlineVariant, height: 1),
@@ -52,7 +52,7 @@ class WelcomeSettingsCard extends StatelessWidget {
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [theme.colorScheme.primary.withOpacity(0.15), theme.colorScheme.primary.withOpacity(0.05)],
+                colors: [theme.colorScheme.primary.withValues(alpha: 0.15), theme.colorScheme.primary.withValues(alpha: 0.05)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),

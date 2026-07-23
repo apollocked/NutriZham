@@ -28,18 +28,18 @@ class SlotEmpty extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: slotColor.withOpacity(0.25),
+              color: slotColor.withValues(alpha: 0.25),
               width: 1.5,
               strokeAlign: BorderSide.strokeAlignInside,
             ),
-            color: slotColor.withOpacity(0.04),
+            color: slotColor.withValues(alpha: 0.04),
           ),
           child: Column(
             children: [
               Container(
                 width: 44, height: 44,
                 decoration: BoxDecoration(
-                  color: slotColor.withOpacity(0.1),
+                  color: slotColor.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(Icons.add_rounded, size: 24, color: slotColor),
@@ -52,7 +52,7 @@ class SlotEmpty extends StatelessWidget {
               Text(tapToBrowse,
                   style: TextStyle(
                       fontSize: 12,
-                      color: theme.colorScheme.onSurfaceVariant.withOpacity(0.7))),
+                      color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7))),
             ],
           ),
         ),
@@ -81,8 +81,8 @@ class SlotAddButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
-          color: slotColor.withOpacity(0.06),
-          border: Border.all(color: slotColor.withOpacity(0.15)),
+          color: slotColor.withValues(alpha: 0.06),
+          border: Border.all(color: slotColor.withValues(alpha: 0.15)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -90,7 +90,7 @@ class SlotAddButton extends StatelessWidget {
             Container(
               width: 24, height: 24,
               decoration: BoxDecoration(
-                color: slotColor.withOpacity(0.15),
+                color: slotColor.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
               child: Icon(Icons.add_rounded, size: 16, color: slotColor),

@@ -69,33 +69,52 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> logout() async {
     emit(const AuthLoading());
-    await _authService.logout();
-    emit(const AuthUnauthenticated());
+    try {
+      await _authService.logout();
+    } finally {
+      emit(const AuthUnauthenticated());
+    }
   }
 
   Future<Map<String, dynamic>> resetPassword(String email) async {
-    return await _authService.resetPassword(email);
+    try {
+      return await _authService.resetPassword(email);
+    } catch (e) {
+      return {'success': false, 'message': e.toString()};
+    }
   }
 
   Future<Map<String, dynamic>> changePassword({
     required String currentPassword,
     required String newPassword,
   }) async {
-    return await _authService.changePassword(
-      currentPassword: currentPassword, newPassword: newPassword,
-    );
+    try {
+      return await _authService.changePassword(
+        currentPassword: currentPassword, newPassword: newPassword,
+      );
+    } catch (e) {
+      return {'success': false, 'message': e.toString()};
+    }
   }
 
   Future<Map<String, dynamic>> updateProfile(UserModel updatedUser) async {
-    return await _authService.updateUser(updatedUser);
+    try {
+      return await _authService.updateUser(updatedUser);
+    } catch (e) {
+      return {'success': false, 'message': e.toString()};
+    }
   }
 
   Future<Map<String, dynamic>> deleteAccount() async {
-    final result = await _authService.deleteAccount(currentUser?.id ?? '');
-    if (result['success']) {
-      emit(const AuthUnauthenticated());
+    try {
+      final result = await _authService.deleteAccount(currentUser?.id ?? '');
+      if (result['success']) {
+        emit(const AuthUnauthenticated());
+      }
+      return result;
+    } catch (e) {
+      return {'success': false, 'message': e.toString()};
     }
-    return result;
   }
 
   Future<Map<String, dynamic>> signInWithGoogle() async {
@@ -129,8 +148,12 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<Map<String, dynamic>> validatePassword(String password) async {
-    return await _authService.changePassword(
-      currentPassword: password, newPassword: password,
-    );
+    try {
+      return await _authService.changePassword(
+        currentPassword: password, newPassword: password,
+      );
+    } catch (e) {
+      return {'success': false, 'message': e.toString()};
+    }
   }
 }

@@ -61,12 +61,12 @@ class _AnimatedBottomNavState extends State<AnimatedBottomNav>
       margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
       height: 64,
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface.withOpacity(theme.brightness == Brightness.dark ? 0.85 : 0.92),
+        color: theme.colorScheme.surface.withValues(alpha: theme.brightness == Brightness.dark ? 0.85 : 0.92),
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
             color: theme.shadowColor
-                .withOpacity(theme.brightness == Brightness.dark ? 0.4 : 0.06),
+                .withValues(alpha: theme.brightness == Brightness.dark ? 0.4 : 0.06),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -95,7 +95,7 @@ class _AnimatedBottomNavState extends State<AnimatedBottomNav>
                     width: pillWidth,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withOpacity(0.12),
+                        color: theme.colorScheme.primary.withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),

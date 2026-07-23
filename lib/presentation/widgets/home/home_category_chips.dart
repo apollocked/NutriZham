@@ -71,7 +71,7 @@ class _Chip extends StatelessWidget {
       selected: selected,
       onSelected: (_) => onTap(),
       backgroundColor: theme.colorScheme.surfaceContainerHighest,
-      selectedColor: color.withOpacity(0.25),
+      selectedColor: color.withValues(alpha: 0.25),
       labelStyle: TextStyle(
         color: selected ? color : theme.colorScheme.onSurfaceVariant,
         fontWeight: FontWeight.w600,

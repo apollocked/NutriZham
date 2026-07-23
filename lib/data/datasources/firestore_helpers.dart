@@ -1,6 +1,5 @@
-// ignore_for_file: avoid_print
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirestoreHelpers {
@@ -22,7 +21,7 @@ class FirestoreHelpers {
         'updatedAt': DateTime.now().toIso8601String(),
       });
     } catch (e) {
-      print('Error adding to favorites: $e');
+      debugPrint('Error adding to favorites: $e');
       rethrow;
     }
   }
@@ -36,7 +35,7 @@ class FirestoreHelpers {
         'updatedAt': DateTime.now().toIso8601String(),
       });
     } catch (e) {
-      print('Error removing from favorites: $e');
+      debugPrint('Error removing from favorites: $e');
       rethrow;
     }
   }
@@ -51,7 +50,7 @@ class FirestoreHelpers {
       }
       return [];
     } catch (e) {
-      print('Error getting favorites: $e');
+      debugPrint('Error getting favorites: $e');
       return [];
     }
   }
@@ -80,7 +79,7 @@ class FirestoreHelpers {
         });
       }
     } catch (e) {
-      print('Error syncing favorites: $e');
+      debugPrint('Error syncing favorites: $e');
     }
   }
 
@@ -103,7 +102,7 @@ class FirestoreHelpers {
         'updatedAt': DateTime.now().toIso8601String(),
       });
     } catch (e) {
-      print('Error syncing meal plans: $e');
+      debugPrint('Error syncing meal plans: $e');
     }
   }
 }

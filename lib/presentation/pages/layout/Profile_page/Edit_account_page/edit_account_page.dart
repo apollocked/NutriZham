@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,6 +39,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
 
   Future<void> _loadUserData() async {
     final user = await _authService.getCurrentUser();
+    if (!mounted) return;
     if (user != null) {
       _usernameController.text = user.username;
       _emailController.text = user.email;

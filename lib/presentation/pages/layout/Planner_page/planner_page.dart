@@ -33,8 +33,12 @@ class _PlannerPageState extends State<PlannerPage> {
   }
 
   Future<void> _loadRecipes() async {
-    final recipes = await context.read<RecipeCubit>().getAll();
-    if (mounted) setState(() { _allRecipes = recipes; _isLoading = false; });
+    try {
+      final recipes = await context.read<RecipeCubit>().getAll();
+      if (mounted) setState(() { _allRecipes = recipes; _isLoading = false; });
+    } catch (_) {
+      if (mounted) setState(() { _isLoading = false; });
+    }
   }
 
   List<Recipe> _mealsForSlot(String slot) {
@@ -146,7 +150,7 @@ class _PlannerPageState extends State<PlannerPage> {
                       else { _collapsedSlots.add(slot); }
                     }),
                     onRemoveMeal: (id, slot) => planner.removeMealFromDate(id, slot),
-                    onReorder: (oldIndex, newIndex) => planner.reorderMealInSlot(slot, oldIndex, newIndex),
+                    onReorderItem: (oldIndex, newIndex) => planner.reorderMealInSlot(slot, oldIndex, newIndex),
                     onMoveMeal: (recipeId, fromSlot) => planner.moveMealToSlot(recipeId, fromSlot, slot),
                     onAddMeal: () => AddMealSheet.show(context, _available(), slot),
                   )),

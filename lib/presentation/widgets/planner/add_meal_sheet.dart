@@ -45,7 +45,7 @@ class AddMealSheet extends StatelessWidget {
               width: 36, height: 4,
               margin: const EdgeInsets.only(bottom: 12),
               decoration: BoxDecoration(
-                color: theme.colorScheme.onSurfaceVariant.withOpacity(0.3),
+                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -86,8 +86,8 @@ class AddMealSheet extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(10),
                                 gradient: LinearGradient(
                                   colors: [
-                                    AppColors.getCategoryColor(recipe.category.name).withOpacity(0.15),
-                                    AppColors.getCategoryColor(recipe.category.name).withOpacity(0.05),
+                                    AppColors.getCategoryColor(recipe.category.name).withValues(alpha: 0.15),
+                                    AppColors.getCategoryColor(recipe.category.name).withValues(alpha: 0.05),
                                   ],
                                 ),
                               ),

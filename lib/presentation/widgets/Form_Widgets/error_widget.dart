@@ -17,7 +17,7 @@ class CustomErrorWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.error_outline_rounded,
-                size: 56, color: theme.colorScheme.error.withOpacity(0.7)),
+                size: 56, color: theme.colorScheme.error.withValues(alpha: 0.7)),
             const SizedBox(height: 16),
             Text(message,
                 textAlign: TextAlign.center,

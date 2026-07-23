@@ -24,12 +24,12 @@ class RecipeHeaderCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [categoryColor.withOpacity(0.12), categoryColor.withOpacity(0.03)],
+          colors: [categoryColor.withValues(alpha: 0.12), categoryColor.withValues(alpha: 0.03)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: categoryColor.withOpacity(0.1)),
+        border: Border.all(color: categoryColor.withValues(alpha: 0.1)),
       ),
       child: Column(
         children: [

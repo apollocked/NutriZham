@@ -24,7 +24,7 @@ class ModeChip extends StatelessWidget {
         duration: const Duration(milliseconds: 250),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
-          color: active ? primary.withOpacity(0.12) : theme.colorScheme.surface,
+          color: active ? primary.withValues(alpha: 0.12) : theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(100),
           border: Border.all(
             color: active ? primary : theme.colorScheme.outlineVariant,

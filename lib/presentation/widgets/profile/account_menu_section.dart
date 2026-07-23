@@ -23,7 +23,7 @@ class AccountMenuSection extends StatelessWidget {
         color: theme.colorScheme.surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          side: BorderSide(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+          side: BorderSide(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
         ),
         child: Column(children: [
           MenuItemTile(icon: Icons.edit_outlined, title: loc.editAccount, onTap: onEditAccount),

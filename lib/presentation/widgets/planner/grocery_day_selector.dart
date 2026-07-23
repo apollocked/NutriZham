@@ -36,7 +36,7 @@ class GroceryDaySelector extends StatelessWidget {
               width: 56,
               decoration: BoxDecoration(
                 color: isSelected
-                    ? theme.colorScheme.primary.withOpacity(0.12)
+                    ? theme.colorScheme.primary.withValues(alpha: 0.12)
                     : theme.colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(

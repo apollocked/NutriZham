@@ -31,14 +31,14 @@ class RecipeOfTheDayCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(24),
           gradient: LinearGradient(
             colors: [
-              theme.colorScheme.primary.withOpacity(0.12),
-              theme.colorScheme.primary.withOpacity(0.03),
+              theme.colorScheme.primary.withValues(alpha: 0.12),
+              theme.colorScheme.primary.withValues(alpha: 0.03),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           border: Border.all(
-              color: theme.colorScheme.primary.withOpacity(0.1)),
+              color: theme.colorScheme.primary.withValues(alpha: 0.1)),
         ),
         child: Stack(
           children: [
@@ -50,7 +50,7 @@ class RecipeOfTheDayCard extends StatelessWidget {
                 height: 100,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: theme.colorScheme.primary.withOpacity(0.05),
+                  color: theme.colorScheme.primary.withValues(alpha: 0.05),
                 ),
               ),
             ),
@@ -65,7 +65,7 @@ class RecipeOfTheDayCard extends StatelessWidget {
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color:
-                              theme.colorScheme.primary.withOpacity(0.12),
+                              theme.colorScheme.primary.withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(
@@ -83,11 +83,11 @@ class RecipeOfTheDayCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.surface.withOpacity(0.7),
+                      color: theme.colorScheme.surface.withValues(alpha: 0.7),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
                           color: theme.colorScheme.primary
-                              .withOpacity(0.08)),
+                              .withValues(alpha: 0.08)),
                     ),
                     child: Row(
                       children: [
@@ -98,8 +98,8 @@ class RecipeOfTheDayCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20),
                             gradient: LinearGradient(
                               colors: [
-                                catColor.withOpacity(0.2),
-                                catColor.withOpacity(0.05)
+                                catColor.withValues(alpha: 0.2),
+                                catColor.withValues(alpha: 0.05)
                               ],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
@@ -132,7 +132,7 @@ class RecipeOfTheDayCard extends StatelessWidget {
                                               vertical: 4),
                                       decoration: BoxDecoration(
                                         color:
-                                            catColor.withOpacity(0.1),
+                                            catColor.withValues(alpha: 0.1),
                                         borderRadius:
                                             BorderRadius.circular(8),
                                       ),
@@ -156,7 +156,7 @@ class RecipeOfTheDayCard extends StatelessWidget {
                                           .local_fire_department_rounded,
                                       size: 16,
                                       color: AppColors.caloriesColor
-                                          .withOpacity(0.7)),
+                                          .withValues(alpha: 0.7)),
                                   const SizedBox(width: 4),
                                   Text('${recipe.nutrition.calories} ${AppLocalizations.of(context)!.kcal}',
                                       style: const TextStyle(

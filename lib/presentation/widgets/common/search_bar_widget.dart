@@ -51,13 +51,13 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
         border: Border.all(
           color: _isFocused
               ? theme.colorScheme.primary
-              : theme.colorScheme.outlineVariant.withOpacity(0.5),
+              : theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
           width: _isFocused ? 1.5 : 1,
         ),
         boxShadow: _isFocused
             ? [
                 BoxShadow(
-                  color: theme.colorScheme.primary.withOpacity(0.08),
+                  color: theme.colorScheme.primary.withValues(alpha: 0.08),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),

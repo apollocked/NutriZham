@@ -15,9 +15,9 @@ class NutritionSummaryBar extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface.withOpacity(0.7),
+        color: theme.colorScheme.surface.withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: theme.colorScheme.outline.withOpacity(0.5)),
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.5)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -27,18 +27,18 @@ class NutritionSummaryBar extends StatelessWidget {
           Container(
               height: 30,
               width: 1,
-              color: theme.colorScheme.outline.withOpacity(0.3)),
+              color: theme.colorScheme.outline.withValues(alpha: 0.3)),
           _buildMiniNutrient(context,
               '${nutrition.protein}g', AppLocalizations.of(context)!.proteinAbbr, AppColors.proteinColor),
           Container(
               height: 30,
               width: 1,
-              color: theme.colorScheme.outline.withOpacity(0.3)),
+              color: theme.colorScheme.outline.withValues(alpha: 0.3)),
           _buildMiniNutrient(context, '${nutrition.carbs}g', AppLocalizations.of(context)!.carbsAbbr, AppColors.carbsColor),
           Container(
               height: 30,
               width: 1,
-              color: theme.colorScheme.outline.withOpacity(0.3)),
+              color: theme.colorScheme.outline.withValues(alpha: 0.3)),
           _buildMiniNutrient(context, '${nutrition.fats}g', AppLocalizations.of(context)!.fatsAbbr, AppColors.fatsColor),
         ],
       ),
@@ -46,7 +46,7 @@ class NutritionSummaryBar extends StatelessWidget {
   }
 
   Widget _buildMiniNutrient(BuildContext context, String value, String label, Color color) {
-    final muted = Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.7);
+    final muted = Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.7);
     return Column(
       children: [
         Text(value,

@@ -76,14 +76,14 @@ class ProfileMealPlanSection extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                theme.colorScheme.primary.withOpacity(0.08),
-                theme.colorScheme.primary.withOpacity(0.02),
+                theme.colorScheme.primary.withValues(alpha: 0.08),
+                theme.colorScheme.primary.withValues(alpha: 0.02),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: theme.colorScheme.primary.withOpacity(0.08)),
+            border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.08)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,7 +94,7 @@ class ProfileMealPlanSection extends StatelessWidget {
                     width: 4, height: 22,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [theme.colorScheme.primary, theme.colorScheme.primary.withOpacity(0.4)],
+                        colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.4)],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                       ),
@@ -128,7 +128,7 @@ class ProfileMealPlanSection extends StatelessWidget {
                       Text('$dailyCaloriesGoal',
                           style: theme.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.w600,
-                              color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5))),
+                              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5))),
                       Text(loc.caloriesGoal,
                           style: theme.textTheme.bodySmall?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant)),
@@ -141,7 +141,7 @@ class ProfileMealPlanSection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4),
                 child: LinearProgressIndicator(
                   value: calRatio,
-                  backgroundColor: AppColors.caloriesColor.withOpacity(0.08),
+                  backgroundColor: AppColors.caloriesColor.withValues(alpha: 0.08),
                   color: AppColors.caloriesColor,
                   minHeight: 6,
                 ),

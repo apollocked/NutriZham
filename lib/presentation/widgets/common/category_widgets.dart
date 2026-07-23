@@ -79,7 +79,7 @@ class _ModernFilterChip extends StatelessWidget {
         selected: selected,
         onSelected: onSelected,
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-        selectedColor: color.withOpacity(0.25),
+        selectedColor: color.withValues(alpha: 0.25),
         labelStyle: TextStyle(
           color: selected
               ? color

@@ -45,8 +45,8 @@ ThemeData buildLightTheme(ThemeData base) {
     ),
     navigationBarTheme: NavigationBarThemeData(
       elevation: 0,
-      backgroundColor: AppColors.lightSurface.withOpacity(0.75),
-      indicatorColor: AppColors.primary.withOpacity(0.12),
+      backgroundColor: AppColors.lightSurface.withValues(alpha: 0.75),
+      indicatorColor: AppColors.primary.withValues(alpha: 0.12),
       indicatorShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
       surfaceTintColor: Colors.transparent,
@@ -68,7 +68,7 @@ ThemeData buildLightTheme(ThemeData base) {
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       clipBehavior: Clip.antiAlias,
-      shadowColor: Colors.black.withOpacity(0.04),
+      shadowColor: Colors.black.withValues(alpha: 0.04),
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
@@ -87,7 +87,7 @@ ThemeData buildLightTheme(ThemeData base) {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary, foregroundColor: Colors.white,
-        elevation: 0, shadowColor: AppColors.primary.withOpacity(0.3),
+        elevation: 0, shadowColor: AppColors.primary.withValues(alpha: 0.3),
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         textStyle: const TextStyle(fontFamily: 'Rudaw', inherit: false, fontSize: 15, fontWeight: FontWeight.w600, letterSpacing: 0.3, textBaseline: TextBaseline.alphabetic),
@@ -119,7 +119,7 @@ ThemeData buildLightTheme(ThemeData base) {
     ),
     chipTheme: ChipThemeData(
       backgroundColor: AppColors.lightSurfaceContainer,
-      selectedColor: AppColors.primary.withOpacity(0.12),
+      selectedColor: AppColors.primary.withValues(alpha: 0.12),
       checkmarkColor: AppColors.primary,
       labelStyle: const TextStyle(fontFamily: 'Rudaw', inherit: false, fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.lightText, textBaseline: TextBaseline.alphabetic),
       secondaryLabelStyle: const TextStyle(fontFamily: 'Rudaw', inherit: false, fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.lightTextSecondary, textBaseline: TextBaseline.alphabetic),

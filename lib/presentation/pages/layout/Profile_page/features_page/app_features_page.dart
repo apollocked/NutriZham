@@ -11,10 +11,10 @@ import 'package:nutrizham/presentation/widgets/profile/app_support_section.dart'
 class AppFeaturesPage extends StatelessWidget {
   const AppFeaturesPage({super.key});
 
-  Future<void> _sendEmail() async {
+  Future<void> _sendEmail(String email) async {
     final Uri emailUri = Uri(
       scheme: 'mailto',
-      path: 'hamabarznji1990@gmail.com',
+      path: email,
       query: 'subject=${Uri.encodeComponent('Support')}&body=${Uri.encodeComponent('Hello,\n\nI need help with...')}',
     );
     if (await canLaunchUrl(emailUri)) {
@@ -37,11 +37,11 @@ class AppFeaturesPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [theme.colorScheme.primary.withOpacity(0.1), theme.colorScheme.secondary.withOpacity(0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight),
-              borderRadius: BorderRadius.circular(16), border: Border.all(color: theme.colorScheme.primary.withOpacity(0.3)),
+              gradient: LinearGradient(colors: [theme.colorScheme.primary.withValues(alpha: 0.1), theme.colorScheme.secondary.withValues(alpha: 0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+              borderRadius: BorderRadius.circular(16), border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.3)),
             ),
             child: Row(children: [
-              Container(width: 60, height: 60, decoration: BoxDecoration(color: theme.colorScheme.primary.withOpacity(0.2), borderRadius: BorderRadius.circular(16)),
+              Container(width: 60, height: 60, decoration: BoxDecoration(color: theme.colorScheme.primary.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(16)),
                 child: Icon(Icons.restaurant_menu_rounded, color: theme.colorScheme.primary, size: 32)),
               const SizedBox(width: 16),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -49,7 +49,7 @@ class AppFeaturesPage extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(loc.recipesApp, style: TextStyle(color: theme.colorScheme.onSurfaceVariant, fontSize: 14)),
                 const SizedBox(height: 4),
-                Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), decoration: BoxDecoration(color: theme.colorScheme.primary.withOpacity(0.15), borderRadius: BorderRadius.circular(6)),
+                Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), decoration: BoxDecoration(color: theme.colorScheme.primary.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(6)),
                   child: Text('${loc.version} ${loc.appVersion}', style: TextStyle(color: theme.colorScheme.primary, fontSize: 11, fontWeight: FontWeight.w600)),
                 ),
               ])),
@@ -71,11 +71,11 @@ class AppFeaturesPage extends StatelessWidget {
               final feature = features[index];
               return Container(
                 decoration: BoxDecoration(color: theme.cardColor, borderRadius: BorderRadius.circular(14), border: Border.all(color: theme.colorScheme.outline),
-                  boxShadow: [BoxShadow(color: feature['color'].withOpacity(0.06), blurRadius: 8, offset: const Offset(0, 2))]),
+                  boxShadow: [BoxShadow(color: feature['color'].withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, 2))]),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Container(width: 44, height: 44, decoration: BoxDecoration(color: feature['color'].withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+                    Container(width: 44, height: 44, decoration: BoxDecoration(color: feature['color'].withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
                       child: Icon(feature['icon'], color: feature['color'], size: 24)),
                     const SizedBox(height: 12),
                     Text(feature['title'], style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: theme.colorScheme.onSurface), maxLines: 2, overflow: TextOverflow.ellipsis),
@@ -89,13 +89,13 @@ class AppFeaturesPage extends StatelessWidget {
           const SizedBox(height: 24),
           const AppDeveloperSection(),
           const SizedBox(height: 24),
-          AppSupportSection(onSendEmail: _sendEmail),
+          AppSupportSection(onSendEmail: () => _sendEmail(loc.emailSupport)),
           const SizedBox(height: 16),
           Container(
             width: double.infinity, padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [theme.colorScheme.primary.withOpacity(0.08), theme.colorScheme.secondary.withOpacity(0.04)], begin: Alignment.topLeft, end: Alignment.bottomRight),
-              borderRadius: BorderRadius.circular(14), border: Border.all(color: theme.colorScheme.primary.withOpacity(0.15)),
+              gradient: LinearGradient(colors: [theme.colorScheme.primary.withValues(alpha: 0.08), theme.colorScheme.secondary.withValues(alpha: 0.04)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+              borderRadius: BorderRadius.circular(14), border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.15)),
             ),
             child: Center(child: Text(loc.builtWith, style: TextStyle(color: theme.colorScheme.primary, fontSize: 14, fontWeight: FontWeight.w600))),
           ),

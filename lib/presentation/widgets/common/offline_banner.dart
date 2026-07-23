@@ -23,8 +23,8 @@ class OfflineBanner extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Theme.of(context).colorScheme.error.withOpacity(0.95),
-              Theme.of(context).colorScheme.error.withOpacity(0.85),
+              Theme.of(context).colorScheme.error.withValues(alpha: 0.95),
+              Theme.of(context).colorScheme.error.withValues(alpha: 0.85),
             ],
           ),
         ),

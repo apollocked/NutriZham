@@ -28,7 +28,7 @@ Future<String?> showChooseSlotDialog(
           Container(
             width: 56, height: 56,
             decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withOpacity(0.1),
+              color: theme.colorScheme.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Icon(Icons.restaurant_rounded,
@@ -59,18 +59,18 @@ Future<String?> showChooseSlotDialog(
                     padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
                     decoration: BoxDecoration(
                       color: added
-                          ? slotColor.withOpacity(0.12)
-                          : slotColor.withOpacity(0.06),
+                          ? slotColor.withValues(alpha: 0.12)
+                          : slotColor.withValues(alpha: 0.06),
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(
-                        color: added ? slotColor.withOpacity(0.5) : slotColor.withOpacity(0.15),
+                        color: added ? slotColor.withValues(alpha: 0.5) : slotColor.withValues(alpha: 0.15),
                         width: added ? 1.5 : 1,
                       ),
                     ),
                     child: Row(
                       children: [
                         Icon(added ? Icons.check_circle_rounded : slot.$2,
-                            color: added ? slotColor : slotColor.withOpacity(0.7), size: 22),
+                            color: added ? slotColor : slotColor.withValues(alpha: 0.7), size: 22),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(slot.$3,
@@ -83,7 +83,7 @@ Future<String?> showChooseSlotDialog(
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
-                              color: slotColor.withOpacity(0.15),
+                              color: slotColor.withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(loc.added,
@@ -94,7 +94,7 @@ Future<String?> showChooseSlotDialog(
                           )
                         else
                           Icon(Icons.add_rounded,
-                              color: slotColor.withOpacity(0.5), size: 20),
+                              color: slotColor.withValues(alpha: 0.5), size: 20),
                       ],
                     ),
                   ),

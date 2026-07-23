@@ -34,7 +34,7 @@ class ProfileWeeklySummary extends StatelessWidget {
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+            border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,7 +80,7 @@ class ProfileWeeklySummary extends StatelessWidget {
       Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: theme.colorScheme.primary.withOpacity(0.1),
+          color: theme.colorScheme.primary.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Icon(Icons.date_range_rounded, size: 18, color: theme.colorScheme.primary),
@@ -88,7 +88,7 @@ class ProfileWeeklySummary extends StatelessWidget {
       const SizedBox(width: 12),
       Text(loc.weeklyPlan, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
       const Spacer(),
-      Icon(Icons.chevron_right_rounded, size: 20, color: theme.colorScheme.onSurfaceVariant.withOpacity(0.4)),
+      Icon(Icons.chevron_right_rounded, size: 20, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4)),
     ]);
   }
 

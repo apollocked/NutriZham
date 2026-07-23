@@ -30,10 +30,10 @@ class MealCard extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-              color: theme.colorScheme.outlineVariant.withOpacity(0.4)),
+              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4)),
           boxShadow: [
             BoxShadow(
-              color: theme.shadowColor.withOpacity(0.04),
+              color: theme.shadowColor.withValues(alpha: 0.04),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -49,10 +49,10 @@ class MealCard extends StatelessWidget {
                   index: index,
                   child: Container(
                     width: 28,
-                    color: catColor.withOpacity(0.08),
+                    color: catColor.withValues(alpha: 0.08),
                     child: Center(
                       child: Icon(Icons.drag_indicator_rounded,
-                          size: 18, color: catColor.withOpacity(0.5)),
+                          size: 18, color: catColor.withValues(alpha: 0.5)),
                     ),
                   ),
                 ),
@@ -65,8 +65,8 @@ class MealCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     gradient: LinearGradient(
                       colors: [
-                        catColor.withOpacity(0.15),
-                        catColor.withOpacity(0.05)
+                        catColor.withValues(alpha: 0.15),
+                        catColor.withValues(alpha: 0.05)
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -99,14 +99,14 @@ class MealCard extends StatelessWidget {
                           children: [
                             Icon(Icons.local_fire_department_rounded,
                                 size: 12,
-                                color: AppColors.caloriesColor.withOpacity(0.7)),
+                                color: AppColors.caloriesColor.withValues(alpha: 0.7)),
                             const SizedBox(width: 3),
                             Text('${recipe.nutrition.calories} ${AppLocalizations.of(context)!.kcal}',
                                 style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
                                     color: AppColors.caloriesColor
-                                        .withOpacity(0.8))),
+                                        .withValues(alpha: 0.8))),
                             const SizedBox(width: 8),
                             MiniMacro(
                                 label: AppLocalizations.of(context)!.proteinAbbr,
@@ -138,7 +138,7 @@ class MealCard extends StatelessWidget {
                     width: 30,
                     height: 30,
                     decoration: BoxDecoration(
-                      color: AppColors.error.withOpacity(0.08),
+                      color: AppColors.error.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Icon(Icons.close_rounded,
@@ -157,7 +157,7 @@ class MealCard extends StatelessWidget {
       feedback: Material(
         color: Colors.transparent,
         elevation: 8,
-        shadowColor: theme.shadowColor.withOpacity(0.3),
+        shadowColor: theme.shadowColor.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(16),
         child: Opacity(opacity: 0.85, child: SizedBox(width: 320, child: cardBody)),
       ),
@@ -183,7 +183,7 @@ class MiniMacro extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Text('$label $value',

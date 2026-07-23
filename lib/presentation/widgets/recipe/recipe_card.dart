@@ -40,7 +40,7 @@ class RecipeCard extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                  color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+                  color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
             ),
             clipBehavior: Clip.antiAlias,
             child: Column(
@@ -52,8 +52,8 @@ class RecipeCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          catColor.withOpacity(0.2),
-                          catColor.withOpacity(0.04)
+                          catColor.withValues(alpha: 0.2),
+                          catColor.withValues(alpha: 0.04)
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -104,7 +104,7 @@ class RecipeCard extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 3),
                             decoration: BoxDecoration(
-                              color: catColor.withOpacity(0.1),
+                              color: catColor.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
@@ -118,7 +118,7 @@ class RecipeCard extends StatelessWidget {
                           const Spacer(),
                           Icon(Icons.local_fire_department_rounded,
                               size: 12,
-                              color: AppColors.caloriesColor.withOpacity(0.7)),
+                              color: AppColors.caloriesColor.withValues(alpha: 0.7)),
                           const SizedBox(width: 2),
                           Text('${recipe.nutrition.calories}',
                               style: const TextStyle(

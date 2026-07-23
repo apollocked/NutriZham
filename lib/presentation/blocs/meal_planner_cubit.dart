@@ -66,47 +66,67 @@ class MealPlannerCubit extends Cubit<MealPlannerState> {
   }
 
   Future<void> addMealToDate(String recipeId, String slot) async {
-    if (state is! PlannerLoaded) {
-      await loadPlannedMeals();
-      if (state is! PlannerLoaded) return;
+    try {
+      if (state is! PlannerLoaded) {
+        await loadPlannedMeals();
+        if (state is! PlannerLoaded) return;
+      }
+      final loaded = state as PlannerLoaded;
+      await MealPlannerService.addMealToDate(recipeId, loaded.selectedDate, slot);
+      final plans = await MealPlannerService.getAllMealPlans();
+      emit(loaded.copyWith(mealPlans: plans));
+    } catch (e) {
+      emit(PlannerError(e.toString()));
     }
-    final loaded = state as PlannerLoaded;
-    await MealPlannerService.addMealToDate(recipeId, loaded.selectedDate, slot);
-    final plans = await MealPlannerService.getAllMealPlans();
-    emit(loaded.copyWith(mealPlans: plans));
   }
 
   Future<void> removeMealFromDate(String recipeId, String slot) async {
-    final s = state;
-    if (s is! PlannerLoaded) return;
-    await MealPlannerService.removeMealFromDate(recipeId, s.selectedDate, slot);
-    final plans = await MealPlannerService.getAllMealPlans();
-    emit(s.copyWith(mealPlans: plans));
+    try {
+      final s = state;
+      if (s is! PlannerLoaded) return;
+      await MealPlannerService.removeMealFromDate(recipeId, s.selectedDate, slot);
+      final plans = await MealPlannerService.getAllMealPlans();
+      emit(s.copyWith(mealPlans: plans));
+    } catch (e) {
+      emit(PlannerError(e.toString()));
+    }
   }
 
   Future<void> moveMealToSlot(String recipeId, String fromSlot, String toSlot) async {
-    final s = state;
-    if (s is! PlannerLoaded) return;
-    await MealPlannerService.moveMealToSlot(recipeId, s.selectedDate, fromSlot, toSlot);
-    final plans = await MealPlannerService.getAllMealPlans();
-    emit(s.copyWith(mealPlans: plans));
+    try {
+      final s = state;
+      if (s is! PlannerLoaded) return;
+      await MealPlannerService.moveMealToSlot(recipeId, s.selectedDate, fromSlot, toSlot);
+      final plans = await MealPlannerService.getAllMealPlans();
+      emit(s.copyWith(mealPlans: plans));
+    } catch (e) {
+      emit(PlannerError(e.toString()));
+    }
   }
 
   Future<void> reorderMealInSlot(String slot, int oldIndex, int newIndex) async {
-    final s = state;
-    if (s is! PlannerLoaded) return;
-    await MealPlannerService.reorderMealInSlot(s.selectedDate, slot, oldIndex, newIndex);
-    final plans = await MealPlannerService.getAllMealPlans();
-    emit(s.copyWith(mealPlans: plans));
+    try {
+      final s = state;
+      if (s is! PlannerLoaded) return;
+      await MealPlannerService.reorderMealInSlot(s.selectedDate, slot, oldIndex, newIndex);
+      final plans = await MealPlannerService.getAllMealPlans();
+      emit(s.copyWith(mealPlans: plans));
+    } catch (e) {
+      emit(PlannerError(e.toString()));
+    }
   }
 
   Future<void> updateNutritionGoals({
     required int calories, required double protein, required double carbs, required double fats,
   }) async {
-    final s = state;
-    if (s is! PlannerLoaded) return;
-    await NutritionGoalsService.updateNutritionGoals(calories: calories, protein: protein, carbs: carbs, fats: fats);
-    emit(s.copyWith(dailyCaloriesGoal: calories, dailyProteinGoal: protein, dailyCarbsGoal: carbs, dailyFatsGoal: fats));
+    try {
+      final s = state;
+      if (s is! PlannerLoaded) return;
+      await NutritionGoalsService.updateNutritionGoals(calories: calories, protein: protein, carbs: carbs, fats: fats);
+      emit(s.copyWith(dailyCaloriesGoal: calories, dailyProteinGoal: protein, dailyCarbsGoal: carbs, dailyFatsGoal: fats));
+    } catch (e) {
+      emit(PlannerError(e.toString()));
+    }
   }
 
   bool isInPlan(String recipeId) {

@@ -16,12 +16,12 @@ class WelcomeHeader extends StatelessWidget {
         height: 110,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [theme.colorScheme.primary.withOpacity(0.12), theme.colorScheme.secondary.withOpacity(0.08)],
+            colors: [theme.colorScheme.primary.withValues(alpha: 0.12), theme.colorScheme.secondary.withValues(alpha: 0.08)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: theme.colorScheme.primary.withOpacity(0.2), width: 2),
+          border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.2), width: 2),
         ),
         child: Center(child: Image.asset('assets/logo/app_logo.png', width: 44, height: 44)),
       ),

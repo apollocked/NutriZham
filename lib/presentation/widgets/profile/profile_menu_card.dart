@@ -25,7 +25,7 @@ class ProfileMenuCard extends StatelessWidget {
         color: theme.colorScheme.surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          side: BorderSide(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+          side: BorderSide(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
         ),
         child: Column(children: [
           MenuItemTile(icon: Icons.favorite_rounded, title: loc.appFeature, onTap: onFeatures),

@@ -38,8 +38,8 @@ ThemeData buildDarkTheme(ThemeData base) {
     ),
     navigationBarTheme: NavigationBarThemeData(
       elevation: 0,
-      backgroundColor: AppColors.darkSurface.withOpacity(0.85),
-      indicatorColor: AppColors.primary.withOpacity(0.2),
+      backgroundColor: AppColors.darkSurface.withValues(alpha: 0.85),
+      indicatorColor: AppColors.primary.withValues(alpha: 0.2),
       indicatorShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
       surfaceTintColor: Colors.transparent, height: 68,
@@ -57,7 +57,7 @@ ThemeData buildDarkTheme(ThemeData base) {
     cardTheme: CardThemeData(
       elevation: 0, color: AppColors.darkCard, surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      clipBehavior: Clip.antiAlias, shadowColor: Colors.black.withOpacity(0.3),
+      clipBehavior: Clip.antiAlias, shadowColor: Colors.black.withValues(alpha: 0.3),
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true, fillColor: AppColors.darkSurfaceContainer,
@@ -81,7 +81,7 @@ ThemeData buildDarkTheme(ThemeData base) {
     ),
     chipTheme: ChipThemeData(
       backgroundColor: AppColors.darkSurfaceContainer,
-      selectedColor: AppColors.primary.withOpacity(0.2),
+      selectedColor: AppColors.primary.withValues(alpha: 0.2),
       checkmarkColor: AppColors.darkText,
       labelStyle: const TextStyle(fontFamily: 'Rudaw', inherit: false, fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.darkText, textBaseline: TextBaseline.alphabetic),
       secondaryLabelStyle: const TextStyle(fontFamily: 'Rudaw', inherit: false, fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.darkTextSecondary, textBaseline: TextBaseline.alphabetic),

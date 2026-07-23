@@ -32,14 +32,14 @@ class ProfileMacroBar extends StatelessWidget {
             borderRadius: BorderRadius.circular(3),
             child: LinearProgressIndicator(
               value: ratio,
-              backgroundColor: color.withOpacity(0.08),
+              backgroundColor: color.withValues(alpha: 0.08),
               color: color,
               minHeight: 4,
             ),
           ),
           Text('${goal.toInt()}g',
               style: TextStyle(fontSize: 9,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.6))),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.6))),
         ],
       ),
     );

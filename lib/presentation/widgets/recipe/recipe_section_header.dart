@@ -28,7 +28,7 @@ class RecipeSectionHeader extends StatelessWidget {
             gradient: LinearGradient(
               colors: [
                 theme.colorScheme.primary,
-                theme.colorScheme.primary.withOpacity(0.4),
+                theme.colorScheme.primary.withValues(alpha: 0.4),
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -43,7 +43,7 @@ class RecipeSectionHeader extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
           decoration: BoxDecoration(
-            color: theme.colorScheme.primary.withOpacity(0.1),
+            color: theme.colorScheme.primary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Text('$count',

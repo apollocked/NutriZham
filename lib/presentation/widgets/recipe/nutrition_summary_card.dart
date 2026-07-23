@@ -30,12 +30,12 @@ class NutritionSummaryCard extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [theme.colorScheme.primary.withOpacity(0.08), theme.colorScheme.primary.withOpacity(0.02)],
+          colors: [theme.colorScheme.primary.withValues(alpha: 0.08), theme.colorScheme.primary.withValues(alpha: 0.02)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: theme.colorScheme.primary.withOpacity(0.08)),
+        border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.08)),
       ),
       child: Column(children: [
         Text(loc.todaysMeals.toUpperCase(), style: TextStyle(color: theme.colorScheme.onSurfaceVariant, fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 1.5)),
@@ -43,9 +43,9 @@ class NutritionSummaryCard extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
           decoration: BoxDecoration(
-            color: theme.colorScheme.surface.withOpacity(0.7),
+            color: theme.colorScheme.surface.withValues(alpha: 0.7),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+            border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
           ),
           child: Column(children: [
             Text('$totalCalories', style: TextStyle(color: theme.colorScheme.onSurface, fontSize: 44, fontWeight: FontWeight.w700)),
@@ -60,9 +60,9 @@ class NutritionSummaryCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: theme.colorScheme.surface.withOpacity(0.7),
+              color: theme.colorScheme.surface.withValues(alpha: 0.7),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+              border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,

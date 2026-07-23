@@ -38,9 +38,13 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   }
 
   Future<void> toggleFavorite(String recipeId) async {
-    await FavoritesHelper.toggleFavorite(recipeId);
-    final ids = await FavoritesHelper.loadFavorites();
-    emit(FavoritesLoaded(ids));
+    try {
+      await FavoritesHelper.toggleFavorite(recipeId);
+      final ids = await FavoritesHelper.loadFavorites();
+      emit(FavoritesLoaded(ids));
+    } catch (e) {
+      emit(FavoritesError(e.toString()));
+    }
   }
 
   bool isFavorite(String recipeId) => ids.contains(recipeId);
@@ -48,7 +52,11 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   int get count => ids.length;
 
   Future<void> clearAll() async {
-    await FavoritesHelper.clearAllFavorites();
-    emit(const FavoritesLoaded({}));
+    try {
+      await FavoritesHelper.clearAllFavorites();
+      emit(const FavoritesLoaded({}));
+    } catch (e) {
+      emit(FavoritesError(e.toString()));
+    }
   }
 }

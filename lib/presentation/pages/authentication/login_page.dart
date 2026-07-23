@@ -127,15 +127,15 @@ class _LoginPageState extends State<LoginPage> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            theme.colorScheme.primary.withOpacity(0.12),
-                            theme.colorScheme.primary.withOpacity(0.04)
+                            theme.colorScheme.primary.withValues(alpha: 0.12),
+                            theme.colorScheme.primary.withValues(alpha: 0.04)
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
                         borderRadius: BorderRadius.circular(28),
                         border: Border.all(
-                            color: theme.colorScheme.primary.withOpacity(0.15),
+                            color: theme.colorScheme.primary.withValues(alpha: 0.15),
                             width: 1.5),
                       ),
                       child: Center(

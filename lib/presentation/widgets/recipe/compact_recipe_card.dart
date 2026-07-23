@@ -35,7 +35,7 @@ class CompactRecipeCard extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                  color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+                  color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
             ),
             child: Padding(
               padding:
@@ -49,8 +49,8 @@ class CompactRecipeCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                       gradient: LinearGradient(
                         colors: [
-                          catColor.withOpacity(0.15),
-                          catColor.withOpacity(0.05)
+                          catColor.withValues(alpha: 0.15),
+                          catColor.withValues(alpha: 0.05)
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -79,7 +79,7 @@ class CompactRecipeCard extends StatelessWidget {
                             Icon(Icons.local_fire_department_rounded,
                                 size: 12,
                                 color:
-                                    AppColors.caloriesColor.withOpacity(0.6)),
+                                    AppColors.caloriesColor.withValues(alpha: 0.6)),
                             const SizedBox(width: 3),
                             Text('${recipe.nutrition.calories} ${AppLocalizations.of(context)!.kcal}',
                                 style: TextStyle(

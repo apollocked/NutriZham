@@ -47,14 +47,14 @@ class NutritionGoalsCard extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            theme.colorScheme.primary.withOpacity(0.08),
-            theme.colorScheme.primary.withOpacity(0.02),
+            theme.colorScheme.primary.withValues(alpha: 0.08),
+            theme.colorScheme.primary.withValues(alpha: 0.02),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: theme.colorScheme.primary.withOpacity(0.08)),
+        border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.08)),
       ),
       child: Column(
         children: [
@@ -82,10 +82,10 @@ class NutritionGoalsCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
             decoration: BoxDecoration(
-              color: theme.colorScheme.surface.withOpacity(0.7),
+              color: theme.colorScheme.surface.withValues(alpha: 0.7),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                  color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+                  color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
             ),
             child: Column(
               children: [
@@ -112,7 +112,7 @@ class NutritionGoalsCard extends StatelessWidget {
                   child: LinearProgressIndicator(
                     value: calPercent,
                     minHeight: 8,
-                    backgroundColor: AppColors.caloriesColor.withOpacity(0.12),
+                    backgroundColor: AppColors.caloriesColor.withValues(alpha: 0.12),
                     valueColor: AlwaysStoppedAnimation<Color>(
                       calPercent >= 1.0
                           ? AppColors.caloriesColor
@@ -133,10 +133,10 @@ class NutritionGoalsCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: theme.colorScheme.surface.withOpacity(0.7),
+                color: theme.colorScheme.surface.withValues(alpha: 0.7),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                    color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+                    color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
               ),
               child: Column(
                 children: [

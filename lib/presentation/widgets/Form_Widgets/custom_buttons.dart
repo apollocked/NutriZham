@@ -34,7 +34,7 @@ class PrimaryButton extends StatelessWidget {
         style: FilledButton.styleFrom(
           backgroundColor: backgroundColor ?? AppColors.primary,
           disabledBackgroundColor:
-              (backgroundColor ?? AppColors.primary).withOpacity(0.6),
+              (backgroundColor ?? AppColors.primary).withValues(alpha: 0.6),
         ),
         child: isLoading
             ? SizedBox(

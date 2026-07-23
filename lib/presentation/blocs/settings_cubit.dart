@@ -18,44 +18,54 @@ class SettingsCubit extends Cubit<SettingsState> {
   SettingsCubit() : super(const SettingsState());
 
   Future<void> initialize() async {
-    final isDarkMode = await PreferencesHelper.getIsDarkMode();
-    final languageCode = await PreferencesHelper.getLanguageCode();
-    final isLoggedIn = await CacheService().getIsLoggedIn();
-    emit(SettingsState(
-      isDarkMode: isDarkMode,
-      languageCode: languageCode,
-      isLoggedIn: isLoggedIn,
-    ));
+    try {
+      final isDarkMode = await PreferencesHelper.getIsDarkMode();
+      final languageCode = await PreferencesHelper.getLanguageCode();
+      final isLoggedIn = await CacheService().getIsLoggedIn();
+      emit(SettingsState(
+        isDarkMode: isDarkMode,
+        languageCode: languageCode,
+        isLoggedIn: isLoggedIn,
+      ));
+    } catch (_) {}
   }
 
   Future<void> setDarkMode(bool value) async {
-    await PreferencesHelper.setIsDarkMode(value);
-    emit(SettingsState(
-      isDarkMode: value,
-      languageCode: state.languageCode,
-      isLoggedIn: state.isLoggedIn,
-    ));
+    try {
+      await PreferencesHelper.setIsDarkMode(value);
+      emit(SettingsState(
+        isDarkMode: value,
+        languageCode: state.languageCode,
+        isLoggedIn: state.isLoggedIn,
+      ));
+    } catch (_) {}
   }
 
   Future<void> setLanguageCode(String code) async {
-    await PreferencesHelper.setLanguageCode(code);
-    emit(SettingsState(
-      isDarkMode: state.isDarkMode,
-      languageCode: code,
-      isLoggedIn: state.isLoggedIn,
-    ));
+    try {
+      await PreferencesHelper.setLanguageCode(code);
+      emit(SettingsState(
+        isDarkMode: state.isDarkMode,
+        languageCode: code,
+        isLoggedIn: state.isLoggedIn,
+      ));
+    } catch (_) {}
   }
 
   Future<void> setLoggedIn(bool value) async {
-    emit(SettingsState(
-      isDarkMode: state.isDarkMode,
-      languageCode: state.languageCode,
-      isLoggedIn: value,
-    ));
-    CacheService().setIsLoggedIn(value);
+    try {
+      emit(SettingsState(
+        isDarkMode: state.isDarkMode,
+        languageCode: state.languageCode,
+        isLoggedIn: value,
+      ));
+      CacheService().setIsLoggedIn(value);
+    } catch (_) {}
   }
 
   Future<void> setWelcomeShown() async {
-    await PreferencesHelper.setWelcomeShown(true);
+    try {
+      await PreferencesHelper.setWelcomeShown(true);
+    } catch (_) {}
   }
 }

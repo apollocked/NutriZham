@@ -35,7 +35,7 @@ class MenuItemTile extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [ic.withOpacity(0.15), ic.withOpacity(0.05)],
+              colors: [ic.withValues(alpha: 0.15), ic.withValues(alpha: 0.05)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -51,7 +51,7 @@ class MenuItemTile extends StatelessWidget {
             : null,
         trailing: showTrailing
             ? Icon(Icons.chevron_right_rounded,
-                size: 22, color: c.withOpacity(0.4))
+                size: 22, color: c.withValues(alpha: 0.4))
             : null,
         onTap: onTap,
         contentPadding:
