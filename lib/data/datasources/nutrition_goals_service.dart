@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:nutrizham/core/cache/cache_service.dart';
 import 'package:nutrizham/data/datasources/firestore_service.dart';
 
@@ -14,7 +15,9 @@ class NutritionGoalsService {
         await _cache.setDailyCarbs(user.dailyCarbs);
         await _cache.setDailyFats(user.dailyFats);
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('NutritionGoalsService.loadNutritionGoals: $e');
+    }
   }
 
   static Future<Map<String, num>> getNutritionGoals() async {
@@ -42,6 +45,8 @@ class NutritionGoalsService {
         carbs: carbs,
         fats: fats,
       );
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('NutritionGoalsService.updateNutritionGoals: $e');
+    }
   }
 }

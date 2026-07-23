@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:nutrizham/data/models/user_model.dart';
 
 class FirestoreService {
@@ -31,7 +32,8 @@ class FirestoreService {
       final doc = await _getUserDoc(userId).get();
       if (doc.exists) return UserModel.fromJson(doc.data()!);
       return null;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('FirestoreService.getUserById: $e');
       return null;
     }
   }
@@ -65,7 +67,8 @@ class FirestoreService {
         return Map<String, dynamic>.from(doc.data()!['mealPlans'] ?? {});
       }
       return {};
-    } catch (_) {
+    } catch (e) {
+      debugPrint('FirestoreService.getMealPlans: $e');
       return {};
     }
   }
@@ -97,7 +100,9 @@ class FirestoreService {
         'mealPlans': merged,
         'updatedAt': DateTime.now().toIso8601String(),
       });
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('FirestoreService.syncMealPlansWithFirestore: $e');
+    }
   }
 
   Future<void> updateNutritionGoals({

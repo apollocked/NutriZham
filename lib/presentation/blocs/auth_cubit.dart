@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/data/models/user_model.dart';
 import 'package:nutrizham/data/datasources/Auth_Services/auth_service.dart';
@@ -137,7 +138,9 @@ class AuthCubit extends Cubit<AuthState> {
           Map<String, dynamic>.from(json.decode(userJson)),
         );
         emit(AuthAuthenticated(cachedUser));
-      } catch (_) {}
+      } catch (e) {
+        debugPrint('AuthCubit.loadCurrentUser.cachedUser: $e');
+      }
     }
     final user = await _authService.getCurrentUser();
     if (user != null) {

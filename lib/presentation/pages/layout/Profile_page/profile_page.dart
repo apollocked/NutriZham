@@ -57,7 +57,9 @@ class _ProfilePageState extends State<ProfilePage> {
       final recipes = context.read<RecipeCubit>();
       final allRecipes = await recipes.getAllFresh();
       if (mounted) setState(() => _allRecipes = allRecipes);
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('ProfilePage._loadRecipesFromFirebase: $e');
+    }
   }
 
   List<Recipe> get _favoriteRecipes => _allRecipes

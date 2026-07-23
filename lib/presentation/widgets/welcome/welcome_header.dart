@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:nutrizham/presentation/widgets/settings/welcome_language_option.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 
 class WelcomeHeader extends StatelessWidget {
-  final String languageCode;
-
-  const WelcomeHeader({super.key, required this.languageCode});
+  const WelcomeHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +24,11 @@ class WelcomeHeader extends StatelessWidget {
         child: Center(child: Image.asset('assets/logo/app_logo.png', width: 44, height: 44)),
       ),
       const SizedBox(height: 36),
-      Text(WelcomeLanguageTexts.welcomeText(languageCode), style: TextStyle(fontSize: 42, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface)),
+      Text(AppLocalizations.of(context)!.welcome, style: TextStyle(fontSize: 42, fontWeight: FontWeight.w700, color: theme.colorScheme.onSurface)),
       const SizedBox(height: 8),
       Text('NutriZham', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700, color: theme.colorScheme.primary, letterSpacing: -0.5)),
       const SizedBox(height: 16),
-      Text(WelcomeLanguageTexts.subtitleText(languageCode), textAlign: TextAlign.center, style: TextStyle(fontSize: 15, color: theme.colorScheme.onSurfaceVariant, height: 1.4)),
+      Text(AppLocalizations.of(context)!.selectLanguage, textAlign: TextAlign.center, style: TextStyle(fontSize: 15, color: theme.colorScheme.onSurfaceVariant, height: 1.4)),
     ]);
   }
 }

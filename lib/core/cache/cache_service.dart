@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -31,7 +32,9 @@ class CacheService {
   Future<void> setBool(String key, bool v) async {
     try {
       await _prefs?.setBool(key, v);
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('CacheService.setBool: $e');
+    }
   }
 
   Future<String> getString(String key, {String d = ''}) async {
@@ -45,7 +48,9 @@ class CacheService {
   Future<void> setString(String key, String v) async {
     try {
       await _prefs?.setString(key, v);
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('CacheService.setString: $e');
+    }
   }
 
   Future<List<String>> getStringList(String key) async {
@@ -59,13 +64,17 @@ class CacheService {
   Future<void> setStringList(String key, List<String> v) async {
     try {
       await _prefs?.setStringList(key, v);
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('CacheService.setStringList: $e');
+    }
   }
 
   Future<void> remove(String key) async {
     try {
       await _prefs?.remove(key);
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('CacheService.remove: $e');
+    }
   }
 
   // FlutterSecureStorage (sensitive - auth tokens only)
@@ -80,13 +89,17 @@ class CacheService {
   Future<void> setSecure(String key, String v) async {
     try {
       await _secure.write(key: key, value: v);
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('CacheService.setSecure: $e');
+    }
   }
 
   Future<void> removeSecure(String key) async {
     try {
       await _secure.delete(key: key);
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('CacheService.removeSecure: $e');
+    }
   }
 
   // Convenience: Theme

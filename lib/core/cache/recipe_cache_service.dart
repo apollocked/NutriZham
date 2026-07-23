@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:nutrizham/core/cache/cache_service.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 
@@ -24,7 +25,8 @@ class RecipeCacheService {
       return list
           .map((e) => Recipe.fromJson(e as Map<String, dynamic>))
           .toList();
-    } catch (_) {
+    } catch (e) {
+      debugPrint('RecipeCacheService.getCachedRecipes: $e');
       return [];
     }
   }
@@ -55,7 +57,8 @@ class RecipeCacheService {
     final recipes = await getCachedRecipes();
     try {
       return recipes.firstWhere((r) => r.id == id);
-    } catch (_) {
+    } catch (e) {
+      debugPrint('RecipeCacheService.getCachedRecipeOfTheDay: $e');
       return null;
     }
   }
@@ -73,7 +76,8 @@ class RecipeCacheService {
       return list
           .map((e) => Recipe.fromJson(e as Map<String, dynamic>))
           .toList();
-    } catch (_) {
+    } catch (e) {
+      debugPrint('RecipeCacheService.getCachedPlannedRecipes: $e');
       return [];
     }
   }

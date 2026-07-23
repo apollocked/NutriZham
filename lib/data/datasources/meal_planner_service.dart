@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:nutrizham/core/cache/cache_service.dart';
 import 'package:nutrizham/data/datasources/firestore_service.dart';
 import 'package:nutrizham/data/datasources/meal_planner_helpers.dart';
@@ -21,7 +22,9 @@ class MealPlannerService {
         updatedMap[key] = entries.map((e) => e.toJson()).toList();
       }
       await _firestoreService.setMealPlans(updatedMap);
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('MealPlannerService._syncPlanToFirestore: $e');
+    }
   }
 
   static Future<Map<String, List<MealPlanEntry>>> loadMealPlans() async {
@@ -47,7 +50,9 @@ class MealPlannerService {
         await _firestoreService.syncMealPlansWithFirestore(
             cached.map((date, entries) => MapEntry(date, entries.map((e) => e.toJson()).toList())));
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('MealPlannerService.loadMealPlans: $e');
+    }
     await updateLocalAndNotify(cached);
     return cached;
   }
@@ -143,7 +148,9 @@ class MealPlannerService {
     await updateLocalAndNotify({});
     try {
       await _firestoreService.setMealPlans({});
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('MealPlannerService.clearAllPlans: $e');
+    }
   }
 
   static void dispose() {

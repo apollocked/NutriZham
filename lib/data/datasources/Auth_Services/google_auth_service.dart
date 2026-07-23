@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:nutrizham/core/cache/cache_service.dart';
 import 'package:nutrizham/data/models/user_model.dart';
@@ -79,7 +80,8 @@ class GoogleAuthService {
         };
       }
       return {'success': false, 'message': 'Google sign-in failed. Please try again.'};
-    } catch (_) {
+    } catch (e) {
+      debugPrint('GoogleAuthService.signInWithGoogle: $e');
       return {'success': false, 'message': 'Google sign-in failed. Please try again.'};
     }
   }

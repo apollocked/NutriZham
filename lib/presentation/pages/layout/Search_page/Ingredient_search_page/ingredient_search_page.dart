@@ -165,7 +165,7 @@ class _IngredientSearchPageState extends State<IngredientSearchPage>
         child: Row(children: [
           Icon(Icons.auto_awesome, size: 18, color: theme.colorScheme.primary),
           const SizedBox(width: 8),
-          Text(loc.recipesYouCanMake, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
+          Text(loc.recipesYouCanMake, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
           const Spacer(),
           Text(loc.recipeCount('${_cachedMatched.length}'), style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
         ]),

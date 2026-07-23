@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:nutrizham/core/cache/cache_service.dart';
 import 'package:nutrizham/data/models/user_model.dart';
 
@@ -32,7 +33,9 @@ class AccountService {
       if (userJson != null) {
         try {
           return UserModel.fromJson(Map<String, dynamic>.from(json.decode(userJson)));
-        } catch (_) {}
+        } catch (e) {
+          debugPrint('AccountService.getCurrentUser.fromJson: $e');
+        }
       }
 
       final newUser = UserModel(
@@ -49,7 +52,8 @@ class AccountService {
       await _firestore.collection('users').doc(user.uid).set(newUser.toJson());
       await _syncUserDataToLocal(newUser);
       return newUser;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('AccountService.getCurrentUser: $e');
       return null;
     }
   }
@@ -82,7 +86,8 @@ class AccountService {
       return {'success': true, 'message': 'Profile updated successfully'};
     } on FirebaseAuthException catch (e) {
       return {'success': false, 'message': 'Failed to update profile: ${e.message}'};
-    } catch (_) {
+    } catch (e) {
+      debugPrint('AccountService.updateUserProfile: $e');
       return {'success': false, 'message': 'An unexpected error occurred'};
     }
   }
@@ -104,7 +109,8 @@ class AccountService {
           ? 'Please re-authenticate to delete your account'
           : 'Failed to delete account: ${e.message}';
       return {'success': false, 'message': message};
-    } catch (_) {
+    } catch (e) {
+      debugPrint('AccountService.deleteAccount: $e');
       return {'success': false, 'message': 'An unexpected error occurred'};
     }
   }
@@ -115,7 +121,8 @@ class AccountService {
       if (user == null) return false;
       final userModel = await getCurrentUser();
       return userModel != null;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('AccountService.isLoggedIn: $e');
       return false;
     }
   }
@@ -127,7 +134,8 @@ class AccountService {
         return UserModel.fromJson(doc.data()!);
       }
       return null;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('AccountService._getUserFromFirestore: $e');
       return null;
     }
   }
@@ -136,6 +144,8 @@ class AccountService {
     try {
       await _cache.setFavorites(userModel.favorites);
       await _cache.setPlannedMeals(userModel.plannedMeals);
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('AccountService._syncUserDataToLocal: $e');
+    }
   }
 }

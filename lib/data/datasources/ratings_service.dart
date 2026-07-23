@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 
 class RatingsService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -14,7 +15,8 @@ class RatingsService {
       if (!doc.exists) return 0;
       final ratings = doc.data()!['ratings'] as Map<String, dynamic>? ?? {};
       return (ratings[recipeId] as num?)?.toInt() ?? 0;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('RatingsService.getUserRating: $e');
       return 0;
     }
   }

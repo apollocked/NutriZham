@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 import 'package:nutrizham/presentation/blocs/settings_cubit.dart';
 import 'package:nutrizham/data/datasources/preferences_helper.dart';
 import 'package:nutrizham/presentation/widgets/welcome/welcome_header.dart';
 import 'package:nutrizham/presentation/widgets/settings/welcome_settings_card.dart';
-import 'package:nutrizham/presentation/widgets/settings/welcome_language_option.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -53,7 +53,7 @@ class _WelcomePageState extends State<WelcomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                WelcomeHeader(languageCode: _selectedLanguage),
+                const WelcomeHeader(),
                 const SizedBox(height: 40),
                 WelcomeSettingsCard(selectedLanguage: _selectedLanguage, onLanguageChanged: (code) => setState(() => _selectedLanguage = code)),
                 const SizedBox(height: 36),
@@ -67,7 +67,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       foregroundColor: theme.colorScheme.onPrimary,
                     ),
                     onPressed: _continue,
-                    child: Text(WelcomeLanguageTexts.continueText(_selectedLanguage), style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.onPrimary, fontWeight: FontWeight.w600)),
+                    child: Text(AppLocalizations.of(context)!.continue_text, style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.onPrimary, fontWeight: FontWeight.w600)),
                   ),
                 ),
               ],

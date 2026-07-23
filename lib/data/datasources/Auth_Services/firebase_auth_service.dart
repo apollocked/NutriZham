@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:nutrizham/core/cache/cache_service.dart';
 import 'package:nutrizham/data/models/user_model.dart';
 
@@ -64,7 +65,8 @@ class FirebaseAuthService {
           message = 'Registration failed: ${e.message}';
       }
       return {'success': false, 'message': message};
-    } catch (_) {
+    } catch (e) {
+      debugPrint('FirebaseAuthService.registerWithEmail: $e');
       return {'success': false, 'message': 'An unexpected error occurred. Please try again.'};
     }
   }
@@ -122,7 +124,8 @@ class FirebaseAuthService {
           message = 'Login failed: ${e.message}';
       }
       return {'success': false, 'message': message};
-    } catch (_) {
+    } catch (e) {
+      debugPrint('FirebaseAuthService.loginWithEmail: $e');
       return {'success': false, 'message': 'An unexpected error occurred. Please try again.'};
     }
   }
@@ -131,7 +134,9 @@ class FirebaseAuthService {
     try {
       await _auth.signOut();
       await _cache.clearAuth();
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('FirebaseAuthService.logout: $e');
+    }
   }
 
   Future<UserModel?> _getUserFromFirestore(String uid) async {
@@ -141,7 +146,8 @@ class FirebaseAuthService {
         return UserModel.fromJson(doc.data()!);
       }
       return null;
-    } catch (_) {
+    } catch (e) {
+      debugPrint('FirebaseAuthService._getUserFromFirestore: $e');
       return null;
     }
   }

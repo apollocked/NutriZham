@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:nutrizham/core/cache/cache_service.dart';
 import 'package:nutrizham/data/datasources/firestore_helpers.dart';
 
@@ -26,7 +27,9 @@ class FavoritesHelper {
       } else if (favoritesSet.isNotEmpty) {
         await _firestoreHelpers.syncFavoritesWithFirestore(favoritesSet);
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('FavoritesHelper.loadFavorites: $e');
+    }
 
     _favoritesStreamController.add(favoritesSet);
     return favoritesSet;
@@ -66,7 +69,9 @@ class FavoritesHelper {
       for (final id in favorites) {
         await _firestoreHelpers.removeFromFavorites(id);
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('FavoritesHelper.clearAllFavorites: $e');
+    }
   }
 
   static Future<int> getFavoritesCount() async {
@@ -85,7 +90,9 @@ class FavoritesHelper {
       final favorites = await _cache.getFavorites();
       await _firestoreHelpers.syncFavoritesWithFirestore(favorites.toSet());
       await _cache.setNeedsSync(false);
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('FavoritesHelper.checkAndSync: $e');
+    }
   }
 
   static void dispose() {

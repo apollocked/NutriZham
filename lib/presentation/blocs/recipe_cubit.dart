@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/core/cache/cache_service.dart';
 import 'package:nutrizham/core/cache/recipe_cache_service.dart';
@@ -167,7 +168,9 @@ class RecipeCubit extends Cubit<RecipeState> {
     if (_isOnline) {
       try {
         return await _repository.getRecipesByCategory(category);
-      } catch (_) {}
+      } catch (e) {
+        debugPrint('RecipeCubit.getByCategory: $e');
+      }
     }
     final cached = await _cache.getCachedRecipes();
     return cached.where((r) => r.category == category).toList();
@@ -177,13 +180,17 @@ class RecipeCubit extends Cubit<RecipeState> {
     final cached = await _cache.getCachedRecipes();
     try {
       return cached.firstWhere((r) => r.id == id);
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('RecipeCubit.getById.cache: $e');
+    }
     if (_isOnline) {
       try {
         final recipe = await _repository.getRecipeById(id);
         if (recipe != null) _cache.cacheRecipes([...cached, recipe]);
         return recipe;
-      } catch (_) {}
+      } catch (e) {
+        debugPrint('RecipeCubit.getById.network: $e');
+      }
     }
     return null;
   }

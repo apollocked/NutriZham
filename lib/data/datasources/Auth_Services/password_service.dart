@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 
 class PasswordService {
   final FirebaseAuth _auth;
@@ -22,7 +23,8 @@ class PasswordService {
           message = 'Failed to send reset email: ${e.message}';
       }
       return {'success': false, 'message': message};
-    } catch (_) {
+    } catch (e) {
+      debugPrint('PasswordService.resetPassword: $e');
       return {'success': false, 'message': 'An unexpected error occurred'};
     }
   }
@@ -41,9 +43,11 @@ class PasswordService {
       await user.reauthenticateWithCredential(credential);
 
       return {'success': true, 'message': 'Password verified'};
-    } on FirebaseAuthException catch (_) {
+    } on FirebaseAuthException catch (e) {
+      debugPrint('PasswordService.validateCurrentPassword: $e');
       return {'success': false, 'message': 'Wrong password'};
-    } catch (_) {
+    } catch (e) {
+      debugPrint('PasswordService.validateCurrentPassword: $e');
       return {'success': false, 'message': 'Wrong password'};
     }
   }
@@ -82,7 +86,8 @@ class PasswordService {
           message = 'Failed to change password: ${e.message}';
       }
       return {'success': false, 'message': message};
-    } catch (_) {
+    } catch (e) {
+      debugPrint('PasswordService.changePassword: $e');
       return {'success': false, 'message': 'An unexpected error occurred'};
     }
   }
