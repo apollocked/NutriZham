@@ -62,27 +62,36 @@ class AppFeaturesPage extends StatelessWidget {
             Text(loc.allFeatures, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: theme.colorScheme.onSurface)),
           ]),
           const SizedBox(height: 16),
-          GridView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 12, mainAxisSpacing: 12, childAspectRatio: 0.9),
-            itemCount: features.length,
-            itemBuilder: (context, index) {
-              final feature = features[index];
-              return Container(
-                decoration: BoxDecoration(color: theme.cardColor, borderRadius: BorderRadius.circular(14), border: Border.all(color: theme.colorScheme.outline),
-                  boxShadow: [BoxShadow(color: feature['color'].withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, 2))]),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Container(width: 44, height: 44, decoration: BoxDecoration(color: feature['color'].withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
-                      child: Icon(feature['icon'], color: feature['color'], size: 24)),
-                    const SizedBox(height: 12),
-                    Text(feature['title'], style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: theme.colorScheme.onSurface), maxLines: 2, overflow: TextOverflow.ellipsis),
-                    const SizedBox(height: 8),
-                    Expanded(child: Text(feature['description'], style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurfaceVariant, height: 1.4), maxLines: 3, overflow: TextOverflow.ellipsis)),
-                  ]),
-                ),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final columns = (constraints.maxWidth / 180).floor().clamp(2, 4);
+              return GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: columns,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 0.9),
+                itemCount: features.length,
+                itemBuilder: (context, index) {
+                  final feature = features[index];
+                  return Container(
+                    decoration: BoxDecoration(color: theme.cardColor, borderRadius: BorderRadius.circular(14), border: Border.all(color: theme.colorScheme.outline),
+                      boxShadow: [BoxShadow(color: feature['color'].withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, 2))]),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        Container(width: 44, height: 44, decoration: BoxDecoration(color: feature['color'].withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+                          child: Icon(feature['icon'], color: feature['color'], size: 24)),
+                        const SizedBox(height: 12),
+                        Text(feature['title'], style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: theme.colorScheme.onSurface), maxLines: 2, overflow: TextOverflow.ellipsis),
+                        const SizedBox(height: 8),
+                        Expanded(child: Text(feature['description'], style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurfaceVariant, height: 1.4), maxLines: 3, overflow: TextOverflow.ellipsis)),
+                      ]),
+                    ),
+                  );
+                },
               );
             },
           ),

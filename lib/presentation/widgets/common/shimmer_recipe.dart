@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nutrizham/presentation/widgets/recipe/adaptive_recipe_grid.dart';
 import 'package:nutrizham/presentation/widgets/common/shimmer_base.dart';
 
 class ShimmerRecipeCard extends StatelessWidget {
@@ -71,20 +72,20 @@ class ShimmerRecipeGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 11),
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.82,
-          crossAxisSpacing: 0,
-          mainAxisSpacing: 0,
-        ),
-        itemCount: itemCount,
-        itemBuilder: (_, __) => const ShimmerRecipeCard(),
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final textScale = MediaQuery.textScalerOf(context).scale(14) / 14;
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate:
+              adaptiveRecipeGridDelegate(constraints.maxWidth, textScale),
+          padding: EdgeInsets.symmetric(
+              horizontal: constraints.maxWidth >= 600 ? 24 : 11),
+          itemCount: itemCount,
+          itemBuilder: (_, __) => const ShimmerRecipeCard(),
+        );
+      },
     );
   }
 }
