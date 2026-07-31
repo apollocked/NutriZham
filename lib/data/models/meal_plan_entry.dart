@@ -16,8 +16,8 @@ class MealPlanEntry {
       };
 
   factory MealPlanEntry.fromJson(Map<String, dynamic> json) => MealPlanEntry(
-        recipeId: json['recipeId'] as String,
+        recipeId: json['recipeId'] as String? ?? '',
         slot: json['slot'] as String? ?? 'breakfast',
-        order: json['order'] as int? ?? 0,
+        order: (json['order'] as num?)?.toInt() ?? 0,
       );
 }

@@ -46,13 +46,13 @@ class FirestoreService {
 
   Future<void> updateUserProfile(UserModel user) async {
     try {
-      await _getUserDoc(user.id).update({
+      await _getUserDoc(user.id).set({
         'username': user.username,
         'email': user.email,
         'age': user.age,
         'profileImage': user.profileImage,
         'updatedAt': DateTime.now().toIso8601String(),
-      });
+      }, SetOptions(merge: true));
     } catch (e) {
       rethrow;
     }
@@ -77,10 +77,10 @@ class FirestoreService {
     final userDoc = _currentUserDoc;
     if (userDoc == null) return;
     try {
-      await userDoc.update({
+      await userDoc.set({
         'mealPlans': mealPlans,
         'updatedAt': DateTime.now().toIso8601String(),
-      });
+      }, SetOptions(merge: true));
     } catch (e) {
       rethrow;
     }
@@ -96,10 +96,10 @@ class FirestoreService {
       localMealPlans.forEach((date, entries) {
         if (!merged.containsKey(date)) merged[date] = entries;
       });
-      await userDoc.update({
+      await userDoc.set({
         'mealPlans': merged,
         'updatedAt': DateTime.now().toIso8601String(),
-      });
+      }, SetOptions(merge: true));
     } catch (e) {
       debugPrint('FirestoreService.syncMealPlansWithFirestore: $e');
     }
@@ -114,13 +114,13 @@ class FirestoreService {
     final userDoc = _currentUserDoc;
     if (userDoc == null) return;
     try {
-      await userDoc.update({
+      await userDoc.set({
         'dailyCalories': calories,
         'dailyProtein': protein,
         'dailyCarbs': carbs,
         'dailyFats': fats,
         'updatedAt': DateTime.now().toIso8601String(),
-      });
+      }, SetOptions(merge: true));
     } catch (e) {
       rethrow;
     }

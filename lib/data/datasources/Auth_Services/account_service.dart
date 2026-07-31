@@ -38,10 +38,20 @@ class AccountService {
         }
       }
 
+      // Only create a new profile when we confirmed the document is missing.
+      // A transient read failure must never overwrite an existing profile.
+      final doc = await _firestore.collection('users').doc(user.uid).get();
+      if (doc.exists && doc.data() != null) {
+        final fresh = UserModel.fromJson(doc.data()!);
+        await _syncUserDataToLocal(fresh);
+        return fresh;
+      }
+
+      final email = user.email ?? '';
       final newUser = UserModel(
         id: user.uid,
-        username: user.displayName ?? user.email!.split('@')[0],
-        email: user.email!,
+        username: user.displayName ?? (email.isEmpty ? 'User' : email.split('@')[0]),
+        email: email,
         age: 20,
         profileImage: user.photoURL,
         createdAt: user.metadata.creationTime ?? DateTime.now(),
@@ -49,7 +59,10 @@ class AccountService {
         plannedMeals: [],
       );
 
-      await _firestore.collection('users').doc(user.uid).set(newUser.toJson());
+      await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .set(newUser.toJson(), SetOptions(merge: true));
       await _syncUserDataToLocal(newUser);
       return newUser;
     } catch (e) {
@@ -63,17 +76,27 @@ class AccountService {
       final user = _auth.currentUser;
       if (user == null) return {'success': false, 'message': 'No user logged in'};
 
+      bool emailChangePending = false;
       if (user.displayName != updatedUser.username) {
         await user.updateDisplayName(updatedUser.username);
       }
       if (user.email != updatedUser.email) {
         await user.verifyBeforeUpdateEmail(updatedUser.email);
+        // The email only changes once the user confirms the verification link.
+        updatedUser = updatedUser.copyWith(email: user.email ?? updatedUser.email);
+        emailChangePending = true;
       }
 
       final currentUser = await getCurrentUser();
       final userToSave = updatedUser.copyWith(
         favorites: currentUser?.favorites ?? updatedUser.favorites,
         plannedMeals: currentUser?.plannedMeals ?? updatedUser.plannedMeals,
+        mealPlans: currentUser?.mealPlans ?? updatedUser.mealPlans,
+        dailyCalories: currentUser?.dailyCalories ?? updatedUser.dailyCalories,
+        dailyProtein: currentUser?.dailyProtein ?? updatedUser.dailyProtein,
+        dailyCarbs: currentUser?.dailyCarbs ?? updatedUser.dailyCarbs,
+        dailyFats: currentUser?.dailyFats ?? updatedUser.dailyFats,
+        ratings: currentUser?.ratings ?? updatedUser.ratings,
         updatedAt: DateTime.now(),
       );
 
@@ -83,6 +106,13 @@ class AccountService {
           .set(userToSave.toJson(), SetOptions(merge: true));
       await _cache.setCurrentUserJson(json.encode(userToSave.toJson()));
 
+      if (emailChangePending) {
+        return {
+          'success': true,
+          'emailChangePending': true,
+          'message': 'Profile updated. Check your inbox to confirm your new email.',
+        };
+      }
       return {'success': true, 'message': 'Profile updated successfully'};
     } on FirebaseAuthException catch (e) {
       return {'success': false, 'message': 'Failed to update profile: ${e.message}'};
@@ -97,11 +127,10 @@ class AccountService {
       final user = _auth.currentUser;
       if (user == null) return {'success': false, 'message': 'No user logged in'};
 
-      await _firestore.collection('users').doc(user.uid).delete();
       await user.delete();
+      await _firestore.collection('users').doc(user.uid).delete();
       await _cache.clearAuth();
-      await _cache.removeFavorites();
-      await _cache.removePlannedMeals();
+      await _cache.clearUserData();
 
       return {'success': true, 'message': 'Account deleted successfully'};
     } on FirebaseAuthException catch (e) {

@@ -16,10 +16,10 @@ class FirestoreHelpers {
     final userId = _auth.currentUser?.uid;
     if (userId == null) return;
     try {
-      await _getUserDoc(userId).update({
+      await _getUserDoc(userId).set({
         'favorites': FieldValue.arrayUnion([recipeId]),
         'updatedAt': DateTime.now().toIso8601String(),
-      });
+      }, SetOptions(merge: true));
     } catch (e) {
       debugPrint('Error adding to favorites: $e');
       rethrow;
@@ -30,10 +30,10 @@ class FirestoreHelpers {
     final userId = _auth.currentUser?.uid;
     if (userId == null) return;
     try {
-      await _getUserDoc(userId).update({
+      await _getUserDoc(userId).set({
         'favorites': FieldValue.arrayRemove([recipeId]),
         'updatedAt': DateTime.now().toIso8601String(),
-      });
+      }, SetOptions(merge: true));
     } catch (e) {
       debugPrint('Error removing from favorites: $e');
       rethrow;
@@ -73,10 +73,10 @@ class FirestoreHelpers {
       final firestoreFavorites = await getUserFavorites();
       final toAdd = localFavorites.difference(firestoreFavorites.toSet());
       if (toAdd.isNotEmpty) {
-        await _getUserDoc(userId).update({
+        await _getUserDoc(userId).set({
           'favorites': FieldValue.arrayUnion(toAdd.toList()),
           'updatedAt': DateTime.now().toIso8601String(),
-        });
+        }, SetOptions(merge: true));
       }
     } catch (e) {
       debugPrint('Error syncing favorites: $e');
@@ -97,10 +97,10 @@ class FirestoreHelpers {
           merged[date] = entries;
         }
       });
-      await _getUserDoc(userId).update({
+      await _getUserDoc(userId).set({
         'mealPlans': merged,
         'updatedAt': DateTime.now().toIso8601String(),
-      });
+      }, SetOptions(merge: true));
     } catch (e) {
       debugPrint('Error syncing meal plans: $e');
     }

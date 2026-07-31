@@ -44,17 +44,25 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Map<String, dynamic>> updateUser(User updatedUser) async {
-    final model = UserModel(
-      id: updatedUser.id,
-      username: updatedUser.username,
-      email: updatedUser.email,
-      age: updatedUser.age,
-      profileImage: updatedUser.profileImage,
-      createdAt: updatedUser.createdAt,
-      favorites: updatedUser.favorites,
-      plannedMeals: updatedUser.plannedMeals,
-      updatedAt: updatedUser.updatedAt,
-    );
+    final model = updatedUser is UserModel
+        ? updatedUser
+        : UserModel(
+            id: updatedUser.id,
+            username: updatedUser.username,
+            email: updatedUser.email,
+            age: updatedUser.age,
+            profileImage: updatedUser.profileImage,
+            createdAt: updatedUser.createdAt,
+            favorites: updatedUser.favorites,
+            plannedMeals: updatedUser.plannedMeals,
+            mealPlans: updatedUser.mealPlans,
+            dailyCalories: updatedUser.dailyCalories,
+            dailyProtein: updatedUser.dailyProtein,
+            dailyCarbs: updatedUser.dailyCarbs,
+            dailyFats: updatedUser.dailyFats,
+            ratings: updatedUser.ratings,
+            updatedAt: updatedUser.updatedAt,
+          );
     return await _authService.updateUser(model);
   }
 

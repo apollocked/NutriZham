@@ -156,14 +156,41 @@ class CacheService {
   static const _dailyProtein = 'daily_protein';
   static const _dailyCarbs = 'daily_carbs';
   static const _dailyFats = 'daily_fats';
-  Future<int> getDailyCalories() async => (await getString(_dailyCalories)).isEmpty ? 2000 : int.parse(await getString(_dailyCalories));
+  Future<int> getDailyCalories() async {
+    final s = await getString(_dailyCalories);
+    return s.isEmpty ? 2000 : int.tryParse(s) ?? 2000;
+  }
   Future<void> setDailyCalories(int v) async => setString(_dailyCalories, v.toString());
-  Future<double> getDailyProtein() async => (await getString(_dailyProtein)).isEmpty ? 150.0 : double.parse(await getString(_dailyProtein));
+  Future<double> getDailyProtein() async {
+    final s = await getString(_dailyProtein);
+    return s.isEmpty ? 150.0 : double.tryParse(s) ?? 150.0;
+  }
   Future<void> setDailyProtein(double v) async => setString(_dailyProtein, v.toString());
-  Future<double> getDailyCarbs() async => (await getString(_dailyCarbs)).isEmpty ? 250.0 : double.parse(await getString(_dailyCarbs));
+  Future<double> getDailyCarbs() async {
+    final s = await getString(_dailyCarbs);
+    return s.isEmpty ? 250.0 : double.tryParse(s) ?? 250.0;
+  }
   Future<void> setDailyCarbs(double v) async => setString(_dailyCarbs, v.toString());
-  Future<double> getDailyFats() async => (await getString(_dailyFats)).isEmpty ? 65.0 : double.parse(await getString(_dailyFats));
+  Future<double> getDailyFats() async {
+    final s = await getString(_dailyFats);
+    return s.isEmpty ? 65.0 : double.tryParse(s) ?? 65.0;
+  }
   Future<void> setDailyFats(double v) async => setString(_dailyFats, v.toString());
+
+  // Convenience: clear all per-user data on account switch / deletion
+  static const _plannedRecipesCache = 'planned_recipes_cache';
+  Future<void> clearUserData() async {
+    await removeFavorites();
+    await removePlannedMeals();
+    await removeMealPlans();
+    await remove(_dailyCalories);
+    await remove(_dailyProtein);
+    await remove(_dailyCarbs);
+    await remove(_dailyFats);
+    await remove(_needsSync);
+    await remove(_plannedSync);
+    await remove(_plannedRecipesCache);
+  }
 
   // Auth session (secure storage — sensitive)
   static const _isLoggedIn = 'is_logged_in';

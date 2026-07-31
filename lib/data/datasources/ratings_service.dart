@@ -21,10 +21,11 @@ class RatingsService {
     }
   }
 
-  Future<void> saveRating(String recipeId, int newRating) async {
+  Future<double> saveRating(String recipeId, int newRating) async {
     final userId = currentUserId;
-    if (userId == null) return;
+    if (userId == null) return 0.0;
     try {
+      double savedAvg = 0.0;
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         final userRef = _firestore.collection('users').doc(userId);
         final recipeRef = _firestore.collection('recipes').doc(recipeId);
@@ -36,20 +37,24 @@ class RatingsService {
             (userSnapshot.data()?['ratings'] as Map<String, dynamic>?) ?? {});
         final oldRating = (currentRatings[recipeId] as num?)?.toInt() ?? 0;
         final currentAvg = (recipeSnapshot.data()?['rating'] as num?)?.toDouble() ?? 0.0;
-        final currentCount = (recipeSnapshot.data()?['ratingCount'] as int?) ?? 0;
+        final currentCount = (recipeSnapshot.data()?['ratingCount'] as num?)?.toInt() ?? 0;
 
         double newAvg;
         int newCount;
 
         if (oldRating == 0 && newRating > 0) {
           newCount = currentCount + 1;
-          newAvg = ((currentAvg * currentCount) + newRating) / newCount;
+          newAvg = currentCount == 0
+              ? newRating.toDouble()
+              : ((currentAvg * currentCount) + newRating) / newCount;
         } else if (oldRating > 0 && newRating > 0) {
-          newCount = currentCount;
-          newAvg = ((currentAvg * currentCount) - oldRating + newRating) / newCount;
+          newCount = currentCount > 0 ? currentCount : 1;
+          newAvg = ((currentAvg * newCount) - oldRating + newRating) / newCount;
         } else {
           newCount = currentCount > 0 ? currentCount - 1 : 0;
-          newAvg = newCount > 0 ? ((currentAvg * (currentCount + 1)) - oldRating) / newCount : 0.0;
+          newAvg = newCount > 0
+              ? ((currentAvg * currentCount) - oldRating) / newCount
+              : 0.0;
         }
 
         currentRatings[recipeId] = newRating;
@@ -57,12 +62,16 @@ class RatingsService {
           'ratings': currentRatings,
           'updatedAt': DateTime.now().toIso8601String(),
         });
-        transaction.update(recipeRef, {
+        transaction.set(recipeRef, {
           'rating': newAvg,
           'ratingCount': newCount,
-        });
+        }, SetOptions(merge: true));
+
+        savedAvg = newAvg;
       });
-    } catch (_) {
+      return savedAvg;
+    } catch (e) {
+      debugPrint('RatingsService.saveRating: $e');
       rethrow;
     }
   }

@@ -29,6 +29,7 @@ class RecipeDetailScreen extends StatefulWidget {
 class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   int _userRating = 0;
   double _displayRating = 0.0;
+  late int _ratingCount = widget.recipe.ratingCount;
   final RatingsService _ratingsService = RatingsService();
 
   @override
@@ -119,18 +120,37 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               RecipeRatingCard(
                 rating: _displayRating,
-                ratingCount: widget.recipe.ratingCount,
+                ratingCount: _ratingCount,
                 userRating: _userRating,
                 onRatingChanged: (rating) async {
+                  final previous = _userRating;
                   setState(() => _userRating = rating);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                        duration: const Duration(milliseconds: 775),
+                  try {
+                    final newAvg = await _ratingsService.saveRating(widget.recipe.id, rating);
+                    if (!mounted) return;
+                    setState(() {
+                      _displayRating = newAvg > 0 ? newAvg : _displayRating;
+                      _ratingCount = previous == 0 && rating > 0
+                          ? _ratingCount + 1
+                          : _ratingCount;
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          duration: const Duration(milliseconds: 775),
+                          behavior: SnackBarBehavior.floating,
+                          content: Text('${loc.rating}: $rating/5'),
+                          backgroundColor: Theme.of(context).colorScheme.primary),
+                    );
+                  } catch (e) {
+                    if (!mounted) return;
+                    setState(() => _userRating = previous);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(loc.ratingSaveFailed),
                         behavior: SnackBarBehavior.floating,
-                        content: Text('${loc.rating}: $rating/5'),
-                        backgroundColor: Theme.of(context).colorScheme.primary),
-                  );
-                  await _ratingsService.saveRating(widget.recipe.id, rating);
+                      ),
+                    );
+                  }
                 },
               ),
               const SizedBox(height: 16),

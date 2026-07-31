@@ -33,12 +33,19 @@ class MealPlannerService {
     try {
       final firestoreMap = await _firestoreService.getMealPlans();
       if (firestoreMap.isNotEmpty) {
-        final firestore = firestoreMap.map((date, value) => MapEntry(
-              date,
-              (value as List)
-                  .map((e) => MealPlanEntry.fromJson(e as Map<String, dynamic>))
-                  .toList(),
-            ));
+        final firestore = <String, List<MealPlanEntry>>{};
+        firestoreMap.forEach((date, value) {
+          if (value is List) {
+            final entries = <MealPlanEntry>[];
+            for (final e in value) {
+              if (e is Map) {
+                entries.add(MealPlanEntry.fromJson(
+                    Map<String, dynamic>.from(e)));
+              }
+            }
+            firestore[date] = entries;
+          }
+        });
         final merged = Map<String, List<MealPlanEntry>>.from(firestore);
         cached.forEach((date, entries) {
           merged.putIfAbsent(date, () => entries);
