@@ -9,6 +9,7 @@ import 'package:nutrizham/presentation/blocs/meal_planner_cubit.dart';
 import 'package:nutrizham/presentation/widgets/Form_Widgets/empty_state_widget.dart';
 import 'package:nutrizham/presentation/widgets/common/shimmer_loading.dart';
 import 'package:nutrizham/presentation/widgets/planner/choose_slot_dialog.dart';
+import 'package:nutrizham/presentation/widgets/recipe/adaptive_recipe_grid.dart';
 import 'package:nutrizham/presentation/widgets/recipe/recipe_card.dart';
 
 class RecipeGrid extends StatelessWidget {
@@ -97,28 +98,34 @@ class RecipeGrid extends StatelessWidget {
         }
         return false;
       },
-      child: GridView.builder(
-        controller: scrollController,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.82,
-          crossAxisSpacing: 0,
-          mainAxisSpacing: 0,
-        ),
-        padding: const EdgeInsets.fromLTRB(11, 0, 11, 96),
-        itemCount: recipes.length + (hasMore && isLoadingMore ? 1 : 0),
-        itemBuilder: (context, index) {
-          if (index == recipes.length) {
-            return const ShimmerRecipeCard();
-          }
-          final recipe = recipes[index];
-          return RecipeCard(
-            recipe: recipe,
-            isFavorite: context.watch<FavoritesCubit>().isFavorite(recipe.id),
-            onFavoriteToggle: () =>
-                context.read<FavoritesCubit>().toggleFavorite(recipe.id),
-            onTap: () => context.push('/recipe/$recipe.id', extra: recipe),
-            onLongPress: () => _addToPlanner(context, recipe),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final textScale = MediaQuery.textScalerOf(context).scale(14) / 14;
+          return GridView.builder(
+            controller: scrollController,
+            gridDelegate: adaptiveRecipeGridDelegate(
+                constraints.maxWidth, textScale),
+            padding: EdgeInsets.fromLTRB(
+              constraints.maxWidth >= 600 ? 24 : 11,
+              0,
+              constraints.maxWidth >= 600 ? 24 : 11,
+              96,
+            ),
+            itemCount: recipes.length + (hasMore && isLoadingMore ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index == recipes.length) {
+                return const ShimmerRecipeCard();
+              }
+              final recipe = recipes[index];
+              return RecipeCard(
+                recipe: recipe,
+                isFavorite: context.watch<FavoritesCubit>().isFavorite(recipe.id),
+                onFavoriteToggle: () =>
+                    context.read<FavoritesCubit>().toggleFavorite(recipe.id),
+                onTap: () => context.push('/recipe/$recipe.id', extra: recipe),
+                onLongPress: () => _addToPlanner(context, recipe),
+              );
+            },
           );
         },
       ),

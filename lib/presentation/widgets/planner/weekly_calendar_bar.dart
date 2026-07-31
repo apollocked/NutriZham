@@ -22,6 +22,7 @@ class WeeklyCalendarBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final loc = AppLocalizations.of(context)!;
     final days = List.generate(7, (i) => weekStart.add(Duration(days: i)));
 
     return Container(
@@ -29,6 +30,7 @@ class WeeklyCalendarBar extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
+            tooltip: loc.previousWeek,
             icon: const Icon(Icons.chevron_left_rounded),
             onPressed: onPreviousWeek,
             style: IconButton.styleFrom(
@@ -98,6 +100,7 @@ class WeeklyCalendarBar extends StatelessWidget {
             ),
           ),
           IconButton(
+            tooltip: loc.nextWeek,
             icon: const Icon(Icons.chevron_right_rounded),
             onPressed: onNextWeek,
             style: IconButton.styleFrom(

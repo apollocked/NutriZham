@@ -71,10 +71,12 @@ class NutritionGoalsCard extends StatelessWidget {
                 ),
               ),
               if (onEditGoals != null)
-                GestureDetector(
-                  onTap: onEditGoals,
-                  child: Icon(Icons.tune_rounded,
+                IconButton(
+                  onPressed: onEditGoals,
+                  tooltip: loc.nutritionGoals,
+                  icon: Icon(Icons.tune_rounded,
                       size: 18, color: theme.colorScheme.primary),
+                  visualDensity: VisualDensity.compact,
                 ),
             ],
           ),

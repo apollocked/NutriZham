@@ -118,6 +118,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: CustomAppBar(title: loc.appTitle, actions: [
         IconButton(
+            tooltip: _showFavoritesOnly
+                ? loc.removeFromFavorites
+                : loc.addToFavorites,
             icon: Icon(
                 _showFavoritesOnly ? Icons.favorite : Icons.favorite_outline,
                 color: _showFavoritesOnly ? AppColors.accentRed : null),

@@ -296,6 +296,18 @@ class AppLocalizationsKu extends AppLocalizations {
   String get removeFromPlan => 'لابردن لە پلان';
 
   @override
+  String get addToFavorites => 'زیادکردن بۆ دڵخوازەکان';
+
+  @override
+  String get removeFromFavorites => 'لابردن لە دڵخوازەکان';
+
+  @override
+  String get previousWeek => 'هەفتەی پێشوو';
+
+  @override
+  String get nextWeek => 'هەفتەی داهاتوو';
+
+  @override
   String get success => 'سەرکەوتوو';
 
   @override

@@ -3,8 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
-import 'package:nutrizham/presentation/widgets/recipe/recipe_card.dart';
 import 'package:nutrizham/presentation/widgets/common/pressable.dart';
+import 'package:nutrizham/presentation/widgets/recipe/adaptive_recipe_grid.dart';
+import 'package:nutrizham/presentation/widgets/recipe/recipe_card.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
 class MatchedRecipesGrid extends StatelessWidget {
@@ -33,17 +34,22 @@ class MatchedRecipesGrid extends StatelessWidget {
         ),
       );
     }
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, childAspectRatio: 0.82, crossAxisSpacing: 0, mainAxisSpacing: 0,
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 11),
-      itemCount: recipes.length,
-      itemBuilder: (_, i) => _RecipeGridItem(
-        recipe: recipes[i],
-        index: i,
-        onLongPress: onLongPress,
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final textScale = MediaQuery.textScalerOf(context).scale(14) / 14;
+        return GridView.builder(
+          gridDelegate:
+              adaptiveRecipeGridDelegate(constraints.maxWidth, textScale),
+          padding: EdgeInsets.symmetric(
+              horizontal: constraints.maxWidth >= 600 ? 24 : 11),
+          itemCount: recipes.length,
+          itemBuilder: (_, i) => _RecipeGridItem(
+            recipe: recipes[i],
+            index: i,
+            onLongPress: onLongPress,
+          ),
+        );
+      },
     );
   }
 }

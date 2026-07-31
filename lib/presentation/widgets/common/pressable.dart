@@ -151,7 +151,7 @@ class _DelayedRevealState extends State<DelayedReveal>
     ).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
     );
-    Future.delayed(widget.baseDelay * widget.index, () {
+    Future.delayed(widget.baseDelay * widget.index.clamp(0, 8), () {
       if (mounted) _controller.forward();
     });
   }

@@ -144,18 +144,23 @@ class RecipeOfTheDayCard extends StatelessWidget {
                             ],
                           ),
                         ),
-                        BounceIcon(
-                          icon: Icon(
-                            favorites.isFavorite(recipe.id)
-                                ? Icons.favorite
-                                : Icons.favorite_outline,
-                            size: 24,
-                            color: favorites.isFavorite(recipe.id)
-                                ? AppColors.accentRed
-                                : theme.colorScheme.onSurfaceVariant,
+                        Tooltip(
+                          message: favorites.isFavorite(recipe.id)
+                              ? loc.removeFromFavorites
+                              : loc.addToFavorites,
+                          child: BounceIcon(
+                            icon: Icon(
+                              favorites.isFavorite(recipe.id)
+                                  ? Icons.favorite
+                                  : Icons.favorite_outline,
+                              size: 24,
+                              color: favorites.isFavorite(recipe.id)
+                                  ? AppColors.accentRed
+                                  : theme.colorScheme.onSurfaceVariant,
+                            ),
+                            onPressed: () =>
+                                favorites.toggleFavorite(recipe.id),
                           ),
-                          onPressed: () =>
-                              favorites.toggleFavorite(recipe.id),
                         ),
                       ],
                     ),

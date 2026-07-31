@@ -54,9 +54,13 @@ class ProfileHeader extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _Pill(label: email, icon: Icons.email_outlined, color: theme.colorScheme.primary),
+            Flexible(
+              child: _Pill(label: email, icon: Icons.email_outlined, color: theme.colorScheme.primary),
+            ),
             const SizedBox(width: 8),
-            _Pill(label: '${loc.age}: $age', icon: Icons.cake_outlined, color: theme.colorScheme.secondary),
+            Flexible(
+              child: _Pill(label: '${loc.age}: $age', icon: Icons.cake_outlined, color: theme.colorScheme.secondary),
+            ),
           ],
         ),
         if (createdAt != null) ...[
@@ -91,7 +95,12 @@ class _Pill extends StatelessWidget {
         children: [
           Icon(icon, size: 14, color: color),
           const SizedBox(width: 6),
-          Text(label, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: color)),
+          Flexible(
+            child: Text(label,
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: color),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis),
+          ),
         ],
       ),
     );

@@ -296,6 +296,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get removeFromPlan => 'Remove from Plan';
 
   @override
+  String get addToFavorites => 'Add to favorites';
+
+  @override
+  String get removeFromFavorites => 'Remove from favorites';
+
+  @override
+  String get previousWeek => 'Previous week';
+
+  @override
+  String get nextWeek => 'Next week';
+
+  @override
   String get success => 'Success';
 
   @override

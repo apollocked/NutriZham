@@ -296,6 +296,18 @@ class AppLocalizationsAr extends AppLocalizations {
   String get removeFromPlan => 'إزالة من الخطة';
 
   @override
+  String get addToFavorites => 'إضافة إلى المفضلة';
+
+  @override
+  String get removeFromFavorites => 'إزالة من المفضلة';
+
+  @override
+  String get previousWeek => 'الأسبوع السابق';
+
+  @override
+  String get nextWeek => 'الأسبوع التالي';
+
+  @override
   String get success => 'نجاح';
 
   @override

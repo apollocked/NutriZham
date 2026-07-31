@@ -106,6 +106,8 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
         title: recipeTitle,
         actions: [
           IconButton(
+            tooltip:
+                isFavorite ? loc.removeFromFavorites : loc.addToFavorites,
             icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_outline),
             color: isFavorite ? AppColors.accentRed : null,
             onPressed: () => favorites.toggleFavorite(widget.recipe.id),

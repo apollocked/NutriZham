@@ -12,6 +12,7 @@ import 'package:nutrizham/presentation/widgets/common/search_bar_widget.dart';
 import 'package:nutrizham/presentation/widgets/common/category_widgets.dart';
 import 'package:nutrizham/presentation/widgets/common/shimmer_loading.dart';
 import 'package:nutrizham/presentation/widgets/common/pressable.dart';
+import 'package:nutrizham/presentation/widgets/recipe/adaptive_recipe_grid.dart';
 import 'package:nutrizham/presentation/widgets/recipe/recipe_card.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 
@@ -111,27 +112,36 @@ class _SearchPageState extends State<SearchPage> with AddToPlannerMixin {
               ? const ShimmerRecipeGrid()
               : filteredRecipes.isEmpty
               ? EmptyStateWidget(icon: Icons.search_off, title: loc.noRecipesFound, subtitle: loc.tryDifferentSearch)
-              : GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 0.82,
-                    crossAxisSpacing: 0,
-                    mainAxisSpacing: 0,
-                  ),
-                  padding: const EdgeInsets.fromLTRB(11, 0, 11, 96),
-                  itemCount: filteredRecipes.length,
-                  itemBuilder: (context, index) {
-                    final recipe = filteredRecipes[index];
-                    final favorites = context.watch<FavoritesCubit>();
-                    return DelayedReveal(
-                      index: index,
-                      child: RecipeCard(
-                        recipe: recipe,
-                        isFavorite: favorites.isFavorite(recipe.id),
-                        onFavoriteToggle: () => favorites.toggleFavorite(recipe.id),
-                        onTap: () => context.push('/recipe/${recipe.id}', extra: recipe),
-                        onLongPress: () => addToPlanner(recipe),
+              : LayoutBuilder(
+                  builder: (context, constraints) {
+                    final textScale =
+                        MediaQuery.textScalerOf(context).scale(14) / 14;
+                    return GridView.builder(
+                      gridDelegate: adaptiveRecipeGridDelegate(
+                          constraints.maxWidth, textScale),
+                      padding: EdgeInsets.fromLTRB(
+                        constraints.maxWidth >= 600 ? 24 : 11,
+                        0,
+                        constraints.maxWidth >= 600 ? 24 : 11,
+                        96,
                       ),
+                      itemCount: filteredRecipes.length,
+                      itemBuilder: (context, index) {
+                        final recipe = filteredRecipes[index];
+                        final favorites = context.watch<FavoritesCubit>();
+                        return DelayedReveal(
+                          index: index,
+                          child: RecipeCard(
+                            recipe: recipe,
+                            isFavorite: favorites.isFavorite(recipe.id),
+                            onFavoriteToggle: () =>
+                                favorites.toggleFavorite(recipe.id),
+                            onTap: () =>
+                                context.push('/recipe/${recipe.id}', extra: recipe),
+                            onLongPress: () => addToPlanner(recipe),
+                          ),
+                        );
+                      },
                     );
                   },
                 ),

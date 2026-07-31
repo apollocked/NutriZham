@@ -34,18 +34,21 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   @override
   void initState() {
     super.initState();
-    _currentPasswordController.addListener(() {
-      setState(() => _showValidateButton =
-          _currentPasswordController.text.isNotEmpty && !_isCurrentPasswordValid);
-    });
+    _currentPasswordController.addListener(_onCurrentPasswordChanged);
   }
 
   @override
   void dispose() {
+    _currentPasswordController.removeListener(_onCurrentPasswordChanged);
     _currentPasswordController.dispose();
     _newPasswordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
+  }
+
+  void _onCurrentPasswordChanged() {
+    setState(() => _showValidateButton =
+        _currentPasswordController.text.isNotEmpty && !_isCurrentPasswordValid);
   }
 
   Future<void> _validateCurrentPassword() async {

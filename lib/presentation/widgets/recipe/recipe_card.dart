@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nutrizham/core/constants/app_colors.dart';
 import 'package:nutrizham/core/utils/category_label.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
+import 'package:nutrizham/l10n/app_localizations.dart';
 import 'package:nutrizham/presentation/widgets/common/pressable.dart';
 
 class RecipeCard extends StatelessWidget {
@@ -68,17 +69,23 @@ class RecipeCard extends StatelessWidget {
                         Positioned(
                           top: 4,
                           right: 2,
-                          child: BounceIcon(
-                            icon: Icon(
-                              isFavorite
-                                  ? Icons.favorite
-                                  : Icons.favorite_outline,
-                              size: 20,
-                              color: isFavorite
-                                  ? AppColors.accentRed
-                                  : theme.colorScheme.onSurfaceVariant,
+                          child: Tooltip(
+                            message: isFavorite
+                                ? AppLocalizations.of(context)!
+                                    .removeFromFavorites
+                                : AppLocalizations.of(context)!.addToFavorites,
+                            child: BounceIcon(
+                              icon: Icon(
+                                isFavorite
+                                    ? Icons.favorite
+                                    : Icons.favorite_outline,
+                                size: 20,
+                                color: isFavorite
+                                    ? AppColors.accentRed
+                                    : theme.colorScheme.onSurfaceVariant,
+                              ),
+                              onPressed: onFavoriteToggle,
                             ),
-                            onPressed: onFavoriteToggle,
                           ),
                         ),
                       ],
@@ -100,31 +107,39 @@ class RecipeCard extends StatelessWidget {
                       const SizedBox(height: 8),
                       Row(
                         children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 3),
-                            decoration: BoxDecoration(
-                              color: catColor.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Text(
-                              categoryLabel(recipe.category, context),
-                              style: TextStyle(
-                                  fontSize: 10,
-                                  color: catColor,
-                                  fontWeight: FontWeight.w600),
+                          Flexible(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: catColor.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                categoryLabel(recipe.category, context),
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    color: catColor,
+                                    fontWeight: FontWeight.w600),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ),
-                          const Spacer(),
+                          const SizedBox(width: 6),
                           Icon(Icons.local_fire_department_rounded,
                               size: 12,
                               color: AppColors.caloriesColor.withValues(alpha: 0.7)),
                           const SizedBox(width: 2),
-                          Text('${recipe.nutrition.calories}',
-                              style: const TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.caloriesColor)),
+                          Flexible(
+                            child: Text('${recipe.nutrition.calories}',
+                                style: const TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.caloriesColor),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis),
+                          ),
                         ],
                       ),
                     ],
