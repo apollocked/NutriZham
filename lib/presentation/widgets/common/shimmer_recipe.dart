@@ -23,11 +23,11 @@ class ShimmerRecipeCard extends StatelessWidget {
             ),
           ),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.max,
             children: [
-              AspectRatio(
-                aspectRatio: 1.6,
+              Expanded(
                 child: Container(
+                  width: double.infinity,
                   decoration: BoxDecoration(
                     color: shimmer,
                     borderRadius: const BorderRadius.vertical(

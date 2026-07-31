@@ -45,11 +45,11 @@ class RecipeCard extends StatelessWidget {
             ),
             clipBehavior: Clip.antiAlias,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: MainAxisSize.max,
               children: [
-                AspectRatio(
-                  aspectRatio: 1.6,
+                Expanded(
                   child: Container(
+                    width: double.infinity,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
