@@ -100,7 +100,12 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<Map<String, dynamic>> updateProfile(UserModel updatedUser) async {
     try {
-      return await _authService.updateUser(updatedUser);
+      final result = await _authService.updateUser(updatedUser);
+      if (result['success'] == true) {
+        final user = await _authService.getCurrentUser();
+        if (user != null) emit(AuthAuthenticated(user));
+      }
+      return result;
     } catch (e) {
       return {'success': false, 'message': e.toString()};
     }

@@ -124,6 +124,8 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                 userRating: _userRating,
                 onRatingChanged: (rating) async {
                   final previous = _userRating;
+                  final messenger = ScaffoldMessenger.of(context);
+                  final theme = Theme.of(context);
                   setState(() => _userRating = rating);
                   try {
                     final newAvg = await _ratingsService.saveRating(widget.recipe.id, rating);
@@ -134,17 +136,17 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                           ? _ratingCount + 1
                           : _ratingCount;
                     });
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    messenger.showSnackBar(
                       SnackBar(
                           duration: const Duration(milliseconds: 775),
                           behavior: SnackBarBehavior.floating,
                           content: Text('${loc.rating}: $rating/5'),
-                          backgroundColor: Theme.of(context).colorScheme.primary),
+                          backgroundColor: theme.colorScheme.primary),
                     );
                   } catch (e) {
                     if (!mounted) return;
                     setState(() => _userRating = previous);
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    messenger.showSnackBar(
                       SnackBar(
                         content: Text(loc.ratingSaveFailed),
                         behavior: SnackBarBehavior.floating,
