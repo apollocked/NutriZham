@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nutrizham/core/cache/cache_service.dart';
 import 'package:nutrizham/core/themes/app_theme.dart';
 import 'package:nutrizham/core/utils/locale_helpers.dart';
@@ -19,15 +20,17 @@ void main() async {
   await CacheService().init();
   final settings = SettingsCubit();
   await settings.initialize();
-  runApp(NutriZhamApp(settings: settings));
+  final router = buildRouter(settings);
+  settings.stream.listen((_) => router.refresh());
+  runApp(NutriZhamApp(settings: settings, router: router));
 }
 
 class NutriZhamApp extends StatelessWidget {
   final SettingsCubit settings;
-  const NutriZhamApp({super.key, required this.settings});
+  final GoRouter router;
+  const NutriZhamApp({super.key, required this.settings, required this.router});
   @override
   Widget build(BuildContext context) {
-    final router = buildRouter();
     return BlocProvider<SettingsCubit>.value(
       value: settings,
       child: MultiBlocProvider(

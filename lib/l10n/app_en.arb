@@ -65,6 +65,7 @@
   "rateThisMeal": "Rate this Meal",
   "yourRating": "Your Rating",
   "submitRating": "Submit Rating",
+  "ratingSaveFailed": "Could not save your rating. Try again later.",
   "settings": "Settings",
   "language": "Language",
   "darkMode": "Dark Mode",

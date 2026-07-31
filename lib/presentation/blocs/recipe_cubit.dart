@@ -31,7 +31,9 @@ class RecipeCubit extends Cubit<RecipeState> {
   }
 
   bool get isLoading => state is RecipeLoading;
-  bool get isLoadingMore => state is RecipeLoadingMore;  bool get isOffline {
+  bool get isLoadingMore => state is RecipeLoadingMore;
+
+  bool get isOffline {
     final s = state;
     return (s is RecipeLoaded && s.isOffline) || (s is RecipeError && s.isOffline);
   }

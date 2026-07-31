@@ -42,31 +42,45 @@ class UserModel extends User {
   }
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    final mealPlans = <String, List<MealPlanEntry>>{};
+    final rawMealPlans = json['mealPlans'];
+    if (rawMealPlans is Map) {
+      rawMealPlans.forEach((date, value) {
+        if (date is String && value is List) {
+          final entries = <MealPlanEntry>[];
+          for (final e in value) {
+            if (e is Map) {
+              entries.add(MealPlanEntry.fromJson(Map<String, dynamic>.from(e)));
+            }
+          }
+          mealPlans[date] = entries;
+        }
+      });
+    }
+    final ratings = <String, int>{};
+    final rawRatings = json['ratings'];
+    if (rawRatings is Map) {
+      rawRatings.forEach((k, v) {
+        if (k is String && v is num) ratings[k] = v.toInt();
+      });
+    }
     return UserModel(
-      id: json['id'] as String,
-      username: json['username'] as String,
-      email: json['email'] as String,
-      age: json['age'] as int,
+      id: json['id'] as String? ?? '',
+      username: json['username'] as String? ?? '',
+      email: json['email'] as String? ?? '',
+      age: (json['age'] as num?)?.toInt() ?? 20,
       profileImage: json['profileImage'] as String?,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      favorites: List<String>.from(json['favorites'] ?? []),
-      ratings: (json['ratings'] as Map<String, dynamic>?)
-              ?.map((k, v) => MapEntry(k, (v as num).toInt())) ??
-          {},
-      plannedMeals: List<String>.from(json['plannedMeals'] ?? []),
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'] as String)
+      createdAt: json['createdAt'] is String
+          ? DateTime.tryParse(json['createdAt'] as String) ?? DateTime.now()
+          : DateTime.now(),
+      favorites: (json['favorites'] as List?)?.whereType<String>().toList() ?? [],
+      ratings: ratings,
+      plannedMeals: (json['plannedMeals'] as List?)?.whereType<String>().toList() ?? [],
+      updatedAt: json['updatedAt'] is String
+          ? DateTime.tryParse(json['updatedAt'] as String)
           : null,
-      mealPlans: (json['mealPlans'] as Map<String, dynamic>?)
-              ?.map((date, value) => MapEntry(
-                    date,
-                    (value as List)
-                        .map((e) =>
-                            MealPlanEntry.fromJson(e as Map<String, dynamic>))
-                        .toList(),
-                  )) ??
-          {},
-      dailyCalories: json['dailyCalories'] as int? ?? 2000,
+      mealPlans: mealPlans,
+      dailyCalories: (json['dailyCalories'] as num?)?.toInt() ?? 2000,
       dailyProtein: (json['dailyProtein'] as num?)?.toDouble() ?? 150,
       dailyCarbs: (json['dailyCarbs'] as num?)?.toDouble() ?? 250,
       dailyFats: (json['dailyFats'] as num?)?.toDouble() ?? 65,

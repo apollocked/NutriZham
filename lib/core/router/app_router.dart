@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:nutrizham/data/datasources/preferences_helper.dart';
 import 'package:nutrizham/presentation/blocs/settings_cubit.dart';
@@ -20,12 +19,11 @@ import 'package:nutrizham/presentation/pages/layout/Profile_page/Edit_account_pa
 import 'package:nutrizham/presentation/pages/layout/Profile_page/Edit_account_page/Change_Password_Page/change_password_page.dart';
 import 'package:nutrizham/presentation/pages/layout/Search_page/Ingredient_search_page/ingredient_search_page.dart';
 
-GoRouter buildRouter() {
+GoRouter buildRouter(SettingsCubit settings) {
   return GoRouter(
     initialLocation: '/welcome',
     redirect: (context, state) async {
-      final settings = context.read<SettingsCubit>().state;
-      final isLoggedIn = settings.isLoggedIn;
+      final isLoggedIn = settings.state.isLoggedIn;
       final currentPath = state.matchedLocation;
 
       final isAuthRoute = currentPath == '/welcome' ||
@@ -40,7 +38,8 @@ GoRouter buildRouter() {
         return '/home';
       }
 
-      if (!isLoggedIn && currentPath == '/welcome' &&
+      if (!isLoggedIn &&
+          currentPath == '/welcome' &&
           await PreferencesHelper.hasWelcomeBeenShown()) {
         return '/login';
       }
@@ -92,21 +91,30 @@ GoRouter buildRouter() {
       GoRoute(
         path: '/search/by-ingredients',
         pageBuilder: (context, state) {
-          final recipes = state.extra as List<Recipe>;
+          final recipes = state.extra is List ? state.extra as List<Recipe> : null;
+          if (recipes == null) {
+            return _slideUpPage(const SearchPage());
+          }
           return _slideUpPage(IngredientSearchPage(allRecipes: recipes));
         },
       ),
       GoRoute(
         path: '/recipe/:id',
         pageBuilder: (context, state) {
-          final recipe = state.extra as Recipe;
+          final recipe = state.extra is Recipe ? state.extra as Recipe : null;
+          if (recipe == null) {
+            return _slideUpPage(const SearchPage());
+          }
           return _slideUpPage(RecipeDetailScreen(recipe: recipe));
         },
       ),
       GoRoute(
         path: '/planner/grocery-list',
         pageBuilder: (context, state) {
-          final recipes = state.extra as List<Recipe>;
+          final recipes = state.extra is List ? state.extra as List<Recipe> : null;
+          if (recipes == null) {
+            return _slideUpPage(const PlannerPage());
+          }
           return _slideUpPage(GroceryListPage(allRecipes: recipes));
         },
       ),

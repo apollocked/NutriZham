@@ -206,6 +206,9 @@ class AppLocalizationsKu extends AppLocalizations {
   String get submitRating => 'ناردنی هەڵسەنگاندن';
 
   @override
+  String get ratingSaveFailed => 'نەتوانرا هەڵسەنگاندنەکەت پاشەکەوت بکرێت. دواتر هەوڵ بدەرەوە.';
+
+  @override
   String get settings => 'ڕێکخستنەکان';
 
   @override

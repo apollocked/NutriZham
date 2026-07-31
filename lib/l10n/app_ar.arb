@@ -65,6 +65,7 @@
   "rateThisMeal": "قيم هذه الوجبة",
   "yourRating": "تقييمك",
   "submitRating": "إرسال التقييم",
+  "ratingSaveFailed": "تعذر حفظ تقييمك. حاول مرة أخرى لاحقًا.",
   "settings": "الإعدادات",
   "language": "اللغة",
   "darkMode": "الوضع المظلم",

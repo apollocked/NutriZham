@@ -31,10 +31,10 @@ class NutritionalInfo {
 
   factory NutritionalInfo.fromJson(Map<String, dynamic> json) {
     return NutritionalInfo(
-      calories: json['calories'] as int,
-      protein: (json['protein'] as num).toDouble(),
-      carbs: (json['carbs'] as num).toDouble(),
-      fats: (json['fats'] as num).toDouble(),
+      calories: (json['calories'] as num?)?.toInt() ?? 0,
+      protein: (json['protein'] as num?)?.toDouble() ?? 0,
+      carbs: (json['carbs'] as num?)?.toDouble() ?? 0,
+      fats: (json['fats'] as num?)?.toDouble() ?? 0,
     );
   }
 }
@@ -78,24 +78,26 @@ class Recipe {
 
   factory Recipe.fromJson(Map<String, dynamic> json) {
     return Recipe(
-      id: json['id'] as String,
-      title: Map<String, String>.from(json['title']),
-      icon: json['icon'] as String,
-      nutrition: NutritionalInfo.fromJson(json['nutrition']),
+      id: json['id'] as String? ?? '',
+      title: Map<String, String>.from(json['title'] ?? {}),
+      icon: json['icon'] as String? ?? '',
+      nutrition: json['nutrition'] is Map<String, dynamic>
+          ? NutritionalInfo.fromJson(Map<String, dynamic>.from(json['nutrition']))
+          : NutritionalInfo(calories: 0, protein: 0, carbs: 0, fats: 0),
       ingredients: Map<String, List<String>>.from(
-        json['ingredients']
-            .map((key, value) => MapEntry(key, List<String>.from(value))),
+        (json['ingredients'] as Map<String, dynamic>? ?? {}).map(
+            (key, value) => MapEntry(key, List<String>.from(value as List? ?? []))),
       ),
       steps: Map<String, List<String>>.from(
-        json['steps']
-            .map((key, value) => MapEntry(key, List<String>.from(value))),
+        (json['steps'] as Map<String, dynamic>? ?? {}).map(
+            (key, value) => MapEntry(key, List<String>.from(value as List? ?? []))),
       ),
       category: MealCategory.values.firstWhere(
         (e) => e.name == json['category'],
         orElse: () => MealCategory.snack,
       ),
       rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
-      ratingCount: json['ratingCount'] as int? ?? 0,
+      ratingCount: (json['ratingCount'] as num?)?.toInt() ?? 0,
     );
   }
 }

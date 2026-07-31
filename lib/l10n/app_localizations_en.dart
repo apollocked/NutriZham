@@ -206,6 +206,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get submitRating => 'Submit Rating';
 
   @override
+  String get ratingSaveFailed => 'Could not save your rating. Try again later.';
+
+  @override
   String get settings => 'Settings';
 
   @override

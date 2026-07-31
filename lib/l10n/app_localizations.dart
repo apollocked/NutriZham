@@ -490,6 +490,12 @@ abstract class AppLocalizations {
   /// **'Submit Rating'**
   String get submitRating;
 
+  /// No description provided for @ratingSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save your rating. Try again later.'**
+  String get ratingSaveFailed;
+
   /// No description provided for @settings.
   ///
   /// In en, this message translates to:

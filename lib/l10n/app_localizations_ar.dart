@@ -206,6 +206,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get submitRating => 'إرسال التقييم';
 
   @override
+  String get ratingSaveFailed => 'تعذر حفظ تقييمك. حاول مرة أخرى لاحقًا.';
+
+  @override
   String get settings => 'الإعدادات';
 
   @override
