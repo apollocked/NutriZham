@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nutrizham/core/constants/app_colors.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
+import 'package:nutrizham/presentation/widgets/common/recipe_image.dart';
 import 'package:nutrizham/presentation/widgets/recipe/category_badge.dart';
 
 class RecipeHeaderCard extends StatelessWidget {
@@ -33,7 +34,18 @@ class RecipeHeaderCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Text(recipe.icon, style: const TextStyle(fontSize: 52)),
+          if (recipe.imageUrl != null && recipe.imageUrl!.isNotEmpty)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: SizedBox(
+                width: double.infinity,
+                height: 180,
+                child: RecipeImage(
+                    recipe: recipe, color: categoryColor, emojiSize: 52),
+              ),
+            )
+          else
+            Text(recipe.icon, style: const TextStyle(fontSize: 52)),
           const SizedBox(height: 16),
           CategoryBadge(category: recipe.category),
           const SizedBox(height: 16),

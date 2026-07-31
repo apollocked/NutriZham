@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:nutrizham/core/constants/app_colors.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
-import 'package:nutrizham/presentation/widgets/common/gradient_icon.dart';
 import 'package:nutrizham/presentation/widgets/common/pressable.dart';
+import 'package:nutrizham/presentation/widgets/common/recipe_image.dart';
 
 class CompactRecipeCard extends StatelessWidget {
   final Recipe recipe;
@@ -43,7 +43,15 @@ class CompactRecipeCard extends StatelessWidget {
                   const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Row(
                 children: [
-                  GradientIcon(emoji: recipe.icon, color: catColor, size: 20),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: SizedBox(
+                      width: 40,
+                      height: 40,
+                      child: RecipeImage(
+                          recipe: recipe, color: catColor, emojiSize: 20),
+                    ),
+                  ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(

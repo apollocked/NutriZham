@@ -4,6 +4,7 @@ import 'package:nutrizham/core/utils/category_label.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 import 'package:nutrizham/presentation/widgets/common/pressable.dart';
+import 'package:nutrizham/presentation/widgets/common/recipe_image.dart';
 
 class RecipeCard extends StatelessWidget {
   final Recipe recipe;
@@ -48,48 +49,34 @@ class RecipeCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          catColor.withValues(alpha: 0.2),
-                          catColor.withValues(alpha: 0.04)
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: RecipeImage(recipe: recipe, color: catColor),
                       ),
-                    ),
-                    child: Stack(
-                      children: [
-                        Center(
-                          child: Text(recipe.icon,
-                              style: TextStyle(fontSize: 38, color: catColor)),
-                        ),
-                        Positioned(
-                          top: 4,
-                          right: 2,
-                          child: Tooltip(
-                            message: isFavorite
-                                ? AppLocalizations.of(context)!
-                                    .removeFromFavorites
-                                : AppLocalizations.of(context)!.addToFavorites,
-                            child: BounceIcon(
-                              icon: Icon(
-                                isFavorite
-                                    ? Icons.favorite
-                                    : Icons.favorite_outline,
-                                size: 20,
-                                color: isFavorite
-                                    ? AppColors.accentRed
-                                    : theme.colorScheme.onSurfaceVariant,
-                              ),
-                              onPressed: onFavoriteToggle,
+                      Positioned(
+                        top: 4,
+                        right: 2,
+                        child: Tooltip(
+                          message: isFavorite
+                              ? AppLocalizations.of(context)!
+                                  .removeFromFavorites
+                              : AppLocalizations.of(context)!.addToFavorites,
+                          child: BounceIcon(
+                            icon: Icon(
+                              isFavorite
+                                  ? Icons.favorite
+                                  : Icons.favorite_outline,
+                              size: 20,
+                              color: isFavorite
+                                  ? AppColors.accentRed
+                                  : theme.colorScheme.onSurfaceVariant,
                             ),
+                            onPressed: onFavoriteToggle,
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 Padding(

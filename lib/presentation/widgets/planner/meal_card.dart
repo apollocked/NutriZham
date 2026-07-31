@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nutrizham/core/constants/app_colors.dart';
 import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
+import 'package:nutrizham/presentation/widgets/common/recipe_image.dart';
 
 class MealCard extends StatelessWidget {
   final Recipe recipe;
@@ -58,23 +59,13 @@ class MealCard extends StatelessWidget {
                 ),
                 Container(width: 4, color: catColor),
                 const SizedBox(width: 10),
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    gradient: LinearGradient(
-                      colors: [
-                        catColor.withValues(alpha: 0.15),
-                        catColor.withValues(alpha: 0.05)
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                  ),
-                  child: Center(
-                    child:
-                        Text(recipe.icon, style: const TextStyle(fontSize: 20)),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: SizedBox(
+                    width: 44,
+                    height: 44,
+                    child: RecipeImage(
+                        recipe: recipe, color: catColor, emojiSize: 20),
                   ),
                 ),
                 const SizedBox(width: 12),

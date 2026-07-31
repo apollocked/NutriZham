@@ -43,6 +43,7 @@ class Recipe {
   final String id;
   final Map<String, String> title;
   final String icon;
+  final String? imageUrl;
   final NutritionalInfo nutrition;
   final Map<String, List<String>> ingredients;
   final Map<String, List<String>> steps;
@@ -58,6 +59,7 @@ class Recipe {
     required this.ingredients,
     required this.steps,
     required this.category,
+    this.imageUrl,
     this.rating = 0.0,
     this.ratingCount = 0,
   });
@@ -67,6 +69,7 @@ class Recipe {
       'id': id,
       'title': title,
       'icon': icon,
+      'imageUrl': imageUrl,
       'nutrition': nutrition.toJson(),
       'ingredients': ingredients,
       'steps': steps,
@@ -81,6 +84,7 @@ class Recipe {
       id: json['id'] as String? ?? '',
       title: Map<String, String>.from(json['title'] ?? {}),
       icon: json['icon'] as String? ?? '',
+      imageUrl: json['imageUrl'] as String?,
       nutrition: json['nutrition'] is Map<String, dynamic>
           ? NutritionalInfo.fromJson(Map<String, dynamic>.from(json['nutrition']))
           : NutritionalInfo(calories: 0, protein: 0, carbs: 0, fats: 0),

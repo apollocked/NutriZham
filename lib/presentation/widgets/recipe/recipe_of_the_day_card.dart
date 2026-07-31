@@ -4,6 +4,7 @@ import 'package:nutrizham/data/models/meals_data.dart';
 import 'package:nutrizham/presentation/blocs/favorites_cubit.dart';
 import 'package:nutrizham/presentation/widgets/common/gradient_icon.dart';
 import 'package:nutrizham/presentation/widgets/common/pressable.dart';
+import 'package:nutrizham/presentation/widgets/common/recipe_image.dart';
 import 'package:nutrizham/l10n/app_localizations.dart';
 import 'package:nutrizham/core/utils/category_label.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -85,7 +86,17 @@ class RecipeOfTheDayCard extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        GradientIcon(emoji: recipe.icon, color: catColor, size: 34, padding: 20, borderRadius: 20),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: SizedBox(
+                            width: 74,
+                            height: 74,
+                            child: RecipeImage(
+                                recipe: recipe,
+                                color: catColor,
+                                emojiSize: 34),
+                          ),
+                        ),
                         const SizedBox(width: 16),
                         Expanded(
                           child: Column(
