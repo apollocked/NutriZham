@@ -213,7 +213,7 @@ Contributions are what make the open-source community such a great place. Any co
 
 ## 📦 Version
 
-**v1.1.1** — 2026
+**v1.1.2** — 2026
 
 ---
 
